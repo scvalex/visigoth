@@ -1,11 +1,13 @@
+#include "graphwidget.h"
 #include "node.h"
 
 #include <QGraphicsScene>
 #include <QPainter>
 
-Node::Node(QGraphicsItem *parent) :
+Node::Node(GraphWidget *graph, QGraphicsItem *parent) :
     QGraphicsItem(parent),
     brush(QColor::fromRgb(qrand() % 256, qrand() % 256, qrand() % 256, 180)),
+    graph(graph),
     hovering(false)
 {
     setFlag(ItemIsMovable);
@@ -48,10 +50,12 @@ void Node::calculateForces() {
     newPos.setY(qMin(qMax(newPos.y(), sceneRect.top() + 10), sceneRect.bottom() - 10));
 }
 
-void Node::advance(int phase) {
-    if (phase == 0 || newPos == pos())
-        return;
+/* Called by GraphWidget repeatedly. */
+bool Node::advance() {
+    if (newPos == pos())
+        return false;
     setPos(newPos);
+    return true;
 }
 
 QRectF Node::boundingRect() const {
@@ -79,7 +83,7 @@ void Node::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *)
 QVariant Node::itemChange(GraphicsItemChange change, const QVariant &value) {
     switch (change) {
     case ItemPositionHasChanged:
-        //graph->itemMoved();
+        graph->itemMoved();
         break;
     default:
         break;

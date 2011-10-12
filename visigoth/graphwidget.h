@@ -13,8 +13,18 @@ public:
 
     void populate();
 
+    void itemMoved();
+
+protected:
+    void keyPressEvent(QKeyEvent *event);
+    void timerEvent(QTimerEvent *event);
+    void wheelEvent(QWheelEvent *event);
+
+    void scaleView(qreal scaleFactor);
+
 private:
     QGraphicsScene *scene;
+    int timerId;
 };
 
 #endif // GRAPHWIDGET_H

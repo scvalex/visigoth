@@ -9,16 +9,17 @@
 #include <QGraphicsItem>
 #include <QVariant>
 
+class GraphWidget;
 class QGraphicsSceneHoverEvent;
 
 class Node : public QGraphicsItem
 {
 public:
-    explicit Node(QGraphicsItem *parent = 0);
+    explicit Node(GraphWidget *graph, QGraphicsItem *parent = 0);
 
     void calculateForces();
 
-    void advance(int phase);
+    bool advance();
 
     QRectF boundingRect() const;
     QPainterPath shape() const;
@@ -33,6 +34,7 @@ protected:
 
 private:
     QBrush brush;
+    GraphWidget *graph;
     bool hovering;
     QPointF newPos;
 };
