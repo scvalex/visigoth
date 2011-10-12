@@ -17,3 +17,15 @@ Node* Edge::destNode() const {
 
 void Edge::adjust() {
 }
+
+QRectF Edge::boundingRect() const {
+    if (!source || !dest)
+        return QRectF();
+    return QRectF();
+}
+
+void Edge::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *) {
+    if (!source || !dest)
+        return;
+    return;
+}

@@ -1,3 +1,4 @@
+#include "edge.h"
 #include "graphwidget.h"
 #include "node.h"
 
@@ -22,9 +23,22 @@ GraphWidget::GraphWidget(QWidget *parent) :
 }
 
 void GraphWidget::populate() {
-    for (int i(0); i < 1000; ++i) {
+    QVector<Node*> nodes;
+    const int NUM_NODES = 10;
+    const int NUM_EDGES = 60;
+    for (int i(0); i < NUM_NODES; ++i) {
         Node *node = new Node(this);
+        nodes << node;
         scene->addItem(node);
+    }
+    for (int i(0); i < NUM_EDGES; ++i) {
+        int a = qrand() % NUM_NODES;
+        int b = a;
+        while (a == b)
+            b = qrand() % NUM_NODES;
+        Edge *edge = new Edge(nodes[a], nodes[b]);
+        nodes[a]->addEdge(edge);
+        nodes[b]->addEdge(edge);
     }
     randomizePlacement();
 }
@@ -73,7 +87,7 @@ void GraphWidget::timerEvent(QTimerEvent *) {
 }
 
 void GraphWidget::wheelEvent(QWheelEvent *event) {
-    scaleView(pow((double)2, -event->delta() / 240.0));
+    scaleView(pow((double)2, event->delta() / 240.0));
 }
 
 void GraphWidget::scaleView(qreal scaleFactor) {
