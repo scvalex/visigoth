@@ -7,8 +7,8 @@ namespace Ui {
     class MainWindow;
 }
 
+class GraphWidget;
 class QGraphicsView;
-class QGraphicsScene;
 
 class MainWindow : public QMainWindow
 {
@@ -22,8 +22,7 @@ public:
 
 private:
     Ui::MainWindow *ui;
-    QGraphicsView *view;
-    QGraphicsScene *scene;
+    GraphWidget *view;
 };
 
 #endif // MAINWINDOW_H

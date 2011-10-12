@@ -5,9 +5,13 @@ TEMPLATE = app
 
 SOURCES += main.cpp \
           mainwindow.cpp \
-          node.cpp
+          node.cpp \
+    graphwidget.cpp
 
 HEADERS += mainwindow.h \
-           node.h
+           node.h \
+    graphwidget.h
 
 FORMS += mainwindow.ui
+
+
