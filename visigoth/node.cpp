@@ -1,3 +1,4 @@
+#include "edge.h"
 #include "graphwidget.h"
 #include "node.h"
 
@@ -13,7 +14,17 @@ Node::Node(GraphWidget *graph, QGraphicsItem *parent) :
     setFlag(ItemIsMovable);
     setFlag(ItemSendsGeometryChanges);
     setCacheMode(DeviceCoordinateCache);
+    setZValue(-1);
     setAcceptHoverEvents(true);
+}
+
+void Node::addEdge(Edge *edge) {
+    edgeList << edge;
+    edge->adjust();
+}
+
+QList<Edge*> Node::edges() const {
+    return edgeList;
 }
 
 void Node::calculateForces() {
@@ -39,6 +50,17 @@ void Node::calculateForces() {
             xvel += (dx * 150.0) / l;
             yvel += (dy * 150.0) / l;
         }
+    }
+
+    double weight = (edgeList.size() + 1) * 10;
+    foreach (Edge *edge, edgeList) {
+        QPointF vec;
+        if (edge->sourceNode() == this)
+            vec = mapToItem(edge->destNode(), 0, 0);
+        else
+            vec = mapToItem(edge->sourceNode(), 0, 0);
+        xvel -= vec.x() / weight;
+        yvel -= vec.y() / weight;
     }
 
     if (qAbs(xvel) < 0.1 && qAbs(yvel) < 0.1)

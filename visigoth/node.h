@@ -9,6 +9,7 @@
 #include <QGraphicsItem>
 #include <QVariant>
 
+class Edge;
 class GraphWidget;
 class QGraphicsSceneHoverEvent;
 
@@ -16,6 +17,9 @@ class Node : public QGraphicsItem
 {
 public:
     explicit Node(GraphWidget *graph, QGraphicsItem *parent = 0);
+
+    void addEdge(Edge *edge);
+    QList<Edge*> edges() const;
 
     void calculateForces();
 
@@ -34,6 +38,7 @@ protected:
 
 private:
     QBrush brush;
+    QList<Edge*> edgeList;
     GraphWidget *graph;
     bool hovering;
     QPointF newPos;
