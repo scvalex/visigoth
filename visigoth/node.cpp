@@ -11,6 +11,7 @@ Node::Node(QGraphicsItem *parent) :
     setFlag(ItemIsMovable);
     setFlag(ItemSendsGeometryChanges);
     setCacheMode(DeviceCoordinateCache);
+    setAcceptHoverEvents(true);
 }
 
 void Node::calculateForces() {
@@ -69,7 +70,7 @@ void Node::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *)
         painter->setBrush(brush);
     } else {
         QColor lighter = brush.color();
-        lighter.setAlpha(100);
+        lighter.setAlpha(255);
         painter->setBrush(QBrush(lighter));
     }
     painter->drawEllipse(-10, -10, 20, 20);
@@ -89,12 +90,10 @@ QVariant Node::itemChange(GraphicsItemChange change, const QVariant &value) {
 
 void Node::hoverEnterEvent(QGraphicsSceneHoverEvent *event) {
     hovering = true;
-    update();
     QGraphicsItem::hoverEnterEvent(event);
 }
 
 void Node::hoverLeaveEvent(QGraphicsSceneHoverEvent *event) {
     hovering = false;
-    update();
     QGraphicsItem::hoverLeaveEvent(event);
 }
