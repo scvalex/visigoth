@@ -1,18 +1,13 @@
-#-------------------------------------------------
-#
-# Project created by QtCreator 2011-10-11T01:27:06
-#
-#-------------------------------------------------
-
-QT       += core gui opengl
+QT += core gui opengl
 
 TARGET = visigoth
 TEMPLATE = app
 
+SOURCES += main.cpp \
+          mainwindow.cpp \
+          node.cpp
 
-SOURCES += main.cpp\
-        mainwindow.cpp
+HEADERS += mainwindow.h \
+           node.h
 
-HEADERS  += mainwindow.h
-
-FORMS    += mainwindow.ui
+FORMS += mainwindow.ui

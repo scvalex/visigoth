@@ -1,4 +1,5 @@
 #include "mainwindow.h"
+#include "node.h"
 #include "ui_mainwindow.h"
 
 #ifdef USE_OPENGL
@@ -26,12 +27,10 @@ MainWindow::MainWindow(QWidget *parent) :
 }
 
 void MainWindow::populate() {
-    QPen pen(Qt::black);
-    pen.setWidthF(0.0);
-    QBrush brush(Qt::SolidPattern);
     for (int i(0); i < 1000; ++i) {
-        brush.setColor(QColor::fromRgb(qrand() % 256, qrand() % 256, qrand() % 256, 180));
-        scene->addEllipse(qrand() % 1000, qrand() % 1000, 10, 10, pen, brush);
+        Node *node = new Node();
+        node->setPos(10 + qrand() % 1000, 10 + qrand() % 1000);
+        scene->addItem(node);
     }
 }
 
