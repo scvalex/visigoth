@@ -24,9 +24,9 @@ GraphWidget::GraphWidget(QWidget *parent) :
 void GraphWidget::populate() {
     for (int i(0); i < 1000; ++i) {
         Node *node = new Node(this);
-        node->setPos(10 + qrand() % 1000, 10 + qrand() % 1000);
         scene->addItem(node);
     }
+    randomizePlacement();
 }
 
 void GraphWidget::itemMoved() {
@@ -41,6 +41,9 @@ void GraphWidget::keyPressEvent(QKeyEvent *event) {
         break;
     case Qt::Key_Minus:
         scaleView(1 / qreal(1.2));
+        break;
+    case Qt::Key_Space:
+        randomizePlacement();
         break;
     default:
         QGraphicsView::keyPressEvent(event);
@@ -78,4 +81,11 @@ void GraphWidget::scaleView(qreal scaleFactor) {
     if (factor < 0.07 || factor > 100)
         return;
     scale(scaleFactor, scaleFactor);
+}
+
+void GraphWidget::randomizePlacement() {
+    foreach (QGraphicsItem *item, scene->items()) {
+        if (qgraphicsitem_cast<Node*>(item))
+            item->setPos(10 + qrand() % 1000, 10 + qrand() % 600);
+    }
 }

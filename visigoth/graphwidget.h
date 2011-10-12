@@ -21,6 +21,7 @@ protected:
     void wheelEvent(QWheelEvent *event);
 
     void scaleView(qreal scaleFactor);
+    void randomizePlacement();
 
 private:
     QGraphicsScene *scene;
