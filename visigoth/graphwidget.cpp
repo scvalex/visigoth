@@ -9,8 +9,10 @@
 
 GraphWidget::GraphWidget(QWidget *parent) :
     QGraphicsView(parent),
+    helping(false),
     timerId(0)
 {
+    setMinimumSize(HELP_WIDTH + 10, HELP_HEIGHT + 10);
     scene = new QGraphicsScene(this);
     scene->setBackgroundBrush(Qt::black);
     //FIXME: look into scene index
@@ -49,15 +51,19 @@ void GraphWidget::itemMoved() {
 
 void GraphWidget::keyPressEvent(QKeyEvent *event) {
     switch (event->key()) {
+    case Qt::Key_H:
+        helping = !helping;
+        viewport()->update();
+        break;
+    case Qt::Key_R:
+        scene->clear();
+        populate();
+        break;
     case Qt::Key_Plus:
         scaleView(qreal(1.2));
         break;
     case Qt::Key_Minus:
         scaleView(1 / qreal(1.2));
-        break;
-    case Qt::Key_R:
-        scene->clear();
-        populate();
         break;
     case Qt::Key_Space:
         randomizePlacement();
@@ -85,6 +91,18 @@ void GraphWidget::timerEvent(QTimerEvent *) {
 
 void GraphWidget::wheelEvent(QWheelEvent *event) {
     scaleView(pow((double)2, event->delta() / 240.0));
+}
+
+void GraphWidget::paintEvent(QPaintEvent *event) {
+    QGraphicsView::paintEvent(event);
+
+    if (helping) {
+        QPainter painter(viewport());
+        QRectF popup((width() - HELP_WIDTH) / 2, (height() - HELP_HEIGHT) / 2, HELP_WIDTH, HELP_HEIGHT);
+        painter.fillRect(popup, QBrush(QColor::fromRgb(100, 100, 255, 70)));
+        painter.setPen(QPen(QColor::fromRgb(100, 100, 255, 120), 2));
+        painter.drawRect(popup.adjusted(-2, -2, +2, +2));
+    }
 }
 
 void GraphWidget::scaleView(qreal scaleFactor) {

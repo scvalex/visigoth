@@ -25,7 +25,6 @@ void RandomGenerator::populate(QVector<Node*> &nodes, QList<Edge*> &edges) {
         while (a == b)
             b = qrand() % NUM_NODES;
 
-        qDebug("creating edge betwee %d and %d", a ,b);
         Edge *edge = new Edge(nodes[a], nodes[b]);
         edges << edge;
 

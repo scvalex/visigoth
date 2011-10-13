@@ -9,6 +9,7 @@ class Edge;
 class GraphGenerator;
 class Node;
 class QGraphicsScene;
+class QPaintEvent;
 
 class GraphWidget : public QGraphicsView
 {
@@ -26,13 +27,18 @@ protected:
     void keyPressEvent(QKeyEvent *event);
     void timerEvent(QTimerEvent *event);
     void wheelEvent(QWheelEvent *event);
+    void paintEvent(QPaintEvent *event);
 
     void scaleView(qreal scaleFactor);
     void randomizePlacement();
 
 private:
+    static const float HELP_WIDTH = 300;
+    static const float HELP_HEIGHT = 500;
+
     GraphGenerator *generator;
     QList<Edge*> edges;
+    bool helping;
     QVector<Node*> nodeVector;
     QGraphicsScene *scene;
     int timerId;
