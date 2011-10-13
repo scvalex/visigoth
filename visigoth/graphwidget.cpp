@@ -1,6 +1,7 @@
 #include "edge.h"
 #include "graphwidget.h"
 #include "node.h"
+#include "randomgenerator.h"
 
 #include <cmath>
 #include <QGraphicsScene>
@@ -27,24 +28,16 @@ QVector<Node*> GraphWidget::nodes() const {
 }
 
 void GraphWidget::populate() {
-    const int NUM_NODES = 60;
-    const int NUM_EDGES = 200;
-    nodeVector.clear();
-    for (int i(0); i < NUM_NODES; ++i) {
-        Node *node = new Node(this);
-        nodeVector << node;
+    RandomGenerator(this).populate(nodeVector, edges);
+
+    foreach (Node *node, nodeVector) {
         scene->addItem(node);
     }
-    edges.clear();
-    for (int i(0); i < NUM_EDGES; ++i) {
-        int a = qrand() % NUM_NODES;
-        int b = a;
-        while (a == b)
-            b = qrand() % NUM_NODES;
-        Edge *edge = new Edge(nodeVector[a], nodeVector[b]);
-        edges << edge;
+
+    foreach (Edge *edge, edges) {
         scene->addItem(edge);
     }
+
     randomizePlacement();
 }
 

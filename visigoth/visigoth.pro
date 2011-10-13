@@ -7,14 +7,22 @@ SOURCES += main.cpp \
           mainwindow.cpp \
           node.cpp \
     graphwidget.cpp \
-    edge.cpp
+    edge.cpp \
+    randomgenerator.cpp
 
 HEADERS += mainwindow.h \
            node.h \
     graphwidget.h \
-    edge.h
+    edge.h \
+    graphgenerator.h \
+    randomgenerator.h
 
 FORMS += mainwindow.ui
+
+
+
+
+
 
 
 

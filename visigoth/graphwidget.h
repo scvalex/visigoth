@@ -2,6 +2,7 @@
 #define GRAPHWIDGET_H
 
 #include <QGraphicsView>
+#include <QList>
 #include <QVector>
 
 class Edge;
@@ -29,7 +30,7 @@ protected:
     void randomizePlacement();
 
 private:
-    QVector<Edge*> edges;
+    QList<Edge*> edges;
     QVector<Node*> nodeVector;
     QGraphicsScene *scene;
     int timerId;
