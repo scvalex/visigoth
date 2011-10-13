@@ -10,6 +10,7 @@
 GraphWidget::GraphWidget(QWidget *parent) :
     QGraphicsView(parent),
     helping(false),
+    helpText(),
     timerId(0)
 {
     setMinimumSize(HELP_WIDTH + 10, HELP_HEIGHT + 10);
@@ -23,6 +24,18 @@ GraphWidget::GraphWidget(QWidget *parent) :
     setViewportUpdateMode(BoundingRectViewportUpdate);
     setRenderHint(QPainter::Antialiasing);
     setTransformationAnchor(AnchorUnderMouse);
+
+    helpText.setText("<h3>Welcome to Visigoth Graph Visualisations</h3>"
+                     "<p>Drag nodes to move.</p>"
+                     "<p>Keybindings:"
+                     "<ul>"
+                     "<li>h - show this text</li>"
+                     "<li>r - generate a new graph</li>"
+                     "<li>&lt;space&gt; - randomize node placement</li>"
+                     "</ul>"
+                     "</p>"
+                     );
+    helpText.setTextWidth(HELP_WIDTH - 10);
 }
 
 QVector<Node*> GraphWidget::nodes() const {
@@ -99,9 +112,11 @@ void GraphWidget::paintEvent(QPaintEvent *event) {
     if (helping) {
         QPainter painter(viewport());
         QRectF popup((width() - HELP_WIDTH) / 2, (height() - HELP_HEIGHT) / 2, HELP_WIDTH, HELP_HEIGHT);
-        painter.fillRect(popup, QBrush(QColor::fromRgb(100, 100, 255, 70)));
-        painter.setPen(QPen(QColor::fromRgb(100, 100, 255, 120), 2));
-        painter.drawRect(popup.adjusted(-2, -2, +2, +2));
+        painter.setBrush(QBrush(QColor::fromRgb(100, 100, 255, 100)));
+        painter.setPen(QPen(QColor::fromRgb(100, 100, 255, 150), 2));
+        painter.drawRoundedRect(popup.adjusted(-2, -2, +2, +2), 4, 4);
+        painter.setPen(QPen(QColor::fromRgb(0, 0, 20), 1));
+        painter.drawStaticText(popup.left() + 5, popup.top() + 5, helpText);
     }
 }
 

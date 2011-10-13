@@ -3,6 +3,7 @@
 
 #include <QGraphicsView>
 #include <QList>
+#include <QStaticText>
 #include <QVector>
 
 class Edge;
@@ -39,6 +40,7 @@ private:
     GraphGenerator *generator;
     QList<Edge*> edges;
     bool helping;
+    QStaticText helpText;
     QVector<Node*> nodeVector;
     QGraphicsScene *scene;
     int timerId;
