@@ -19,7 +19,6 @@ public:
     explicit Node(GraphWidget *graph, QGraphicsItem *parent = 0);
 
     void addEdge(Edge *edge);
-    QList<Edge*> edges() const;
 
     void calculateForces();
 

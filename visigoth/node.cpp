@@ -14,17 +14,12 @@ Node::Node(GraphWidget *graph, QGraphicsItem *parent) :
     setFlag(ItemIsMovable);
     setFlag(ItemSendsGeometryChanges);
     setCacheMode(DeviceCoordinateCache);
-    setZValue(-1);
+    setZValue(100);
     setAcceptHoverEvents(true);
 }
 
 void Node::addEdge(Edge *edge) {
     edgeList << edge;
-    edge->adjust();
-}
-
-QList<Edge*> Node::edges() const {
-    return edgeList;
 }
 
 void Node::calculateForces() {
@@ -37,11 +32,7 @@ void Node::calculateForces() {
     qreal xvel = 0;
     qreal yvel = 0;
     //FIXME: Don't go through all the items.
-    foreach (QGraphicsItem *item, scene()->items()) {
-        Node *node = qgraphicsitem_cast<Node *>(item);
-        if (!node)
-            continue;
-
+    foreach (Node *node, graph->nodes()) {
         QPointF vec = mapToItem(node, 0, 0);
         qreal dx = vec.x();
         qreal dy = vec.y();
@@ -52,6 +43,7 @@ void Node::calculateForces() {
         }
     }
 
+    qDebug("edgeList at %p", &edgeList);
     double weight = (edgeList.size() + 1) * 10;
     foreach (Edge *edge, edgeList) {
         QPointF vec;
@@ -105,6 +97,8 @@ void Node::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *)
 QVariant Node::itemChange(GraphicsItemChange change, const QVariant &value) {
     switch (change) {
     case ItemPositionHasChanged:
+        foreach (Edge *edge, edgeList)
+            edge->adjust();
         graph->itemMoved();
         break;
     default:

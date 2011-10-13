@@ -22,23 +22,28 @@ GraphWidget::GraphWidget(QWidget *parent) :
     setTransformationAnchor(AnchorUnderMouse);
 }
 
+QVector<Node*> GraphWidget::nodes() const {
+    return nodeVector;
+}
+
 void GraphWidget::populate() {
-    QVector<Node*> nodes;
-    const int NUM_NODES = 10;
-    const int NUM_EDGES = 60;
+    const int NUM_NODES = 60;
+    const int NUM_EDGES = 200;
+    nodeVector.clear();
     for (int i(0); i < NUM_NODES; ++i) {
         Node *node = new Node(this);
-        nodes << node;
+        nodeVector << node;
         scene->addItem(node);
     }
+    edges.clear();
     for (int i(0); i < NUM_EDGES; ++i) {
         int a = qrand() % NUM_NODES;
         int b = a;
         while (a == b)
             b = qrand() % NUM_NODES;
-        Edge *edge = new Edge(nodes[a], nodes[b]);
-        nodes[a]->addEdge(edge);
-        nodes[b]->addEdge(edge);
+        Edge *edge = new Edge(nodeVector[a], nodeVector[b]);
+        edges << edge;
+        scene->addItem(edge);
     }
     randomizePlacement();
 }
@@ -65,17 +70,11 @@ void GraphWidget::keyPressEvent(QKeyEvent *event) {
 }
 
 void GraphWidget::timerEvent(QTimerEvent *) {
-    QList<Node*> nodes;
-    foreach (QGraphicsItem *item, scene->items()) {
-        if (Node *node = qgraphicsitem_cast<Node*>(item))
-            nodes << node;
-    }
-
-    foreach (Node *node, nodes)
+    foreach (Node *node, nodeVector)
         node->calculateForces();
 
     bool itemsMoved = false;
-    foreach (Node *node, nodes) {
+    foreach (Node *node, nodeVector) {
         if (node->advance())
             itemsMoved = true;
     }
@@ -98,8 +97,10 @@ void GraphWidget::scaleView(qreal scaleFactor) {
 }
 
 void GraphWidget::randomizePlacement() {
-    foreach (QGraphicsItem *item, scene->items()) {
-        if (qgraphicsitem_cast<Node*>(item))
-            item->setPos(10 + qrand() % 1000, 10 + qrand() % 600);
+    foreach (Node *node, nodeVector) {
+        node->setPos(10 + qrand() % 1000, 10 + qrand() % 600);
+    }
+    foreach (Edge *edge, edges) {
+        edge->adjust();
     }
 }

@@ -2,7 +2,10 @@
 #define GRAPHWIDGET_H
 
 #include <QGraphicsView>
+#include <QVector>
 
+class Edge;
+class Node;
 class QGraphicsScene;
 
 class GraphWidget : public QGraphicsView
@@ -10,6 +13,8 @@ class GraphWidget : public QGraphicsView
     Q_OBJECT
 public:
     explicit GraphWidget(QWidget *parent = 0);
+
+    QVector<Node*> nodes() const;
 
     void populate();
 
@@ -24,6 +29,8 @@ protected:
     void randomizePlacement();
 
 private:
+    QVector<Edge*> edges;
+    QVector<Node*> nodeVector;
     QGraphicsScene *scene;
     int timerId;
 };

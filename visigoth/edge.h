@@ -8,7 +8,7 @@ class Node;
 class Edge : public QGraphicsItem
 {
 public:
-    Edge(Node *sourceNode, Node *destNode, QGraphicsItem *parent = 0);
+    explicit Edge(Node *sourceNode, Node *destNode, QGraphicsItem *parent = 0);
 
     Node* sourceNode() const;
     Node* destNode() const;
@@ -21,7 +21,9 @@ protected:
 
 private:
     Node *dest;
+    QPointF destPoint;
     Node *source;
+    QPointF sourcePoint;
 };
 
 #endif // EDGE_H
