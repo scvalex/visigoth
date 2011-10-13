@@ -9,7 +9,7 @@
 
 GraphWidget::GraphWidget(QWidget *parent) :
     QGraphicsView(parent),
-    helping(false),
+    helping(true),
     helpText(),
     timerId(0)
 {
@@ -31,7 +31,8 @@ GraphWidget::GraphWidget(QWidget *parent) :
                      "<ul>"
                      "<li>h - show this text</li>"
                      "<li>r - generate a new graph</li>"
-                     "<li>&lt;space&gt; - randomize node placement</li>"
+                     "<li>&lt;spc&gt; - randomize node placement</li>"
+                     "<li>&lt;esc&gt; - return to graph view</li>"
                      "</ul>"
                      "</p>"
                      );
@@ -71,6 +72,10 @@ void GraphWidget::keyPressEvent(QKeyEvent *event) {
     case Qt::Key_R:
         scene->clear();
         populate();
+        break;
+    case Qt::Key_Escape:
+        helping = false;
+        viewport()->update();
         break;
     case Qt::Key_Plus:
         scaleView(qreal(1.2));
@@ -112,8 +117,8 @@ void GraphWidget::paintEvent(QPaintEvent *event) {
     if (helping) {
         QPainter painter(viewport());
         QRectF popup((width() - HELP_WIDTH) / 2, (height() - HELP_HEIGHT) / 2, HELP_WIDTH, HELP_HEIGHT);
-        painter.setBrush(QBrush(QColor::fromRgb(100, 100, 255, 100)));
-        painter.setPen(QPen(QColor::fromRgb(100, 100, 255, 150), 2));
+        painter.setBrush(QBrush(QColor::fromRgb(140, 140, 255, 100)));
+        painter.setPen(QPen(QColor::fromRgb(140, 140, 255, 150), 2));
         painter.drawRoundedRect(popup.adjusted(-2, -2, +2, +2), 4, 4);
         painter.setPen(QPen(QColor::fromRgb(0, 0, 20), 1));
         painter.drawStaticText(popup.left() + 5, popup.top() + 5, helpText);
