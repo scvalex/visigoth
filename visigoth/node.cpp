@@ -43,7 +43,6 @@ void Node::calculateForces() {
         }
     }
 
-    qDebug("edgeList at %p", &edgeList);
     double weight = (edgeList.size() + 1) * 10;
     foreach (Edge *edge, edgeList) {
         QPointF vec;
