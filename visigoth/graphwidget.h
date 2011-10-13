@@ -6,6 +6,7 @@
 #include <QVector>
 
 class Edge;
+class GraphGenerator;
 class Node;
 class QGraphicsScene;
 
@@ -30,6 +31,7 @@ protected:
     void randomizePlacement();
 
 private:
+    GraphGenerator *generator;
     QList<Edge*> edges;
     QVector<Node*> nodeVector;
     QGraphicsScene *scene;

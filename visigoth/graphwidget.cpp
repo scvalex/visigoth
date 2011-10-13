@@ -28,7 +28,8 @@ QVector<Node*> GraphWidget::nodes() const {
 }
 
 void GraphWidget::populate() {
-    RandomGenerator(this).populate(nodeVector, edges);
+    generator = new RandomGenerator(this);
+    generator->populate(nodeVector, edges);
 
     foreach (Node *node, nodeVector) {
         scene->addItem(node);
@@ -53,6 +54,10 @@ void GraphWidget::keyPressEvent(QKeyEvent *event) {
         break;
     case Qt::Key_Minus:
         scaleView(1 / qreal(1.2));
+        break;
+    case Qt::Key_R:
+        scene->clear();
+        populate();
         break;
     case Qt::Key_Space:
         randomizePlacement();
