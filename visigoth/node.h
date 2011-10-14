@@ -24,6 +24,9 @@ public:
 
     void calculateForces();
 
+    /* Return the new position. */
+    QPointF calculateForces();
+
     bool advance();
 
     enum { Type = UserType + 1 };

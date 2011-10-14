@@ -27,10 +27,10 @@ void Node::addEdge(Edge *edge) {
     edgeList << edge;
 }
 
-void Node::calculateForces() {
+QPointF Node::calculateForces() {
     if (!scene() || scene()->mouseGrabberItem() == this) {
         newPos = pos();
-        return;
+        return newPos;
     }
 
     // Sum up all the forces pushing away.
@@ -62,20 +62,8 @@ void Node::calculateForces() {
     if (qAbs(xvel) < 0.1 && qAbs(yvel) < 0.1)
         xvel = yvel = 0;
 
-    QRectF sceneRect = scene()->sceneRect();
     newPos = pos() + QPointF(xvel, yvel);
-    if (newPos.x() < sceneRect.left() + 10) {
-        sceneRect.setLeft(newPos.x() - 10);
-    }
-    if (newPos.x() > sceneRect.right() - 10) {
-        sceneRect.setRight(newPos.x() + 10);
-    }
-    if (newPos.y() < sceneRect.top() + 10) {
-        sceneRect.setTop(newPos.y() - 10);
-    }
-    if (newPos.y() > sceneRect.bottom() + 10) {
-        sceneRect.setBottom(newPos.y() + 10);
-    }
+    return newPos;
 }
 
 /* Called by GraphWidget repeatedly. */

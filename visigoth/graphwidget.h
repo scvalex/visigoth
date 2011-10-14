@@ -32,6 +32,7 @@ protected:
 
     void scaleView(qreal scaleFactor);
     void randomizePlacement();
+    void fitToScreen();
 
 private:
     static const float HELP_WIDTH = 300;
