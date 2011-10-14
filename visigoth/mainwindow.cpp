@@ -38,16 +38,22 @@ MainWindow::~MainWindow()
 void MainWindow::on_actionPrint_to_PDF_triggered()
 {
 
-    QPixmap pixmap = QPixmap::grabWindow(QApplication::desktop()->winId());
+    //first commented version took a screenshot of the whole screen, compared to
+    //the 2nd version which now takes only the Widget;
+
+    //QPixmap pixmap = QPixmap::grabWindow(QApplication::desktop()->winId());
+
+    QPixmap pixmap = QPixmap::grabWidget(view,0,0,-1,-1);
 
     QString format = "png";
     QString initialPath = QDir::currentPath() + tr("/untitled.") + format;
 
     QString fileName = QFileDialog::getSaveFileName(this, tr("Save As"),
                                     initialPath,
-                                    tr("%1 Files (*.%2);;All Files (*)")
-                                    .arg(format.toUpper())
-                                    .arg(format));
+                                    tr("PNG (*.png);;JPG (*.jpg);;All Files (*)"));
+                                    //tr("%1 Files (*.%2);;All Files (*);;JPG (*.jpg)")
+                                    //.arg(format.toUpper())
+                                    //.arg(format));
     if (!fileName.isEmpty())
         pixmap.save(fileName, format.toAscii());
 
