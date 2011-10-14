@@ -5,11 +5,12 @@
 #include <QGraphicsScene>
 #include <QPainter>
 
-Node::Node(GraphWidget *graph, QGraphicsItem *parent) :
+Node::Node(int tag, GraphWidget *graph, QGraphicsItem *parent) :
     QGraphicsItem(parent),
     brush(QColor::fromRgb(qrand() % 256, qrand() % 256, qrand() % 256, 180)),
     graph(graph),
-    hovering(false)
+    hovering(false),
+    myTag(tag)
 {
     setFlag(ItemIsMovable);
     setFlag(ItemSendsGeometryChanges);
@@ -18,20 +19,24 @@ Node::Node(GraphWidget *graph, QGraphicsItem *parent) :
     setAcceptHoverEvents(true);
 }
 
+int Node::tag() const {
+    return myTag;
+}
+
 void Node::addEdge(Edge *edge) {
     edgeList << edge;
 }
 
-void Node::calculateForces() {
+QPointF Node::calculateForces() {
     if (!scene() || scene()->mouseGrabberItem() == this) {
         newPos = pos();
-        return;
+        return newPos;
     }
 
     // Sum up all the forces pushing away.
     qreal xvel = 0;
     qreal yvel = 0;
-    //FIXME: Don't go through all the items.
+
     foreach (Node *node, graph->nodes()) {
         QPointF vec = mapToItem(node, 0, 0);
         qreal dx = vec.x();
@@ -57,10 +62,8 @@ void Node::calculateForces() {
     if (qAbs(xvel) < 0.1 && qAbs(yvel) < 0.1)
         xvel = yvel = 0;
 
-    QRectF sceneRect = scene()->sceneRect();
     newPos = pos() + QPointF(xvel, yvel);
-    newPos.setX(qMin(qMax(newPos.x(), sceneRect.left() + 10), sceneRect.right() - 10));
-    newPos.setY(qMin(qMax(newPos.y(), sceneRect.top() + 10), sceneRect.bottom() - 10));
+    return newPos;
 }
 
 /* Called by GraphWidget repeatedly. */

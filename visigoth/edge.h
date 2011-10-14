@@ -13,6 +13,9 @@ public:
     Node* sourceNode() const;
     Node* destNode() const;
 
+    enum { Type = UserType + 2 };
+    int type() const { return Type; }
+
     void adjust();
 
 protected:

@@ -15,12 +15,12 @@ FrancescoGenerator::FrancescoGenerator(GraphWidget *parentGraph, int density) :
 }
 
 void FrancescoGenerator::populate(QVector<Node*> &nodes, QList<Edge*> &edges) {
-    const int NUM_NODES = 500;
+    const int NUM_NODES = 2000;
 
     nodes.clear();
     edges.clear();
     for (int i(0); i < NUM_NODES; ++i) {
-        Node *node = new Node(graph);
+        Node *node = new Node(i, graph);
         nodes << node;
     }
 

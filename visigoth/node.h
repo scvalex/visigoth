@@ -16,13 +16,19 @@ class QGraphicsSceneHoverEvent;
 class Node : public QGraphicsItem
 {
 public:
-    explicit Node(GraphWidget *graph, QGraphicsItem *parent = 0);
+    explicit Node(int tag, GraphWidget *graph, QGraphicsItem *parent = 0);
 
     void addEdge(Edge *edge);
 
-    void calculateForces();
+    int tag() const;
+
+    /* Return the new position. */
+    QPointF calculateForces();
 
     bool advance();
+
+    enum { Type = UserType + 1 };
+    int type() const { return Type; }
 
     QRectF boundingRect() const;
     QPainterPath shape() const;
@@ -40,6 +46,7 @@ private:
     QList<Edge*> edgeList;
     GraphWidget *graph;
     bool hovering;
+    int myTag;
     QPointF newPos;
 };
 
