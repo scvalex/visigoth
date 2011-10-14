@@ -18,7 +18,7 @@ GraphWidget::GraphWidget(QWidget *parent) :
     scene = new QGraphicsScene(this);
     scene->setBackgroundBrush(Qt::black);
     //FIXME: look into scene index
-    scene->setItemIndexMethod(QGraphicsScene::NoIndex);
+    //scene->setItemIndexMethod(QGraphicsScene::NoIndex);
     setScene(scene);
 
     setCacheMode(CacheBackground);
@@ -51,7 +51,6 @@ void GraphWidget::populate() {
     foreach (Node *node, nodeVector) {
         scene->addItem(node);
     }
-
     foreach (Edge *edge, edges) {
         scene->addItem(edge);
     }

@@ -21,7 +21,7 @@ void FrancescoGenerator::populate(QVector<Node*> &nodes, QList<Edge*> &edges) {
     nodes.clear();
     edges.clear();
     for (int i(0); i < NUM_NODES; ++i) {
-        Node *node = new Node(graph);
+        Node *node = new Node(i, graph);
         nodes << node;
     }
 

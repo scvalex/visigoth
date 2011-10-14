@@ -5,17 +5,22 @@
 #include <QGraphicsScene>
 #include <QPainter>
 
-Node::Node(GraphWidget *graph, QGraphicsItem *parent) :
+Node::Node(int tag, GraphWidget *graph, QGraphicsItem *parent) :
     QGraphicsItem(parent),
     brush(QColor::fromRgb(qrand() % 256, qrand() % 256, qrand() % 256, 180)),
     graph(graph),
-    hovering(false)
+    hovering(false),
+    myTag(tag)
 {
     setFlag(ItemIsMovable);
     setFlag(ItemSendsGeometryChanges);
     setCacheMode(DeviceCoordinateCache);
     setZValue(100);
     setAcceptHoverEvents(true);
+}
+
+int Node::tag() const {
+    return myTag;
 }
 
 void Node::addEdge(Edge *edge) {
@@ -31,8 +36,24 @@ void Node::calculateForces() {
     // Sum up all the forces pushing away.
     qreal xvel = 0;
     qreal yvel = 0;
-    //FIXME: Don't go through all the items.
-    foreach (Node *node, graph->nodes()) {
+    const int MIN_NODES = 20;
+    QList<QGraphicsItem*> nearItems;
+    int dist = 100;
+    for (;;) {
+        nearItems = scene()->items(x() - dist, y() - dist, 2 * dist, 2 * dist, Qt::IntersectsItemBoundingRect);
+        int curItems(0);
+        foreach (QGraphicsItem *item, nearItems) {
+            if (qgraphicsitem_cast<Node*>(item))
+                ++curItems;
+        }
+        if (curItems > MIN_NODES)
+            break;
+        dist *= 1.5;
+    }
+    foreach (QGraphicsItem *item, nearItems) {
+        Node *node = qgraphicsitem_cast<Node*>(item);
+        if (!node)
+            continue;
         QPointF vec = mapToItem(node, 0, 0);
         qreal dx = vec.x();
         qreal dy = vec.y();
