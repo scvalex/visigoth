@@ -22,8 +22,6 @@ public:
 
     int tag() const;
 
-    void calculateForces();
-
     /* Return the new position. */
     QPointF calculateForces();
 
