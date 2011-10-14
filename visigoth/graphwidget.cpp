@@ -26,13 +26,13 @@ GraphWidget::GraphWidget(QWidget *parent) :
     setTransformationAnchor(AnchorUnderMouse);
 
     helpText.setText("<h3>Welcome to Visigoth Graph Visualisations</h3>"
-                     "<p>Drag nodes to move.</p>"
+                     "<p>Drag nodes to move. Press <em>ESC</em> to close this help.</p>"
                      "<p>Keybindings:"
                      "<ul>"
-                     "<li>h - show this text</li>"
-                     "<li>r - generate a new graph</li>"
-                     "<li>&lt;spc&gt; - randomize node placement</li>"
-                     "<li>&lt;esc&gt; - return to graph view</li>"
+                     "<li><em>h</em> - show this text</li>"
+                     "<li><em>r</em> - generate a new graph</li>"
+                     "<li>&lt;<em>spc</em>&gt; - randomize node placement</li>"
+                     "<li>&lt;<em>esc</em>&gt; - return to graph view</li>"
                      "</ul>"
                      "</p>"
                      );
