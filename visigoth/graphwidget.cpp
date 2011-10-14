@@ -8,8 +8,6 @@
 #include <QGraphicsScene>
 #include <QKeyEvent>
 
-#include <QDebug>
-
 GraphWidget::GraphWidget(QWidget *parent) :
     QGraphicsView(parent),
     helping(true),
