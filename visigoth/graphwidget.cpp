@@ -2,6 +2,7 @@
 #include "graphwidget.h"
 #include "node.h"
 #include "randomgenerator.h"
+#include "francescogenerator.h"
 
 #include <cmath>
 #include <QGraphicsScene>
@@ -44,7 +45,7 @@ QVector<Node*> GraphWidget::nodes() const {
 }
 
 void GraphWidget::populate() {
-    generator = new RandomGenerator(this);
+    generator = new FrancescoGenerator(this, 600);
     generator->populate(nodeVector, edges);
 
     foreach (Node *node, nodeVector) {
