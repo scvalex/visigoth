@@ -147,8 +147,8 @@ void GraphWidget::paintEvent(QPaintEvent *event) {
     if (helping) {
         QPainter painter(viewport());
         QRectF popup((width() - HELP_WIDTH) / 2, (height() - HELP_HEIGHT) / 2, HELP_WIDTH, HELP_HEIGHT);
-        painter.setBrush(QBrush(QColor::fromRgb(140, 140, 255, 100)));
-        painter.setPen(QPen(QColor::fromRgb(140, 140, 255, 150), 2));
+        painter.setBrush(QBrush(QColor::fromRgb(140, 140, 255, 150)));
+        painter.setPen(QPen(QColor::fromRgb(140, 140, 255, 200), 2));
         painter.drawRoundedRect(popup.adjusted(-2, -2, +2, +2), 4, 4);
         painter.setPen(QPen(QColor::fromRgb(0, 0, 20), 1));
         painter.drawStaticText(popup.left() + 5, popup.top() + 5, helpText);
