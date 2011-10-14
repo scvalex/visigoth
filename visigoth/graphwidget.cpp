@@ -36,7 +36,7 @@ GraphWidget::GraphWidget(QWidget *parent) :
                      "<li><em>r</em> - generate a new graph</li>"
                      "<li>&lt;<em>spc</em>&gt; - randomize node placement</li>"
                      "<li>&lt;<em>esc</em>&gt; - return to graph view</li>"
-                     "<li><em>0</em> - fit the graph to the screen</li>
+                     "<li><em>0</em> - fit the graph to the screen</li>"
                      "</ul>"
                      "</p>"
                      );
