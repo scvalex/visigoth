@@ -36,24 +36,8 @@ void Node::calculateForces() {
     // Sum up all the forces pushing away.
     qreal xvel = 0;
     qreal yvel = 0;
-    const int MIN_NODES = 20;
-    QList<QGraphicsItem*> nearItems;
-    int dist = 100;
-    for (;;) {
-        nearItems = scene()->items(x() - dist, y() - dist, 2 * dist, 2 * dist, Qt::IntersectsItemBoundingRect);
-        int curItems(0);
-        foreach (QGraphicsItem *item, nearItems) {
-            if (qgraphicsitem_cast<Node*>(item))
-                ++curItems;
-        }
-        if (curItems > MIN_NODES)
-            break;
-        dist *= 1.5;
-    }
-    foreach (QGraphicsItem *item, nearItems) {
-        Node *node = qgraphicsitem_cast<Node*>(item);
-        if (!node)
-            continue;
+
+    foreach (Node *node, graph->nodes()) {
         QPointF vec = mapToItem(node, 0, 0);
         qreal dx = vec.x();
         qreal dy = vec.y();

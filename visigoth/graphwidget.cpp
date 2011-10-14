@@ -17,8 +17,7 @@ GraphWidget::GraphWidget(QWidget *parent) :
     setMinimumSize(HELP_WIDTH + 10, HELP_HEIGHT + 10);
     scene = new QGraphicsScene(this);
     scene->setBackgroundBrush(Qt::black);
-    //FIXME: look into scene index
-    //scene->setItemIndexMethod(QGraphicsScene::NoIndex);
+    scene->setItemIndexMethod(QGraphicsScene::NoIndex);
     setScene(scene);
 
     setCacheMode(CacheBackground);

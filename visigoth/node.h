@@ -45,8 +45,8 @@ private:
     QList<Edge*> edgeList;
     GraphWidget *graph;
     bool hovering;
-    QPointF newPos;
     int myTag;
+    QPointF newPos;
 };
 
 #endif // NODE_H
