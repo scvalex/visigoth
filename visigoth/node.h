@@ -20,7 +20,8 @@ public:
 
     void addEdge(Edge *edge);
 
-    void calculateForces();
+    /* Returns the new position */
+    QPointF calculateForces();
 
     bool advance();
 
