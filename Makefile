@@ -12,5 +12,10 @@ build:
 
 .PHONY: clean
 clean:
-	rm -rf build
+	rm -rf build profile
 
+.PHONY: profile
+profile: build
+	mkdir -p profile
+	CPUPROFILE=profile/visigoth.prof LD_PRELOAD=/usr/lib/libprofiler.so build/visigoth
+	pprof --text build/visigoth profile/visigoth.prof > profile/visigoth.report
