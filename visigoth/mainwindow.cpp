@@ -1,6 +1,10 @@
 #include "graphwidget.h"
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
+#include "QPrinter"
+#include "QFileDialog"
+#include "QDir"
+#include "QDesktopWidget"
 
 #ifdef USE_OPENGL
 #include <QGLWidget>
@@ -11,13 +15,15 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
-
     view = new GraphWidget(this);
 #ifdef USE_OPENGL
     view->setViewport(new QGLWidget(QGLFormat(QGL::SampleBuffers)));
 #endif
     setCentralWidget(view);
     qsrand(23);
+
+
+
 }
 
 void MainWindow::populate() {
@@ -27,4 +33,22 @@ void MainWindow::populate() {
 MainWindow::~MainWindow()
 {
     delete ui;
+}
+
+void MainWindow::on_actionPrint_to_PDF_triggered()
+{
+
+    QPixmap pixmap = QPixmap::grabWindow(QApplication::desktop()->winId());
+
+    QString format = "png";
+    QString initialPath = QDir::currentPath() + tr("/untitled.") + format;
+
+    QString fileName = QFileDialog::getSaveFileName(this, tr("Save As"),
+                                    initialPath,
+                                    tr("%1 Files (*.%2);;All Files (*)")
+                                    .arg(format.toUpper())
+                                    .arg(format));
+    if (!fileName.isEmpty())
+        pixmap.save(fileName, format.toAscii());
+
 }

@@ -2,7 +2,6 @@
 #include "graphwidget.h"
 #include "node.h"
 #include "francescogenerator.h"
-
 #include <stdexcept>
 #include <cmath>
 

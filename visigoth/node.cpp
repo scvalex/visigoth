@@ -90,7 +90,9 @@ void Node::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *)
         lighter.setAlpha(255);
         painter->setBrush(QBrush(lighter));
     }
-    painter->drawEllipse(-10, -10, 20, 20);
+    //modify circles to rectangles by Max's suggestion in order to improve performance;
+    //painter->drawEllipse(-10, -10, 20, 20);
+    painter->drawRect(-10,-10, 15, 15);
 }
 
 QVariant Node::itemChange(GraphicsItemChange change, const QVariant &value) {

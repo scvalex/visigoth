@@ -3,7 +3,6 @@
 #include "node.h"
 #include "randomgenerator.h"
 #include "francescogenerator.h"
-
 #include <cmath>
 #include <QGraphicsScene>
 #include <QKeyEvent>
@@ -20,7 +19,6 @@ GraphWidget::GraphWidget(QWidget *parent) :
     //FIXME: look into scene index
     scene->setItemIndexMethod(QGraphicsScene::NoIndex);
     setScene(scene);
-
     setCacheMode(CacheBackground);
     setViewportUpdateMode(BoundingRectViewportUpdate);
     setRenderHint(QPainter::Antialiasing);
