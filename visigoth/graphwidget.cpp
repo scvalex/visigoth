@@ -6,15 +6,17 @@
 #include <cmath>
 #include <QGraphicsScene>
 #include <QKeyEvent>
-
+#include <QAbstractAnimation>
 #include <QDebug>
 
 GraphWidget::GraphWidget(QWidget *parent) :
     QGraphicsView(parent),
     helping(true),
     helpText(),
-    timerId(0)
+    timerId(0),
+    isPlaying(true)
 {
+
     setMinimumSize(HELP_WIDTH + 10, HELP_HEIGHT + 10);
     scene = new QGraphicsScene(this);
     scene->setBackgroundBrush(Qt::black);
@@ -69,7 +71,7 @@ void GraphWidget::keyPressEvent(QKeyEvent *event) {
         helping = !helping;
         viewport()->update();
         break;
-    case Qt::Key_R:
+    case Qt::Key_G:
         scene->clear();
         populate();
         break;
@@ -83,8 +85,11 @@ void GraphWidget::keyPressEvent(QKeyEvent *event) {
     case Qt::Key_Minus:
         scaleView(1 / qreal(1.2));
         break;
-    case Qt::Key_Space:
+    case Qt::Key_R:
         randomizePlacement();
+        break;
+    case Qt::Key_Space:
+        playPause();
         break;
     case Qt::Key_0:
         fitToScreen();
@@ -156,6 +161,22 @@ void GraphWidget::scaleView(qreal scaleFactor) {
     if (factor < 0.07 || factor > 100)
         return;
     scale(scaleFactor, scaleFactor);
+}
+
+void GraphWidget::playPause() {
+
+    if (isPlaying)
+    {
+        killTimer(timerId);
+        timerId = 0;
+    }
+    else
+    {
+        timerId = startTimer(1000 / 25);
+    }
+
+    isPlaying = !isPlaying;
+
 }
 
 void GraphWidget::randomizePlacement() {

@@ -32,6 +32,7 @@ protected:
 
     void scaleView(qreal scaleFactor);
     void randomizePlacement();
+    void playPause();
     void fitToScreen();
 
 private:
@@ -45,6 +46,7 @@ private:
     QVector<Node*> nodeVector;
     QGraphicsScene *scene;
     int timerId;
+    bool isPlaying;
 };
 
 #endif // GRAPHWIDGET_H

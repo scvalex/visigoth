@@ -51,9 +51,9 @@ void MainWindow::on_actionPrint_to_PDF_triggered()
     QString fileName = QFileDialog::getSaveFileName(this, tr("Save As"),
                                     initialPath,
                                     tr("PNG (*.png);;JPG (*.jpg);;All Files (*)"));
-                                    //tr("%1 Files (*.%2);;All Files (*);;JPG (*.jpg)")
-                                    //.arg(format.toUpper())
-                                    //.arg(format));
+    //tr("%1 Files (*.%2);;All Files (*);;JPG (*.jpg)")
+    //.arg(format.toUpper())
+    //.arg(format));
     if (!fileName.isEmpty())
         pixmap.save(fileName, format.toAscii());
 
