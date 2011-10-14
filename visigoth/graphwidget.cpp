@@ -45,7 +45,7 @@ QVector<Node*> GraphWidget::nodes() const {
 }
 
 void GraphWidget::populate() {
-    generator = new FrancescoGenerator(this, 600);
+    generator = new FrancescoGenerator(this, 60);
     generator->populate(nodeVector, edges);
 
     foreach (Node *node, nodeVector) {
