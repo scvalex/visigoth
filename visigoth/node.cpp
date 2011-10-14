@@ -5,17 +5,22 @@
 #include <QGraphicsScene>
 #include <QPainter>
 
-Node::Node(GraphWidget *graph, QGraphicsItem *parent) :
+Node::Node(int tag, GraphWidget *graph, QGraphicsItem *parent) :
     QGraphicsItem(parent),
     brush(QColor::fromRgb(qrand() % 256, qrand() % 256, qrand() % 256, 180)),
     graph(graph),
-    hovering(false)
+    hovering(false),
+    myTag(tag)
 {
     setFlag(ItemIsMovable);
     setFlag(ItemSendsGeometryChanges);
     setCacheMode(DeviceCoordinateCache);
     setZValue(100);
     setAcceptHoverEvents(true);
+}
+
+int Node::tag() const {
+    return myTag;
 }
 
 void Node::addEdge(Edge *edge) {
@@ -31,7 +36,7 @@ QPointF Node::calculateForces() {
     // Sum up all the forces pushing away.
     qreal xvel = 0;
     qreal yvel = 0;
-    //FIXME: Don't go through all the items.
+
     foreach (Node *node, graph->nodes()) {
         QPointF vec = mapToItem(node, 0, 0);
         qreal dx = vec.x();

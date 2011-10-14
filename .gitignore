@@ -1,4 +1,5 @@
 build/*
+profile/*
 visigoth-build-*/*
 visigoth/visigoth.pro.user*
 
