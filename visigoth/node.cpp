@@ -48,6 +48,7 @@ QPointF Node::calculateForces() {
         }
     }
 
+    // Now all the forces that pulling items together
     double weight = (edgeList.size() + 1) * 10;
     foreach (Edge *edge, edgeList) {
         QPointF vec;

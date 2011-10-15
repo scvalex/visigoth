@@ -114,12 +114,12 @@ void GraphWidget::timerEvent(QTimerEvent *) {
         }
     }
 
-	// Resize the scene to fit all the nodes
-	QRectF sceneRect = scene->sceneRect();
-	sceneRect.setLeft(topLeft.x() - 10);
-	sceneRect.setTop(topLeft.y() - 10);
-	sceneRect.setRight(bottomRight.x() + 10);
-	sceneRect.setBottom(bottomRight.y() + 10);
+    // Resize the scene to fit all the nodes
+    QRectF sceneRect = scene->sceneRect();
+    sceneRect.setLeft(topLeft.x() - 10);
+    sceneRect.setTop(topLeft.y() - 10);
+    sceneRect.setRight(bottomRight.x() + 10);
+    sceneRect.setBottom(bottomRight.y() + 10);
 
     bool itemsMoved = false;
     foreach (Node *node, nodeVector) {
