@@ -59,6 +59,6 @@ void Edge::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *)
     if (qFuzzyCompare(line.length(), qreal(0.0)))
         return;
 
-    painter->setPen(QPen(QColor::fromRgb(0, 0, 255, 100), 1, Qt::SolidLine));
+    painter->setPen(QPen(QColor::fromRgb(0, 165, 211, 258), 1, Qt::SolidLine));
     painter->drawLine(line);
 }
