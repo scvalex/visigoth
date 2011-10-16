@@ -3,6 +3,7 @@
 #include "node.h"
 #include "randomgenerator.h"
 #include "francescogenerator.h"
+#include "treecode.h"
 
 #include <cmath>
 #include <QGraphicsScene>
@@ -131,6 +132,9 @@ void GraphWidget::timerEvent(QTimerEvent *) {
         killTimer(timerId);
         timerId = 0;
     }
+
+    TreeCode* tree = new TreeCode(nodeVector, scene->sceneRect());
+    delete tree;
 }
 
 void GraphWidget::wheelEvent(QWheelEvent *event) {
