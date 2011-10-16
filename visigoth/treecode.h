@@ -17,7 +17,7 @@ public:
 	int getSize();
 private:
 	// The size of the edge of each decomposition (for a quad-tree it'll be 2)
-	static const int TREE_WAY 2
+	static const int TREE_WAY = 2;
 	// The minimun size of a quadrant
 	static const int QUADRANT_MIN_SIZE = 25;
 	// The maximum number of levels
