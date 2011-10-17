@@ -40,7 +40,7 @@ TreeCode::~TreeCode()
     }
 }
 
-TreeObject& TreeCode::getRoot()
+TreeNode& TreeCode::getRoot()
 {
     return root;
 }
@@ -186,7 +186,7 @@ void TreeCode::Branch::addNode(Node* node)
     this->size++;
 }
 
-QVector<TreeObject*>* TreeCode::Branch::getChildren()
+QVector<TreeNode*>* TreeCode::Branch::getChildren()
 {
     int edgeWidth = ipow(this->tree->TREE_WAY, this->level);
     return &this->tree->nodes[this->level + 1][this->row * edgeWidth + this->col];
@@ -220,7 +220,7 @@ void TreeCode::Leaf::addNode(Node* node)
 	nodes.append(node);
 }
 
-QVector<TreeObject*>* TreeCode::Leaf::getChildren()
+QVector<TreeNode*>* TreeCode::Leaf::getChildren()
 {
 	return NULL;
 }

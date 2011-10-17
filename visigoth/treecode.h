@@ -2,7 +2,7 @@
 #define TREECODE_H
 
 #include "node.h"
-#include "treeobject.h"
+#include "treenode.h"
 
 #include <QVector>
 #include <QGraphicsItem>
@@ -12,16 +12,16 @@ class TreeCode
 public:
 	TreeCode(QVector<Node*>& nodeVector, QRectF boundaries);
 	~TreeCode();
-	TreeObject& getRoot();
+	TreeNode& getRoot();
 private:
 
-    class Branch : public TreeObject
+    class Branch : public TreeNode
     {
     public:
         Branch(TreeCode* tree, int level, int row, int col, int size=5);
         int getSize();
         QPointF getCenter();
-        QVector<TreeObject*>* getChildren();
+        QVector<TreeNode*>* getChildren();
         QVector<Node*>* getNodes();
         void addNode(Node*);
     private:
@@ -32,13 +32,13 @@ private:
         int size;
     };
 
-    class Leaf : public TreeObject
+    class Leaf : public TreeNode
     {
     public:
         Leaf(TreeCode* tree, int row, int col);
         int getSize();
         QPointF getCenter();
-        QVector<TreeObject*>* getChildren();
+        QVector<TreeNode*>* getChildren();
         QVector<Node*>* getNodes();
         void addNode(Node* node);
     private:
@@ -63,9 +63,9 @@ private:
 	// Containing all the Branchs, and the TreeLeaves at the last level.
 	// The first vector holds the different levels.
 	// The seconds holds groups TREE_WAY^(l-1) cells, which in turn contain TREE_WAY * TREE_WAY
-	// TreeObjects. The TreeObjects are stored like this so that the given one tree object
+	// TreeNodes. The TreeNodes are stored like this so that the given one tree object
 	// we can easily get the 4 children.
-	QVector<QVector<QVector<TreeObject*> > > nodes;
+	QVector<QVector<QVector<TreeNode*> > > nodes;
 	// Utility node to start from
 	TreeCode::Branch root;
 
