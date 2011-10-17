@@ -21,8 +21,7 @@ private:
         Branch(TreeCode* tree, int level, int row, int col, int size=5);
         int getSize();
         QPointF getCenter();
-        QVector<TreeNode*>* getChildren();
-        QVector<Node*>* getNodes();
+        QVector<TreeNode*>& getChildren();
         void addNode(Node*);
     private:
         TreeCode* tree;
@@ -30,22 +29,7 @@ private:
         int row;
         int col;
         int size;
-    };
-
-    class Leaf : public TreeNode
-    {
-    public:
-        Leaf(TreeCode* tree, int row, int col);
-        int getSize();
-        QPointF getCenter();
-        QVector<TreeNode*>* getChildren();
-        QVector<Node*>* getNodes();
-        void addNode(Node* node);
-    private:
-        QVector<Node*> nodes;
-        TreeCode* tree;
-        int row;
-        int col;
+        QPointF center;
     };
 
     // The size of the edge of each decomposition (for a quad-tree it'll be 2)
@@ -66,6 +50,7 @@ private:
 	// TreeNodes. The TreeNodes are stored like this so that the given one tree object
 	// we can easily get the 4 children.
 	QVector<QVector<QVector<TreeNode*> > > nodes;
+	QVector<QVector<TreeNode*> > leaves;
 	// Utility node to start from
 	TreeCode::Branch root;
 
@@ -77,7 +62,6 @@ private:
 	int getLevelQuadrants(int l);
 
     friend class TreeCode::Branch;
-    friend class TreeCode::Leaf;
 };
 
 #endif // TREECODE_H

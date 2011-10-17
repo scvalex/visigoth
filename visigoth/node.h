@@ -9,11 +9,13 @@
 #include <QGraphicsItem>
 #include <QVariant>
 
+#include "treenode.h"
+
 class Edge;
 class GraphWidget;
 class QGraphicsSceneHoverEvent;
 
-class Node : public QGraphicsItem
+class Node : public QGraphicsItem, public TreeNode
 {
 public:
     explicit Node(int tag, GraphWidget *graph, QGraphicsItem *parent = 0);
@@ -23,7 +25,7 @@ public:
     int tag() const;
 
     /* Return the new position. */
-    QPointF calculateForces();
+    QPointF calculatePosition(TreeNode& treeNode);
 
     bool advance();
 
@@ -41,13 +43,22 @@ protected:
     void hoverEnterEvent(QGraphicsSceneHoverEvent *event);
     void hoverLeaveEvent(QGraphicsSceneHoverEvent *event);
 
+	int getSize();
+	QPointF getCenter();
+	void addNode(Node*);
+	QVector<TreeNode*>& getChildren();
 private:
+	static const qreal minDistance = 0;
+
     QBrush brush;
     QList<Edge*> edgeList;
     GraphWidget *graph;
     bool hovering;
     int myTag;
     QPointF newPos;
+
+    QPointF calculateNonEdgeForces(TreeNode* treeNode);
+    QPointF calculateNonEdgeForces(QVector<Node*>* nodeVector);
 };
 
 #endif // NODE_H

@@ -1,4 +1,5 @@
 #include "treecode.h"
+#include "treenode.h"
 
 #include <QRectF>
 #include <cmath>
@@ -79,7 +80,7 @@ void TreeCode::allocateNodes()
 		int nextl = l + 1;
 
 		// The number of outer quadrants
-		int quadrants = ipow(TREE_WAY, l);
+		int quadrants = getLevelQuadrants(l);
 		nodes[l].resize(quadrants * quadrants);
 
 		// Traverse the outer quadrants
@@ -88,8 +89,8 @@ void TreeCode::allocateNodes()
 
 				int ix = rowout * quadrants + colout;
 
-				// Allocate the inner 4 (or 9, or whatever) nodes and traverse
-				nodes[l][ix].resize(TREE_WAY * TREE_WAY);
+                // Allocate the inner 4 (or 9, or whatever) nodes and traverse
+                nodes[l][ix].resize(TREE_WAY * TREE_WAY);
 				for (int rowin = 0; rowin < TREE_WAY; ++rowin) {
 					for (int colin = 0; colin < TREE_WAY; ++colin) {
 						int ixin = rowin * TREE_WAY + colin;
@@ -97,15 +98,18 @@ void TreeCode::allocateNodes()
                         int rown = rowout * TREE_WAY + rowin;
                         int coln = colout * TREE_WAY + colin;
 
-                        // If it's the last level, create a leaf
-                        if (nextl < levels) {
-                            nodes[l][ix][ixin] = new Branch(this, nextl, rown, coln);
-                        } else {
-                            nodes[l][ix][ixin] = new Leaf(this, rown, coln);
-                        }
+                        nodes[l][ix][ixin] = new Branch(this, nextl, rown, coln);
                     }
                 }
             }
+        }
+    }
+
+    int leavesQuadrants = getLevelQuadrants(levels);
+    leaves.resize(leavesQuadrants * leavesQuadrants);
+    for (int row = 0; row < leavesQuadrants; ++row) {
+        for (int col = 0; col < leavesQuadrants; ++col) {
+            leaves[row * leavesQuadrants + col] = QVector<TreeNode*>();
         }
     }
 }
@@ -144,7 +148,11 @@ void TreeCode::fillNodes(QVector<Node*>& nodeVector)
             int ixout = rowout * ipow(TREE_WAY, l) + colout;
             int ixin = (rowout % TREE_WAY) * TREE_WAY + (colout % TREE_WAY);
 
-            nodes[l][ixout][ixin]->addNode(node);
+            dynamic_cast<Branch*>(nodes[l][ixout][ixin])->addNode(node);
+
+            if (l >= levels - 1) {
+                leaves[rowin * levelQuadrants + colin].append(node);
+            }
         }
     }
 }
@@ -167,7 +175,8 @@ TreeCode::Branch::Branch(TreeCode* tree, int level, int row, int col, int size) 
 	level(level),
 	row(row),
 	col(col),
-	size(size)
+	size(size),
+	center(QPointF(0, 0))
 {
 }
 
@@ -178,54 +187,28 @@ int TreeCode::Branch::getSize()
 
 QPointF TreeCode::Branch::getCenter()
 {
-    return getQuadrantCenter(tree->boundaries, tree->TREE_WAY, level, row, col);
+    if (this->size == 1) {
+        return this->center;
+    } else {
+        qreal edgeWidth = tree->boundaries.x() / ipow(tree->TREE_WAY, level);
+        qreal x = (col * edgeWidth) + (edgeWidth / 2);
+        qreal y = (row * edgeWidth) + (edgeWidth / 2);
+        return QPointF(x, y);
+    }
 }
 
 void TreeCode::Branch::addNode(Node* node)
 {
     this->size++;
+    this->center = node->pos();
 }
 
-QVector<TreeNode*>* TreeCode::Branch::getChildren()
+QVector<TreeNode*>& TreeCode::Branch::getChildren()
 {
     int edgeWidth = ipow(this->tree->TREE_WAY, this->level);
-    return &this->tree->nodes[this->level + 1][this->row * edgeWidth + this->col];
-}
-
-QVector<Node*>* TreeCode::Branch::getNodes()
-{
-    return NULL;
-}
-
-TreeCode::Leaf::Leaf(TreeCode* tree, int row, int col) :
-    nodes(QVector<Node*>()),
-    tree(tree),
-    row(row),
-    col(col)
-{
-}
-
-int TreeCode::Leaf::getSize()
-{
-	return nodes.size();
-}
-
-QPointF TreeCode::Leaf::getCenter()
-{
-	return getQuadrantCenter(tree->boundaries, tree->TREE_WAY, tree->levels, row, col);
-}
-
-void TreeCode::Leaf::addNode(Node* node)
-{
-	nodes.append(node);
-}
-
-QVector<TreeNode*>* TreeCode::Leaf::getChildren()
-{
-	return NULL;
-}
-
-QVector<Node*>* TreeCode::Leaf::getNodes()
-{
-	return &nodes;
+    if (level >= this->tree->levels) {
+        return this->tree->leaves[this->row * edgeWidth + this->col];
+    } else {
+        return this->tree->nodes[this->level + 1][this->row * edgeWidth + this->col];
+    }
 }

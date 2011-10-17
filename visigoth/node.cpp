@@ -1,9 +1,11 @@
 #include "edge.h"
 #include "graphwidget.h"
 #include "node.h"
+#include "treenode.h"
 
 #include <QGraphicsScene>
 #include <QPainter>
+#include <cmath>
 
 Node::Node(int tag, GraphWidget *graph, QGraphicsItem *parent) :
     QGraphicsItem(parent),
@@ -27,26 +29,17 @@ void Node::addEdge(Edge *edge) {
     edgeList << edge;
 }
 
-QPointF Node::calculateForces() {
+QPointF Node::calculatePosition(TreeNode& treeNode) {
     if (!scene() || scene()->mouseGrabberItem() == this) {
         newPos = pos();
         return newPos;
     }
 
-    // Sum up all the forces pushing away.
-    qreal xvel = 0;
-    qreal yvel = 0;
+    // Calculate non-edge forces
+    QPointF nonEdge = calculateNonEdgeForces(&treeNode);
 
-    foreach (Node *node, graph->nodes()) {
-        QPointF vec = mapToItem(node, 0, 0);
-        qreal dx = vec.x();
-        qreal dy = vec.y();
-        double l = 2.0 * (dx*dx + dy*dy);
-        if (l > 0) {
-            xvel += (dx * 150.0) / l;
-            yvel += (dy * 150.0) / l;
-        }
-    }
+    qreal xvel = nonEdge.x();
+    qreal yvel = nonEdge.y();
 
     // Now all the forces that pulling items together
     double weight = (edgeList.size() + 1) * 10;
@@ -65,6 +58,35 @@ QPointF Node::calculateForces() {
 
     newPos = pos() + QPointF(xvel, yvel);
     return newPos;
+}
+
+QPointF Node::calculateNonEdgeForces(TreeNode* treeNode)
+{
+    QPointF vec = mapToItem(this, treeNode->getCenter());
+    qreal dx = vec.x();
+    qreal dy = vec.y();
+    qreal distance = sqrt(dx*dx + dy*dy);
+    if (distance > minDistance || treeNode->getSize() == 1) {
+        double l = 2.0 * (dx*dx + dy*dy);
+        QPointF vel;
+
+        if (l > 0) {
+            vel = QPointF((dx * 150.0) / l, (dy * 150.0) / l);
+        } else {
+            vel = QPointF(0, 0);
+        }
+
+        return vel;
+    } else {
+        qreal xvel;
+        qreal yvel;
+        foreach (TreeNode* treeNode, treeNode->getChildren()) {
+            QPointF vel = calculateNonEdgeForces(treeNode);
+            xvel += vel.x();
+            yvel += vel.y();
+        }
+        return QPointF(xvel, yvel);
+    }
 }
 
 /* Called by GraphWidget repeatedly. */
@@ -119,4 +141,22 @@ void Node::hoverEnterEvent(QGraphicsSceneHoverEvent *event) {
 void Node::hoverLeaveEvent(QGraphicsSceneHoverEvent *event) {
     hovering = false;
     QGraphicsItem::hoverLeaveEvent(event);
+}
+
+int Node::getSize()
+{
+    return 1;
+}
+
+QPointF Node::getCenter()
+{
+    return this->pos();
+}
+
+void Node::addNode(Node*) {
+
+}
+
+QVector<TreeNode*>& Node::getChildren() {
+
 }

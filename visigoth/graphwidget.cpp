@@ -102,7 +102,7 @@ void GraphWidget::timerEvent(QTimerEvent *) {
     TreeCode treeCode(nodeVector, scene->sceneRect());
 
     foreach (Node *node, nodeVector) {
-        QPointF pos = node->calculateForces();
+        QPointF pos = node->calculatePosition(treeCode.getRoot());
         if (pos.x() < topLeft.x()) {
             topLeft.setX(pos.x());
         }
