@@ -23,6 +23,8 @@ public:
     void populate();
 
     void itemMoved();
+    QVector<Node*>* getNodeVector();
+    QList<Edge*>* getEdgeList();
 
 protected:
     void keyPressEvent(QKeyEvent *event);
@@ -40,9 +42,11 @@ private:
     static const float HELP_HEIGHT = 500;
 
     GraphGenerator *generator;
+    // use this to get the total edges of the Graph
     QList<Edge*> edges;
     bool helping;
     QStaticText helpText;
+    // stores the nodes of the graph
     QVector<Node*> nodeVector;
     QGraphicsScene *scene;
     int timerId;

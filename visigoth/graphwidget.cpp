@@ -3,6 +3,7 @@
 #include "node.h"
 #include "randomgenerator.h"
 #include "francescogenerator.h"
+#include "algorithms.h"
 #include <cmath>
 #include <QGraphicsScene>
 #include <QKeyEvent>
@@ -58,6 +59,8 @@ void GraphWidget::populate() {
     }
 
     randomizePlacement();
+    // degree = 2*E
+    Algorithms::updatePreference(&nodeVector,2*edges.count());
 }
 
 void GraphWidget::itemMoved() {
@@ -190,4 +193,14 @@ void GraphWidget::randomizePlacement() {
 
 void GraphWidget::fitToScreen() {
     fitInView(scene->sceneRect(), Qt::KeepAspectRatio);
+}
+
+QVector<Node*> * GraphWidget::getNodeVector(){
+
+    return &nodeVector;
+}
+
+QList<Edge*> * GraphWidget::getEdgeList(){
+
+    return &edges;
 }

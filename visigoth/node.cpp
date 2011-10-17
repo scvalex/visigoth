@@ -17,7 +17,11 @@ Node::Node(int tag, GraphWidget *graph, QGraphicsItem *parent) :
     setCacheMode(DeviceCoordinateCache);
     setZValue(100);
     setAcceptHoverEvents(true);
+    preference = 0;
+    cumulativePreference = 0;
+
 }
+
 
 int Node::tag() const {
     return myTag;
@@ -92,10 +96,17 @@ void Node::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *)
         QColor lighter = brush.color();
         lighter.setAlpha(255);
         painter->setBrush(QBrush(lighter));
+
+        // convert double to string
+        std::ostringstream strs;
+        strs << "Preference: " << preference*100 << "%" << "\nEdges: " << edgeList.count();
+        std::string str = strs.str();
+        QString tip = QString::fromStdString(str);
+        QToolTip::showText(newPos.toPoint(),tip);
     }
     //modify circles to rectangles by Max's suggestion in order to improve performance;
-    //painter->drawEllipse(-10, -10, 20, 20);
-    painter->drawRect(-10,-10, 15, 15);
+    painter->drawEllipse(-10, -10, 20, 20);
+    //painter->drawRect(-10,-10, 15, 15);
 }
 
 QVariant Node::itemChange(GraphicsItemChange change, const QVariant &value) {
@@ -120,4 +131,42 @@ void Node::hoverEnterEvent(QGraphicsSceneHoverEvent *event) {
 void Node::hoverLeaveEvent(QGraphicsSceneHoverEvent *event) {
     hovering = false;
     QGraphicsItem::hoverLeaveEvent(event);
+
 }
+
+/*
+
+  Methods added for calculations in class Algorithms
+  --Marc
+
+ */
+
+QList<Edge*>* Node::getList(){
+
+    return &edgeList;
+
+}
+
+void Node::setCumPref(double p){
+
+    cumulativePreference = p;
+
+}
+
+double Node::getCumPref(){
+
+    return cumulativePreference;
+}
+
+void Node::setPref(double p){
+
+    preference = p;
+
+}
+
+
+double Node::getPref(){
+
+    return preference;
+}
+

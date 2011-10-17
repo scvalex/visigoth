@@ -2,6 +2,7 @@
 #include "graphwidget.h"
 #include "node.h"
 #include "francescogenerator.h"
+#include "algorithms.h"
 #include <stdexcept>
 #include <cmath>
 
@@ -15,7 +16,7 @@ FrancescoGenerator::FrancescoGenerator(GraphWidget *parentGraph, int density) :
 }
 
 void FrancescoGenerator::populate(QVector<Node*> &nodes, QList<Edge*> &edges) {
-    const int NUM_NODES = 200;
+    const int NUM_NODES = 6;
 
     nodes.clear();
     edges.clear();
@@ -30,8 +31,14 @@ void FrancescoGenerator::populate(QVector<Node*> &nodes, QList<Edge*> &edges) {
             do {
                 other = qrand() % node;
 
-                Edge *edge = new Edge(nodes[node], nodes[other]);
-                edges << edge;
+                // Solves problem of generating identical edges twice
+                if(!Algorithms::edgeExsist(nodes[node]->tag(),nodes[other]->tag(), graph->getEdgeList())){
+
+                    Edge *edge = new Edge(nodes[node], nodes[other]);
+                    edges << edge;
+
+                }
+
             } while (qrand() % 100 > density);
         }
     }

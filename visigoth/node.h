@@ -8,6 +8,8 @@
 #include <QBrush>
 #include <QGraphicsItem>
 #include <QVariant>
+#include <QToolTip>
+#include <sstream>
 
 class Edge;
 class GraphWidget;
@@ -35,6 +37,13 @@ public:
 
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
 
+    QList<Edge*>* getList();
+
+    void setCumPref(double p);
+    double getCumPref();
+    void setPref(double p);
+    double getPref();
+
 protected:
     QVariant itemChange(GraphicsItemChange change, const QVariant &value);
 
@@ -48,6 +57,10 @@ private:
     bool hovering;
     int myTag;
     QPointF newPos;
+    // used for selecting a node by preferential seleciton
+    double cumulativePreference;
+    // used for display purposes only
+    double preference;
 };
 
 #endif // NODE_H
