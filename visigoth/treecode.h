@@ -37,7 +37,12 @@ private:
 	// we can easily get the 4 children.
 	QVector<QVector<QVector<TreeObject*> > > nodes;
 
-	int getLevelEdge(int l);
+	// Utility functions
+	QRectF squareBoundaries(QRectF boundaries);
+	int calculateLevels(qreal edge);
+	void allocateNodes();
+	void fillNodes(QVector<Node*>& nodeVector);
+	int getLevelQuadrants(int l);
 
     friend class TreeNode;
     friend class TreeLeaf;
