@@ -99,6 +99,8 @@ void GraphWidget::timerEvent(QTimerEvent *) {
     QPointF topLeft;
     QPointF bottomRight;
 
+    TreeCode treeCode(nodeVector, scene->sceneRect());
+
     foreach (Node *node, nodeVector) {
         QPointF pos = node->calculateForces();
         if (pos.x() < topLeft.x()) {
@@ -132,9 +134,6 @@ void GraphWidget::timerEvent(QTimerEvent *) {
         killTimer(timerId);
         timerId = 0;
     }
-
-    TreeCode* tree = new TreeCode(nodeVector, scene->sceneRect());
-    delete tree;
 }
 
 void GraphWidget::wheelEvent(QWheelEvent *event) {

@@ -18,7 +18,7 @@ int ipow(int base, int exp)
 }
 
 TreeCode::TreeCode(QVector<Node*>& nodeVector, QRectF boundaries) :
-    size(nodeVector.size())
+    root(Branch(this, 0, 0, 0, nodeVector.size()))
 {
     this->boundaries = squareBoundaries(boundaries);
 
@@ -27,6 +27,22 @@ TreeCode::TreeCode(QVector<Node*>& nodeVector, QRectF boundaries) :
     allocateNodes();
 
     fillNodes(nodeVector);
+}
+
+TreeCode::~TreeCode()
+{
+    for (int i = 0; i < nodes.size(); ++i) {
+        for (int j = 0; j < nodes[i].size(); ++j) {
+            for (int k = 0; k < nodes[i][j].size(); ++k) {
+                delete nodes[i][j][k];
+            }
+        }
+    }
+}
+
+TreeObject& TreeCode::getRoot()
+{
+    return root;
 }
 
 QRectF TreeCode::squareBoundaries(QRectF boundaries)
@@ -83,9 +99,9 @@ void TreeCode::allocateNodes()
 
                         // If it's the last level, create a leaf
                         if (nextl < levels) {
-                            nodes[l][ix][ixin] = new TreeNode(this, nextl, rown, coln);
+                            nodes[l][ix][ixin] = new Branch(this, nextl, rown, coln);
                         } else {
-                            nodes[l][ix][ixin] = new TreeLeaf(this, rown, coln);
+                            nodes[l][ix][ixin] = new Leaf(this, rown, coln);
                         }
                     }
                 }
@@ -128,11 +144,7 @@ void TreeCode::fillNodes(QVector<Node*>& nodeVector)
             int ixout = rowout * ipow(TREE_WAY, l) + colout;
             int ixin = (rowout % TREE_WAY) * TREE_WAY + (colout % TREE_WAY);
 
-            if (nextl < levels) {
-                dynamic_cast<TreeNode*>(nodes[l][ixout][ixin])->addNode();
-            } else {
-                dynamic_cast<TreeLeaf*>(nodes[l][ixout][ixin])->addNode(node);
-            }
+            nodes[l][ixout][ixin]->addNode(node);
         }
     }
 }
@@ -140,17 +152,6 @@ void TreeCode::fillNodes(QVector<Node*>& nodeVector)
 int TreeCode::getLevelQuadrants(int l)
 {
     return ipow(TREE_WAY, l);
-}
-
-TreeCode::~TreeCode()
-{
-    for (int i = 0; i < nodes.size(); ++i) {
-        for (int j = 0; j < nodes[i].size(); ++j) {
-            for (int k = 0; k < nodes[i][j].size(); ++k) {
-                delete nodes[i][j][k];
-            }
-        }
-    }
 }
 
 QPointF getQuadrantCenter(QRectF boundaries, int treeWay, int level, int row, int col)
@@ -161,60 +162,70 @@ QPointF getQuadrantCenter(QRectF boundaries, int treeWay, int level, int row, in
     return QPointF(x, y);
 }
 
-TreeNode::TreeNode(TreeCode* tree, int level, int row, int col) :
+TreeCode::Branch::Branch(TreeCode* tree, int level, int row, int col, int size) :
 	tree(tree),
 	level(level),
 	row(row),
 	col(col),
-	size(0)
+	size(size)
 {
 }
 
-int TreeNode::getSize()
+int TreeCode::Branch::getSize()
 {
     return 0;
 }
 
-QPointF TreeNode::getCenter()
+QPointF TreeCode::Branch::getCenter()
 {
     return getQuadrantCenter(tree->boundaries, tree->TREE_WAY, level, row, col);
 }
 
-QVector<TreeObject*>* TreeNode::getChildren()
+void TreeCode::Branch::addNode(Node* node)
+{
+    this->size++;
+}
+
+QVector<TreeObject*>* TreeCode::Branch::getChildren()
 {
     int edgeWidth = ipow(this->tree->TREE_WAY, this->level);
     return &this->tree->nodes[this->level + 1][this->row * edgeWidth + this->col];
 }
 
-void TreeNode::addNode()
+QVector<Node*>* TreeCode::Branch::getNodes()
 {
-    this->size++;
+    return NULL;
 }
 
-TreeLeaf::TreeLeaf(TreeCode* tree, int row, int col) :
-    nodes(QVector<TreeObject*>()),
+TreeCode::Leaf::Leaf(TreeCode* tree, int row, int col) :
+    nodes(QVector<Node*>()),
     tree(tree),
     row(row),
     col(col)
 {
 }
 
-int TreeLeaf::getSize()
+int TreeCode::Leaf::getSize()
 {
 	return nodes.size();
 }
 
-QPointF TreeLeaf::getCenter()
+QPointF TreeCode::Leaf::getCenter()
 {
 	return getQuadrantCenter(tree->boundaries, tree->TREE_WAY, tree->levels, row, col);
 }
 
-void TreeLeaf::addNode(Node* node)
+void TreeCode::Leaf::addNode(Node* node)
 {
 	nodes.append(node);
 }
 
-QVector<TreeObject*>* TreeLeaf::getChildren()
+QVector<TreeObject*>* TreeCode::Leaf::getChildren()
+{
+	return NULL;
+}
+
+QVector<Node*>* TreeCode::Leaf::getNodes()
 {
 	return &nodes;
 }

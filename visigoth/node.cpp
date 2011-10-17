@@ -120,15 +120,3 @@ void Node::hoverLeaveEvent(QGraphicsSceneHoverEvent *event) {
     hovering = false;
     QGraphicsItem::hoverLeaveEvent(event);
 }
-
-int Node::getSize() {
-    return 1;
-}
-
-QPointF Node::getCenter() {
-    return this->pos();
-}
-
-QVector<TreeObject*>* Node::getChildren() {
-    return NULL;
-}
