@@ -15,6 +15,7 @@ GraphWidget::GraphWidget(QWidget *parent) :
     helping(true),
     helpText(),
     isPlaying(true),
+    isRunning(false),
     timerId(0)
 {
     setMinimumSize(HELP_WIDTH + 10, HELP_HEIGHT + 10);
@@ -62,8 +63,8 @@ void GraphWidget::populate() {
 }
 
 void GraphWidget::itemMoved() {
-    if (!timerId)
-        timerId = startTimer(1000 / 25);
+    isRunning = true;
+    setAnimationRunning();
 }
 
 void GraphWidget::keyPressEvent(QKeyEvent *event) {
@@ -120,23 +121,20 @@ void GraphWidget::timerEvent(QTimerEvent *) {
         }
     }
 
-	// Resize the scene to fit all the nodes
-	QRectF sceneRect = scene->sceneRect();
-	sceneRect.setLeft(topLeft.x() - 10);
-	sceneRect.setTop(topLeft.y() - 10);
-	sceneRect.setRight(bottomRight.x() + 10);
-	sceneRect.setBottom(bottomRight.y() + 10);
+    // Resize the scene to fit all the nodes
+    QRectF sceneRect = scene->sceneRect();
+    sceneRect.setLeft(topLeft.x() - 10);
+    sceneRect.setTop(topLeft.y() - 10);
+    sceneRect.setRight(bottomRight.x() + 10);
+    sceneRect.setBottom(bottomRight.y() + 10);
 
-    bool itemsMoved = false;
+    isRunning = false;
     foreach (Node *node, nodeVector) {
-        if (node->advance())
-            itemsMoved = true;
+        if (node->advance()) {
+            isRunning = true;
+        }
     }
-
-    if (!itemsMoved) {
-        killTimer(timerId);
-        timerId = 0;
-    }
+    setAnimationRunning();
 }
 
 void GraphWidget::wheelEvent(QWheelEvent *event) {
@@ -165,14 +163,21 @@ void GraphWidget::scaleView(qreal scaleFactor) {
 }
 
 void GraphWidget::playPause() {
-    if (isPlaying) {
+    isPlaying = !isPlaying;
+    if (!isPlaying) {
+        setAnimationRunning();
+    } else {
+        setAnimationRunning();
+    }
+}
+
+void GraphWidget::setAnimationRunning() {
+    if (isPlaying && isRunning && !timerId) {
+        timerId = startTimer(1000 / 25);
+    } else if ((!isPlaying || !isRunning) && timerId) {
         killTimer(timerId);
         timerId = 0;
-    } else {
-        timerId = startTimer(1000 / 25);
     }
-    isPlaying = !isPlaying;
-
 }
 
 void GraphWidget::randomizePlacement() {
