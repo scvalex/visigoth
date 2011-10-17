@@ -35,7 +35,7 @@ TreeCode::TreeCode(QVector<Node*>& nodeVector, QRectF boundaries) :
 	for (int i = 0; i < leavesEdge; ++i) {
 		leaves[i].resize(leavesEdge);
 		for (int j = 0; j < leavesEdge; ++j) {
-			leaves[i][j] = new TreeLeaf();
+			leaves[i][j] = new TreeLeaf(this, i, j);
 		}
 	}
 
@@ -101,6 +101,14 @@ TreeCode::~TreeCode()
 	}
 }
 
+QPointF getQuadrantCenter(QRectF boundaries, int treeWay, int level, int row, int col)
+{
+    qreal edgeWidth = boundaries.x() / pow(treeWay, level);
+    qreal x = (col * edgeWidth) + (edgeWidth / 2);
+    qreal y = (row * edgeWidth) + (edgeWidth / 2);
+    return QPointF(x, y);
+}
+
 TreeNode::TreeNode(TreeCode* tree, int level, int row, int col) :
 	tree(tree),
 	level(level),
@@ -112,26 +120,29 @@ TreeNode::TreeNode(TreeCode* tree, int level, int row, int col) :
 
 int TreeNode::getSize()
 {
-	return 0;
+    return 0;
 }
 
 QPointF TreeNode::getCenter()
 {
-	return QPointF();
+    return getQuadrantCenter(tree->boundaries, tree->TREE_WAY, level, row, col);
 }
 
 QVector<TreeObject*>* TreeNode::getChildren()
 {
-	return NULL;
+    return NULL;
 }
 
 void TreeNode::addNode()
 {
-	this->size++;
+    this->size++;
 }
 
-TreeLeaf::TreeLeaf() :
-	nodes(QVector<TreeObject*>())
+TreeLeaf::TreeLeaf(TreeCode* tree, int row, int col) :
+    nodes(QVector<TreeObject*>()),
+    tree(tree),
+    row(row),
+    col(col)
 {
 }
 
@@ -142,7 +153,7 @@ return nodes.size();
 
 QPointF TreeLeaf::getCenter()
 {
-	return QPointF();
+	return getQuadrantCenter(tree->boundaries, tree->TREE_WAY, tree->levels, row, col);
 }
 
 void TreeLeaf::addNode(Node* node)

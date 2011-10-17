@@ -36,7 +36,8 @@ private:
 
 	int getLevelEdge(int l);
 
-	friend class TreeNode;
+    friend class TreeNode;
+    friend class TreeLeaf;
 };
 
 class TreeNode : public TreeObject
@@ -60,13 +61,19 @@ private:
 class TreeLeaf : public TreeObject
 {
 public:
-	TreeLeaf();
 	int getSize();
 	QPointF getCenter();
 	QVector<TreeObject*>* getChildren();
 	void addNode(Node* node);
 private:
-	QVector<TreeObject*> nodes;
+	TreeLeaf(TreeCode* tree, int row, int col);
+
+    QVector<TreeObject*> nodes;
+    TreeCode* tree;
+    int row;
+    int col;
+
+    friend class TreeCode;
 };
 
 #endif // TREECODE_H
