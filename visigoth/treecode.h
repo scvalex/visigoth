@@ -30,9 +30,12 @@ private:
 	QRectF boundaries;
 	// The total level of decomposition
 	int levels;
-	QVector<QVector<TreeLeaf*> > leaves;
 	// Containing all the TreeNodes, and the TreeLeaves at the last level.
-	QVector<QVector<QVector<TreeNode* > > > nodes;
+	// The first vector holds the different levels.
+	// The seconds holds groups TREE_WAY^(l-1) cells, which in turn contain TREE_WAY * TREE_WAY
+	// TreeObjects. The TreeObjects are stored like this so that the given one tree object
+	// we can easily get the 4 children.
+	QVector<QVector<QVector<TreeObject*> > > nodes;
 
 	int getLevelEdge(int l);
 
