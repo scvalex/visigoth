@@ -3,45 +3,6 @@
 #include <QRectF>
 #include <cmath>
 
-TreeNode::TreeNode(TreeCode* tree, int level, int row, int col) :
-	tree(tree),
-	level(level),
-	row(row),
-	col(col),
-	size(0)
-{
-}
-
-int TreeNode::getSize()
-{
-	return 0;
-}
-
-void TreeNode::addNode()
-{
-	this->size++;
-}
-
-TreeLeaf::TreeLeaf() :
-	nodes(QVector<Node*>())
-{
-}
-
-int TreeLeaf::getSize()
-{
-return nodes.size();
-}
-
-void TreeLeaf::addNode(Node* node)
-{
-	nodes.append(node);
-}
-
-QVector<Node*>& TreeLeaf::getNodes()
-{
-    return nodes;
-}
-
 TreeCode::TreeCode(QVector<Node*>& nodeVector, QRectF boundaries) :
     size(nodeVector.size())
 {
@@ -138,4 +99,58 @@ TreeCode::~TreeCode()
 			}
 		}
 	}
+}
+
+TreeNode::TreeNode(TreeCode* tree, int level, int row, int col) :
+	tree(tree),
+	level(level),
+	row(row),
+	col(col),
+	size(0)
+{
+}
+
+int TreeNode::getSize()
+{
+	return 0;
+}
+
+QPointF TreeNode::getCenter()
+{
+	return QPointF();
+}
+
+QVector<TreeObject*>* TreeNode::getChildren()
+{
+	return NULL;
+}
+
+void TreeNode::addNode()
+{
+	this->size++;
+}
+
+TreeLeaf::TreeLeaf() :
+	nodes(QVector<Node*>())
+{
+}
+
+int TreeLeaf::getSize()
+{
+return nodes.size();
+}
+
+QPointF TreeLeaf::getCenter()
+{
+	return QPointF();
+}
+
+void TreeLeaf::addNode(Node* node)
+{
+	nodes.append(node);
+}
+
+QVector<TreeObject*>* TreeLeaf::getChildren()
+{
+	return (QVector<TreeObject*>*) &nodes;
 }

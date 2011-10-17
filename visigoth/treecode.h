@@ -2,8 +2,10 @@
 #define TREECODE_H
 
 #include "node.h"
+#include "treeobject.h"
 
 #include <QVector>
+#include <QGraphicsItem>
 
 class TreeObject;
 class TreeNode;
@@ -28,26 +30,20 @@ private:
 	QRectF boundaries;
 	// The total level of decomposition
 	int levels;
-	// This contains all the "leaves" (the nodes in the last level of decomposition).
 	QVector<QVector<TreeLeaf*> > leaves;
-	// Containing all the TreeNodes, for each level.
-	QVector<QVector<QVector<TreeNode*> > > nodes;
+	// Containing all the TreeNodes, and the TreeLeaves at the last level.
+	QVector<QVector<QVector<TreeNode* > > > nodes;
 
 	int getLevelEdge(int l);
 
 	friend class TreeNode;
 };
 
-class TreeObject
-{
-public:
-	virtual ~TreeObject() {}
-	virtual int getSize() = 0;
-};
-
 class TreeNode : public TreeObject
 {
 	int getSize();
+	QPointF getCenter();
+	virtual QVector<TreeObject*>* getChildren();
 private:
 	TreeNode(TreeCode* tree, int level, int row, int col);
 	void addNode();
@@ -66,10 +62,11 @@ class TreeLeaf : public TreeObject
 public:
 	TreeLeaf();
 	int getSize();
-	QVector<Node*>& getNodes();
+	QPointF getCenter();
+	QVector<TreeObject*>* getChildren();
 	void addNode(Node* node);
 private:
 	QVector<Node*> nodes;
 };
 
-#endif //TREECODE_H
+#endif // TREECODE_H
