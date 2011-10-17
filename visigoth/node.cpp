@@ -6,6 +6,7 @@
 #include <QGraphicsScene>
 #include <QPainter>
 #include <cmath>
+#include <stdexcept>
 
 Node::Node(int tag, GraphWidget *graph, QGraphicsItem *parent) :
     QGraphicsItem(parent),
@@ -66,7 +67,7 @@ QPointF Node::calculateNonEdgeForces(TreeNode* treeNode)
     qreal dx = vec.x();
     qreal dy = vec.y();
     qreal distance = sqrt(dx*dx + dy*dy);
-    if (distance > minDistance || treeNode->getSize() == 1) {
+    if (distance < minDistance || treeNode->getSize() < 2) {
         double l = 2.0 * (dx*dx + dy*dy);
         QPointF vel;
 
@@ -78,8 +79,8 @@ QPointF Node::calculateNonEdgeForces(TreeNode* treeNode)
 
         return vel;
     } else {
-        qreal xvel;
-        qreal yvel;
+        qreal xvel = 0;
+        qreal yvel = 0;
         foreach (TreeNode* treeNode, treeNode->getChildren()) {
             QPointF vel = calculateNonEdgeForces(treeNode);
             xvel += vel.x();
@@ -154,9 +155,9 @@ QPointF Node::getCenter()
 }
 
 void Node::addNode(Node*) {
-
+    throw std::runtime_error("Node: calling addNode() on a terminal node");
 }
 
 QVector<TreeNode*>& Node::getChildren() {
-
+    throw std::runtime_error("Node: calling getChildren() on a terminal node");
 }
