@@ -32,6 +32,7 @@ protected:
 
     void scaleView(qreal scaleFactor);
     void randomizePlacement();
+    void playPause();
     void fitToScreen();
 
 private:
@@ -42,6 +43,7 @@ private:
     QList<Edge*> edges;
     bool helping;
     QStaticText helpText;
+    bool isPlaying;
     QVector<Node*> nodeVector;
     QGraphicsScene *scene;
     int timerId;

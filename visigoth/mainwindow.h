@@ -20,6 +20,9 @@ public:
 
     void populate();
 
+private slots:
+    void on_actionPrint_to_PDF_triggered();
+
 private:
     Ui::MainWindow *ui;
     GraphWidget *view;

@@ -23,11 +23,23 @@
      <x>0</x>
      <y>0</y>
      <width>400</width>
-     <height>23</height>
+     <height>22</height>
     </rect>
    </property>
+   <widget class="QMenu" name="menu_File">
+    <property name="title">
+     <string>&amp;File</string>
+    </property>
+    <addaction name="actionPrint_to_PDF"/>
+   </widget>
+   <addaction name="menu_File"/>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
+  <action name="actionPrint_to_PDF">
+   <property name="text">
+    <string>Export to ...</string>
+   </property>
+  </action>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <resources/>
