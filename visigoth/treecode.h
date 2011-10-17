@@ -66,7 +66,7 @@ public:
 	QVector<TreeObject*>* getChildren();
 	void addNode(Node* node);
 private:
-	QVector<Node*> nodes;
+	QVector<TreeObject*> nodes;
 };
 
 #endif // TREECODE_H

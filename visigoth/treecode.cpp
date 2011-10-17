@@ -131,7 +131,7 @@ void TreeNode::addNode()
 }
 
 TreeLeaf::TreeLeaf() :
-	nodes(QVector<Node*>())
+	nodes(QVector<TreeObject*>())
 {
 }
 
@@ -152,5 +152,5 @@ void TreeLeaf::addNode(Node* node)
 
 QVector<TreeObject*>* TreeLeaf::getChildren()
 {
-	return (QVector<TreeObject*>*) &nodes;
+	return &nodes;
 }
