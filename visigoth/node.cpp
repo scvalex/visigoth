@@ -68,32 +68,6 @@ QPointF Node::calculatePosition(TreeNode& treeNode) {
 
 QPointF Node::calculateNonEdgeForces(TreeNode* treeNode)
 {
-    /*
-    qreal xvel = 0;
-    qreal yvel = 0;
-
-    foreach (QVector<TreeNode*> nodeVec, treeNode->getLeaves()) {
-        foreach (TreeNode* node, nodeVec) {
-
-            QPointF vec(this->getCenter().x() - node->getCenter().x(),
-                        this->getCenter().y() - node->getCenter().y());
-            qreal dx = vec.x();
-            qreal dy = vec.y();
-
-            std::cout << dx << " " << dy << "\n";
-
-            double l = 2.0 * (dx*dx + dy*dy);
-
-            if (l > 0) {
-                xvel += (dx * 150.0) / l;
-                yvel += (dy * 150.0) / l;
-            }
-        }
-    }
-
-    return QPointF(xvel, yvel);
-    */
-
     if (treeNode->getSize() < 1) {
         return QPointF(0, 0);
     }
@@ -119,8 +93,8 @@ QPointF Node::calculateNonEdgeForces(TreeNode* treeNode)
     } else {
         qreal xvel = 0;
         qreal yvel = 0;
-        foreach (TreeNode* treeNode, treeNode->getChildren()) {
-            QPointF vel = calculateNonEdgeForces(treeNode);
+        foreach (TreeNode* children, treeNode->getChildren()) {
+            QPointF vel = calculateNonEdgeForces(children);
             xvel += vel.x();
             yvel += vel.y();
         }
@@ -189,7 +163,7 @@ int Node::getSize()
 
 QPointF Node::getCenter()
 {
-    return this->pos();
+    return pos();
 }
 
 QVector<TreeNode*>& Node::getChildren() {

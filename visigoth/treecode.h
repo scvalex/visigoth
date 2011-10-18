@@ -62,6 +62,7 @@ private:
 	void allocateNodes();
 	void fillNodes(QVector<Node*>& nodeVector);
 	int getLevelQuadrants(int l);
+	int flattenIndex(int rowWidth, int row, int col);
 
     friend class TreeCode::Branch;
 };
