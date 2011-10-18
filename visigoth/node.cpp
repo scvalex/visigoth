@@ -69,7 +69,6 @@ QPointF Node::calculatePosition(TreeNode* treeNode) {
 
 QPointF Node::calculateNonEdgeForces(TreeNode* treeNode)
 {
-    /*
     std::cout << "size: " << treeNode->getSize() << "\n";
     if (treeNode->getSize() < 1) {
         return QPointF(0, 0);
@@ -105,7 +104,6 @@ QPointF Node::calculateNonEdgeForces(TreeNode* treeNode)
         std::cout << "recursing out\n";
         return QPointF(xvel, yvel);
     }
-    */
 }
 
 /* Called by GraphWidget repeatedly. */
