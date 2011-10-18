@@ -18,16 +18,14 @@ private:
     class Branch : public TreeNode
     {
     public:
-        Branch(TreeCode* tree, int level, int row, int col, int size=0);
+        Branch(int size=0);
         int getSize();
         QPointF getCenter();
         QVector<TreeNode*>& getChildren();
         void addNode(Node*);
+        void addChild(TreeNode*);
     private:
-        TreeCode* tree;
-        int level;
-        int row;
-        int col;
+        QVector<TreeNode*> children;
         int size;
         QPointF center;
     };
@@ -39,22 +37,13 @@ private:
     // The maximum number of levels
     static const int MAX_LEVELS = 15;
 
-	// The total number of elements
-	int size;
 	QRectF boundaries;
 	// The total level of decomposition
 	int levels;
-	// Vector containing all the branches. Using a the superclass so that I don't have to
-	// re-create the vector when returning it.
-	// The first vector holds the different levels.
-	// The seconds holds groups TREE_WAY^(l-1) cells, which in turn contain TREE_WAY * TREE_WAY
-	// TreeNodes. The TreeNodes are stored like this so that the given one tree object
-	// we can easily get the 4 children.
-	QVector<QVector<QVector<TreeNode*> > > nodes;
-	// Vector containing the leaves - a vector of Nodes. Again, using the superclass.
-	QVector<QVector<TreeNode*> > leaves;
-	// Utility node to start from
-	TreeCode::Branch root;
+	// The branches in the tree, at the last level containing the proper nodes
+	QVector<QVector<QVector<Branch*> > > nodes;
+
+	Branch root;
 
 	// Utility functions
 	QRectF calculateBoundaries(QVector<Node*>& nodeVector);
@@ -63,8 +52,6 @@ private:
 	void fillNodes(QVector<Node*>& nodeVector);
 	int getLevelQuadrants(int l);
 	int flattenIndex(int rowWidth, int row, int col);
-
-    friend class TreeCode::Branch;
 };
 
 #endif // TREECODE_H
