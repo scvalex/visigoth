@@ -1,7 +1,7 @@
-#ifndef TREEOBJECT_H
-#define TREEOBJECT_H
+#ifndef TREENODE_H
+#define TREENODE_H
 
-#include <QPointF>
+	#include <QPointF>
 #include <QVector>
 
 class TreeNode
@@ -16,4 +16,4 @@ public:
     static const qreal tolerance = 0;
 };
 
-#endif // TREEOBJECT_H
+#endif // TREENODE_H

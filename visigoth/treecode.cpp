@@ -200,6 +200,11 @@ QVector<TreeNode*>& TreeCode::Branch::getChildren()
     return children;
 }
 
+qreal TreeCode::Branch::getWidth()
+{
+    return width;
+}
+
 void TreeCode::Branch::addNode(Node* node)
 {
     size++;
