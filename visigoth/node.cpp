@@ -64,12 +64,15 @@ QPointF Node::calculatePosition(TreeNode& treeNode) {
 
 QPointF Node::calculateNonEdgeForces(TreeNode* treeNode)
 {
-    /*
+    if (treeNode->getSize() < 1) {
+        return QPointF(0, 0);
+    }
+
     QPointF vec = mapToItem(this, treeNode->getCenter());
     qreal dx = vec.x();
     qreal dy = vec.y();
     qreal distance = sqrt(dx*dx + dy*dy);
-    if (distance < minDistance || treeNode->getSize() < 2) {
+    if (distance < minDistance || treeNode->getSize() == 1) {
         double l = 2.0 * (dx*dx + dy*dy);
         QPointF vel;
 
@@ -90,7 +93,6 @@ QPointF Node::calculateNonEdgeForces(TreeNode* treeNode)
         }
         return QPointF(xvel, yvel);
     }
-    */
 }
 
 /* Called by GraphWidget repeatedly. */

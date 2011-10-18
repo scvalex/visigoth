@@ -37,15 +37,15 @@ public:
 
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
 
+	int getSize();
+	QPointF getCenter();
+	QVector<TreeNode*>& getChildren();
 protected:
     QVariant itemChange(GraphicsItemChange change, const QVariant &value);
 
     void hoverEnterEvent(QGraphicsSceneHoverEvent *event);
     void hoverLeaveEvent(QGraphicsSceneHoverEvent *event);
 
-	int getSize();
-	QPointF getCenter();
-	QVector<TreeNode*>& getChildren();
 private:
 	static const qreal minDistance = 0;
 

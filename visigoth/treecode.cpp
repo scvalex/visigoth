@@ -5,6 +5,8 @@
 #include <cmath>
 #include <limits>
 
+#include <iostream>
+
 int ipow(int base, int exp)
 {
     int result = 1;
@@ -29,6 +31,22 @@ TreeCode::TreeCode(QVector<Node*>& nodeVector) :
     allocateNodes();
 
     fillNodes(nodeVector);
+
+    /*
+    foreach (Node* node, nodeVector) {
+        std::cout << node->getCenter().x() << " " << node->getCenter().y() << "\n";
+    }
+
+    std::cout << "----------------------\n";
+
+    foreach (QVector<TreeNode*> vec, leaves) {
+        foreach (TreeNode* node, vec) {
+            std::cout << node->getCenter().x() << " " << node->getCenter().y() << "\n";
+        }
+    }
+
+    throw 1;
+    */
 }
 
 TreeCode::~TreeCode()
