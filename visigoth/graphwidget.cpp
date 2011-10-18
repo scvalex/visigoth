@@ -5,14 +5,18 @@
 #include "francescogenerator.h"
 #include "treecode.h"
 
-#include <cmath>
+#include <QAbstractAnimation>
+#include <QDebug>
 #include <QGraphicsScene>
 #include <QKeyEvent>
+#include <cmath>
 
 GraphWidget::GraphWidget(QWidget *parent) :
     QGraphicsView(parent),
     helping(true),
     helpText(),
+    isPlaying(true),
+    isRunning(false),
     timerId(0)
 {
     setMinimumSize(HELP_WIDTH + 10, HELP_HEIGHT + 10);
@@ -20,7 +24,6 @@ GraphWidget::GraphWidget(QWidget *parent) :
     scene->setBackgroundBrush(Qt::black);
     scene->setItemIndexMethod(QGraphicsScene::NoIndex);
     setScene(scene);
-
     setCacheMode(CacheBackground);
     setViewportUpdateMode(BoundingRectViewportUpdate);
     setRenderHint(QPainter::Antialiasing);
@@ -31,8 +34,9 @@ GraphWidget::GraphWidget(QWidget *parent) :
                      "<p>Keybindings:"
                      "<ul>"
                      "<li><em>h</em> - show this text</li>"
-                     "<li><em>r</em> - generate a new graph</li>"
-                     "<li>&lt;<em>spc</em>&gt; - randomize node placement</li>"
+                     "<li><em>g</em> - generate a new graph</li>"
+                     "<li><em>r</em> - randomize node placement</li>"
+                     "<li>&lt;<em>spc</em>&gt; - pause/play the animation</li>"
                      "<li>&lt;<em>esc</em>&gt; - return to graph view</li>"
                      "<li><em>0</em> - fit the graph to the screen</li>"
                      "</ul>"
@@ -60,8 +64,8 @@ void GraphWidget::populate() {
 }
 
 void GraphWidget::itemMoved() {
-    if (!timerId)
-        timerId = startTimer(1000 / 25);
+    isRunning = true;
+    setAnimationRunning();
 }
 
 void GraphWidget::keyPressEvent(QKeyEvent *event) {
@@ -70,7 +74,7 @@ void GraphWidget::keyPressEvent(QKeyEvent *event) {
         helping = !helping;
         viewport()->update();
         break;
-    case Qt::Key_R:
+    case Qt::Key_G:
         scene->clear();
         populate();
         break;
@@ -84,8 +88,11 @@ void GraphWidget::keyPressEvent(QKeyEvent *event) {
     case Qt::Key_Minus:
         scaleView(1 / qreal(1.2));
         break;
-    case Qt::Key_Space:
+    case Qt::Key_R:
         randomizePlacement();
+        break;
+    case Qt::Key_Space:
+        playPause();
         break;
     case Qt::Key_0:
         fitToScreen();
@@ -124,16 +131,13 @@ void GraphWidget::timerEvent(QTimerEvent *) {
     sceneRect.setRight(bottomRight.x() + 10);
     sceneRect.setBottom(bottomRight.y() + 10);
 
-    bool itemsMoved = false;
+    isRunning = false;
     foreach (Node *node, nodeVector) {
-        if (node->advance())
-            itemsMoved = true;
+        if (node->advance()) {
+            isRunning = true;
+        }
     }
-
-    if (!itemsMoved) {
-        killTimer(timerId);
-        timerId = 0;
-    }
+    setAnimationRunning();
 }
 
 void GraphWidget::wheelEvent(QWheelEvent *event) {
@@ -159,6 +163,24 @@ void GraphWidget::scaleView(qreal scaleFactor) {
     if (factor < 0.07 || factor > 100)
         return;
     scale(scaleFactor, scaleFactor);
+}
+
+void GraphWidget::playPause() {
+    isPlaying = !isPlaying;
+    if (!isPlaying) {
+        setAnimationRunning();
+    } else {
+        setAnimationRunning();
+    }
+}
+
+void GraphWidget::setAnimationRunning() {
+    if (isPlaying && isRunning && !timerId) {
+        timerId = startTimer(1000 / 25);
+    } else if ((!isPlaying || !isRunning) && timerId) {
+        killTimer(timerId);
+        timerId = 0;
+    }
 }
 
 void GraphWidget::randomizePlacement() {

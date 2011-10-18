@@ -157,10 +157,6 @@ QPointF Node::getCenter()
     return this->pos();
 }
 
-void Node::addNode(Node*) {
-    throw std::runtime_error("Node: calling addNode() on a terminal node");
-}
-
 QVector<TreeNode*>& Node::getChildren() {
     throw std::runtime_error("Node: calling getChildren() on a terminal node");
 }

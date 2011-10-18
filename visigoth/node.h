@@ -45,7 +45,6 @@ protected:
 
 	int getSize();
 	QPointF getCenter();
-	void addNode(Node*);
 	QVector<TreeNode*>& getChildren();
 private:
 	static const qreal minDistance = 0;

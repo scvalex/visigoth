@@ -14,7 +14,6 @@ public:
 	~TreeCode();
 	TreeNode& getRoot();
 private:
-
     class Branch : public TreeNode
     {
     public:
