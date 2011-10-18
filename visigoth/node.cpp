@@ -58,8 +58,9 @@ QPointF Node::calculatePosition(TreeNode& treeNode) {
         yvel -= vec.y() / weight;
     }
 
-    if (qAbs(xvel) < 0.1 && qAbs(yvel) < 0.1)
+    if (qAbs(xvel) < 0.1 && qAbs(yvel) < 0.1) {
         xvel = yvel = 0;
+    }
 
     newPos = pos() + QPointF(xvel, yvel);
     return newPos;
@@ -67,6 +68,32 @@ QPointF Node::calculatePosition(TreeNode& treeNode) {
 
 QPointF Node::calculateNonEdgeForces(TreeNode* treeNode)
 {
+    /*
+    qreal xvel = 0;
+    qreal yvel = 0;
+
+    foreach (QVector<TreeNode*> nodeVec, treeNode->getLeaves()) {
+        foreach (TreeNode* node, nodeVec) {
+
+            QPointF vec(this->getCenter().x() - node->getCenter().x(),
+                        this->getCenter().y() - node->getCenter().y());
+            qreal dx = vec.x();
+            qreal dy = vec.y();
+
+            std::cout << dx << " " << dy << "\n";
+
+            double l = 2.0 * (dx*dx + dy*dy);
+
+            if (l > 0) {
+                xvel += (dx * 150.0) / l;
+                yvel += (dy * 150.0) / l;
+            }
+        }
+    }
+
+    return QPointF(xvel, yvel);
+    */
+
     if (treeNode->getSize() < 1) {
         return QPointF(0, 0);
     }
@@ -75,9 +102,9 @@ QPointF Node::calculateNonEdgeForces(TreeNode* treeNode)
                 this->pos().y() - treeNode->getCenter().y());
     qreal dx = vec.x();
     qreal dy = vec.y();
+
     qreal distance = sqrt(dx*dx + dy*dy);
     if (distance < minDistance || treeNode->getSize() == 1) {
-        std::cout << treeNode->getCenter().x() << " " << treeNode->getCenter().y() << "\n";
 
         double l = 2.0 * (dx*dx + dy*dy);
         QPointF vel;

@@ -22,7 +22,7 @@ int ipow(int base, int exp)
 }
 
 TreeCode::TreeCode(QVector<Node*>& nodeVector) :
-    root(Branch(this, 0, 0, 0, nodeVector.size()))
+    root(Branch(this, 1, 0, 0, nodeVector.size()))
 {
     this->boundaries = calculateBoundaries(nodeVector);
 
@@ -230,6 +230,6 @@ QVector<TreeNode*>& TreeCode::Branch::getChildren()
     if (level >= this->tree->levels) {
         return this->tree->leaves[this->row * edgeWidth + this->col];
     } else {
-        return this->tree->nodes[this->level + 1][this->row * edgeWidth + this->col];
+        return this->tree->nodes[this->level][this->row * edgeWidth + this->col];
     }
 }
