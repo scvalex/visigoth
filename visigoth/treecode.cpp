@@ -22,10 +22,9 @@ int ipow(int base, int exp)
 }
 
 TreeCode::TreeCode(QVector<Node*>& nodeVector) :
-    root(Branch(nodeVector.size()))
+    boundaries(calculateBoundaries(nodeVector)),
+    root(Branch(boundaries.x(), nodeVector.size()))
 {
-    this->boundaries = calculateBoundaries(nodeVector);
-
     levels = calculateLevels(this->boundaries.width());
 
     allocateNodes();
@@ -125,11 +124,12 @@ void TreeCode::allocateNodes()
         int ixl = l - 1;
 
         nodes[ixl].resize(quadrants);
+        qreal levelWidth = boundaries.width() / (qreal) quadrants;
 
         for (int row = 0; row < quadrants; row++) {
             nodes[ixl][row].resize(quadrants);
             for (int col = 0; col < quadrants; col++) {
-                Branch* branch = new Branch();
+                Branch* branch = new Branch(levelWidth);
                 if (l < levels) {
                     int rowsup = row * TREE_WAY;
                     int colsup = col * TREE_WAY;
@@ -178,7 +178,8 @@ inline int TreeCode::getLevelQuadrants(int l)
     return ipow(TREE_WAY, l);
 }
 
-TreeCode::Branch::Branch(int size) :
+TreeCode::Branch::Branch(qreal width, int size) :
+    width(width),
     size(size),
 	center(QPointF(0, 0))
 {

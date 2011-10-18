@@ -10,7 +10,8 @@ SOURCES += main.cpp \
     edge.cpp \
     randomgenerator.cpp \
     francescogenerator.cpp \
-    treecode.cpp
+    treecode.cpp \
+    treenode.cpp
 
 HEADERS += mainwindow.h \
            node.h \
@@ -19,7 +20,6 @@ HEADERS += mainwindow.h \
     graphgenerator.h \
     randomgenerator.h \
     francescogenerator.h \
-    treecode.h \
     treenode.h
 
 FORMS += mainwindow.ui

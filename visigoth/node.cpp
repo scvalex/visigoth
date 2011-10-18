@@ -2,6 +2,7 @@
 #include "graphwidget.h"
 #include "node.h"
 #include "treenode.h"
+#include "treecode.h"
 
 #include <QGraphicsScene>
 #include <QPainter>
@@ -79,7 +80,7 @@ QPointF Node::calculateNonEdgeForces(TreeNode* treeNode)
 
     qreal distance = sqrt(dx*dx + dy*dy);
 
-    if (distance < minDistance || treeNode->getSize() == 1) {
+    if (treeNode->isFarEnough(distance) || treeNode->getSize() == 1) {
         double l = 2.0 * (dx*dx + dy*dy);
         QPointF vel;
 
@@ -168,4 +169,8 @@ QPointF Node::getCenter()
 
 QVector<TreeNode*>& Node::getChildren() {
     throw std::runtime_error("Node: calling getChildren() on a terminal node");
+}
+
+qreal Node::getWidth() {
+    return 0;
 }

@@ -40,6 +40,7 @@ public:
 	int getSize();
 	QPointF getCenter();
 	QVector<TreeNode*>& getChildren();
+	qreal getWidth();
 protected:
     QVariant itemChange(GraphicsItemChange change, const QVariant &value);
 
@@ -47,8 +48,6 @@ protected:
     void hoverLeaveEvent(QGraphicsSceneHoverEvent *event);
 
 private:
-	static const qreal minDistance = 0;
-
     QBrush brush;
     QList<Edge*> edgeList;
     GraphWidget *graph;
