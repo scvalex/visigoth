@@ -20,6 +20,7 @@ HEADERS += mainwindow.h \
     graphgenerator.h \
     randomgenerator.h \
     francescogenerator.h \
-    treenode.h
+    treenode.h \
+    treecode.h
 
 FORMS += mainwindow.ui
