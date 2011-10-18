@@ -37,7 +37,6 @@ TreeCode::TreeCode(QVector<Node*>& nodeVector) :
             root.addChild(nodes[0][r][c]);
         }
     }
-
 }
 
 TreeCode::~TreeCode()
@@ -134,7 +133,6 @@ void TreeCode::allocateNodes()
                 if (l < levels) {
                     int rowsup = row * TREE_WAY;
                     int colsup = col * TREE_WAY;
-                    std::cout << row << " " << col << " " << rowsup << " " << colsup << "\n";
                     for (int r = 0; r < TREE_WAY; r++) {
                         for (int c = 0; c < TREE_WAY; c++) {
                             branch->addChild(nodes[l][rowsup+r][colsup+c]);
@@ -161,6 +159,7 @@ void TreeCode::fillNodes(QVector<Node*>& nodeVector)
         int col = floor((pos.y() - boundaries.top()) / leafQuadrantWidth);
 
         nodes[levels-1][row][col]->addChild(node);
+        nodes[levels-1][row][col]->addNode(node);
 
         for (int l = 1; l < levels; ++l) {
             int ixl = l - 1;

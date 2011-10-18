@@ -40,7 +40,6 @@ QPointF Node::calculatePosition(TreeNode* treeNode) {
 
     // Calculate non-edge forces
     QPointF nonEdge = calculateNonEdgeForces(treeNode);
-    std::cout << "-----------------------------\n";
 
     qreal xvel = nonEdge.x();
     qreal yvel = nonEdge.y();
@@ -69,7 +68,6 @@ QPointF Node::calculatePosition(TreeNode* treeNode) {
 
 QPointF Node::calculateNonEdgeForces(TreeNode* treeNode)
 {
-    std::cout << "size: " << treeNode->getSize() << "\n";
     if (treeNode->getSize() < 1) {
         return QPointF(0, 0);
     }
@@ -80,8 +78,8 @@ QPointF Node::calculateNonEdgeForces(TreeNode* treeNode)
     qreal dy = vec.y();
 
     qreal distance = sqrt(dx*dx + dy*dy);
+
     if (distance < minDistance || treeNode->getSize() == 1) {
-        std::cout << "stop recursing\n";
         double l = 2.0 * (dx*dx + dy*dy);
         QPointF vel;
 
@@ -95,13 +93,11 @@ QPointF Node::calculateNonEdgeForces(TreeNode* treeNode)
     } else {
         qreal xvel = 0;
         qreal yvel = 0;
-        std::cout << "recursing in\n";
         foreach (TreeNode* child, treeNode->getChildren()) {
             QPointF vel = calculateNonEdgeForces(child);
             xvel += vel.x();
             yvel += vel.y();
         }
-        std::cout << "recursing out\n";
         return QPointF(xvel, yvel);
     }
 }
