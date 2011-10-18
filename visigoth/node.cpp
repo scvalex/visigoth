@@ -8,6 +8,8 @@
 #include <cmath>
 #include <stdexcept>
 
+#include <iostream>
+
 Node::Node(int tag, GraphWidget *graph, QGraphicsItem *parent) :
     QGraphicsItem(parent),
     brush(QColor::fromRgb(qrand() % 256, qrand() % 256, qrand() % 256, 180)),
@@ -47,10 +49,11 @@ QPointF Node::calculatePosition(TreeNode& treeNode) {
 
     foreach (Edge *edge, edgeList) {
         QPointF vec;
-        if (edge->sourceNode() == this)
+        if (edge->sourceNode() == this) {
             vec = mapToItem(edge->destNode(), 0, 0);
-        else
+        } else {
             vec = mapToItem(edge->sourceNode(), 0, 0);
+        }
         xvel -= vec.x() / weight;
         yvel -= vec.y() / weight;
     }
@@ -68,11 +71,14 @@ QPointF Node::calculateNonEdgeForces(TreeNode* treeNode)
         return QPointF(0, 0);
     }
 
-    QPointF vec = mapToItem(this, treeNode->getCenter());
+    QPointF vec(this->pos().x() - treeNode->getCenter().x(),
+                this->pos().y() - treeNode->getCenter().y());
     qreal dx = vec.x();
     qreal dy = vec.y();
     qreal distance = sqrt(dx*dx + dy*dy);
     if (distance < minDistance || treeNode->getSize() == 1) {
+        std::cout << treeNode->getCenter().x() << " " << treeNode->getCenter().y() << "\n";
+
         double l = 2.0 * (dx*dx + dy*dy);
         QPointF vel;
 

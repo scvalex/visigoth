@@ -56,8 +56,8 @@ private:
     int myTag;
     QPointF newPos;
 
+    QPointF mapPoint(QPointF source, QPointF dest);
     QPointF calculateNonEdgeForces(TreeNode* treeNode);
-    QPointF calculateNonEdgeForces(QVector<Node*>* nodeVector);
 };
 
 #endif // NODE_H

@@ -31,22 +31,6 @@ TreeCode::TreeCode(QVector<Node*>& nodeVector) :
     allocateNodes();
 
     fillNodes(nodeVector);
-
-    /*
-    foreach (Node* node, nodeVector) {
-        std::cout << node->getCenter().x() << " " << node->getCenter().y() << "\n";
-    }
-
-    std::cout << "----------------------\n";
-
-    foreach (QVector<TreeNode*> vec, leaves) {
-        foreach (TreeNode* node, vec) {
-            std::cout << node->getCenter().x() << " " << node->getCenter().y() << "\n";
-        }
-    }
-
-    throw 1;
-    */
 }
 
 TreeCode::~TreeCode()
@@ -219,7 +203,7 @@ TreeCode::Branch::Branch(TreeCode* tree, int level, int row, int col, int size) 
 
 int TreeCode::Branch::getSize()
 {
-    return 0;
+    return size;
 }
 
 QPointF TreeCode::Branch::getCenter()
