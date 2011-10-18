@@ -3,6 +3,7 @@
 
 #include <QRectF>
 #include <cmath>
+#include <limits>
 
 int ipow(int base, int exp)
 {
@@ -18,10 +19,10 @@ int ipow(int base, int exp)
     return result;
 }
 
-TreeCode::TreeCode(QVector<Node*>& nodeVector, QRectF boundaries) :
+TreeCode::TreeCode(QVector<Node*>& nodeVector) :
     root(Branch(this, 0, 0, 0, nodeVector.size()))
 {
-    this->boundaries = squareBoundaries(boundaries);
+    this->boundaries = calculateBoundaries(nodeVector);
 
     levels = calculateLevels(this->boundaries.width());
 
@@ -46,8 +47,34 @@ TreeNode& TreeCode::getRoot()
     return root;
 }
 
-QRectF TreeCode::squareBoundaries(QRectF boundaries)
+QRectF TreeCode::getBoundaries()
 {
+    return boundaries;
+}
+
+QRectF TreeCode::calculateBoundaries(QVector<Node*>& nodeVector)
+{
+    QPointF topLeft(std::numeric_limits<double>::max(), std::numeric_limits<double>::max());
+    QPointF bottomRight(std::numeric_limits<double>::min(), std::numeric_limits<double>::min());
+
+    foreach (Node* node, nodeVector) {
+        QPointF pos = node->pos();
+        if (pos.x() < topLeft.x()) {
+            topLeft.setX(pos.x());
+        }
+        if (pos.y() < topLeft.y()) {
+            topLeft.setY(pos.y());
+        }
+        if (pos.x() > bottomRight.x()) {
+            bottomRight.setX(pos.x());
+        }
+        if (pos.y() > bottomRight.y()) {
+            bottomRight.setY(pos.y());
+        }
+    }
+
+    QRectF boundaries(topLeft, bottomRight);
+
     qreal edge = qMax(boundaries.height(), boundaries.width());
     // Make sure that the boundaries are a square
     if (boundaries.height() > edge) {

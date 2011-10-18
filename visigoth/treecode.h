@@ -10,14 +10,15 @@
 class TreeCode
 {
 public:
-	TreeCode(QVector<Node*>& nodeVector, QRectF boundaries);
+	TreeCode(QVector<Node*>& nodeVector);
 	~TreeCode();
 	TreeNode& getRoot();
+	QRectF getBoundaries();
 private:
     class Branch : public TreeNode
     {
     public:
-        Branch(TreeCode* tree, int level, int row, int col, int size=5);
+        Branch(TreeCode* tree, int level, int row, int col, int size=0);
         int getSize();
         QPointF getCenter();
         QVector<TreeNode*>& getChildren();
@@ -56,7 +57,7 @@ private:
 	TreeCode::Branch root;
 
 	// Utility functions
-	QRectF squareBoundaries(QRectF boundaries);
+	QRectF calculateBoundaries(QVector<Node*>& nodeVector);
 	int calculateLevels(qreal edge);
 	void allocateNodes();
 	void fillNodes(QVector<Node*>& nodeVector);
