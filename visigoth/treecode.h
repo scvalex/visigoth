@@ -44,12 +44,14 @@ private:
 	QRectF boundaries;
 	// The total level of decomposition
 	int levels;
-	// Containing all the Branchs, and the TreeLeaves at the last level.
+	// Vector containing all the branches. Using a the superclass so that I don't have to
+	// re-create the vector when returning it.
 	// The first vector holds the different levels.
 	// The seconds holds groups TREE_WAY^(l-1) cells, which in turn contain TREE_WAY * TREE_WAY
 	// TreeNodes. The TreeNodes are stored like this so that the given one tree object
 	// we can easily get the 4 children.
 	QVector<QVector<QVector<TreeNode*> > > nodes;
+	// Vector containing the leaves - a vector of Nodes. Again, using the superclass.
 	QVector<QVector<TreeNode*> > leaves;
 	// Utility node to start from
 	TreeCode::Branch root;

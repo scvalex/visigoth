@@ -145,7 +145,7 @@ void TreeCode::fillNodes(QVector<Node*>& nodeVector)
             int rowout = rowin / (TREE_WAY * TREE_WAY);
             int colout = colin / (TREE_WAY * TREE_WAY);
 
-            int ixout = rowout * ipow(TREE_WAY, l) + colout;
+            int ixout = rowout * getLevelQuadrants(l) + colout;
             int ixin = (rowout % TREE_WAY) * TREE_WAY + (colout % TREE_WAY);
 
             dynamic_cast<Branch*>(nodes[l][ixout][ixin])->addNode(node);
@@ -160,14 +160,6 @@ void TreeCode::fillNodes(QVector<Node*>& nodeVector)
 int TreeCode::getLevelQuadrants(int l)
 {
     return ipow(TREE_WAY, l);
-}
-
-QPointF getQuadrantCenter(QRectF boundaries, int treeWay, int level, int row, int col)
-{
-    qreal edgeWidth = boundaries.x() / ipow(treeWay, level);
-    qreal x = (col * edgeWidth) + (edgeWidth / 2);
-    qreal y = (row * edgeWidth) + (edgeWidth / 2);
-    return QPointF(x, y);
 }
 
 TreeCode::Branch::Branch(TreeCode* tree, int level, int row, int col, int size) :
@@ -190,7 +182,7 @@ QPointF TreeCode::Branch::getCenter()
     if (this->size == 1) {
         return this->center;
     } else {
-        qreal edgeWidth = tree->boundaries.x() / ipow(tree->TREE_WAY, level);
+        qreal edgeWidth = tree->boundaries.x() / tree->getLevelQuadrants(level);
         qreal x = (col * edgeWidth) + (edgeWidth / 2);
         qreal y = (row * edgeWidth) + (edgeWidth / 2);
         return QPointF(x, y);
@@ -205,7 +197,7 @@ void TreeCode::Branch::addNode(Node* node)
 
 QVector<TreeNode*>& TreeCode::Branch::getChildren()
 {
-    int edgeWidth = ipow(this->tree->TREE_WAY, this->level);
+    int edgeWidth = tree->getLevelQuadrants(level);
     if (level >= this->tree->levels) {
         return this->tree->leaves[this->row * edgeWidth + this->col];
     } else {

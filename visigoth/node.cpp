@@ -44,6 +44,7 @@ QPointF Node::calculatePosition(TreeNode& treeNode) {
 
     // Now all the forces that pulling items together
     double weight = (edgeList.size() + 1) * 10;
+
     foreach (Edge *edge, edgeList) {
         QPointF vec;
         if (edge->sourceNode() == this)
@@ -63,6 +64,7 @@ QPointF Node::calculatePosition(TreeNode& treeNode) {
 
 QPointF Node::calculateNonEdgeForces(TreeNode* treeNode)
 {
+    /*
     QPointF vec = mapToItem(this, treeNode->getCenter());
     qreal dx = vec.x();
     qreal dy = vec.y();
@@ -88,6 +90,7 @@ QPointF Node::calculateNonEdgeForces(TreeNode* treeNode)
         }
         return QPointF(xvel, yvel);
     }
+    */
 }
 
 /* Called by GraphWidget repeatedly. */
