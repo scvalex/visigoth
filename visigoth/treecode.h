@@ -12,7 +12,7 @@ class TreeCode
 public:
 	TreeCode(QVector<Node*>& nodeVector);
 	~TreeCode();
-	TreeNode& getRoot();
+	TreeNode* getRoot();
 	QRectF getBoundaries();
 private:
     class Branch : public TreeNode
@@ -46,8 +46,6 @@ private:
 	int levels;
 	// The branches in the tree, at the last level containing the proper nodes
 	QVector<QVector<QVector<Branch*> > > nodes;
-
-	Branch root;
 
 	// Utility functions
 	QRectF calculateBoundaries(QVector<Node*>& nodeVector);
