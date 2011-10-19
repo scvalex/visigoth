@@ -37,6 +37,7 @@ GraphWidget::GraphWidget(QWidget *parent) :
                      "<li>&lt;<em>spc</em>&gt; - randomize node placement</li>"
                      "<li>&lt;<em>esc</em>&gt; - return to graph view</li>"
                      "<li><em>0</em> - fit the graph to the screen</li>"
+                     "<li><em>A</em> - Add Node</li>"
                      "</ul>"
                      "</p>"
                      );
@@ -96,6 +97,9 @@ void GraphWidget::keyPressEvent(QKeyEvent *event) {
         break;
     case Qt::Key_0:
         fitToScreen();
+        break;
+    case Qt::Key_A:
+        Algorithms::addVertex(this,1,qrand()%100);
         break;
     default:
         QGraphicsView::keyPressEvent(event);
@@ -203,4 +207,16 @@ QVector<Node*> * GraphWidget::getNodeVector(){
 QList<Edge*> * GraphWidget::getEdgeList(){
 
     return &edges;
+}
+
+void GraphWidget::addEdgeToScene(Edge* e){
+
+    scene->addItem(e);
+
+}
+
+void GraphWidget::addNodeToScene(Node* n){
+
+    scene->addItem(n);
+
 }

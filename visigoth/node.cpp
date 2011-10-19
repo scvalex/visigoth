@@ -99,7 +99,9 @@ void Node::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *)
 
         // convert double to string
         std::ostringstream strs;
-        strs << "Preference: " << preference*100 << "%" << "\nEdges: " << edgeList.count();
+        strs << "Preference: " << preference << "%"
+             << "\nDegree: " << edgeList.count()
+             << "\nDEBUG, Cumulative Prference" << cumulativePreference;
         std::string str = strs.str();
         QString tip = QString::fromStdString(str);
         QToolTip::showText(newPos.toPoint(),tip);
@@ -136,7 +138,7 @@ void Node::hoverLeaveEvent(QGraphicsSceneHoverEvent *event) {
 
 /*
 
-  Methods added for calculations in class Algorithms
+  Methods added for calculations support in class Algorithms
   --Marc
 
  */
@@ -163,7 +165,6 @@ void Node::setPref(double p){
     preference = p;
 
 }
-
 
 double Node::getPref(){
 

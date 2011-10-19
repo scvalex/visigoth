@@ -25,6 +25,8 @@ public:
     void itemMoved();
     QVector<Node*>* getNodeVector();
     QList<Edge*>* getEdgeList();
+    void addNodeToScene(Node * n);
+    void addEdgeToScene(Edge * e);
 
 protected:
     void keyPressEvent(QKeyEvent *event);
