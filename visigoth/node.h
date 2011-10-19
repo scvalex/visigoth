@@ -37,10 +37,10 @@ public:
 
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
 
-	int getSize();
-	QPointF getCenter();
-	QVector<TreeNode*>& getChildren();
-	qreal getWidth();
+    int getSize();
+    QPointF getCenter();
+    QVector<TreeNode*>& getChildren();
+    qreal getWidth();
 protected:
     QVariant itemChange(GraphicsItemChange change, const QVariant &value);
 

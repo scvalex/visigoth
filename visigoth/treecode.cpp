@@ -96,16 +96,16 @@ QRectF TreeCode::calculateBoundaries(QVector<Node*>& nodeVector)
 
 int TreeCode::calculateLevels(qreal edge)
 {
-	levels = 1;
-	while (edge / TREE_WAY > QUADRANT_MIN_SIZE && levels <= MAX_LEVELS) {
-		edge /= TREE_WAY;
-		++levels;
-	}
-	return levels;
+    levels = 1;
+    while (edge / TREE_WAY > QUADRANT_MIN_SIZE && levels <= MAX_LEVELS) {
+        edge /= TREE_WAY;
+        ++levels;
+    }
+    return levels;
 }
 
 int TreeCode::flattenIndex(int rowCells, int row, int col) {
-	return rowCells * row + col;
+    return rowCells * row + col;
 }
 
 void TreeCode::allocateNodes()

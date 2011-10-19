@@ -41,19 +41,19 @@ private:
     // The maximum number of levels
     static const int MAX_LEVELS = 15;
 
-	QRectF boundaries;
-	// The total level of decomposition
-	int levels;
-	// The branches in the tree, at the last level containing the proper nodes
-	QVector<QVector<QVector<Branch*> > > nodes;
+    QRectF boundaries;
+    // The total level of decomposition
+    int levels;
+    // The branches in the tree, at the last level containing the proper nodes
+    QVector<QVector<QVector<Branch*> > > nodes;
 
-	// Utility functions
-	QRectF calculateBoundaries(QVector<Node*>& nodeVector);
-	int calculateLevels(qreal edge);
-	void allocateNodes();
-	void fillNodes(QVector<Node*>& nodeVector);
-	int getLevelQuadrants(int l);
-	int flattenIndex(int rowWidth, int row, int col);
+    // Utility functions
+    QRectF calculateBoundaries(QVector<Node*>& nodeVector);
+    int calculateLevels(qreal edge);
+    void allocateNodes();
+    void fillNodes(QVector<Node*>& nodeVector);
+    int getLevelQuadrants(int l);
+    int flattenIndex(int rowWidth, int row, int col);
 };
 
 #endif // TREECODE_H
