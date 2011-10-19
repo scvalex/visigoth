@@ -30,6 +30,8 @@ private:
         qreal width;
         int size;
         QPointF center;
+
+        static QVector<TreeNode*> noChildren;
     };
 
     // The size of the edge of each decomposition (for a quad-tree it'll be 2)
