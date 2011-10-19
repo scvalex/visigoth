@@ -44,9 +44,12 @@ private:
     bool helping;
     QStaticText helpText;
     bool isPlaying;
+    bool isRunning;
     QVector<Node*> nodeVector;
     QGraphicsScene *scene;
     int timerId;
+
+    void setAnimationRunning();
 };
 
 #endif // GRAPHWIDGET_H
