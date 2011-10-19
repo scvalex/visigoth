@@ -13,7 +13,7 @@ public:
 	virtual qreal getWidth() = 0;
 
     bool isFarEnough(qreal distance);
-    static const qreal tolerance = 0.3;
+    static const qreal tolerance = 0.4;
 };
 
 #endif // TREENODE_H
