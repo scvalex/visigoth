@@ -210,8 +210,10 @@ qreal TreeCode::Branch::getWidth()
 
 void TreeCode::Branch::addNode(TreeNode* node)
 {
-    center = QPointF((size * center.x() + node->getCenter().x()) / (size + 1),
-                     (size * center.y() + node->getCenter().y()) / (size + 1));
+    QPointF nodeCenter = node->getCenter();
+    int nodeSize = node->getSize();
+    center = QPointF((size * center.x() + nodeCenter.x()) / (size + nodeSize),
+                     (size * center.y() + nodeCenter.y()) / (size + nodeSize));
     size++;
 }
 
