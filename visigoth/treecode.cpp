@@ -207,8 +207,8 @@ void TreeCode::Branch::addNode(TreeNode* node)
 {
     QPointF nodeCenter = node->getCenter();
     int nodeSize = node->getSize();
-    center = QPointF((size * center.x() + nodeCenter.x()) / (size + nodeSize),
-                     (size * center.y() + nodeCenter.y()) / (size + nodeSize));
+    center = QPointF((size * center.x() + nodeSize * nodeCenter.x()) / (size + nodeSize),
+                     (size * center.y() + nodeSize * nodeCenter.y()) / (size + nodeSize));
     size++;
 }
 
