@@ -104,10 +104,6 @@ int TreeCode::calculateLevels(qreal edge)
     return levels;
 }
 
-int TreeCode::flattenIndex(int rowCells, int row, int col) {
-    return rowCells * row + col;
-}
-
 void TreeCode::allocateNodes()
 {
     nodes.resize(levels);
@@ -156,6 +152,7 @@ void TreeCode::fillNodes(QVector<Node*>& nodeVector)
         if (col >= leavesQuadrants - 1) {
             col = leavesQuadrants - 1;
         }
+
         nodes[levels-1][row][col]->addChild(node);
         nodes[levels-1][row][col]->addNode(node);
 
