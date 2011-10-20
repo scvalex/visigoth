@@ -33,10 +33,10 @@ TreeCode::TreeCode(QVector<Node*>& nodeVector) :
 
 TreeCode::~TreeCode()
 {
-    for (int i = 0; i < nodes.size(); ++i) {
-        for (int j = 0; j < nodes[i].size(); ++j) {
-            for (int k = 0; k < nodes[i][j].size(); ++k) {
-                delete nodes[i][j][k];
+    for (int i = 0; i < quadrants.size(); ++i) {
+        for (int j = 0; j < quadrants[i].size(); ++j) {
+            for (int k = 0; k < quadrants[i][j].size(); ++k) {
+                delete quadrants[i][j][k];
             }
         }
     }
@@ -44,7 +44,7 @@ TreeCode::~TreeCode()
 
 TreeNode* TreeCode::getRoot()
 {
-    return nodes[0][0][0];
+    return quadrants[0][0][0];
 }
 
 QRectF TreeCode::getBoundaries()
@@ -106,24 +106,24 @@ int TreeCode::calculateLevels(qreal edge)
 
 void TreeCode::allocateNodes()
 {
-    nodes.resize(levels);
+    quadrants.resize(levels);
 
     for (int l = levels-1; l >= 0; --l) {
-        int quadrants = getLevelQuadrants(l);
+        int numQuads = getLevelQuadrants(l);
 
-        nodes[l].resize(quadrants);
-        qreal levelWidth = boundaries.width() / (qreal) quadrants;
+        quadrants[l].resize(numQuads);
+        qreal levelWidth = boundaries.width() / (qreal) numQuads;
 
-        for (int row = 0; row < quadrants; row++) {
-            nodes[l][row].resize(quadrants);
-            for (int col = 0; col < quadrants; col++) {
-                nodes[l][row][col] = new Branch(levelWidth);
+        for (int row = 0; row < numQuads; row++) {
+            quadrants[l][row].resize(numQuads);
+            for (int col = 0; col < numQuads; col++) {
+                quadrants[l][row][col] = new Quadrant(levelWidth);
                 if (l < levels-1) {
                     int rowsup = row * TREE_WAY;
                     int colsup = col * TREE_WAY;
                     for (int r = 0; r < TREE_WAY; r++) {
                         for (int c = 0; c < TREE_WAY; c++) {
-                            nodes[l][row][col]->addChild(nodes[l+1][rowsup+r][colsup+c]);
+                            quadrants[l][row][col]->addChild(quadrants[l+1][rowsup+r][colsup+c]);
                         }
                     }
                 }
@@ -137,7 +137,7 @@ void TreeCode::fillNodes(QVector<Node*>& nodeVector)
     qreal leavesQuadrants = getLevelQuadrants(levels-1);
     qreal leafQuadrantWidth = boundaries.width() / (qreal) leavesQuadrants;
 
-    // Fill up the nodes
+    // Fill up the quadrants
     foreach (Node* node, nodeVector) {
         QPointF pos = node->pos();
 
@@ -152,8 +152,8 @@ void TreeCode::fillNodes(QVector<Node*>& nodeVector)
             col = leavesQuadrants - 1;
         }
 
-        nodes[levels-1][row][col]->addChild(node);
-        nodes[levels-1][row][col]->addNode(node);
+        quadrants[levels-1][row][col]->addChild(node);
+        quadrants[levels-1][row][col]->addNode(node);
 
         for (int l = 0; l < levels; ++l) {
             int levelQuadrants = getLevelQuadrants(l);
@@ -161,7 +161,7 @@ void TreeCode::fillNodes(QVector<Node*>& nodeVector)
             int rowl = (levelQuadrants * row) / leavesQuadrants;
             int coll = (levelQuadrants * col) / leavesQuadrants;
 
-            nodes[l][rowl][coll]->addNode(node);
+            quadrants[l][rowl][coll]->addNode(node);
         }
     }
 }
@@ -171,24 +171,24 @@ inline int TreeCode::getLevelQuadrants(int l)
     return ipow(TREE_WAY, l);
 }
 
-TreeCode::Branch::Branch(qreal width, int size) :
+TreeCode::Quadrant::Quadrant(qreal width, int size) :
     width(width),
     size(size),
 	center(QPointF(0, 0))
 {
 }
 
-int TreeCode::Branch::getSize()
+int TreeCode::Quadrant::getSize()
 {
     return size;
 }
 
-QPointF TreeCode::Branch::getCenter()
+QPointF TreeCode::Quadrant::getCenter()
 {
     return center;
 }
 
-QVector<TreeNode*>& TreeCode::Branch::getChildren()
+QVector<TreeNode*>& TreeCode::Quadrant::getChildren()
 {
     if (size > 1) {
         return children;
@@ -198,12 +198,12 @@ QVector<TreeNode*>& TreeCode::Branch::getChildren()
     }
 }
 
-qreal TreeCode::Branch::getWidth()
+qreal TreeCode::Quadrant::getWidth()
 {
     return width;
 }
 
-void TreeCode::Branch::addNode(TreeNode* node)
+void TreeCode::Quadrant::addNode(TreeNode* node)
 {
     QPointF nodeCenter = node->getCenter();
     int nodeSize = node->getSize();
@@ -212,6 +212,6 @@ void TreeCode::Branch::addNode(TreeNode* node)
     size++;
 }
 
-void TreeCode::Branch::addChild(TreeNode* node) {
+void TreeCode::Quadrant::addChild(TreeNode* node) {
     children.append(node);
 }

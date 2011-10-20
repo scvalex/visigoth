@@ -15,10 +15,10 @@ public:
 	TreeNode* getRoot();
 	QRectF getBoundaries();
 private:
-    class Branch : public TreeNode
+    class Quadrant : public TreeNode
     {
     public:
-        Branch(qreal width, int size=0);
+        Quadrant(qreal width, int size=0);
         int getSize();
         QPointF getCenter();
         QVector<TreeNode*>& getChildren();
@@ -42,8 +42,8 @@ private:
     QRectF boundaries;
     // The total level of decomposition
     int levels;
-    // The branches in the tree, at the last level containing the proper nodes
-    QVector<QVector<QVector<Branch*> > > nodes;
+    // The quadrants in the tree, at the last level containing the proper quadrant
+    QVector<QVector<QVector<Quadrant*> > > quadrants;
 
     // Utility functions
     QRectF calculateBoundaries(QVector<Node*>& nodeVector);
