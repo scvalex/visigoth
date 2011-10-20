@@ -172,8 +172,6 @@ inline int TreeCode::getLevelQuadrants(int l)
     return ipow(TREE_WAY, l);
 }
 
-QVector<TreeNode*> TreeCode::Branch::noChildren(0);
-
 TreeCode::Branch::Branch(qreal width, int size) :
     width(width),
     size(size),
@@ -196,7 +194,8 @@ QVector<TreeNode*>& TreeCode::Branch::getChildren()
     if (size > 1) {
         return children;
     } else {
-        return noChildren;
+        static QVector<TreeNode*> emptyChildrenVector(0);
+        return emptyChildrenVector;
     }
 }
 
