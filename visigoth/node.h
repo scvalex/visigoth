@@ -8,6 +8,7 @@
 #include <QBrush>
 #include <QGraphicsItem>
 #include <QVariant>
+#include <QVector>
 
 class Edge;
 class GraphWidget;
@@ -34,6 +35,7 @@ public:
     QPainterPath shape() const;
 
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
+
 
 protected:
     QVariant itemChange(GraphicsItemChange change, const QVariant &value);

@@ -48,6 +48,10 @@ QVector<Node*> GraphWidget::nodes() const {
     return nodeVector;
 }
 
+QList<Edge*> GraphWidget::getEdges() const {
+    return edges;
+}
+
 void GraphWidget::populate() {
     generator = new FrancescoGenerator(this, 60);
     generator->populate(nodeVector, edges);

@@ -19,6 +19,7 @@ public:
     explicit GraphWidget(QWidget *parent = 0);
 
     QVector<Node*> nodes() const;
+    QList<Edge*> getEdges() const;
 
     void populate();
 

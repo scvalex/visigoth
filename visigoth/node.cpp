@@ -4,10 +4,12 @@
 
 #include <QGraphicsScene>
 #include <QPainter>
+#include <QVector>
 
 Node::Node(int tag, GraphWidget *graph, QGraphicsItem *parent) :
     QGraphicsItem(parent),
-    brush(QColor::fromRgb(qrand() % 256, qrand() % 256, qrand() % 256, 180)),
+    brush(QColor::fromRgb(205,239,255,255)),
+    //brush(QColor::fromRgb(qrand() % 256, qrand() % 256, qrand() % 256, 180)),
     graph(graph),
     hovering(false),
     myTag(tag)
@@ -88,10 +90,13 @@ void Node::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *)
     painter->setPen(Qt::NoPen);
     if (!hovering) {
         painter->setBrush(brush);
+
     } else {
-        QColor lighter = brush.color();
-        lighter.setAlpha(255);
-        painter->setBrush(QBrush(lighter));
+        //change the color for the hovering node
+        QColor highlight = brush.color();
+        highlight.setNamedColor("green");
+        highlight.setAlpha(255);
+        painter->setBrush(QBrush(highlight));
     }
     painter->drawEllipse(-10, -10, 20, 20);
 }
@@ -112,10 +117,27 @@ QVariant Node::itemChange(GraphicsItemChange change, const QVariant &value) {
 
 void Node::hoverEnterEvent(QGraphicsSceneHoverEvent *event) {
     hovering = true;
+    foreach(Edge* edge, edgeList) {
+        if (edge->sourceNode() == this) {
+            edge->destNode()->hovering = true;
+        }
+        if (edge->destNode() == this) {
+            edge->sourceNode()->hovering = true;
+        }
+    }
     QGraphicsItem::hoverEnterEvent(event);
 }
 
 void Node::hoverLeaveEvent(QGraphicsSceneHoverEvent *event) {
     hovering = false;
+    foreach(Edge* edge, edgeList) {
+        if (edge->sourceNode() == this) {
+            edge->destNode()->hovering = false;
+        }
+        if (edge->destNode() == this) {
+            edge->sourceNode()->hovering = false;
+        }
+    }
     QGraphicsItem::hoverLeaveEvent(event);
 }
+
