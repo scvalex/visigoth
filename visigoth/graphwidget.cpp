@@ -37,7 +37,7 @@ GraphWidget::GraphWidget(QWidget *parent) :
                      "<li>&lt;<em>spc</em>&gt; - randomize node placement</li>"
                      "<li>&lt;<em>esc</em>&gt; - return to graph view</li>"
                      "<li><em>0</em> - fit the graph to the screen</li>"
-                     "<li><em>A</em> - Add Node</li>"
+                     "<li><em>A</em> - Randomly add Node using preferential selection with clustering</li>"
                      "</ul>"
                      "</p>"
                      );
