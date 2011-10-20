@@ -6,10 +6,9 @@
 
 #include <QGraphicsScene>
 #include <QPainter>
+
 #include <cmath>
 #include <stdexcept>
-
-#include <iostream>
 
 Node::Node(int tag, GraphWidget *graph, QGraphicsItem *parent) :
     QGraphicsItem(parent),
@@ -64,14 +63,14 @@ QPointF Node::calculatePosition(TreeNode* treeNode) {
     }
 
     newPos = pos() + QPointF(xvel, yvel);
+
     return newPos;
 }
 
 QPointF Node::calculateNonEdgeForces(TreeNode* treeNode)
 {
-    if (treeNode->getSize() < 1) {
+    if (treeNode->getSize() < 1)
         return QPointF(0, 0);
-    }
 
     QPointF vec(this->pos().x() - treeNode->getCenter().x(),
                 this->pos().y() - treeNode->getCenter().y());
@@ -80,27 +79,26 @@ QPointF Node::calculateNonEdgeForces(TreeNode* treeNode)
 
     qreal distance = sqrt(dx*dx + dy*dy);
 
+    QPointF vel;
     if (treeNode->isFarEnough(distance) || treeNode->getSize() == 1) {
         double l = 2.0 * (dx*dx + dy*dy);
-        QPointF vel;
 
         if (l > 0) {
             vel = QPointF((dx * 150.0) / l, (dy * 150.0) / l);
         } else {
             vel = QPointF(0, 0);
         }
-
-        return vel;
     } else {
         qreal xvel = 0;
         qreal yvel = 0;
         foreach (TreeNode* child, treeNode->getChildren()) {
-            QPointF vel = calculateNonEdgeForces(child);
-            xvel += vel.x();
-            yvel += vel.y();
+            QPointF velCh = calculateNonEdgeForces(child);
+            xvel += velCh.x();
+            yvel += velCh.y();
         }
-        return QPointF(xvel, yvel);
+        vel = QPointF(xvel, yvel);
     }
+    return vel;
 }
 
 /* Called by GraphWidget repeatedly. */
