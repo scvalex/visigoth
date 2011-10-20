@@ -117,17 +117,16 @@ void TreeCode::allocateNodes()
         for (int row = 0; row < quadrants; row++) {
             nodes[l][row].resize(quadrants);
             for (int col = 0; col < quadrants; col++) {
-                Branch* branch = new Branch(levelWidth);
+                nodes[l][row][col] = new Branch(levelWidth);
                 if (l < levels-1) {
                     int rowsup = row * TREE_WAY;
                     int colsup = col * TREE_WAY;
                     for (int r = 0; r < TREE_WAY; r++) {
                         for (int c = 0; c < TREE_WAY; c++) {
-                            branch->addChild(nodes[l+1][rowsup+r][colsup+c]);
+                            nodes[l][row][col]->addChild(nodes[l+1][rowsup+r][colsup+c]);
                         }
                     }
                 }
-                nodes[l][row][col] = branch;
             }
         }
     }
