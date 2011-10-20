@@ -22,7 +22,7 @@ private:
         int getSize();
         QPointF getCenter();
         QVector<TreeNode*>& getChildren();
-        void addNode(Node*);
+        void addNode(TreeNode*);
         void addChild(TreeNode*);
         qreal getWidth();
     private:
