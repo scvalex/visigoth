@@ -6,17 +6,30 @@ void Algorithms::addVertex(GraphWidget *graph, int edgesToAdd, double p){
     double random;
     Node * vPref;
     QVector<Node*>* nVec = graph->getNodeVector();
-    Node* vertex = new Node(nVec->count(), graph);
+    int nVecLength = nVec->count();
+    Node* vertex = new Node(nVecLength, graph);
     QList<Edge *>* edges = graph->getEdgeList();
     QVector<Node*>* neighbours;
     QList<Node *>* usedNodes = new QList<Node*>();
+    int debug3;
+    int debug4;
+    int debug5;
+
+    // saftey check to ensure that the method
+    //does not get stuck looping
+
+    if(edgesToAdd > nVecLength){
+        edgesToAdd = nVecLength;
+    }
 
     while (edgesToAdd != 0){
 
 
         do{
             random = genRandom();
+            debug3 = vertex->tag();
             vPref = getPref(nVec,random);
+            debug4 = vPref->tag();
         }
         while(edgeExsist(vertex->tag(),vPref->tag(),edges));
 
@@ -32,16 +45,16 @@ void Algorithms::addVertex(GraphWidget *graph, int edgesToAdd, double p){
 
             neighbours = getNeighbours(vPref);
             addNewEdges(graph,edgesToAdd,vertex,neighbours,usedNodes);
+            debug5 = usedNodes->count();
 
         }
 
 
-        if(usedNodes->count() == nVec->count()){
+        if(usedNodes->count() == nVecLength){
             edgesToAdd = 0;
         }
 
     }
-
 
     *nVec << vertex;
     graph->addNodeToScene(vertex);
@@ -128,9 +141,8 @@ void Algorithms::updatePreference(QVector<Node*> * nVec, int totalDegree){
 
         double tempLength = (double) n->getList()->length();
         double tempPref = (tempLength / (double) totalDegree) * 100;
-        double tempCumPref = tempPref + prefCumulative;
         n->setPref( tempPref );
-        n->setCumPref(tempCumPref);
+        n->setCumPref(prefCumulative);
         prefCumulative += tempPref;
 
     }
@@ -144,24 +156,22 @@ Node* Algorithms::getPref(QVector<Node*>* nVec, double genPref){
     bool found = false;
     Node* retNode;
 
-    // only one vertex exists
-    if(end == 1){
-        retNode = *(nVec->begin());
-        found = true;
-    }
     while(!found){
         int avg = (start+end)/2;
         Node* temp1 = nVec->at(avg);
 
-        if( (avg == end ) || (avg == start)){
+        if( (start == end ) || (avg == end) ){
             retNode = temp1;
             found = true;
         }
+
+
         else{ // (1)
+
             Node* temp2 = nVec->at(avg+1);
             double pref1 = temp1->getCumPref();
             double pref2 = temp2->getCumPref();
-            if(pref1 <= genPref && genPref < pref2){
+            if(genPref >= pref1 && genPref < pref2){
                 found = true;
                 retNode = temp1;
             }
@@ -227,4 +237,17 @@ QVector<Node *>* Algorithms::getIntersection(QVector<Node *>* vec1, QVector<Node
     }
 
     return retVec;
+}
+
+QVector<Node *>* Algorithms::cloneVector(QVector<Node *> *nVec){
+
+    int length = nVec->count();
+    QVector<Node *>* retVec = new QVector<Node *>(length);
+
+    for(int i = 0; i < length; ++i ){
+        retVec[i] = nVec[i];
+    }
+
+    return retVec;
+
 }

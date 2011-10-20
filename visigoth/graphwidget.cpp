@@ -99,7 +99,7 @@ void GraphWidget::keyPressEvent(QKeyEvent *event) {
         fitToScreen();
         break;
     case Qt::Key_A:
-        Algorithms::addVertex(this,1,qrand()%100);
+        Algorithms::addVertex(this,(qrand() % 3 ) + 1,qrand()%100);
         break;
     default:
         QGraphicsView::keyPressEvent(event);

@@ -56,6 +56,8 @@ private:
     GraphWidget *graph;
     bool hovering;
     int myTag;
+     // tags used in the pref selection process
+    int shadowTag;
     QPointF newPos;
     // used for selecting a node by preferential seleciton
     double cumulativePreference;
