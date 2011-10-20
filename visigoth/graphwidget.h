@@ -32,6 +32,7 @@ protected:
 
     void scaleView(qreal scaleFactor);
     void randomizePlacement();
+    void playPause();
     void fitToScreen();
 
 private:
@@ -42,9 +43,13 @@ private:
     QList<Edge*> edges;
     bool helping;
     QStaticText helpText;
+    bool isPlaying;
+    bool isRunning;
     QVector<Node*> nodeVector;
     QGraphicsScene *scene;
     int timerId;
+
+    void setAnimationRunning();
 };
 
 #endif // GRAPHWIDGET_H
