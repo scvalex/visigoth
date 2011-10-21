@@ -101,16 +101,18 @@ int TreeCode::calculateLevels(qreal edge) {
 
 void TreeCode::allocateNode(int l, int row, int col) {
     if (quadrants[l][row][col] == NULL) {
-        int levelWidth = boundaries.width() / (qreal) getLevelQuadrants(l);
+        qreal levelWidth = boundaries.width() / (qreal) getLevelQuadrants(l);
         quadrants[l][row][col] = new Quadrant(levelWidth);
+    }
 
-        if (l < levels-1) {
-            int rowsup = row * TREE_WAY;
-            int colsup = col * TREE_WAY;
-
-            for (int r(0); r < TREE_WAY; ++r) {
-                for (int c(0); c < TREE_WAY; ++c) {
-                    allocateNode(l+1, rowsup+r, colsup+c);
+    if (l < levels-1) {
+        int rowsup = row * TREE_WAY;
+        int colsup = col * TREE_WAY;
+        qreal levelSupWidth = boundaries.width() / (qreal) getLevelQuadrants(l+1);
+        for (int r(0); r < TREE_WAY; ++r) {
+            for (int c(0); c < TREE_WAY; ++c) {
+                if (quadrants[l+1][rowsup+r][colsup+c] == NULL) {
+                    quadrants[l+1][rowsup+r][colsup+c] = new Quadrant(levelSupWidth);
                     quadrants[l][row][col]->addChild(quadrants[l+1][rowsup+r][colsup+c]);
                 }
             }
