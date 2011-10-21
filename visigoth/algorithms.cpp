@@ -51,10 +51,7 @@ void Algorithms::addVertex(GraphWidget *graph, int edgesToAdd, double p) {
 
     *nVec << vertex;
     graph->addNodeToScene(vertex);
-    // debug
-    int debug1 = edges->count();
-    int debug2 = nVec->count();
-    updatePreference(nVec,2*edges->count());
+    updatePreference(nVec, 2*edges->count());
 }
 
 void Algorithms::addNewEdges(GraphWidget *graph,int edgesToAdd,

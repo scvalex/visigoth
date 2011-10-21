@@ -11,8 +11,8 @@ Node::Node(int tag, GraphWidget *graph, QGraphicsItem *parent) :
     graph(graph),
     hovering(false),
     myTag(tag),
-    preference(0),
-    cumulativePreference(0)
+    cumulativePreference(0),
+    preference(0)
 {
     setFlag(ItemIsMovable);
     setFlag(ItemSendsGeometryChanges);
