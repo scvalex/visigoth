@@ -1,7 +1,6 @@
 #ifndef TREECODE_H
 #define TREECODE_H
 
-#include "node.h"
 #include "treenode.h"
 
 #include <QVector>
@@ -10,10 +9,11 @@
 class TreeCode
 {
 public:
-	TreeCode(QVector<Node*>& nodeVector);
+	TreeCode(QRectF boundaries);
 	~TreeCode();
 	TreeNode* getRoot();
 	QRectF getBoundaries();
+	void addNode(TreeNode* node);
 private:
     class Quadrant : public TreeNode
     {
@@ -46,13 +46,11 @@ private:
     QVector<QVector<QVector<Quadrant*> > > quadrants;
 
     // Utility functions
-    QRectF calculateBoundaries(QVector<Node*>& nodeVector);
+    QRectF squareBoundaries(QRectF boundaries);
     int calculateLevels(qreal edge);
     void allocateNodes();
     void allocateNode(int level, int row, int col);
-    void fillNodes(QVector<Node*>& nodeVector);
     int getLevelQuadrants(int l);
-    int flattenIndex(int rowWidth, int row, int col);
 };
 
 #endif // TREECODE_H

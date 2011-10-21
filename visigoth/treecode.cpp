@@ -3,6 +3,7 @@
 
 #include <cmath>
 #include <limits>
+
 #include <QRectF>
 
 // Because C++/Qt doesn't have a pow that works on ints.
@@ -18,14 +19,12 @@ int ipow(int base, int exp) {
     return result;
 }
 
-TreeCode::TreeCode(QVector<Node*>& nodeVector) :
-    boundaries(calculateBoundaries(nodeVector))
+TreeCode::TreeCode(QRectF boundaries) :
+    boundaries(squareBoundaries(boundaries))
 {
-    levels = calculateLevels(this->boundaries.width());
+    levels = calculateLevels(boundaries.width());
 
     allocateNodes();
-
-    fillNodes(nodeVector);
 }
 
 TreeCode::~TreeCode() {
@@ -48,32 +47,7 @@ QRectF TreeCode::getBoundaries() {
     return boundaries;
 }
 
-QRectF TreeCode::calculateBoundaries(QVector<Node*>& nodeVector) {
-    QPointF topLeft(std::numeric_limits<double>::max(), std::numeric_limits<double>::max());
-    QPointF bottomRight(std::numeric_limits<double>::min(), std::numeric_limits<double>::min());
-
-    foreach (Node* node, nodeVector) {
-        QPointF pos = node->pos();
-        if (pos.x() < topLeft.x()) {
-            topLeft.setX(pos.x());
-        }
-        if (pos.y() < topLeft.y()) {
-            topLeft.setY(pos.y());
-        }
-        if (pos.x() > bottomRight.x()) {
-            bottomRight.setX(pos.x());
-        }
-        if (pos.y() > bottomRight.y()) {
-            bottomRight.setY(pos.y());
-        }
-    }
-
-    // Increase the right and bottom part by one so that the node on the boundary will be in
-    bottomRight.setX(bottomRight.x() + 1);
-    bottomRight.setY(bottomRight.y() + 1);
-
-    QRectF boundaries(topLeft, bottomRight);
-
+QRectF TreeCode::squareBoundaries(QRectF boundaries) {
     qreal edge = qMax(boundaries.height(), boundaries.width());
     // Make sure that the boundaries are a square
     if (boundaries.height() > edge) {
@@ -134,39 +108,36 @@ void TreeCode::allocateNodes() {
     }
 }
 
-void TreeCode::fillNodes(QVector<Node*>& nodeVector) {
+void TreeCode::addNode(TreeNode* node) {
     qreal leavesQuadrants = getLevelQuadrants(levels-1);
     qreal leafQuadrantWidth = boundaries.width() / (qreal) leavesQuadrants;
 
-    // Fill up the quadrants
-    foreach (Node* node, nodeVector) {
-        QPointF pos = node->pos();
+    QPointF pos = node->getCenter();
 
-        // row and col are the ones referring to the leaves (the last quadrants)
-        int row = floor((pos.x() - boundaries.left()) / leafQuadrantWidth);
-        int col = floor((pos.y() - boundaries.top()) / leafQuadrantWidth);
+    // row and col are the ones referring to the leaves (the last quadrants)
+    int row = floor((pos.x() - boundaries.left()) / leafQuadrantWidth);
+    int col = floor((pos.y() - boundaries.top()) / leafQuadrantWidth);
 
-        if (row >= leavesQuadrants - 1) {
-            row = leavesQuadrants - 1;
-        }
-        if (col >= leavesQuadrants - 1) {
-            col = leavesQuadrants - 1;
-        }
+    if (row >= leavesQuadrants - 1) {
+        row = leavesQuadrants - 1;
+    }
+    if (col >= leavesQuadrants - 1) {
+        col = leavesQuadrants - 1;
+    }
 
-        allocateNode(levels-1, row, col);
-        quadrants[levels-1][row][col]->addChild(node);
-        quadrants[levels-1][row][col]->addNode(node);
+    allocateNode(levels-1, row, col);
+    quadrants[levels-1][row][col]->addChild(node);
+    quadrants[levels-1][row][col]->addNode(node);
 
-        for (int l(0); l < levels; ++l) {
-            int levelQuadrants = getLevelQuadrants(l);
+    for (int l(0); l < levels; ++l) {
+        int levelQuadrants = getLevelQuadrants(l);
 
-            int rowl = (levelQuadrants * row) / leavesQuadrants;
-            int coll = (levelQuadrants * col) / leavesQuadrants;
+        int rowl = (levelQuadrants * row) / leavesQuadrants;
+        int coll = (levelQuadrants * col) / leavesQuadrants;
 
-            allocateNode(l, rowl, coll);
+        allocateNode(l, rowl, coll);
 
-            quadrants[l][rowl][coll]->addNode(node);
-        }
+        quadrants[l][rowl][coll]->addNode(node);
     }
 }
 

@@ -115,7 +115,14 @@ void GraphWidget::timerEvent(QTimerEvent *) {
     QPointF topLeft;
     QPointF bottomRight;
 
-    TreeCode treeCode(nodeVector);
+    TreeCode treeCode(myScene->sceneRect());
+
+    foreach (QGraphicsItem* item, myScene->items()) {
+        Node* node = qgraphicsitem_cast<Node*>(item);
+        if (node) {
+            treeCode.addNode(node);
+        }
+    }
 
     foreach (QGraphicsItem *item, myScene->items()) {
         Node *node = qgraphicsitem_cast<Node*>(item);
