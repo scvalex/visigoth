@@ -8,6 +8,8 @@
 #include <QBrush>
 #include <QGraphicsItem>
 #include <QVariant>
+#include <QToolTip>
+#include <sstream>
 
 #include "treenode.h"
 
@@ -18,7 +20,7 @@ class QGraphicsSceneHoverEvent;
 class Node : public QGraphicsItem, public TreeNode
 {
 public:
-    explicit Node(int tag, GraphWidget *graph, QGraphicsItem *parent = 0);
+    explicit Node(GraphWidget *graph, QGraphicsItem *parent = 0);
 
     void addEdge(Edge *edge);
 
@@ -37,10 +39,14 @@ public:
 
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
 
+    QList<Edge*>* edges();
     int getSize();
     QPointF getCenter();
     QVector<TreeNode*>& getChildren();
     qreal getWidth();
+
+    static void reset();
+
 protected:
     QVariant itemChange(GraphicsItemChange change, const QVariant &value);
 
@@ -48,6 +54,8 @@ protected:
     void hoverLeaveEvent(QGraphicsSceneHoverEvent *event);
 
 private:
+    static int ALL_NODES;
+
     QBrush brush;
     QList<Edge*> edgeList;
     GraphWidget *graph;

@@ -10,13 +10,15 @@
 #include <cmath>
 #include <stdexcept>
 
-Node::Node(int tag, GraphWidget *graph, QGraphicsItem *parent) :
+int Node::ALL_NODES(0);
+
+Node::Node(GraphWidget *graph, QGraphicsItem *parent) :
     QGraphicsItem(parent),
     brush(QColor::fromRgb(qrand() % 256, qrand() % 256, qrand() % 256, 180)),
     graph(graph),
-    hovering(false),
-    myTag(tag)
+    hovering(false)
 {
+    myTag = ALL_NODES++;
     setFlag(ItemIsMovable);
     setFlag(ItemSendsGeometryChanges);
     setCacheMode(DeviceCoordinateCache);
@@ -155,13 +157,19 @@ void Node::hoverLeaveEvent(QGraphicsSceneHoverEvent *event) {
     QGraphicsItem::hoverLeaveEvent(event);
 }
 
-int Node::getSize()
-{
+QList<Edge*>* Node::edges() {
+    return &edgeList;
+}
+
+void Node::reset() {
+    ALL_NODES = 0;
+}
+
+int Node::getSize() {
     return 1;
 }
 
-QPointF Node::getCenter()
-{
+QPointF Node::getCenter() {
     return pos();
 }
 
