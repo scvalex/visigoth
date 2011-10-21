@@ -55,8 +55,6 @@ private:
     GraphWidget *graph;
     bool hovering;
     int myTag;
-     // tags used in the pref selection process
-    int shadowTag;
     QPointF newPos;
 };
 

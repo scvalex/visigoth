@@ -17,8 +17,3 @@ HEADERS += mainwindow.h \
     preferential.h
 
 FORMS += mainwindow.ui
-
-
-
-
-

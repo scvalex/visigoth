@@ -39,7 +39,7 @@ GraphWidget::GraphWidget(QWidget *parent) :
                      "<li>&lt;<em>spc</em>&gt; - pause/play the animation</li>"
                      "<li>&lt;<em>esc</em>&gt; - return to graph view</li>"
                      "<li><em>0</em> - fit the graph to the screen</li>"
-                     "<li><em>a</em> - add a new node using preferential selection with clustering</li>"
+                     "<li><em>a</em> - add a new node</li>"
                      "</ul>"
                      "</p>"
                      );
