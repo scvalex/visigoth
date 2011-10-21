@@ -28,7 +28,7 @@ void Algorithms::addVertex(GraphWidget *graph, int edgesToAdd, double p) {
             vPref = getPref(nVec,random);
             debug4 = vPref->tag();
         }
-        while (edgeExsist(vertex->tag(), vPref->tag(), edges));
+        while (edgeExist(vertex->tag(), vPref->tag(), edges));
 
         Edge *e = new Edge(vertex, vPref);
         graph->addEdgeToScene(e);
@@ -65,7 +65,7 @@ void Algorithms::addNewEdges(GraphWidget *graph,int edgesToAdd,
         int rand = qrand() % length;
         Node *vi = setUsed->at(rand);
 
-        if (!edgeExsist(vertex->tag(), vi->tag(), graph->getEdgeList())) {
+        if (!edgeExist(vertex->tag(), vi->tag(), graph->getEdgeList())) {
             Edge *e = new Edge(vertex, vi);
             *edges << e;
             --edgesToAdd;
@@ -103,7 +103,6 @@ QVector<Node*>* Algorithms::getNeighbours(Node *n) {
     }
 
     return neighbours;
-
 }
 
 void Algorithms::updatePreference(QVector<Node*> * nVec, int totalDegree) {
@@ -156,7 +155,7 @@ Node* Algorithms::getPref(QVector<Node*>* nVec, double genPref) {
     return retNode;
 }
 
-bool Algorithms::edgeExsist(int sourceTag, int destTag, QList<Edge *>* edges) {
+bool Algorithms::edgeExist(int sourceTag, int destTag, QList<Edge *>* edges) {
     QList<Edge*>::const_iterator i;
     bool exist = false;
 
@@ -196,17 +195,6 @@ QVector<Node*>* Algorithms::getIntersection(QVector<Node*> *vec1, QVector<Node*>
             retVec->append(tempPointer);
         }
 
-    }
-
-    return retVec;
-}
-
-QVector<Node*>* Algorithms::cloneVector(QVector<Node*> *nVec) {
-    int length = nVec->count();
-    QVector<Node*> *retVec = new QVector<Node*>(length);
-
-    for (int i(0); i < length; ++i) {
-        retVec[i] = nVec[i];
     }
 
     return retVec;

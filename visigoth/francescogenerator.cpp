@@ -33,7 +33,7 @@ void FrancescoGenerator::populate(QVector<Node*> &nodes, QList<Edge*> &edges) {
                 other = qrand() % node;
 
                 // Don't generate the same edge twice
-                if (!Algorithms::edgeExsist(nodes[node]->tag(), nodes[other]->tag(), graph->getEdgeList())) {
+                if (!Algorithms::edgeExist(nodes[node]->tag(), nodes[other]->tag(), graph->getEdgeList())) {
                     edges << new Edge(nodes[node], nodes[other]);
                 }
 

@@ -18,7 +18,7 @@ public:
     // using preferential attachment
     static void addVertex(GraphWidget *graph, int edgesToAdd, double p);
     static void updatePreference(QVector<Node*> *nVec, int totalEdges);
-    static bool edgeExsist(int sourceTag, int destTag, QList<Edge*> *edges);
+    static bool edgeExist(int sourceTag, int destTag, QList<Edge*> *edges);
     static QVector<Node*>* cloneVector(QVector<Node*> *nVec);
 
 private:
