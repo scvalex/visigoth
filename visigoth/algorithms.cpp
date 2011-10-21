@@ -2,7 +2,6 @@
 
 // Add vertex using preferential attachment with clustering.
 void Algorithms::addVertex(GraphWidget *graph, int edgesToAdd, double p) {
-    double random;
     Node *vPref;
     QVector<Node*> *nVec = graph->getNodeVector();
     int nVecLength = nVec->count();
@@ -10,9 +9,6 @@ void Algorithms::addVertex(GraphWidget *graph, int edgesToAdd, double p) {
     QList<Edge*> *edges = graph->getEdgeList();
     QVector<Node*> *neighbours;
     QList<Node*> *usedNodes = new QList<Node*>();
-    int debug3;
-    int debug4;
-    int debug5;
 
     // saftey check to ensure that the method
     // does not get stuck looping
@@ -23,16 +19,12 @@ void Algorithms::addVertex(GraphWidget *graph, int edgesToAdd, double p) {
 
     while (edgesToAdd != 0) {
         do {
-            random = genRandom();
-            debug3 = vertex->tag();
-            vPref = getPref(nVec,random);
-            debug4 = vPref->tag();
-        }
-        while (edgeExist(vertex->tag(), vPref->tag(), edges));
+            vPref = getPref(nVec, genRandom());
+        } while (edgeExists(vertex->tag(), vPref->tag(), edges));
 
-        Edge *e = new Edge(vertex, vPref);
-        graph->addEdgeToScene(e);
-        *edges << e;
+        Edge *edge = new Edge(vertex, vPref);
+        graph->addEdgeToScene(edge);
+        *edges << edge;
         --edgesToAdd;
 
         usedNodes->append(vPref);
@@ -40,8 +32,6 @@ void Algorithms::addVertex(GraphWidget *graph, int edgesToAdd, double p) {
         if (genRandom() < p){
             neighbours = getNeighbours(vPref);
             addNewEdges(graph, edgesToAdd, vertex, neighbours, usedNodes);
-            debug5 = usedNodes->count();
-
         }
 
         if (usedNodes->count() == nVecLength){
@@ -54,9 +44,9 @@ void Algorithms::addVertex(GraphWidget *graph, int edgesToAdd, double p) {
     updatePreference(nVec, 2*edges->count());
 }
 
-void Algorithms::addNewEdges(GraphWidget *graph,int edgesToAdd,
-                             Node *vertex, QVector<Node *>* neighbours,
-                             QList<Node*>* usedNodes) {
+void Algorithms::addNewEdges(GraphWidget *graph, int edgesToAdd,
+                             Node *vertex, QVector<Node *> *neighbours,
+                             QList<Node*> *usedNodes) {
     QList<Edge*> *edges = graph->getEdgeList();
     QVector<Node*> *setUsed = neighbours;
     int length = setUsed->count();
@@ -65,7 +55,7 @@ void Algorithms::addNewEdges(GraphWidget *graph,int edgesToAdd,
         int rand = qrand() % length;
         Node *vi = setUsed->at(rand);
 
-        if (!edgeExist(vertex->tag(), vi->tag(), graph->getEdgeList())) {
+        if (!edgeExists(vertex->tag(), vi->tag(), graph->getEdgeList())) {
             Edge *e = new Edge(vertex, vi);
             *edges << e;
             --edgesToAdd;
@@ -80,32 +70,28 @@ void Algorithms::addNewEdges(GraphWidget *graph,int edgesToAdd,
     }
 }
 
-// gen random double with 2 precision
-double Algorithms::genRandom(){
-    double main = qrand() % 100;
-    return main + (( qrand() % 100 ) / 100 );
-}
-
 QVector<Node*>* Algorithms::getNeighbours(Node *n) {
     QList<Edge*> tempList = *(n->getList());
     QVector<Node*> *neighbours = new QVector<Node*>();
-    QList<Edge*>::const_iterator i;
     int nTag = n->tag();
 
-    for (i = tempList.constBegin(); i != tempList.constEnd(); ++i){
-        int sT = (*i)->sourceNode()->tag();
+    for (QList<Edge*>::const_iterator ii = tempList.constBegin();
+         ii != tempList.constEnd();
+         ++ii)
+    {
+        int sT = (*ii)->sourceNode()->tag();
 
-        if(nTag == sT){
-            neighbours->append((*i)->destNode());
+        if(nTag == sT) {
+            neighbours->append((*ii)->destNode());
         } else{
-            neighbours->append((*i)->sourceNode());
+            neighbours->append((*ii)->sourceNode());
         }
     }
 
     return neighbours;
 }
 
-void Algorithms::updatePreference(QVector<Node*> * nVec, int totalDegree) {
+void Algorithms::updatePreference(QVector<Node*> *nVec, int totalDegree) {
     int prefCumulative = 0;
 
     if(nVec->count() == 1) {
@@ -123,22 +109,22 @@ void Algorithms::updatePreference(QVector<Node*> * nVec, int totalDegree) {
     }
 }
 
-// Returns the preferred node, using binary search.
-Node* Algorithms::getPref(QVector<Node*>* nVec, double genPref) {
+// Return the preferred node, using binary search.
+Node* Algorithms::getPref(QVector<Node*> *nVec, double genPref) {
     int start = 0;
     int end = nVec->count() - 1;
     bool found = false;
     Node* retNode;
 
     while (!found) {
-        int avg = (start+end)/2;
-        Node* temp1 = nVec->at(avg);
+        int avg = (start + end) / 2;
+        Node *temp1 = nVec->at(avg);
 
         if ((start == end ) || (avg == end)) {
             retNode = temp1;
             found = true;
         } else {
-            Node* temp2 = nVec->at(avg+1);
+            Node *temp2 = nVec->at(avg + 1);
             double pref1 = temp1->getCumPref();
             double pref2 = temp2->getCumPref();
             if (genPref >= pref1 && genPref < pref2) {
@@ -155,14 +141,15 @@ Node* Algorithms::getPref(QVector<Node*>* nVec, double genPref) {
     return retNode;
 }
 
-bool Algorithms::edgeExist(int sourceTag, int destTag, QList<Edge *>* edges) {
-    QList<Edge*>::const_iterator i;
+bool Algorithms::edgeExists(int sourceTag, int destTag, QList<Edge*> *edges) {
     bool exist = false;
 
-    for(i = edges->constBegin(); i != edges->constEnd(); ++i) {
-        Edge* e = *i;
-        int sTag = e->sourceNode()->tag();
-        int dTag = e->destNode()->tag();
+    for(QList<Edge*>::const_iterator ii = edges->constBegin();
+        ii != edges->constEnd();
+        ++ii)
+    {
+        int sTag = (*ii)->sourceNode()->tag();
+        int dTag = (*ii)->destNode()->tag();
 
 
         if ((sTag == sourceTag && dTag == destTag) || (sourceTag == destTag)) {
@@ -198,4 +185,10 @@ QVector<Node*>* Algorithms::getIntersection(QVector<Node*> *vec1, QVector<Node*>
     }
 
     return retVec;
+}
+
+// Generate random double with 2 precision.
+double Algorithms::genRandom(){
+    double main = qrand() % 100;
+    return main + (( qrand() % 100 ) / 100 );
 }
