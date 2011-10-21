@@ -33,8 +33,6 @@ void Preferential::addVertex(int edgesToAdd, double p) {
         edgesToAdd = numNodes;
     }
 
-    qDebug("numNodes = %d", numNodes);
-
     while (edgesToAdd > 0) {
         vPref = getPreference(graph->scene()->items(), genRandom());
         int cutOff;
