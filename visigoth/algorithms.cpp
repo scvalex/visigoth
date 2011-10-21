@@ -161,7 +161,7 @@ Node* Algorithms::getPref(QVector<Node*>* nVec, double genPref) {
 
 bool Algorithms::edgeExsist(int sourceTag, int destTag, QList<Edge *>* edges) {
     QList<Edge*>::const_iterator i;
-    bool exsist = false;
+    bool exist = false;
 
     for(i = edges->constBegin(); i != edges->constEnd(); ++i) {
         Edge* e = *i;
@@ -170,12 +170,12 @@ bool Algorithms::edgeExsist(int sourceTag, int destTag, QList<Edge *>* edges) {
 
 
         if ((sTag == sourceTag && dTag == destTag) || (sourceTag == destTag)) {
-            exsist = true;
+            exist = true;
             break;
         }
     }
 
-    return exsist;
+    return exist;
 }
 
 QVector<Node*>* Algorithms::getIntersection(QVector<Node*> *vec1, QVector<Node*> *vec2) {
