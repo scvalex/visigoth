@@ -49,6 +49,7 @@ private:
     QRectF calculateBoundaries(QVector<Node*>& nodeVector);
     int calculateLevels(qreal edge);
     void allocateNodes();
+    void allocateNode(int level, int row, int col);
     void fillNodes(QVector<Node*>& nodeVector);
     int getLevelQuadrants(int l);
     int flattenIndex(int rowWidth, int row, int col);

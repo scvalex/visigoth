@@ -97,6 +97,25 @@ int TreeCode::calculateLevels(qreal edge) {
     return levels;
 }
 
+void TreeCode::allocateNode(int l, int row, int col) {
+    if (quadrants[l][row][col] == NULL) {
+        int levelWidth = boundaries.width() / (qreal) getLevelQuadrants(l);
+        quadrants[l][row][col] = new Quadrant(levelWidth);
+
+        if (l < levels-1) {
+            int rowsup = row * TREE_WAY;
+            int colsup = col * TREE_WAY;
+
+            for (int r(0); r < TREE_WAY; ++r) {
+                for (int c(0); c < TREE_WAY; ++c) {
+                    allocateNode(l+1, rowsup+r, colsup+c);
+                    quadrants[l][row][col]->addChild(quadrants[l+1][rowsup+r][colsup+c]);
+                }
+            }
+        }
+    }
+}
+
 void TreeCode::allocateNodes() {
     quadrants.resize(levels);
 
@@ -104,22 +123,9 @@ void TreeCode::allocateNodes() {
         int numQuads = getLevelQuadrants(l);
 
         quadrants[l].resize(numQuads);
-        qreal levelWidth = boundaries.width() / (qreal) numQuads;
 
         for (int row(0); row < numQuads; row++) {
             quadrants[l][row].resize(numQuads);
-            for (int col(0); col < numQuads; col++) {
-                quadrants[l][row][col] = new Quadrant(levelWidth);
-                if (l < levels-1) {
-                    int rowsup = row * TREE_WAY;
-                    int colsup = col * TREE_WAY;
-                    for (int r(0); r < TREE_WAY; r++) {
-                        for (int c(0); c < TREE_WAY; c++) {
-                            quadrants[l][row][col]->addChild(quadrants[l+1][rowsup+r][colsup+c]);
-                        }
-                    }
-                }
-            }
         }
     }
 }
@@ -143,6 +149,7 @@ void TreeCode::fillNodes(QVector<Node*>& nodeVector) {
             col = leavesQuadrants - 1;
         }
 
+        allocateNode(levels-1, row, col);
         quadrants[levels-1][row][col]->addChild(node);
         quadrants[levels-1][row][col]->addNode(node);
 
@@ -151,6 +158,8 @@ void TreeCode::fillNodes(QVector<Node*>& nodeVector) {
 
             int rowl = (levelQuadrants * row) / leavesQuadrants;
             int coll = (levelQuadrants * col) / leavesQuadrants;
+
+            allocateNode(l, rowl, coll);
 
             quadrants[l][rowl][coll]->addNode(node);
         }
