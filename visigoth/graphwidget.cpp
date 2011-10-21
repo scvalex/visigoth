@@ -1,23 +1,25 @@
+#include "algorithms.h"
 #include "edge.h"
 #include "graphwidget.h"
 #include "node.h"
 #include "randomgenerator.h"
 #include "francescogenerator.h"
-#include "algorithms.h"
+
 #include <cmath>
-#include <QGraphicsScene>
-#include <QKeyEvent>
+
 #include <QAbstractAnimation>
 #include <QDebug>
+#include <QGraphicsScene>
+#include <QKeyEvent>
 
 GraphWidget::GraphWidget(QWidget *parent) :
     QGraphicsView(parent),
     helping(true),
     helpText(),
-    timerId(0),
-    isPlaying(true)
+    isPlaying(true),
+    isRunning(false),
+    timerId(0)
 {
-
     setMinimumSize(HELP_WIDTH + 10, HELP_HEIGHT + 10);
     scene = new QGraphicsScene(this);
     scene->setBackgroundBrush(Qt::black);
@@ -33,11 +35,12 @@ GraphWidget::GraphWidget(QWidget *parent) :
                      "<p>Keybindings:"
                      "<ul>"
                      "<li><em>h</em> - show this text</li>"
-                     "<li><em>r</em> - generate a new graph</li>"
-                     "<li>&lt;<em>spc</em>&gt; - randomize node placement</li>"
+                     "<li><em>g</em> - generate a new graph</li>"
+                     "<li><em>r</em> - randomize node placement</li>"
+                     "<li>&lt;<em>spc</em>&gt; - pause/play the animation</li>"
                      "<li>&lt;<em>esc</em>&gt; - return to graph view</li>"
                      "<li><em>0</em> - fit the graph to the screen</li>"
-                     "<li><em>A</em> - Randomly add Node using preferential selection with clustering</li>"
+                     "<li><em>A</em> - add a new node using preferential selection with clustering</li>"
                      "</ul>"
                      "</p>"
                      );
@@ -60,13 +63,12 @@ void GraphWidget::populate() {
     }
 
     randomizePlacement();
-    // degree = 2*E
-    Algorithms::updatePreference(&nodeVector,2*edges.count());
+    Algorithms::updatePreference(&nodeVector, 2*edges.count());
 }
 
 void GraphWidget::itemMoved() {
-    if (!timerId)
-        timerId = startTimer(1000 / 25);
+    isRunning = true;
+    setAnimationRunning();
 }
 
 void GraphWidget::keyPressEvent(QKeyEvent *event) {
@@ -99,7 +101,7 @@ void GraphWidget::keyPressEvent(QKeyEvent *event) {
         fitToScreen();
         break;
     case Qt::Key_A:
-        Algorithms::addVertex(this,(qrand() % 3 ) + 1,qrand()%100);
+        Algorithms::addVertex(this, (qrand() % 3 ) + 1, qrand() % 100);
         break;
     default:
         QGraphicsView::keyPressEvent(event);
@@ -126,23 +128,20 @@ void GraphWidget::timerEvent(QTimerEvent *) {
         }
     }
 
-	// Resize the scene to fit all the nodes
-	QRectF sceneRect = scene->sceneRect();
-	sceneRect.setLeft(topLeft.x() - 10);
-	sceneRect.setTop(topLeft.y() - 10);
-	sceneRect.setRight(bottomRight.x() + 10);
-	sceneRect.setBottom(bottomRight.y() + 10);
+    // Resize the scene to fit all the nodes
+    QRectF sceneRect = scene->sceneRect();
+    sceneRect.setLeft(topLeft.x() - 10);
+    sceneRect.setTop(topLeft.y() - 10);
+    sceneRect.setRight(bottomRight.x() + 10);
+    sceneRect.setBottom(bottomRight.y() + 10);
 
-    bool itemsMoved = false;
+    isRunning = false;
     foreach (Node *node, nodeVector) {
-        if (node->advance())
-            itemsMoved = true;
+        if (node->advance()) {
+            isRunning = true;
+        }
     }
-
-    if (!itemsMoved) {
-        killTimer(timerId);
-        timerId = 0;
-    }
+    setAnimationRunning();
 }
 
 void GraphWidget::wheelEvent(QWheelEvent *event) {
@@ -171,19 +170,21 @@ void GraphWidget::scaleView(qreal scaleFactor) {
 }
 
 void GraphWidget::playPause() {
+    isPlaying = !isPlaying;
+    if (!isPlaying) {
+        setAnimationRunning();
+    } else {
+        setAnimationRunning();
+    }
+}
 
-    if (isPlaying)
-    {
+void GraphWidget::setAnimationRunning() {
+    if (isPlaying && isRunning && !timerId) {
+        timerId = startTimer(1000 / 25);
+    } else if ((!isPlaying || !isRunning) && timerId) {
         killTimer(timerId);
         timerId = 0;
     }
-    else
-    {
-        timerId = startTimer(1000 / 25);
-    }
-
-    isPlaying = !isPlaying;
-
 }
 
 void GraphWidget::randomizePlacement() {
@@ -199,24 +200,18 @@ void GraphWidget::fitToScreen() {
     fitInView(scene->sceneRect(), Qt::KeepAspectRatio);
 }
 
-QVector<Node*> * GraphWidget::getNodeVector(){
-
+QVector<Node*>* GraphWidget::getNodeVector() {
     return &nodeVector;
 }
 
-QList<Edge*> * GraphWidget::getEdgeList(){
-
+QList<Edge*>* GraphWidget::getEdgeList() {
     return &edges;
 }
 
 void GraphWidget::addEdgeToScene(Edge* e){
-
     scene->addItem(e);
-
 }
 
 void GraphWidget::addNodeToScene(Node* n){
-
     scene->addItem(n);
-
 }

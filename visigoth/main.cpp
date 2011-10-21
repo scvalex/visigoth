@@ -7,5 +7,6 @@ int main(int argc, char *argv[])
     MainWindow w;
     w.populate();
     w.showMaximized();
+
     return a.exec();
 }
