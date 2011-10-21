@@ -80,6 +80,11 @@ void GraphWidget::keyPressEvent(QKeyEvent *event) {
     case Qt::Key_G:
         myScene->clear();
         hasEdge.clear();
+        Node::reset();
+        if (algo) {
+            delete algo;
+            algo = 0;
+        }
         populate();
         break;
     case Qt::Key_Escape:

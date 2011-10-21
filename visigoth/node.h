@@ -39,10 +39,7 @@ public:
 
     QList<Edge*>* edges();
 
-    void setCumPref(double p);
-    double getCumPref();
-    void setPref(double p);
-    double getPref();
+    static void reset();
 
 protected:
     QVariant itemChange(GraphicsItemChange change, const QVariant &value);
@@ -61,10 +58,6 @@ private:
      // tags used in the pref selection process
     int shadowTag;
     QPointF newPos;
-    // used for selecting a node by preferential seleciton
-    double cumulativePreference;
-    // used for display purposes only
-    double preference;
 };
 
 #endif // NODE_H

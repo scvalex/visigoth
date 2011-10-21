@@ -112,8 +112,8 @@ void Preferential::updatePreference(QList<QGraphicsItem*> items, int totalDegree
         Node *node = qgraphicsitem_cast<Node*>(items.first());
         if (!node)
             return;
-        node->setPref(100);
-        node->setCumPref(100);
+        preferences[node->tag()] = 100;
+        cumulativePreferences[node->tag()] = 100;
         return;
     }
 
@@ -124,8 +124,8 @@ void Preferential::updatePreference(QList<QGraphicsItem*> items, int totalDegree
 
         double tempLength = (double)node->edges()->length();
         double tempPref = (tempLength / (double) totalDegree) * 100;
-        node->setPref(tempPref);
-        node->setCumPref(prefCumulative);
+        preferences[node->tag()] = tempPref;
+        cumulativePreferences[node->tag()] = prefCumulative;
         prefCumulative += tempPref;
     }
 }
@@ -137,10 +137,6 @@ Node* Preferential::getPreference(QList<QGraphicsItem*> items, double genPref) {
         if (Node *node = qgraphicsitem_cast<Node*>(item))
             nodes << node;
     }
-    int start = 0;
-    int end = nodes.count() - 1;
-    bool found = false;
-    Node *retNode;
 
     const float E = 0.01;
     int l;
@@ -149,7 +145,7 @@ Node* Preferential::getPreference(QList<QGraphicsItem*> items, double genPref) {
     int i(0);
     for (; l > 0; l >>= 1) {
         if (l + i < nodes.count()) {
-            if (nodes[l + i]->getCumPref() <= genPref + E)
+            if (cumulativePreferences[l + i] <= genPref + E)
                 i += l;
         }
     }

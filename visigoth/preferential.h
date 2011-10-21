@@ -6,6 +6,7 @@
 #include "node.h"
 
 #include <QList>
+#include <QMap>
 #include <QVector>
 
 class GraphWidget;
@@ -34,6 +35,11 @@ protected:
 
 private:
     GraphWidget *graph;
+
+    // used for selecting a node by preferential seleciton
+    QMap<int, double> cumulativePreferences;
+    // used for display purposes only
+    QMap<int, double> preferences;
 };
 
 #endif // PREFERENTIAL_H

@@ -11,9 +11,7 @@ Node::Node(GraphWidget *graph, QGraphicsItem *parent) :
     QGraphicsItem(parent),
     brush(QColor::fromRgb(qrand() % 256, qrand() % 256, qrand() % 256, 180)),
     graph(graph),
-    hovering(false),
-    cumulativePreference(0),
-    preference(0)
+    hovering(false)
 {
     myTag = ALL_NODES++;
     setFlag(ItemIsMovable);
@@ -99,15 +97,6 @@ void Node::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *)
         QColor lighter = brush.color();
         lighter.setAlpha(255);
         painter->setBrush(QBrush(lighter));
-
-        // convert double to string
-        std::ostringstream strs;
-        strs << "Preference: " << preference << "%"
-             << "\nDegree: " << edgeList.count()
-             << "\nDEBUG, Cumulative Prference" << cumulativePreference;
-        std::string str = strs.str();
-        QString tip = QString::fromStdString(str);
-        QToolTip::showText(newPos.toPoint(), tip);
     }
     painter->drawEllipse(-10, -10, 20, 20);
 }
@@ -140,19 +129,6 @@ QList<Edge*>* Node::edges() {
     return &edgeList;
 }
 
-void Node::setCumPref(double p) {
-    cumulativePreference = p;
+void Node::reset() {
+    ALL_NODES = 0;
 }
-
-double Node::getCumPref() {
-    return cumulativePreference;
-}
-
-void Node::setPref(double p) {
-    preference = p;
-}
-
-double Node::getPref() {
-    return preference;
-}
-
