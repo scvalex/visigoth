@@ -8,7 +8,6 @@
 #include <QVector>
 
 class Edge;
-class GraphGenerator;
 class Node;
 class Preferential;
 class QGraphicsScene;
@@ -46,7 +45,6 @@ private:
     static const float HELP_HEIGHT = 500;
 
     Preferential *algo;
-    GraphGenerator *generator;
     QVector<QSet<int> > hasEdge;
     bool helping;
     QStaticText helpText;

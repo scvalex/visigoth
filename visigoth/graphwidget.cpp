@@ -1,8 +1,6 @@
 #include "edge.h"
-#include "francescogenerator.h"
 #include "graphwidget.h"
 #include "node.h"
-#include "randomgenerator.h"
 #include "preferential.h"
 
 #include <cmath>
@@ -15,7 +13,6 @@
 GraphWidget::GraphWidget(QWidget *parent) :
     QGraphicsView(parent),
     algo(0),
-    generator(0),
     helping(true),
     helpText(),
     isPlaying(true),
@@ -52,16 +49,13 @@ GraphWidget::GraphWidget(QWidget *parent) :
 GraphWidget::~GraphWidget() {
     if (algo)
         delete algo;
-    if (generator)
-        delete generator;
 }
 
 void GraphWidget::populate() {
-    //generator = new FrancescoGenerator(this, 60);
-    //generator->populate();
     algo = new Preferential(this);
-    for (int i(0); i < 100; ++i)
+    for (int i(0); i < 100; ++i) {
         algo->addVertex((qrand() % 3 ) + 1, qrand() % 100);
+    }
 
     randomizePlacement();
 }
