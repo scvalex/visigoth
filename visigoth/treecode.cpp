@@ -32,7 +32,9 @@ TreeCode::~TreeCode() {
     for (int i(0); i < quadrants.size(); ++i) {
         for (int j(0); j < quadrants[i].size(); ++j) {
             for (int k(0); k < quadrants[i][j].size(); ++k) {
-                delete quadrants[i][j][k];
+                if (quadrants[i][j][k] != NULL) {
+                    delete quadrants[i][j][k];
+                }
             }
         }
     }
