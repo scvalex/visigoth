@@ -1,5 +1,5 @@
-#ifndef ALGORITHMS_H
-#define ALGORITHMS_H
+#ifndef PREFERENTIAL_H
+#define PREFERENTIAL_H
 
 #include "edge.h"
 #include "graphwidget.h"
@@ -12,7 +12,7 @@
 #include <QList>
 #include <QVector>
 
-class Algorithms {
+class Preferential {
 public:
     // public for demo purpose, will be made private later
     // using preferential attachment
@@ -32,4 +32,4 @@ private:
     static Node* getPreference(QList<QGraphicsItem*> items, double genPref);
 };
 
-#endif // ALGORITHMS_H
+#endif // PREFERENTIAL_H

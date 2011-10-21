@@ -10,7 +10,7 @@ SOURCES += main.cpp \
     edge.cpp \
     randomgenerator.cpp \
     francescogenerator.cpp \
-    algorithms.cpp
+    preferential.cpp
 
 HEADERS += mainwindow.h \
            node.h \
@@ -19,10 +19,6 @@ HEADERS += mainwindow.h \
     graphgenerator.h \
     randomgenerator.h \
     francescogenerator.h \
-    algorithms.h
+    preferential.h
 
 FORMS += mainwindow.ui
-
-
-
-

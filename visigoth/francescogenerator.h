@@ -3,6 +3,8 @@
 
 #include "graphgenerator.h"
 
+class GraphWidget;
+
 class FrancescoGenerator : public GraphGenerator
 {
 public:

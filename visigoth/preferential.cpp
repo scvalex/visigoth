@@ -1,7 +1,7 @@
-#include "algorithms.h"
+#include "preferential.h"
 
 // Add vertex using preferential attachment with clustering.
-void Algorithms::addVertex(GraphWidget *graph, int edgesToAdd, double p) {
+void Preferential::addVertex(GraphWidget *graph, int edgesToAdd, double p) {
     Node *vPref;
     int numNodes(0);
     int numEdges(0);
@@ -47,7 +47,7 @@ void Algorithms::addVertex(GraphWidget *graph, int edgesToAdd, double p) {
     updatePreference(graph->scene()->items(), 2*numEdges);
 }
 
-void Algorithms::addNewEdges(GraphWidget *graph, int edgesToAdd,
+void Preferential::addNewEdges(GraphWidget *graph, int edgesToAdd,
                              Node *vertex, QVector<Node *> *neighbours,
                              QList<Node*> *usedNodes) {
     QVector<Node*> *setUsed = neighbours;
@@ -69,7 +69,7 @@ void Algorithms::addNewEdges(GraphWidget *graph, int edgesToAdd,
     }
 }
 
-QVector<Node*>* Algorithms::getNeighbours(Node *n) {
+QVector<Node*>* Preferential::getNeighbours(Node *n) {
     QList<Edge*> tempList = *(n->edges());
     QVector<Node*> *neighbours = new QVector<Node*>();
     int nTag = n->tag();
@@ -90,7 +90,7 @@ QVector<Node*>* Algorithms::getNeighbours(Node *n) {
     return neighbours;
 }
 
-void Algorithms::updatePreference(QList<QGraphicsItem*> items, int totalDegree) {
+void Preferential::updatePreference(QList<QGraphicsItem*> items, int totalDegree) {
     int prefCumulative = 0;
 
     if (items.count() == 1) {
@@ -116,7 +116,7 @@ void Algorithms::updatePreference(QList<QGraphicsItem*> items, int totalDegree) 
 }
 
 // Return the preferred node, using binary search.
-Node* Algorithms::getPreference(QList<QGraphicsItem*> items, double genPref) {
+Node* Preferential::getPreference(QList<QGraphicsItem*> items, double genPref) {
     QVector<Node*> nodes;
     foreach (QGraphicsItem *item, items) {
         if (Node *node = qgraphicsitem_cast<Node*>(item))
@@ -152,7 +152,7 @@ Node* Algorithms::getPreference(QList<QGraphicsItem*> items, double genPref) {
     return retNode;
 }
 
-QVector<Node*>* Algorithms::getIntersection(QVector<Node*> *vec1, QVector<Node*> *vec2) {
+QVector<Node*>* Preferential::getIntersection(QVector<Node*> *vec1, QVector<Node*> *vec2) {
     QVector<Node*> *retVec = new QVector<Node*>();
     QVector<Node*> *shorterVec;
     QVector<Node*> *longerVec;
@@ -179,7 +179,7 @@ QVector<Node*>* Algorithms::getIntersection(QVector<Node*> *vec1, QVector<Node*>
 }
 
 // Generate random double with 2 precision.
-double Algorithms::genRandom(){
+double Preferential::genRandom(){
     double main = qrand() % 100;
     return main + (( qrand() % 100 ) / 100 );
 }

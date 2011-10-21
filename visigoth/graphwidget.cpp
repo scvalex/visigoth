@@ -1,9 +1,9 @@
-#include "algorithms.h"
 #include "edge.h"
+#include "francescogenerator.h"
 #include "graphwidget.h"
 #include "node.h"
 #include "randomgenerator.h"
-#include "francescogenerator.h"
+#include "preferential.h"
 
 #include <cmath>
 
@@ -40,7 +40,7 @@ GraphWidget::GraphWidget(QWidget *parent) :
                      "<li>&lt;<em>spc</em>&gt; - pause/play the animation</li>"
                      "<li>&lt;<em>esc</em>&gt; - return to graph view</li>"
                      "<li><em>0</em> - fit the graph to the screen</li>"
-                     "<li><em>A</em> - add a new node using preferential selection with clustering</li>"
+                     "<li><em>a</em> - add a new node using preferential selection with clustering</li>"
                      "</ul>"
                      "</p>"
                      );
@@ -51,7 +51,7 @@ void GraphWidget::populate() {
     generator = new FrancescoGenerator(this, 60);
     int numEdges = generator->populate();
 
-    Algorithms::updatePreference(myScene->items(), 2 * numEdges);
+    Preferential::updatePreference(myScene->items(), 2 * numEdges);
 
     randomizePlacement();
 }
@@ -92,7 +92,7 @@ void GraphWidget::keyPressEvent(QKeyEvent *event) {
         fitToScreen();
         break;
     case Qt::Key_A:
-        Algorithms::addVertex(this, (qrand() % 3 ) + 1, qrand() % 100);
+        Preferential::addVertex(this, (qrand() % 3 ) + 1, qrand() % 100);
         break;
     default:
         QGraphicsView::keyPressEvent(event);

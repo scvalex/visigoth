@@ -1,8 +1,8 @@
-#include "algorithms.h"
 #include "edge.h"
+#include "francescogenerator.h"
 #include "graphwidget.h"
 #include "node.h"
-#include "francescogenerator.h"
+#include "preferential.h"
 
 #include <stdexcept>
 #include <cmath>
