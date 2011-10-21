@@ -3,6 +3,7 @@
 
 #include <QGraphicsView>
 #include <QList>
+#include <QSet>
 #include <QStaticText>
 #include <QVector>
 
@@ -18,15 +19,13 @@ class GraphWidget : public QGraphicsView
 public:
     explicit GraphWidget(QWidget *parent = 0);
 
-    QVector<Node*> nodes() const;
-
     void populate();
 
     void itemMoved();
-    QVector<Node*>* getNodeVector();
-    QList<Edge*>* getEdgeList();
-    void addNodeToScene(Node *n);
-    void addEdgeToScene(Edge *e);
+
+    void addNode(Node *n);
+    bool addNewEdge(Edge *e);
+    bool doesEdgeExist(int sourceTag, int destTag);
 
 protected:
     void keyPressEvent(QKeyEvent *event);
@@ -34,26 +33,24 @@ protected:
     void wheelEvent(QWheelEvent *event);
     void paintEvent(QPaintEvent *event);
 
-    void scaleView(qreal scaleFactor);
-    void randomizePlacement();
-    void playPause();
     void fitToScreen();
+    void playPause();
+    void randomizePlacement();
+    void scaleView(qreal scaleFactor);
+    void setAnimationRunning();
 
 private:
     static const float HELP_WIDTH = 300;
     static const float HELP_HEIGHT = 500;
 
     GraphGenerator *generator;
-    QList<Edge*> edges;
+    QVector<QSet<int> > hasEdge;
     bool helping;
     QStaticText helpText;
     bool isPlaying;
     bool isRunning;
-    QVector<Node*> nodeVector;
-    QGraphicsScene *scene;
+    QGraphicsScene *myScene;
     int timerId;
-
-    void setAnimationRunning();
 };
 
 #endif // GRAPHWIDGET_H

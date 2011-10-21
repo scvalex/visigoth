@@ -12,7 +12,7 @@ class RandomGenerator : public GraphGenerator
 public:
     RandomGenerator(GraphWidget *parentGraph);
 
-    void populate(QVector<Node*> &nodes, QList<Edge*> &edges);
+    int populate();
 
 private:
     GraphWidget *graph;

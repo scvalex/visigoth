@@ -10,25 +10,29 @@ RandomGenerator::RandomGenerator(GraphWidget *parentGraph) :
 {
 }
 
-void RandomGenerator::populate(QVector<Node*> &nodes, QList<Edge*> &edges) {
+int RandomGenerator::populate() {
     const int NUM_NODES = 50;
     const int NUM_EDGES = 150;
-    nodes.clear();
+
+    QVector<Node*> nodes(NUM_NODES);
     for (int i(0); i < NUM_NODES; ++i) {
-        Node *node = new Node(i, graph);
-        nodes << node;
+        nodes[i] = new Node(i, graph);
+        graph->addNode(nodes[i]);
     }
-    edges.clear();
-    int a = 0;
+
+    int a(0);
+    int numEdges(0);
     for (int i(0); i < NUM_EDGES; ++i) {
         int b = a;
         while (a == b)
             b = qrand() % NUM_NODES;
 
-        Edge *edge = new Edge(nodes[a], nodes[b]);
-        edges << edge;
+        if (graph->addNewEdge(new Edge(nodes[a], nodes[b])))
+            ++numEdges;
 
         //if (qrand() % int(pow(1.2, a)) == 0)
         a = (a+1) % NUM_NODES;
     }
+
+    return numEdges;
 }

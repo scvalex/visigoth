@@ -10,7 +10,8 @@ class Node;
 class GraphGenerator
 {
 public:
-    virtual void populate(QVector<Node*> &nodes, QList<Edge*> &edges) = 0;
+    // Returns the number of edges generated.
+    virtual int populate() = 0;
 };
 
 #endif // GRAPHGENERATOR_H

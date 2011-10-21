@@ -3,28 +3,32 @@
 // Add vertex using preferential attachment with clustering.
 void Algorithms::addVertex(GraphWidget *graph, int edgesToAdd, double p) {
     Node *vPref;
-    QVector<Node*> *nVec = graph->getNodeVector();
-    int nVecLength = nVec->count();
-    Node* vertex = new Node(nVecLength, graph);
-    QList<Edge*> *edges = graph->getEdgeList();
+    int numNodes(0);
+    int numEdges(0);
+    foreach (QGraphicsItem *item, graph->scene()->items()) {
+        if (qgraphicsitem_cast<Node*>(item))
+            ++numNodes;
+        if (qgraphicsitem_cast<Edge*>(item))
+            ++numEdges;
+    }
+    Node* vertex = new Node(numNodes, graph);
     QVector<Node*> *neighbours;
     QList<Node*> *usedNodes = new QList<Node*>();
 
     // saftey check to ensure that the method
     // does not get stuck looping
 
-    if (edgesToAdd > nVecLength) {
-        edgesToAdd = nVecLength;
+    if (edgesToAdd > numNodes) {
+        edgesToAdd = numNodes;
     }
 
     while (edgesToAdd != 0) {
         do {
-            vPref = getPref(nVec, genRandom());
-        } while (edgeExists(vertex->tag(), vPref->tag(), edges));
+            vPref = getPreference(graph->scene()->items(), genRandom());
+        } while (graph->doesEdgeExist(vertex->tag(), vPref->tag()));
 
         Edge *edge = new Edge(vertex, vPref);
-        graph->addEdgeToScene(edge);
-        *edges << edge;
+        graph->addNewEdge(edge);
         --edgesToAdd;
 
         usedNodes->append(vPref);
@@ -34,20 +38,18 @@ void Algorithms::addVertex(GraphWidget *graph, int edgesToAdd, double p) {
             addNewEdges(graph, edgesToAdd, vertex, neighbours, usedNodes);
         }
 
-        if (usedNodes->count() == nVecLength){
+        if (usedNodes->count() == numNodes){
             edgesToAdd = 0;
         }
     }
 
-    *nVec << vertex;
-    graph->addNodeToScene(vertex);
-    updatePreference(nVec, 2*edges->count());
+    graph->addNode(vertex);
+    updatePreference(graph->scene()->items(), 2*numEdges);
 }
 
 void Algorithms::addNewEdges(GraphWidget *graph, int edgesToAdd,
                              Node *vertex, QVector<Node *> *neighbours,
                              QList<Node*> *usedNodes) {
-    QList<Edge*> *edges = graph->getEdgeList();
     QVector<Node*> *setUsed = neighbours;
     int length = setUsed->count();
 
@@ -55,11 +57,8 @@ void Algorithms::addNewEdges(GraphWidget *graph, int edgesToAdd,
         int rand = qrand() % length;
         Node *vi = setUsed->at(rand);
 
-        if (!edgeExists(vertex->tag(), vi->tag(), graph->getEdgeList())) {
-            Edge *e = new Edge(vertex, vi);
-            *edges << e;
+        if (graph->addNewEdge(new Edge(vertex, vi))) {
             --edgesToAdd;
-            graph->addEdgeToScene(e);
             usedNodes->append(vi);
             setUsed = getIntersection(neighbours, getNeighbours(vi));
         } else {
@@ -71,7 +70,7 @@ void Algorithms::addNewEdges(GraphWidget *graph, int edgesToAdd,
 }
 
 QVector<Node*>* Algorithms::getNeighbours(Node *n) {
-    QList<Edge*> tempList = *(n->getList());
+    QList<Edge*> tempList = *(n->edges());
     QVector<Node*> *neighbours = new QVector<Node*>();
     int nTag = n->tag();
 
@@ -91,40 +90,52 @@ QVector<Node*>* Algorithms::getNeighbours(Node *n) {
     return neighbours;
 }
 
-void Algorithms::updatePreference(QVector<Node*> *nVec, int totalDegree) {
+void Algorithms::updatePreference(QList<QGraphicsItem*> items, int totalDegree) {
     int prefCumulative = 0;
 
-    if(nVec->count() == 1) {
-        nVec->first()->setPref(100);
-        nVec->first()->setCumPref(100);
+    if (items.count() == 1) {
+        Node *node = qgraphicsitem_cast<Node*>(items.first());
+        if (!node)
+            return;
+        node->setPref(100);
+        node->setCumPref(100);
         return;
     }
 
-    foreach (Node *n, *nVec) {
-        double tempLength = (double)n->getList()->length();
+    foreach (QGraphicsItem *item, items) {
+        Node *node = qgraphicsitem_cast<Node*>(item);
+        if (!node)
+            continue;
+
+        double tempLength = (double)node->edges()->length();
         double tempPref = (tempLength / (double) totalDegree) * 100;
-        n->setPref(tempPref);
-        n->setCumPref(prefCumulative);
+        node->setPref(tempPref);
+        node->setCumPref(prefCumulative);
         prefCumulative += tempPref;
     }
 }
 
 // Return the preferred node, using binary search.
-Node* Algorithms::getPref(QVector<Node*> *nVec, double genPref) {
+Node* Algorithms::getPreference(QList<QGraphicsItem*> items, double genPref) {
+    QVector<Node*> nodes;
+    foreach (QGraphicsItem *item, items) {
+        if (Node *node = qgraphicsitem_cast<Node*>(item))
+            nodes << node;
+    }
     int start = 0;
-    int end = nVec->count() - 1;
+    int end = nodes.count() - 1;
     bool found = false;
     Node* retNode;
 
     while (!found) {
         int avg = (start + end) / 2;
-        Node *temp1 = nVec->at(avg);
+        Node *temp1 = nodes.at(avg);
 
         if ((start == end ) || (avg == end)) {
             retNode = temp1;
             found = true;
         } else {
-            Node *temp2 = nVec->at(avg + 1);
+            Node *temp2 = nodes.at(avg + 1);
             double pref1 = temp1->getCumPref();
             double pref2 = temp2->getCumPref();
             if (genPref >= pref1 && genPref < pref2) {
@@ -141,28 +152,8 @@ Node* Algorithms::getPref(QVector<Node*> *nVec, double genPref) {
     return retNode;
 }
 
-bool Algorithms::edgeExists(int sourceTag, int destTag, QList<Edge*> *edges) {
-    bool exist = false;
-
-    for(QList<Edge*>::const_iterator ii = edges->constBegin();
-        ii != edges->constEnd();
-        ++ii)
-    {
-        int sTag = (*ii)->sourceNode()->tag();
-        int dTag = (*ii)->destNode()->tag();
-
-
-        if ((sTag == sourceTag && dTag == destTag) || (sourceTag == destTag)) {
-            exist = true;
-            break;
-        }
-    }
-
-    return exist;
-}
-
 QVector<Node*>* Algorithms::getIntersection(QVector<Node*> *vec1, QVector<Node*> *vec2) {
-    QVector<Node*> *retVec = new QVector<Node *>();
+    QVector<Node*> *retVec = new QVector<Node*>();
     QVector<Node*> *shorterVec;
     QVector<Node*> *longerVec;
     int length;

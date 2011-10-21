@@ -39,7 +39,10 @@ QPointF Node::calculateForces() {
     qreal xvel = 0;
     qreal yvel = 0;
 
-    foreach (Node *node, graph->nodes()) {
+    foreach (QGraphicsItem *item, scene()->items()) {
+        Node *node = qgraphicsitem_cast<Node*>(item);
+        if (!node)
+            continue;
         QPointF vec = mapToItem(node, 0, 0);
         qreal dx = vec.x();
         qreal dy = vec.y();
@@ -131,7 +134,7 @@ void Node::hoverLeaveEvent(QGraphicsSceneHoverEvent *event) {
     QGraphicsItem::hoverLeaveEvent(event);
 }
 
-QList<Edge*>* Node::getList() {
+QList<Edge*>* Node::edges() {
     return &edgeList;
 }
 

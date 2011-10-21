@@ -37,7 +37,7 @@ public:
 
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
 
-    QList<Edge*>* getList();
+    QList<Edge*>* edges();
 
     void setCumPref(double p);
     double getCumPref();

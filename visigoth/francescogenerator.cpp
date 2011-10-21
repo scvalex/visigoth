@@ -16,28 +16,23 @@ FrancescoGenerator::FrancescoGenerator(GraphWidget *parentGraph, int density) :
     this->density = density;
 }
 
-void FrancescoGenerator::populate(QVector<Node*> &nodes, QList<Edge*> &edges) {
+int FrancescoGenerator::populate() {
     const int NUM_NODES = 200;
 
-    nodes.clear();
-    edges.clear();
+    QVector<Node*> nodes(NUM_NODES);
     for (int i(0); i < NUM_NODES; ++i) {
-        Node *node = new Node(i, graph);
-        nodes << node;
+        nodes[i] = new Node(i, graph);
+        graph->addNode(nodes[i]);
     }
 
+    int numEdges(0);
     for (int node(0); node < NUM_NODES; ++node)	{
         if (node > 0) {
-            int other;
             do {
-                other = qrand() % node;
-
-                // Don't generate the same edge twice
-                if (!Algorithms::edgeExists(nodes[node]->tag(), nodes[other]->tag(), graph->getEdgeList())) {
-                    edges << new Edge(nodes[node], nodes[other]);
-                }
-
+                if (graph->addNewEdge(new Edge(nodes[node], nodes[qrand() % node])))
+                    ++numEdges;
             } while (qrand() % 100 > density);
         }
     }
+    return numEdges;
 }

@@ -19,7 +19,7 @@ public:
     static void addVertex(GraphWidget *graph, int edgesToAdd, double p);
     static QVector<Node*>* cloneVector(QVector<Node*> *nVec);
     static bool edgeExists(int sourceTag, int destTag, QList<Edge*> *edges);
-    static void updatePreference(QVector<Node*> *nVec, int totalEdges);
+    static void updatePreference(QList<QGraphicsItem*> items, int numEdges);
 
 private:
     // genPef is a randomly generated number satisfing 0 <= genPref < 100
@@ -29,8 +29,7 @@ private:
     static double genRandom();
     static QVector<Node*>* getIntersection(QVector<Node*> *vec1, QVector<Node*> *vec2);
     static QVector<Node*>* getNeighbours(Node *n);
-    static Node* getPref(QVector<Node*> *nVec, double genPref);
-    static void restoreTags(QVector<Node*> *nVec);
+    static Node* getPreference(QList<QGraphicsItem*> items, double genPref);
 };
 
 #endif // ALGORITHMS_H

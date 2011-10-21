@@ -8,7 +8,7 @@ class FrancescoGenerator : public GraphGenerator
 public:
     FrancescoGenerator(GraphWidget *parentGraph, int density);
 
-    void populate(QVector<Node*> &nodes, QList<Edge*> &edges);
+    int populate();
 
 private:
     GraphWidget *graph;
