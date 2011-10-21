@@ -1,7 +1,18 @@
 #include "preferential.h"
 
+Preferential::Preferential(GraphWidget *graph) :
+    graph(graph)
+{
+    int numEdges(0);
+    foreach (QGraphicsItem *item, graph->scene()->items()) {
+        if (qgraphicsitem_cast<Edge*>(item))
+            ++numEdges;
+    }
+    updatePreference(graph->scene()->items(), 2 * numEdges);
+}
+
 // Add vertex using preferential attachment with clustering.
-void Preferential::addVertex(GraphWidget *graph, int edgesToAdd, double p) {
+void Preferential::addVertex(int edgesToAdd, double p) {
     Node *vPref;
     int numNodes(0);
     int numEdges(0);
@@ -35,7 +46,7 @@ void Preferential::addVertex(GraphWidget *graph, int edgesToAdd, double p) {
 
         if (genRandom() < p){
             neighbours = getNeighbours(vPref);
-            addNewEdges(graph, edgesToAdd, vertex, neighbours, usedNodes);
+            addNewEdges(edgesToAdd, vertex, neighbours, usedNodes);
         }
 
         if (usedNodes->count() == numNodes){
@@ -47,9 +58,9 @@ void Preferential::addVertex(GraphWidget *graph, int edgesToAdd, double p) {
     updatePreference(graph->scene()->items(), 2*numEdges);
 }
 
-void Preferential::addNewEdges(GraphWidget *graph, int edgesToAdd,
-                             Node *vertex, QVector<Node *> *neighbours,
-                             QList<Node*> *usedNodes) {
+void Preferential::addNewEdges(int edgesToAdd,
+                               Node *vertex, QVector<Node *> *neighbours,
+                               QList<Node*> *usedNodes) {
     QVector<Node*> *setUsed = neighbours;
     int length = setUsed->count();
 

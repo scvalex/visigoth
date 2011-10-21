@@ -10,6 +10,7 @@
 class Edge;
 class GraphGenerator;
 class Node;
+class Preferential;
 class QGraphicsScene;
 class QPaintEvent;
 
@@ -18,6 +19,7 @@ class GraphWidget : public QGraphicsView
     Q_OBJECT
 public:
     explicit GraphWidget(QWidget *parent = 0);
+    virtual ~GraphWidget();
 
     void populate();
 
@@ -43,6 +45,7 @@ private:
     static const float HELP_WIDTH = 300;
     static const float HELP_HEIGHT = 500;
 
+    Preferential *algo;
     GraphGenerator *generator;
     QVector<QSet<int> > hasEdge;
     bool helping;

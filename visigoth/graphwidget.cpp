@@ -14,6 +14,8 @@
 
 GraphWidget::GraphWidget(QWidget *parent) :
     QGraphicsView(parent),
+    algo(0),
+    generator(0),
     helping(true),
     helpText(),
     isPlaying(true),
@@ -47,11 +49,17 @@ GraphWidget::GraphWidget(QWidget *parent) :
     helpText.setTextWidth(HELP_WIDTH - 10);
 }
 
+GraphWidget::~GraphWidget() {
+    if (algo)
+        delete algo;
+    if (generator)
+        delete generator;
+}
+
 void GraphWidget::populate() {
     generator = new FrancescoGenerator(this, 60);
-    int numEdges = generator->populate();
-
-    Preferential::updatePreference(myScene->items(), 2 * numEdges);
+    generator->populate();
+    algo = new Preferential(this);
 
     randomizePlacement();
 }
@@ -92,7 +100,9 @@ void GraphWidget::keyPressEvent(QKeyEvent *event) {
         fitToScreen();
         break;
     case Qt::Key_A:
-        Preferential::addVertex(this, (qrand() % 3 ) + 1, qrand() % 100);
+        if (algo) {
+            algo->addVertex((qrand() % 3 ) + 1, qrand() % 100);
+        }
         break;
     default:
         QGraphicsView::keyPressEvent(event);

@@ -5,31 +5,35 @@
 #include "graphwidget.h"
 #include "node.h"
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <time.h>
-
 #include <QList>
 #include <QVector>
 
+class GraphWidget;
+class Preferential;
+
 class Preferential {
 public:
+    Preferential(GraphWidget *graph);
+
     // public for demo purpose, will be made private later
     // using preferential attachment
-    static void addVertex(GraphWidget *graph, int edgesToAdd, double p);
-    static QVector<Node*>* cloneVector(QVector<Node*> *nVec);
-    static bool edgeExists(int sourceTag, int destTag, QList<Edge*> *edges);
-    static void updatePreference(QList<QGraphicsItem*> items, int numEdges);
+    void addVertex(int edgesToAdd, double p);
+    QVector<Node*>* cloneVector(QVector<Node*> *nVec);
+    bool edgeExists(int sourceTag, int destTag, QList<Edge*> *edges);
+
+protected:
+    // genPef is a randomly generated number satisfing 0 <= genPref < 100
+    void addNewEdges(int edgesToAdd,
+                     Node *vertex, QVector<Node*> *neighbours,
+                     QList<Node*> *usedNodes);
+    double genRandom();
+    QVector<Node*>* getIntersection(QVector<Node*> *vec1, QVector<Node*> *vec2);
+    QVector<Node*>* getNeighbours(Node *n);
+    Node* getPreference(QList<QGraphicsItem*> items, double genPref);
+    void updatePreference(QList<QGraphicsItem*> items, int numEdges);
 
 private:
-    // genPef is a randomly generated number satisfing 0 <= genPref < 100
-    static void addNewEdges(GraphWidget *graph, int edgesToAdd,
-                            Node *vertex, QVector<Node*> *neighbours,
-                            QList<Node*> *usedNodes);
-    static double genRandom();
-    static QVector<Node*>* getIntersection(QVector<Node*> *vec1, QVector<Node*> *vec2);
-    static QVector<Node*>* getNeighbours(Node *n);
-    static Node* getPreference(QList<QGraphicsItem*> items, double genPref);
+    GraphWidget *graph;
 };
 
 #endif // PREFERENTIAL_H
