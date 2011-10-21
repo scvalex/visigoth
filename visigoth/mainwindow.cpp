@@ -41,7 +41,9 @@ void MainWindow::on_actionPrint_to_PDF_triggered()
 
     //QPixmap pixmap = QPixmap::grabWindow(QApplication::desktop()->winId());
 
-    QPixmap pixmap = QPixmap::grabWidget(view, 0, 0, -1, -1);
+    int vWidth = view->width()-15;
+
+    QPixmap pixmap = QPixmap::grabWidget(view, 0, 0, vWidth, -1);
 
     QString format = "png";
     QString initialPath = QDir::currentPath() + "/untitled." + format;
