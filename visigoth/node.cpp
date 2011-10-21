@@ -5,15 +5,17 @@
 #include <QGraphicsScene>
 #include <QPainter>
 
-Node::Node(int tag, GraphWidget *graph, QGraphicsItem *parent) :
+int Node::ALL_NODES(0);
+
+Node::Node(GraphWidget *graph, QGraphicsItem *parent) :
     QGraphicsItem(parent),
     brush(QColor::fromRgb(qrand() % 256, qrand() % 256, qrand() % 256, 180)),
     graph(graph),
     hovering(false),
-    myTag(tag),
     cumulativePreference(0),
     preference(0)
 {
+    myTag = ALL_NODES++;
     setFlag(ItemIsMovable);
     setFlag(ItemSendsGeometryChanges);
     setCacheMode(DeviceCoordinateCache);

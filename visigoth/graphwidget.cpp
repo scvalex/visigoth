@@ -57,9 +57,14 @@ GraphWidget::~GraphWidget() {
 }
 
 void GraphWidget::populate() {
-    generator = new FrancescoGenerator(this, 60);
-    generator->populate();
+    //generator = new FrancescoGenerator(this, 60);
+    //generator->populate();
+    Node *n1 = addNode(new Node(this));
+    Node *n2 = addNode(new Node(this));
+    addNewEdge(new Edge(n1, n2));
     algo = new Preferential(this);
+    for (int i(0); i < 100; ++i)
+        algo->addVertex((qrand() % 3 ) + 1, qrand() % 100);
 
     randomizePlacement();
 }
@@ -225,8 +230,9 @@ bool GraphWidget::addNewEdge(Edge *edge) {
     return true;
 }
 
-void GraphWidget::addNode(Node *node) {
+Node* GraphWidget::addNode(Node *node) {
     myScene->addItem(node);
+    return node;
 }
 
 bool GraphWidget::doesEdgeExist(int sourceTag, int destTag) {

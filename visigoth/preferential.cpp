@@ -22,7 +22,7 @@ void Preferential::addVertex(int edgesToAdd, double p) {
         if (qgraphicsitem_cast<Edge*>(item))
             ++numEdges;
     }
-    Node* vertex = new Node(numNodes, graph);
+    Node* vertex = new Node(graph);
     QVector<Node*> *neighbours;
     QList<Node*> *usedNodes = new QList<Node*>();
 
@@ -33,10 +33,14 @@ void Preferential::addVertex(int edgesToAdd, double p) {
         edgesToAdd = numNodes;
     }
 
-    while (edgesToAdd != 0) {
-        do {
+    while (edgesToAdd > 0) {
+        vPref = getPreference(graph->scene()->items(), genRandom());
+        int cutOff;
+        for (cutOff = 0; cutOff < 100 && graph->doesEdgeExist(vertex->tag(), vPref->tag()); ++cutOff) {
             vPref = getPreference(graph->scene()->items(), genRandom());
-        } while (graph->doesEdgeExist(vertex->tag(), vPref->tag()));
+        }
+        if (cutOff == 100)
+            break;
 
         Edge *edge = new Edge(vertex, vPref);
         graph->addNewEdge(edge);

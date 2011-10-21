@@ -25,7 +25,7 @@ public:
 
     void itemMoved();
 
-    void addNode(Node *n);
+    Node* addNode(Node *n);
     bool addNewEdge(Edge *e);
     bool doesEdgeExist(int sourceTag, int destTag);
 

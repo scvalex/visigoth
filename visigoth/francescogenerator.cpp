@@ -21,7 +21,7 @@ int FrancescoGenerator::populate() {
 
     QVector<Node*> nodes(NUM_NODES);
     for (int i(0); i < NUM_NODES; ++i) {
-        nodes[i] = new Node(i, graph);
+        nodes[i] = new Node(graph);
         graph->addNode(nodes[i]);
     }
 

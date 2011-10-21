@@ -18,7 +18,7 @@ class QGraphicsSceneHoverEvent;
 class Node : public QGraphicsItem
 {
 public:
-    explicit Node(int tag, GraphWidget *graph, QGraphicsItem *parent = 0);
+    explicit Node(GraphWidget *graph, QGraphicsItem *parent = 0);
 
     void addEdge(Edge *edge);
 
@@ -51,6 +51,8 @@ protected:
     void hoverLeaveEvent(QGraphicsSceneHoverEvent *event);
 
 private:
+    static int ALL_NODES;
+
     QBrush brush;
     QList<Edge*> edgeList;
     GraphWidget *graph;
