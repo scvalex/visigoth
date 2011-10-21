@@ -177,8 +177,7 @@ inline int TreeCode::getLevelQuadrants(int l) {
 TreeCode::Quadrant::Quadrant(qreal width, int size) :
     width(width),
     size(size),
-    center(QPointF(0, 0))
-{
+    center(QPointF(0, 0)) {
 }
 
 int TreeCode::Quadrant::getSize() {
