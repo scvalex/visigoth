@@ -22,7 +22,7 @@ void Preferential::addVertex(int edgesToAdd, double p) {
         if (qgraphicsitem_cast<Edge*>(item))
             ++numEdges;
     }
-    Node* vertex = new Node(graph);
+    Node *vertex = new Node(graph);
     QVector<Node*> *neighbours;
     QList<Node*> *usedNodes = new QList<Node*>();
 
@@ -32,6 +32,8 @@ void Preferential::addVertex(int edgesToAdd, double p) {
     if (edgesToAdd > numNodes) {
         edgesToAdd = numNodes;
     }
+
+    qDebug("numNodes = %d", numNodes);
 
     while (edgesToAdd > 0) {
         vPref = getPreference(graph->scene()->items(), genRandom());
@@ -59,7 +61,7 @@ void Preferential::addVertex(int edgesToAdd, double p) {
     }
 
     graph->addNode(vertex);
-    updatePreference(graph->scene()->items(), 2*numEdges);
+    updatePreference(graph->scene()->items(), 2 * numEdges);
 }
 
 void Preferential::addNewEdges(int edgesToAdd,
@@ -140,31 +142,20 @@ Node* Preferential::getPreference(QList<QGraphicsItem*> items, double genPref) {
     int start = 0;
     int end = nodes.count() - 1;
     bool found = false;
-    Node* retNode;
+    Node *retNode;
 
-    while (!found) {
-        int avg = (start + end) / 2;
-        Node *temp1 = nodes.at(avg);
-
-        if ((start == end ) || (avg == end)) {
-            retNode = temp1;
-            found = true;
-        } else {
-            Node *temp2 = nodes.at(avg + 1);
-            double pref1 = temp1->getCumPref();
-            double pref2 = temp2->getCumPref();
-            if (genPref >= pref1 && genPref < pref2) {
-                found = true;
-                retNode = temp1;
-            } else if (genPref > pref1) {
-                start = avg + 1;
-            } else {
-                end = avg - 1;
-            }
+    const float E = 0.01;
+    int l;
+    for (l = 1; l < nodes.count(); l <<= 1)
+        ;
+    int i(0);
+    for (; l > 0; l >>= 1) {
+        if (l + i < nodes.count()) {
+            if (nodes[l + i]->getCumPref() <= genPref + E)
+                i += l;
         }
     }
-
-    return retNode;
+    return nodes[i];
 }
 
 QVector<Node*>* Preferential::getIntersection(QVector<Node*> *vec1, QVector<Node*> *vec2) {
