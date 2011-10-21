@@ -27,6 +27,7 @@ public:
     QPointF calculateForces();
 
     bool advance();
+    bool hovering;
 
     enum { Type = UserType + 1 };
     int type() const { return Type; }
@@ -47,7 +48,7 @@ private:
     QBrush brush;
     QList<Edge*> edgeList;
     GraphWidget *graph;
-    bool hovering;
+
     int myTag;
     QPointF newPos;
 };

@@ -8,7 +8,7 @@
 
 Node::Node(int tag, GraphWidget *graph, QGraphicsItem *parent) :
     QGraphicsItem(parent),
-    brush(QColor::fromRgb(205,239,255,255)),
+    brush(QColor::fromRgb(50,150,255,255)),
     //brush(QColor::fromRgb(qrand() % 256, qrand() % 256, qrand() % 256, 180)),
     graph(graph),
     hovering(false),
@@ -94,8 +94,8 @@ void Node::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *)
     } else {
         //change the color for the hovering node
         QColor highlight = brush.color();
-        highlight.setNamedColor("green");
-        highlight.setAlpha(255);
+        highlight.setNamedColor("yellow");
+        highlight.setAlpha(200);
         painter->setBrush(QBrush(highlight));
     }
     painter->drawEllipse(-10, -10, 20, 20);
