@@ -9,6 +9,8 @@
 #include <QGraphicsItem>
 #include <QVariant>
 #include <QVector>
+#include <QToolTip>
+#include <sstream>
 
 class Edge;
 class GraphWidget;
@@ -17,7 +19,7 @@ class QGraphicsSceneHoverEvent;
 class Node : public QGraphicsItem
 {
 public:
-    explicit Node(int tag, GraphWidget *graph, QGraphicsItem *parent = 0);
+    explicit Node(GraphWidget *graph, QGraphicsItem *parent = 0);
 
     void addEdge(Edge *edge);
 
@@ -38,6 +40,9 @@ public:
     void mousePressEvent(QGraphicsSceneMouseEvent *event);
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
 
+    QList<Edge*>* edges();
+
+    static void reset();
 
 protected:
     QVariant itemChange(GraphicsItemChange change, const QVariant &value);
@@ -46,6 +51,8 @@ protected:
     void hoverLeaveEvent(QGraphicsSceneHoverEvent *event);
 
 private:
+    static int ALL_NODES;
+
     QBrush brush;
     QList<Edge*> edgeList;
     GraphWidget *graph;

@@ -6,14 +6,16 @@
 #include <QPainter>
 #include <QVector>
 
-Node::Node(int tag, GraphWidget *graph, QGraphicsItem *parent) :
+int Node::ALL_NODES(0);
+
+Node::Node(GraphWidget *graph, QGraphicsItem *parent) :
     QGraphicsItem(parent),
     brush(QColor::fromRgb(50,150,255,255)),
     //brush(QColor::fromRgb(qrand() % 256, qrand() % 256, qrand() % 256, 180)),
     graph(graph),
-    hovering(false),
-    myTag(tag)
+    hovering(false)
 {
+    myTag = ALL_NODES++;
     setFlag(ItemIsMovable);
     setFlag(ItemIsSelectable);
     setFlag(ItemSendsGeometryChanges);
@@ -45,7 +47,10 @@ QPointF Node::calculateForces() {
     qreal xvel = 0;
     qreal yvel = 0;
 
-    foreach (Node *node, graph->nodes()) {
+    foreach (QGraphicsItem *item, scene()->items()) {
+        Node *node = qgraphicsitem_cast<Node*>(item);
+        if (!node)
+            continue;
         QPointF vec = mapToItem(node, 0, 0);
         qreal dx = vec.x();
         qreal dy = vec.y();
@@ -147,3 +152,10 @@ void Node::hoverLeaveEvent(QGraphicsSceneHoverEvent *event) {
     QGraphicsItem::hoverLeaveEvent(event);
 }
 
+QList<Edge*>* Node::edges() {
+    return &edgeList;
+}
+
+void Node::reset() {
+    ALL_NODES = 0;
+}

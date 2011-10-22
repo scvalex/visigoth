@@ -8,15 +8,12 @@ SOURCES += main.cpp \
           node.cpp \
     graphwidget.cpp \
     edge.cpp \
-    randomgenerator.cpp \
-    francescogenerator.cpp
+    preferential.cpp
 
 HEADERS += mainwindow.h \
            node.h \
     graphwidget.h \
     edge.h \
-    graphgenerator.h \
-    randomgenerator.h \
-    francescogenerator.h
+    preferential.h
 
 FORMS += mainwindow.ui

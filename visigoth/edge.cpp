@@ -1,6 +1,5 @@
 #include "node.h"
 #include "edge.h"
-
 #include <QDebug>
 #include <QPainter>
 
