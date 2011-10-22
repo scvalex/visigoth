@@ -2,6 +2,7 @@
 #include "graphwidget.h"
 #include "node.h"
 #include "preferential.h"
+#include "treecode.h"
 
 #include <cmath>
 
@@ -114,12 +115,21 @@ void GraphWidget::timerEvent(QTimerEvent *) {
     QPointF topLeft;
     QPointF bottomRight;
 
+    TreeCode treeCode(myScene->sceneRect());
+
+    foreach (QGraphicsItem* item, myScene->items()) {
+        Node* node = qgraphicsitem_cast<Node*>(item);
+        if (node) {
+            treeCode.addNode(node);
+        }
+    }
+
     foreach (QGraphicsItem *item, myScene->items()) {
         Node *node = qgraphicsitem_cast<Node*>(item);
         if (!node)
             continue;
+        QPointF pos = node->calculatePosition(treeCode.getRoot());
 
-        QPointF pos = node->calculateForces();
         if (pos.x() < topLeft.x()) {
             topLeft.setX(pos.x());
         }

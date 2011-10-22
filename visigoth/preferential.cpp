@@ -85,12 +85,11 @@ void Preferential::addNewEdges(int edgesToAdd,
 }
 
 QVector<Node*>* Preferential::getNeighbours(Node *n) {
-    QList<Edge*> tempList = *(n->edges());
     QVector<Node*> *neighbours = new QVector<Node*>();
     int nTag = n->tag();
 
-    for (QList<Edge*>::const_iterator ii = tempList.constBegin();
-         ii != tempList.constEnd();
+    for (QList<Edge*>::const_iterator ii = n->edges().constBegin();
+         ii != n->edges().constEnd();
          ++ii)
     {
         int sT = (*ii)->sourceNode()->tag();
@@ -122,7 +121,7 @@ void Preferential::updatePreference(QList<QGraphicsItem*> items, int totalDegree
         if (!node)
             continue;
 
-        double tempLength = (double)node->edges()->length();
+        double tempLength = (double)node->edges().length();
         double tempPref = (tempLength / (double) totalDegree) * 100;
         preferences[node->tag()] = tempPref;
         cumulativePreferences[node->tag()] = prefCumulative;
