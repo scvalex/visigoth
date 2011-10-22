@@ -35,6 +35,7 @@ public:
     QRectF boundingRect() const;
     QPainterPath shape() const;
 
+    void mousePressEvent(QGraphicsSceneMouseEvent *event);
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
 
 

@@ -47,12 +47,10 @@ QRectF Edge::boundingRect() const {
     return QRectF(sourcePoint, QSizeF(destPoint.x() - sourcePoint.x(),
                                       destPoint.y() - sourcePoint.y()))
             .normalized();
-
 }
 
 
 void Edge::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *) {
-
     QBrush brushP;
 
     if (!source || !dest)

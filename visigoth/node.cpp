@@ -15,10 +15,16 @@ Node::Node(int tag, GraphWidget *graph, QGraphicsItem *parent) :
     myTag(tag)
 {
     setFlag(ItemIsMovable);
+    setFlag(ItemIsSelectable);
     setFlag(ItemSendsGeometryChanges);
     setCacheMode(DeviceCoordinateCache);
     setZValue(100);
     setAcceptHoverEvents(true);
+}
+
+void Node::mousePressEvent(QGraphicsSceneMouseEvent *event){
+    this->isSelected();
+    QGraphicsItem::mousePressEvent(event);
 }
 
 int Node::tag() const {
