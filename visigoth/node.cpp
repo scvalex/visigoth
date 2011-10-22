@@ -86,10 +86,10 @@ QPointF Node::calculateNonEdgeForces(TreeNode* treeNode)
                 this->pos().y() - treeNode->getCenter().y());
     qreal dx = vec.x();
     qreal dy = vec.y();
-
     qreal distance = sqrt(dx*dx + dy*dy);
 
     QPointF vel;
+
     if (treeNode->isFarEnough(distance) || treeNode->getSize() == 1) {
         double l = 2.0 * (dx*dx + dy*dy);
 
@@ -141,6 +141,7 @@ void Node::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *)
         highlight.setAlpha(200);
         painter->setBrush(QBrush(highlight));
     }
+
     painter->drawEllipse(-10, -10, 20, 20);
 }
 

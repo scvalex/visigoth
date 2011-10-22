@@ -117,7 +117,6 @@ void GraphWidget::keyPressEvent(QKeyEvent *event) {
 }
 
 void GraphWidget::getUserInput() {
-
     bool ok;
     QString text = QInputDialog::getText(this,
             "", "Enter the Number of Nodes:", QLineEdit::Normal,
@@ -135,7 +134,6 @@ void GraphWidget::getUserInput() {
     } else {
         //don't do anything
     }
-
 }
 
 void GraphWidget::timerEvent(QTimerEvent *) {

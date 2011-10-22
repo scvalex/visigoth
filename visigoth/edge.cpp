@@ -43,6 +43,7 @@ void Edge::adjust() {
 QRectF Edge::boundingRect() const {
     if (!source || !dest)
         return QRectF();
+
     return QRectF(sourcePoint, QSizeF(destPoint.x() - sourcePoint.x(),
                                       destPoint.y() - sourcePoint.y()))
             .normalized();
@@ -64,5 +65,6 @@ void Edge::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *)
     } else {
         painter->setPen(QPen(QColor::fromRgb(167, 219, 216, 200), 1, Qt::SolidLine));
     }
+
     painter->drawLine(line);
 }
