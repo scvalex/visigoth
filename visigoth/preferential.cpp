@@ -12,8 +12,9 @@ void Preferential::addVertex(int edgesToAdd, double p) {
     Node *vPref;
     int numNodes = graph->nodes().size();
     int numEdges = graph->edges().size();
-    Node *vertex = new Node(graph);
     QList<Node*> usedNodes;
+    QVector<Node*> nodes = graph->nodes(); /* important: doesn't contain the new node */
+    Node *vertex = graph->newNode();
 
     // saftey check to ensure that the method
     // does not get stuck looping
@@ -23,10 +24,10 @@ void Preferential::addVertex(int edgesToAdd, double p) {
     }
 
     while (edgesToAdd > 0) {
-        vPref = getPreference(graph->nodes(), genRandom());
+        vPref = getPreference(nodes, genRandom());
         int cutOff;
-        for (cutOff = 0; cutOff < 100 && !graph->addNewEdge(vertex, vPref); ++cutOff) {
-            vPref = getPreference(graph->nodes(), genRandom());
+        for (cutOff = 0; cutOff < 100 && !graph->newEdge(vertex, vPref); ++cutOff) {
+            vPref = getPreference(nodes, genRandom());
         }
         if (cutOff == 100)
             break;
@@ -43,7 +44,6 @@ void Preferential::addVertex(int edgesToAdd, double p) {
             break;
     }
 
-    graph->addNode(vertex);
     updatePreference(graph->nodes(), 2 * numEdges);
 }
 
@@ -56,7 +56,7 @@ void Preferential::addNewEdges(int edgesToAdd,
         int rand = qrand() % length;
         Node *vi = neighbours[rand];
 
-        if (graph->addNewEdge(vertex, vi)) {
+        if (graph->newEdge(vertex, vi)) {
             --edgesToAdd;
             usedNodes << vi;
             neighbours = getIntersection(neighbours, vi->neighbours());

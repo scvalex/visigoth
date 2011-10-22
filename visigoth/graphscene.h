@@ -18,10 +18,12 @@ public:
 
     QVector<Node*>& nodes();
     QList<Edge*>& edges();
+
     bool doesEdgeExist(Node *source, Node *dest);
 
-    Node* addNode(Node *node);
-    bool addNewEdge(Node *source, Node *dest);
+    Node* newNode();
+    bool newEdge(Node *source, Node *dest);
+
     void reset();
 
     void itemMoved();

@@ -10,16 +10,17 @@
 #include <QVariant>
 #include <QToolTip>
 
+#include "graphscene.h"
 #include "treenode.h"
 
 class Edge;
-class GraphScene;
 class QGraphicsSceneHoverEvent;
 
 class Node : public QGraphicsItem, public TreeNode
 {
 public:
-    explicit Node(GraphScene *graph, QGraphicsItem *parent = 0);
+    /* Only GraphScene can construct Nodes. */
+    friend class GraphScene;
 
     void addEdge(Edge *edge);
 
@@ -48,6 +49,8 @@ public:
     static void reset();
 
 protected:
+    explicit Node(GraphScene *graph, QGraphicsItem *parent = 0);
+
     QVariant itemChange(GraphicsItemChange change, const QVariant &value);
 
     void hoverEnterEvent(QGraphicsSceneHoverEvent *event);

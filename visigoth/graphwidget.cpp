@@ -50,6 +50,7 @@ GraphWidget::GraphWidget(QWidget *parent) :
 GraphWidget::~GraphWidget() {
     if (algo)
         delete algo;
+    delete myScene;
 }
 
 void GraphWidget::populate() {
@@ -74,7 +75,6 @@ void GraphWidget::keyPressEvent(QKeyEvent *event) {
         break;
     case Qt::Key_G:
         myScene->reset();
-        Node::reset();
         if (algo) {
             delete algo;
             algo = 0;

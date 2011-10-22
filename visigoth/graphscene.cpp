@@ -14,6 +14,8 @@ void GraphScene::reset() {
     hasEdge.clear();
     myEdges.clear();
     myNodes.clear();
+    Node::reset();
+    //FIXME also free nodes and edges
 }
 
 QVector<Node*>& GraphScene::nodes() {
@@ -24,7 +26,7 @@ QList<Edge*>& GraphScene::edges() {
     return myEdges;
 }
 
-bool GraphScene::addNewEdge(Node *source, Node *dest) {
+bool GraphScene::newEdge(Node *source, Node *dest) {
     Q_ASSERT(source != 0);
     Q_ASSERT(dest != 0);
     if (doesEdgeExist(source, dest)) {
@@ -44,7 +46,8 @@ bool GraphScene::addNewEdge(Node *source, Node *dest) {
     return true;
 }
 
-Node* GraphScene::addNode(Node *node) {
+Node* GraphScene::newNode() {
+    Node *node = new Node(this);
     addItem(node);
     myNodes << node;
     return node;
