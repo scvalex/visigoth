@@ -23,7 +23,7 @@ public:
 
     virtual ~GraphWidget();
 
-    void populate();
+    void populate(int nodesNB);
 
     void itemMoved();
 
@@ -31,12 +31,15 @@ public:
     bool addNewEdge(Edge *e);
     bool doesEdgeExist(int sourceTag, int destTag);
 
+    int nodesNumber;
+
 protected:
     void keyPressEvent(QKeyEvent *event);
     void timerEvent(QTimerEvent *event);
     void wheelEvent(QWheelEvent *event);
     void paintEvent(QPaintEvent *event);
 
+    void getUserInput();
     void fitToScreen();
     void playPause();
     void randomizePlacement();
@@ -55,6 +58,7 @@ private:
     bool isRunning;
     QGraphicsScene *myScene;
     int timerId;
+
 };
 
 #endif // GRAPHWIDGET_H

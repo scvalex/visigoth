@@ -26,7 +26,7 @@ MainWindow::MainWindow(QWidget *parent) :
 }
 
 void MainWindow::populate() {
-    view->populate();
+    view->populate(100);
 }
 
 MainWindow::~MainWindow()

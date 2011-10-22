@@ -10,6 +10,7 @@
 #include <QDebug>
 #include <QGraphicsScene>
 #include <QKeyEvent>
+#include <QInputDialog>
 
 GraphWidget::GraphWidget(QWidget *parent) :
     QGraphicsView(parent),
@@ -18,6 +19,7 @@ GraphWidget::GraphWidget(QWidget *parent) :
     helpText(),
     isPlaying(true),
     isRunning(false),
+    nodesNumber(100),
     timerId(0)
 {
     setMinimumSize(HELP_WIDTH + 10, HELP_HEIGHT + 10);
@@ -35,6 +37,7 @@ GraphWidget::GraphWidget(QWidget *parent) :
                      "<p>Keybindings:"
                      "<ul>"
                      "<li><em>h</em> - show this text</li>"
+                     "<li><em>i</em> - get user input</li>"
                      "<li><em>g</em> - generate a new graph</li>"
                      "<li><em>r</em> - randomize node placement</li>"
                      "<li>&lt;<em>spc</em>&gt; - pause/play the animation</li>"
@@ -52,12 +55,11 @@ GraphWidget::~GraphWidget() {
         delete algo;
 }
 
-void GraphWidget::populate() {
+void GraphWidget::populate(int nodesNumber) {
     algo = new Preferential(this);
-    for (int i(0); i < 100; ++i) {
+    for (int i(0); i < nodesNumber; ++i) {
         algo->addVertex((qrand() % 3 ) + 1, qrand() % 100);
     }
-
     randomizePlacement();
 }
 
@@ -80,7 +82,7 @@ void GraphWidget::keyPressEvent(QKeyEvent *event) {
             delete algo;
             algo = 0;
         }
-        populate();
+        populate(nodesNumber);
         break;
     case Qt::Key_Escape:
         helping = false;
@@ -106,9 +108,34 @@ void GraphWidget::keyPressEvent(QKeyEvent *event) {
             algo->addVertex((qrand() % 3 ) + 1, qrand() % 100);
         }
         break;
+    case Qt::Key_I:
+        getUserInput();
+        break;
     default:
         QGraphicsView::keyPressEvent(event);
     }
+}
+
+void GraphWidget::getUserInput() {
+
+    bool ok;
+    QString text = QInputDialog::getText(this,
+            "", "Enter the Number of Nodes:", QLineEdit::Normal,
+            QString::null, &ok, 0 );
+    if ( ok && !text.isEmpty() ) {
+        nodesNumber = text.toInt();
+        myScene->clear();
+        hasEdge.clear();
+        Node::reset();
+        if (algo) {
+            delete algo;
+            algo = 0;
+        }
+        populate(nodesNumber);
+    } else {
+        //don't do anything
+    }
+
 }
 
 void GraphWidget::timerEvent(QTimerEvent *) {

@@ -19,6 +19,7 @@ public:
     ~MainWindow();
 
     void populate();
+    int m;
 
 private slots:
     void on_actionPrint_to_PDF_triggered();
