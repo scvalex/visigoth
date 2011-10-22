@@ -7,9 +7,7 @@
 #include <QStaticText>
 #include <QVector>
 
-class Edge;
 class GraphScene;
-class Node;
 class Preferential;
 class QPaintEvent;
 
@@ -23,10 +21,6 @@ public:
     void populate();
 
     void itemMoved();
-
-    Node* addNode(Node *n);
-    bool addNewEdge(Edge *e);
-    bool doesEdgeExist(int sourceTag, int destTag);
 
 protected:
     void keyPressEvent(QKeyEvent *event);
@@ -45,7 +39,6 @@ private:
     static const float HELP_HEIGHT = 500;
 
     Preferential *algo;
-    QVector<QSet<int> > hasEdge;
     bool helping;
     QStaticText helpText;
     bool isPlaying;

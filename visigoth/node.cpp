@@ -1,10 +1,9 @@
 #include "edge.h"
-#include "graphwidget.h"
+#include "graphscene.h"
 #include "node.h"
 #include "treenode.h"
 #include "treecode.h"
 
-#include <QGraphicsScene>
 #include <QPainter>
 
 #include <cmath>
@@ -12,7 +11,7 @@
 
 int Node::ALL_NODES(0);
 
-Node::Node(GraphWidget *graph, QGraphicsItem *parent) :
+Node::Node(GraphScene *graph, QGraphicsItem *parent) :
     QGraphicsItem(parent),
     brush(QColor::fromRgb(qrand() % 256, qrand() % 256, qrand() % 256, 180)),
     graph(graph),
@@ -136,8 +135,9 @@ void Node::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *)
 QVariant Node::itemChange(GraphicsItemChange change, const QVariant &value) {
     switch (change) {
     case ItemPositionHasChanged:
-        foreach (Edge *edge, edgeList)
+        foreach (Edge *edge, edgeList) {
             edge->adjust();
+        }
         graph->itemMoved();
         break;
     default:
@@ -159,6 +159,17 @@ void Node::hoverLeaveEvent(QGraphicsSceneHoverEvent *event) {
 
 QList<Edge*>& Node::edges() {
     return edgeList;
+}
+
+QVector<Node*> Node::neighbours() const {
+    QVector<Node*> ns;
+    foreach (Edge *e, edgeList) {
+        if (e->sourceNode() == this)
+            ns << e->destNode();
+        if (e->destNode() == this)
+            ns << e->sourceNode();
+    }
+    return ns;
 }
 
 void Node::reset() {
