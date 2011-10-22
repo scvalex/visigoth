@@ -8,9 +8,9 @@
 #include <QVector>
 
 class Edge;
+class GraphScene;
 class Node;
 class Preferential;
-class QGraphicsScene;
 class QPaintEvent;
 
 class GraphWidget : public QGraphicsView
@@ -50,7 +50,7 @@ private:
     QStaticText helpText;
     bool isPlaying;
     bool isRunning;
-    QGraphicsScene *myScene;
+    GraphScene *myScene;
     int timerId;
 };
 

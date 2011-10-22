@@ -1,4 +1,5 @@
 #include "edge.h"
+#include "graphscene.h"
 #include "graphwidget.h"
 #include "node.h"
 #include "preferential.h"
@@ -8,7 +9,6 @@
 
 #include <QAbstractAnimation>
 #include <QDebug>
-#include <QGraphicsScene>
 #include <QKeyEvent>
 
 GraphWidget::GraphWidget(QWidget *parent) :
@@ -21,7 +21,7 @@ GraphWidget::GraphWidget(QWidget *parent) :
     timerId(0)
 {
     setMinimumSize(HELP_WIDTH + 10, HELP_HEIGHT + 10);
-    myScene = new QGraphicsScene(this);
+    myScene = new GraphScene(this);
     myScene->setBackgroundBrush(Qt::black);
     myScene->setItemIndexMethod(QGraphicsScene::NoIndex);
     setScene(myScene);
