@@ -151,11 +151,11 @@ TreeCode::Quadrant::Quadrant(qreal width, int size) :
     center(QPointF(0, 0)) {
 }
 
-int TreeCode::Quadrant::getSize() {
+int TreeCode::Quadrant::getSize() const {
     return size;
 }
 
-QPointF TreeCode::Quadrant::getCenter() {
+QPointF TreeCode::Quadrant::getCenter() const {
     return center;
 }
 
@@ -168,7 +168,7 @@ QVector<TreeNode*>& TreeCode::Quadrant::getChildren() {
     }
 }
 
-qreal TreeCode::Quadrant::getWidth() {
+qreal TreeCode::Quadrant::getWidth() const {
     return width;
 }
 

@@ -157,19 +157,19 @@ void Node::hoverLeaveEvent(QGraphicsSceneHoverEvent *event) {
     QGraphicsItem::hoverLeaveEvent(event);
 }
 
-QList<Edge*>* Node::edges() {
-    return &edgeList;
+QList<Edge*>& Node::edges() {
+    return edgeList;
 }
 
 void Node::reset() {
     ALL_NODES = 0;
 }
 
-int Node::getSize() {
+int Node::getSize() const {
     return 1;
 }
 
-QPointF Node::getCenter() {
+QPointF Node::getCenter() const {
     return pos();
 }
 
@@ -177,6 +177,6 @@ QVector<TreeNode*>& Node::getChildren() {
     throw std::runtime_error("Node: calling getChildren() on a terminal node");
 }
 
-qreal Node::getWidth() {
+qreal Node::getWidth() const {
     return 0;
 }

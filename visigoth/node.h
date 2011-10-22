@@ -39,11 +39,11 @@ public:
 
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
 
-    QList<Edge*>* edges();
-    int getSize();
-    QPointF getCenter();
+    QList<Edge*>& edges();
+    int getSize() const;
+    QPointF getCenter() const;
     QVector<TreeNode*>& getChildren();
-    qreal getWidth();
+    qreal getWidth() const;
 
     static void reset();
 

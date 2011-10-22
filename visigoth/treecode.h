@@ -19,12 +19,12 @@ private:
     {
     public:
         Quadrant(qreal width, int size=0);
-        int getSize();
-        QPointF getCenter();
+        int getSize() const;
+        QPointF getCenter() const;
         QVector<TreeNode*>& getChildren();
         void addNode(TreeNode*);
         void addChild(TreeNode*);
-        qreal getWidth();
+        qreal getWidth() const;
     private:
         QVector<TreeNode*> children;
         qreal width;
