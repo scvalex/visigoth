@@ -1,17 +1,24 @@
 #include "edge.h"
 #include "graphwidget.h"
 #include "node.h"
+#include "treenode.h"
+#include "treecode.h"
 
 #include <QGraphicsScene>
 #include <QPainter>
 
-Node::Node(int tag, GraphWidget *graph, QGraphicsItem *parent) :
+#include <cmath>
+#include <stdexcept>
+
+int Node::ALL_NODES(0);
+
+Node::Node(GraphWidget *graph, QGraphicsItem *parent) :
     QGraphicsItem(parent),
     brush(QColor::fromRgb(qrand() % 256, qrand() % 256, qrand() % 256, 180)),
     graph(graph),
-    hovering(false),
-    myTag(tag)
+    hovering(false)
 {
+    myTag = ALL_NODES++;
     setFlag(ItemIsMovable);
     setFlag(ItemSendsGeometryChanges);
     setCacheMode(DeviceCoordinateCache);
@@ -27,43 +34,73 @@ void Node::addEdge(Edge *edge) {
     edgeList << edge;
 }
 
-QPointF Node::calculateForces() {
+QPointF Node::calculatePosition(TreeNode* treeNode) {
     if (!scene() || scene()->mouseGrabberItem() == this) {
         newPos = pos();
         return newPos;
     }
 
-    // Sum up all the forces pushing away.
-    qreal xvel = 0;
-    qreal yvel = 0;
+    // Calculate non-edge forces
+    QPointF nonEdge = calculateNonEdgeForces(treeNode);
 
-    foreach (Node *node, graph->nodes()) {
-        QPointF vec = mapToItem(node, 0, 0);
-        qreal dx = vec.x();
-        qreal dy = vec.y();
-        double l = 2.0 * (dx*dx + dy*dy);
-        if (l > 0) {
-            xvel += (dx * 150.0) / l;
-            yvel += (dy * 150.0) / l;
-        }
-    }
+    qreal xvel = nonEdge.x();
+    qreal yvel = nonEdge.y();
 
+    // Now all the forces that pulling items together
     double weight = (edgeList.size() + 1) * 10;
+
     foreach (Edge *edge, edgeList) {
         QPointF vec;
-        if (edge->sourceNode() == this)
+        if (edge->sourceNode() == this) {
             vec = mapToItem(edge->destNode(), 0, 0);
-        else
+        } else {
             vec = mapToItem(edge->sourceNode(), 0, 0);
+        }
         xvel -= vec.x() / weight;
         yvel -= vec.y() / weight;
     }
 
-    if (qAbs(xvel) < 0.1 && qAbs(yvel) < 0.1)
+    if (qAbs(xvel) < 0.1 && qAbs(yvel) < 0.1) {
         xvel = yvel = 0;
+    }
 
     newPos = pos() + QPointF(xvel, yvel);
+
     return newPos;
+}
+
+QPointF Node::calculateNonEdgeForces(TreeNode* treeNode)
+{
+    if (treeNode->getSize() < 1)
+        return QPointF(0, 0);
+
+    QPointF vec(this->pos().x() - treeNode->getCenter().x(),
+                this->pos().y() - treeNode->getCenter().y());
+    qreal dx = vec.x();
+    qreal dy = vec.y();
+
+    qreal distance = sqrt(dx*dx + dy*dy);
+
+    QPointF vel;
+    if (treeNode->isFarEnough(distance) || treeNode->getSize() == 1) {
+        double l = 2.0 * (dx*dx + dy*dy);
+
+        if (l > 0) {
+            vel = QPointF((dx * 150.0) / l, (dy * 150.0) / l);
+        } else {
+            vel = QPointF(0, 0);
+        }
+    } else {
+        qreal xvel = 0;
+        qreal yvel = 0;
+        foreach (TreeNode* child, treeNode->getChildren()) {
+            QPointF velCh = calculateNonEdgeForces(child);
+            xvel += velCh.x();
+            yvel += velCh.y();
+        }
+        vel = QPointF(xvel, yvel);
+    }
+    return vel;
 }
 
 /* Called by GraphWidget repeatedly. */
@@ -118,4 +155,28 @@ void Node::hoverEnterEvent(QGraphicsSceneHoverEvent *event) {
 void Node::hoverLeaveEvent(QGraphicsSceneHoverEvent *event) {
     hovering = false;
     QGraphicsItem::hoverLeaveEvent(event);
+}
+
+QList<Edge*>& Node::edges() {
+    return edgeList;
+}
+
+void Node::reset() {
+    ALL_NODES = 0;
+}
+
+int Node::getSize() const {
+    return 1;
+}
+
+QPointF Node::getCenter() const {
+    return pos();
+}
+
+QVector<TreeNode*>& Node::getChildren() {
+    throw std::runtime_error("Node: calling getChildren() on a terminal node");
+}
+
+qreal Node::getWidth() const {
+    return 0;
 }

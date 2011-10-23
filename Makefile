@@ -13,6 +13,7 @@ build:
 .PHONY: clean
 clean:
 	rm -rf build profile
+	rm -rf visigoth-*
 
 .PHONY: profile
 profile: build
