@@ -27,7 +27,7 @@ public:
     int tag() const;
 
     /* Return the new position. */
-    QPointF calculatePosition(TreeNode* treeNode);
+    QPointF calculatePosition(QVector<Node*> nodeVector);
 
     bool advance();
 

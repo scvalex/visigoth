@@ -34,17 +34,29 @@ void Node::addEdge(Edge *edge) {
     edgeList << edge;
 }
 
-QPointF Node::calculatePosition(TreeNode* treeNode) {
+QPointF Node::calculatePosition(QVector<Node*> nodeVector) {
     if (!scene() || scene()->mouseGrabberItem() == this) {
         newPos = pos();
         return newPos;
     }
 
     // Calculate non-edge forces
-    QPointF nonEdge = calculateNonEdgeForces(treeNode);
+    qreal xvel = 0;
+    qreal yvel = 0;
 
-    qreal xvel = nonEdge.x();
-    qreal yvel = nonEdge.y();
+    foreach (Node* node, nodeVector) {
+        QPointF vec = mapToItem(node, 0, 0);
+        qreal dx = vec.x();
+        qreal dy = vec.y();
+
+        qreal l = 2 * (dx*dx + dy*dy);
+
+        if (l > 0) {
+           xvel += (dx * 150) / l;
+           yvel += (dy * 150) / l;
+        }
+
+    }
 
     // Now all the forces that pulling items together
     double weight = (edgeList.size() + 1) * 10;
@@ -69,6 +81,7 @@ QPointF Node::calculatePosition(TreeNode* treeNode) {
     return newPos;
 }
 
+/*
 QPointF Node::calculateNonEdgeForces(TreeNode* treeNode)
 {
     if (treeNode->getSize() < 1)
@@ -102,6 +115,7 @@ QPointF Node::calculateNonEdgeForces(TreeNode* treeNode)
     }
     return vel;
 }
+*/
 
 /* Called by GraphWidget repeatedly. */
 bool Node::advance() {

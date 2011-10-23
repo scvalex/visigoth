@@ -10,6 +10,7 @@
 #include <QDebug>
 #include <QGraphicsScene>
 #include <QKeyEvent>
+#include <QVector>
 
 GraphWidget::GraphWidget(QWidget *parent) :
     QGraphicsView(parent),
@@ -117,18 +118,16 @@ void GraphWidget::timerEvent(QTimerEvent *) {
 
     TreeCode treeCode(myScene->sceneRect());
 
+    QVector<Node*> nodeVector;
     foreach (QGraphicsItem* item, myScene->items()) {
         Node* node = qgraphicsitem_cast<Node*>(item);
         if (node) {
-            treeCode.addNode(node);
+            nodeVector.append(node);
         }
     }
 
-    foreach (QGraphicsItem *item, myScene->items()) {
-        Node *node = qgraphicsitem_cast<Node*>(item);
-        if (!node)
-            continue;
-        QPointF pos = node->calculatePosition(treeCode.getRoot());
+    foreach (Node* node, nodeVector) {
+        QPointF pos = node->calculatePosition(nodeVector);
 
         if (pos.x() < topLeft.x()) {
             topLeft.setX(pos.x());
