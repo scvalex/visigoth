@@ -19,14 +19,13 @@ public:
     ~MainWindow();
 
     void populate();
-    int m;
-
 private slots:
     void on_actionPrint_to_PDF_triggered();
-
 private:
     Ui::MainWindow *ui;
     GraphWidget *view;
+
+    static const int BASE_NODES_NUMBER = 100;
 };
 
 #endif // MAINWINDOW_H

@@ -18,7 +18,7 @@ Node::Node(GraphWidget *graph, QGraphicsItem *parent) :
     brush(QColor::fromRgb(50,150,255,255)),
     //brush(QColor::fromRgb(qrand() % 256, qrand() % 256, qrand() % 256, 180)),
     graph(graph),
-    hovering(false)
+    highlighted(false)
 {
     myTag = ALL_NODES++;
     setFlag(ItemIsMovable);
@@ -27,11 +27,6 @@ Node::Node(GraphWidget *graph, QGraphicsItem *parent) :
     setCacheMode(DeviceCoordinateCache);
     setZValue(100);
     setAcceptHoverEvents(true);
-}
-
-void Node::mousePressEvent(QGraphicsSceneMouseEvent *event){
-    this->isSelected();
-    QGraphicsItem::mousePressEvent(event);
 }
 
 int Node::tag() const {
@@ -131,11 +126,11 @@ QPainterPath Node::shape() const {
 
 void Node::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *) {
     painter->setPen(Qt::NoPen);
-    if (!hovering) {
+    if (!isHighlighted()) {
         painter->setBrush(brush);
 
     } else {
-        //change the color for the hovering node
+        //change the color for the highlighted node
         QColor highlight = brush.color();
         highlight.setNamedColor("yellow");
         highlight.setAlpha(200);
@@ -160,26 +155,26 @@ QVariant Node::itemChange(GraphicsItemChange change, const QVariant &value) {
 }
 
 void Node::hoverEnterEvent(QGraphicsSceneHoverEvent *event) {
-    hovering = true;
+    this->highlight();
     foreach(Edge* edge, edgeList) {
         if (edge->sourceNode() == this) {
-            edge->destNode()->hovering = true;
+            edge->destNode()->highlight();
         }
         if (edge->destNode() == this) {
-            edge->sourceNode()->hovering = true;
+            edge->sourceNode()->highlight();
         }
     }
     QGraphicsItem::hoverEnterEvent(event);
 }
 
 void Node::hoverLeaveEvent(QGraphicsSceneHoverEvent *event) {
-    hovering = false;
+    this->unHighlight();
     foreach(Edge* edge, edgeList) {
         if (edge->sourceNode() == this) {
-            edge->destNode()->hovering = false;
+            edge->destNode()->unHighlight();
         }
         if (edge->destNode() == this) {
-            edge->sourceNode()->hovering = false;
+            edge->sourceNode()->unHighlight();
         }
     }
     QGraphicsItem::hoverLeaveEvent(event);
@@ -207,4 +202,16 @@ QVector<TreeNode*>& Node::getChildren() {
 
 qreal Node::getWidth() const {
     return 0;
+}
+
+void Node::highlight() {
+    this->highlighted = true;
+}
+
+void Node::unHighlight() {
+    this->highlighted = false;
+}
+
+bool Node::isHighlighted() const {
+    return this->highlighted;
 }

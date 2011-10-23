@@ -37,7 +37,7 @@ GraphWidget::GraphWidget(QWidget *parent) :
                      "<p>Keybindings:"
                      "<ul>"
                      "<li><em>h</em> - show this text</li>"
-                     "<li><em>i</em> - get user input</li>"
+                     "<li><em>i</em> - set number of nodes</li>"
                      "<li><em>g</em> - generate a new graph</li>"
                      "<li><em>r</em> - randomize node placement</li>"
                      "<li>&lt;<em>spc</em>&gt; - pause/play the animation</li>"
@@ -120,8 +120,8 @@ void GraphWidget::getUserInput() {
     bool ok;
     QString text = QInputDialog::getText(this,
             "", "Enter the Number of Nodes:", QLineEdit::Normal,
-            QString::null, &ok, 0 );
-    if ( ok && !text.isEmpty() ) {
+            QString::null, &ok, 0);
+    if (ok && !text.isEmpty()) {
         nodesNumber = text.toInt();
         myScene->clear();
         hasEdge.clear();

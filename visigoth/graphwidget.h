@@ -58,7 +58,6 @@ private:
     bool isRunning;
     QGraphicsScene *myScene;
     int timerId;
-
 };
 
 #endif // GRAPHWIDGET_H

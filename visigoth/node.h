@@ -8,8 +8,8 @@
 #include <QBrush>
 #include <QGraphicsItem>
 #include <QVariant>
-#include <QVector>
 #include <QToolTip>
+
 #include <sstream>
 
 #include "treenode.h"
@@ -31,7 +31,6 @@ public:
     QPointF calculatePosition(TreeNode* treeNode);
 
     bool advance();
-    bool hovering;
 
     enum { Type = UserType + 1 };
     int type() const { return Type; }
@@ -39,7 +38,6 @@ public:
     QRectF boundingRect() const;
     QPainterPath shape() const;
 
-    void mousePressEvent(QGraphicsSceneMouseEvent *event);
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
 
     QList<Edge*>& edges();
@@ -48,8 +46,11 @@ public:
     QVector<TreeNode*>& getChildren();
     qreal getWidth() const;
 
-    static void reset();
+    void highlight();
+    void unHighlight();
+    bool isHighlighted() const;
 
+    static void reset();
 protected:
     QVariant itemChange(GraphicsItemChange change, const QVariant &value);
 
@@ -68,6 +69,8 @@ private:
 
     QPointF mapPoint(QPointF source, QPointF dest);
     QPointF calculateNonEdgeForces(TreeNode* treeNode);
+
+    bool highlighted;
 };
 
 #endif // NODE_H
