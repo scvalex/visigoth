@@ -25,7 +25,6 @@ private:
     Ui::MainWindow *ui;
     GraphWidget *view;
 
-    static const int BASE_NODES_NUMBER = 100;
 };
 
 #endif // MAINWINDOW_H

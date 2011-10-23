@@ -19,8 +19,8 @@ GraphWidget::GraphWidget(QWidget *parent) :
     helpText(),
     isPlaying(true),
     isRunning(false),
-    nodesNumber(100),
-    timerId(0)
+    timerId(0),
+    nodesNumber(BASE_NODES_NUMBER)
 {
     setMinimumSize(HELP_WIDTH + 10, HELP_HEIGHT + 10);
     myScene = new QGraphicsScene(this);
@@ -55,7 +55,7 @@ GraphWidget::~GraphWidget() {
         delete algo;
 }
 
-void GraphWidget::populate(int nodesNumber) {
+void GraphWidget::populate() {
     algo = new Preferential(this);
     for (int i(0); i < nodesNumber; ++i) {
         algo->addVertex((qrand() % 3 ) + 1, qrand() % 100);
@@ -82,7 +82,7 @@ void GraphWidget::keyPressEvent(QKeyEvent *event) {
             delete algo;
             algo = 0;
         }
-        populate(nodesNumber);
+        populate();
         break;
     case Qt::Key_Escape:
         helping = false;
@@ -130,7 +130,7 @@ void GraphWidget::getUserInput() {
             delete algo;
             algo = 0;
         }
-        populate(nodesNumber);
+        populate();
     } else {
         //don't do anything
     }

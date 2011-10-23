@@ -23,15 +23,13 @@ public:
 
     virtual ~GraphWidget();
 
-    void populate(int nodesNB);
+    void populate();
 
     void itemMoved();
 
     Node* addNode(Node *n);
     bool addNewEdge(Edge *e);
     bool doesEdgeExist(int sourceTag, int destTag);
-
-    int nodesNumber;
 
 protected:
     void keyPressEvent(QKeyEvent *event);
@@ -49,6 +47,7 @@ protected:
 private:
     static const float HELP_WIDTH = 300;
     static const float HELP_HEIGHT = 500;
+    static const int BASE_NODES_NUMBER = 100;
 
     Preferential *algo;
     QVector<QSet<int> > hasEdge;
@@ -58,6 +57,7 @@ private:
     bool isRunning;
     QGraphicsScene *myScene;
     int timerId;
+    int nodesNumber;
 };
 
 #endif // GRAPHWIDGET_H

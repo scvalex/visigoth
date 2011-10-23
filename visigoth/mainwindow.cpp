@@ -26,7 +26,7 @@ MainWindow::MainWindow(QWidget *parent) :
 }
 
 void MainWindow::populate() {
-    view->populate(BASE_NODES_NUMBER);
+    view->populate();
 }
 
 MainWindow::~MainWindow()
