@@ -15,8 +15,8 @@ int Node::ALL_NODES(0);
 
 Node::Node(GraphWidget *graph, QGraphicsItem *parent) :
     QGraphicsItem(parent),
-    brush(QColor::fromRgb(50,150,255,255)),
-    //brush(QColor::fromRgb(qrand() % 256, qrand() % 256, qrand() % 256, 180)),
+    //brush(QColor::fromRgb(50,150,255,255)),
+    brush(QColor::fromRgb(qrand() % 256, qrand() % 256, qrand() % 256, 180)),
     graph(graph),
     highlighted(false)
 {
@@ -37,17 +37,29 @@ void Node::addEdge(Edge *edge) {
     edgeList << edge;
 }
 
-QPointF Node::calculatePosition(TreeNode* treeNode) {
+QPointF Node::calculatePosition(QVector<Node*> nodeVector) {
     if (!scene() || scene()->mouseGrabberItem() == this) {
         newPos = pos();
         return newPos;
     }
 
     // Calculate non-edge forces
-    QPointF nonEdge = calculateNonEdgeForces(treeNode);
+    qreal xvel = 0;
+    qreal yvel = 0;
 
-    qreal xvel = nonEdge.x();
-    qreal yvel = nonEdge.y();
+    foreach (Node* node, nodeVector) {
+        QPointF vec = mapToItem(node, 0, 0);
+        qreal dx = vec.x();
+        qreal dy = vec.y();
+
+        qreal l = 2 * (dx*dx + dy*dy);
+
+        if (l > 0) {
+           xvel += (dx * 150) / l;
+           yvel += (dy * 150) / l;
+        }
+
+    }
 
     // Now all the forces that pulling items together
     double weight = (edgeList.size() + 1) * 10;
@@ -72,6 +84,7 @@ QPointF Node::calculatePosition(TreeNode* treeNode) {
     return newPos;
 }
 
+/*
 QPointF Node::calculateNonEdgeForces(TreeNode* treeNode)
 {
     if (treeNode->getSize() < 1)
@@ -105,6 +118,7 @@ QPointF Node::calculateNonEdgeForces(TreeNode* treeNode)
     }
     return vel;
 }
+*/
 
 /* Called by GraphWidget repeatedly. */
 bool Node::advance() {
@@ -156,27 +170,11 @@ QVariant Node::itemChange(GraphicsItemChange change, const QVariant &value) {
 
 void Node::hoverEnterEvent(QGraphicsSceneHoverEvent *event) {
     this->highlight();
-    foreach(Edge* edge, edgeList) {
-        if (edge->sourceNode() == this) {
-            edge->destNode()->highlight();
-        }
-        if (edge->destNode() == this) {
-            edge->sourceNode()->highlight();
-        }
-    }
     QGraphicsItem::hoverEnterEvent(event);
 }
 
 void Node::hoverLeaveEvent(QGraphicsSceneHoverEvent *event) {
     this->unHighlight();
-    foreach(Edge* edge, edgeList) {
-        if (edge->sourceNode() == this) {
-            edge->destNode()->unHighlight();
-        }
-        if (edge->destNode() == this) {
-            edge->sourceNode()->unHighlight();
-        }
-    }
     QGraphicsItem::hoverLeaveEvent(event);
 }
 

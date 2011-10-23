@@ -57,7 +57,7 @@ void Edge::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *)
     if (qFuzzyCompare(line.length(), qreal(0.0)))
         return;
 
-    if (source->isHighlighted() && dest->isHighlighted()) {
+    if (source->isHighlighted() || dest->isHighlighted()) {
         painter->setPen(QPen(QColor::fromRgb(247, 196, 31, 255), 1, Qt::SolidLine));
     } else {
         painter->setPen(QPen(QColor::fromRgb(167, 219, 216, 200), 1, Qt::SolidLine));
