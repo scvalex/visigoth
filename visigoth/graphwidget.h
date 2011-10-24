@@ -30,7 +30,6 @@ protected:
 
     void fitToScreen();
     void playPause();
-    void randomizePlacement();
     void scaleView(qreal scaleFactor);
     void setAnimationRunning();
 

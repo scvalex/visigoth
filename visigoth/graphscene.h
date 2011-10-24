@@ -9,6 +9,7 @@
 class Edge;
 class GraphWidget;
 class Node;
+class Preferential;
 
 class GraphScene : public QGraphicsScene
 {
@@ -28,11 +29,18 @@ public:
 
     void itemMoved();
 
+    void populate();
+
+    void randomizePlacement();
+
+    void addVertex();
+
 private:
     QVector<QSet<int> > hasEdge;
     QVector<Node*> myNodes;
     QList<Edge*> myEdges;
     GraphWidget *view;
+    Preferential *algo;
 };
 
 #endif // GRAPHSCENE_H

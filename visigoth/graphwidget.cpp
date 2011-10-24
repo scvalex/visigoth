@@ -10,10 +10,10 @@
 #include <QAbstractAnimation>
 #include <QDebug>
 #include <QKeyEvent>
+#include <QVector>
 
 GraphWidget::GraphWidget(QWidget *parent) :
     QGraphicsView(parent),
-    algo(0),
     helping(true),
     helpText(),
     isPlaying(true),
@@ -48,18 +48,12 @@ GraphWidget::GraphWidget(QWidget *parent) :
 }
 
 GraphWidget::~GraphWidget() {
-    if (algo)
-        delete algo;
     delete myScene;
 }
 
 void GraphWidget::populate() {
-    algo = new Preferential(myScene);
-    for (int i(0); i < 100; ++i) {
-        algo->addVertex((qrand() % 3 ) + 1, qrand() % 100);
-    }
-
-    randomizePlacement();
+    myScene->populate();
+    myScene->randomizePlacement();
 }
 
 void GraphWidget::itemMoved() {
@@ -75,10 +69,6 @@ void GraphWidget::keyPressEvent(QKeyEvent *event) {
         break;
     case Qt::Key_G:
         myScene->reset();
-        if (algo) {
-            delete algo;
-            algo = 0;
-        }
         populate();
         break;
     case Qt::Key_Escape:
@@ -92,7 +82,7 @@ void GraphWidget::keyPressEvent(QKeyEvent *event) {
         scaleView(1 / qreal(1.2));
         break;
     case Qt::Key_R:
-        randomizePlacement();
+        myScene->randomizePlacement();
         break;
     case Qt::Key_Space:
         playPause();
@@ -101,9 +91,7 @@ void GraphWidget::keyPressEvent(QKeyEvent *event) {
         fitToScreen();
         break;
     case Qt::Key_A:
-        if (algo) {
-            algo->addVertex((qrand() % 3 ) + 1, qrand() % 100);
-        }
+        myScene->addVertex();
         break;
     default:
         QGraphicsView::keyPressEvent(event);
@@ -116,12 +104,16 @@ void GraphWidget::timerEvent(QTimerEvent *) {
 
     TreeCode treeCode(myScene->sceneRect());
 
-    foreach (Node *node, myScene->nodes()) {
-        treeCode.addNode(node);
+    QVector<Node*> nodeVector;
+    foreach (QGraphicsItem* item, myScene->items()) {
+        Node* node = qgraphicsitem_cast<Node*>(item);
+        if (node) {
+            nodeVector.append(node);
+        }
     }
 
-    foreach (Node *node, myScene->nodes()) {
-        QPointF pos = node->calculatePosition(treeCode.getRoot());
+    foreach (Node* node, nodeVector) {
+        QPointF pos = node->calculatePosition(nodeVector);
 
         if (pos.x() < topLeft.x()) {
             topLeft.setX(pos.x());
@@ -193,15 +185,6 @@ void GraphWidget::setAnimationRunning() {
     } else if ((!isPlaying || !isRunning) && timerId) {
         killTimer(timerId);
         timerId = 0;
-    }
-}
-
-void GraphWidget::randomizePlacement() {
-    foreach (Node *node, myScene->nodes()) {
-        node->setPos(10 + qrand() % 1000, 10 + qrand() % 600);
-    }
-    foreach (Edge *edge, myScene->edges()) {
-        edge->adjust();
     }
 }
 

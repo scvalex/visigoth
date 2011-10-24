@@ -2,10 +2,12 @@
 #include "graphscene.h"
 #include "graphwidget.h"
 #include "node.h"
+#include "preferential.h"
 
 GraphScene::GraphScene(GraphWidget *parent) :
     QGraphicsScene(parent),
-    view(parent)
+    view(parent),
+    algo(0)
 {
 }
 
@@ -69,3 +71,24 @@ bool GraphScene::doesEdgeExist(Node *source, Node *dest) {
 void GraphScene::itemMoved() {
     view->itemMoved();
 }
+
+void GraphScene::populate() {
+    algo = new Preferential(this);
+    for (int i(0); i < 100; ++i) {
+        addVertex();
+    }
+}
+
+void GraphScene::randomizePlacement() {
+    foreach (Node *node, nodes()) {
+        node->setPos(10 + qrand() % 1000, 10 + qrand() % 600);
+    }
+    foreach (Edge *edge, edges()) {
+        edge->adjust();
+    }
+}
+
+void GraphScene::addVertex() {
+    algo->addVertex((qrand() % 3 ) + 1, qrand() % 100);
+}
+
