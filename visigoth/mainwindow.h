@@ -1,14 +1,16 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
+#include "graphwidget.h"
+#include "glgraphwidget.h"
+
 #include <QMainWindow>
+#include <QGraphicsView>
 
 namespace Ui {
     class MainWindow;
 }
 
-class GraphWidget;
-class QGraphicsView;
 
 class MainWindow : public QMainWindow
 {
@@ -25,7 +27,8 @@ private slots:
 
 private:
     Ui::MainWindow *ui;
-    GraphWidget *view;
+    //GraphWidget *view;
+    GLGraphWidget *view;
 };
 
 #endif // MAINWINDOW_H
