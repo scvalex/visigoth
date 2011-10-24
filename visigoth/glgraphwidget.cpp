@@ -7,13 +7,15 @@
 GLGraphWidget::GLGraphWidget(QWidget *parent) :
     QGLWidget(parent)
 {
-    //myScene = new GraphScene(this);
+    myScene = new GraphScene(this);
     //myScene->setBackgroundBrush(Qt::black);
     //myScene->setItemIndexMethod(QGraphicsScene::NoIndex);
     //setScene(myScene);
 }
 
 void GLGraphWidget::populate() {
+    myScene->populate();
+    myScene->randomizePlacement();
 }
 
 void GLGraphWidget::initializeGL() {
@@ -54,6 +56,9 @@ void GLGraphWidget::resizeGL(int w, int h) {
     glMatrixMode(GL_MODELVIEW);
 }
 
+void GLGraphWidget::itemMoved() {
+    // Nothing.
+}
 
 
 

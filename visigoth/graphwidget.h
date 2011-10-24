@@ -7,11 +7,13 @@
 #include <QStaticText>
 #include <QVector>
 
+#include "abstractgraphwidget.h"
+
 class GraphScene;
 class Preferential;
 class QPaintEvent;
 
-class GraphWidget : public QGraphicsView
+class GraphWidget : public QGraphicsView, public AbstractGraphWidget
 {
     Q_OBJECT
 public:

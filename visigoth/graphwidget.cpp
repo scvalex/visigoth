@@ -4,6 +4,7 @@
 #include "node.h"
 #include "preferential.h"
 #include "treecode.h"
+#include "abstractgraphwidget.h"
 
 #include <cmath>
 

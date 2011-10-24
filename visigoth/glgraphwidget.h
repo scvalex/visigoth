@@ -3,16 +3,19 @@
 
 #include <QGLWidget>
 
+#include "abstractgraphwidget.h"
 #include "graphscene.h"
 
 
-class GLGraphWidget : public QGLWidget
+class GLGraphWidget : public QGLWidget, public AbstractGraphWidget
 {
     Q_OBJECT
 public:
     explicit GLGraphWidget(QWidget *parent = 0);
 
     void populate();
+
+    void itemMoved();
 
 protected slots:
     void initializeGL();
