@@ -1,24 +1,182 @@
+#include <QKeyEvent>
+#include <GL/gl.h>
+
 #include "glgraphwidget.h"
 #include "glancillary.h"        // gla*()
 
-#include <GL/gl.h>
-
 #include "edge.h"
 #include "node.h"
+#include "treecode.h"
 
+
+/****************************
+ * GraphWidget imitation code (public)
+ ***************************/
 
 GLGraphWidget::GLGraphWidget(QWidget *parent) :
-    QGLWidget(parent)
+    QGLWidget(parent),
+    isPlaying(true),
+    isRunning(false),
+    helping(true),
+    timerId(0)
 {
+    setFocusPolicy(Qt::StrongFocus);
+
     myScene = new GraphScene(this);
     myScene->setBackgroundBrush(Qt::black);
     myScene->setItemIndexMethod(QGraphicsScene::NoIndex);
 }
 
-void GLGraphWidget::populate() {
+void GLGraphWidget::populate()
+{
     myScene->populate();
     myScene->randomizePlacement();
 }
+
+void GLGraphWidget::itemMoved()
+{
+    isRunning = true;
+    setAnimationRunning();
+}
+
+
+
+/****************************
+ * GraphWidget imitation code (protected)
+ ***************************/
+
+void GLGraphWidget::setAnimationRunning()
+{
+    if (isPlaying && isRunning && !timerId)
+        timerId = startTimer(1000 / 25);
+    else if ((!isPlaying || !isRunning) && timerId) {
+        killTimer(timerId);
+        timerId = 0;
+    }
+}
+
+void GLGraphWidget::playPause()
+{
+    isPlaying = !isPlaying;
+    setAnimationRunning();
+
+    this->repaint();
+}
+
+void GLGraphWidget::scaleView(qreal scaleFactor)
+{
+    // FIXME: Implement GLGraphWidget::scaleView.
+    (void) scaleFactor;
+}
+
+void GLGraphWidget::fitToScreen()
+{
+    // FIXME: Implement GLGraphWidget::fitToScreen()
+}
+
+void GLGraphWidget::wheelEvent(QWheelEvent *event)
+{
+    // FIXME: Implement GLGraphWidget::wheelEvent()
+    (void) event;
+
+    this->repaint();
+}
+
+void GLGraphWidget::keyPressEvent(QKeyEvent *event)
+{
+    switch (event->key()) {
+    case Qt::Key_H:
+        helping = !helping;
+        //viewport()->update();
+        this->paintGL();
+        break;
+    case Qt::Key_G:
+        myScene->reset();
+        populate();
+        break;
+    case Qt::Key_Escape:
+        helping = false;
+        //viewport()->update();
+        this->paintGL();
+        break;
+    case Qt::Key_Plus:
+        scaleView(qreal(1.2));
+        break;
+    case Qt::Key_Minus:
+        scaleView(1 / qreal(1.2));
+        break;
+    case Qt::Key_R:
+        myScene->randomizePlacement();
+        break;
+    case Qt::Key_Space:
+        playPause();
+        break;
+    case Qt::Key_0:
+        fitToScreen();
+        break;
+    case Qt::Key_A:
+        myScene->addVertex();
+        break;
+    default:
+        //QGraphicsView::keyPressEvent(event);
+        // FIXME: Add default keypress handler in GLGraphWidget
+        break;
+    }
+
+    this->repaint();
+}
+
+void GLGraphWidget::timerEvent(QTimerEvent *)
+{
+    QPointF topLeft;
+    QPointF bottomRight;
+
+    TreeCode treeCode(myScene->sceneRect());
+
+    QVector<Node*> nodeVector;
+    foreach (QGraphicsItem* item, myScene->items()) {
+        Node* node = qgraphicsitem_cast<Node*>(item);
+        if (node)
+            nodeVector.append(node);
+    }
+
+    foreach (Node* node, nodeVector) {
+        QPointF pos = node->calculatePosition(nodeVector);
+
+        if (pos.x() < topLeft.x())
+            topLeft.setX(pos.x());
+        if (pos.y() < topLeft.y())
+            topLeft.setY(pos.y());
+        if (pos.x() > bottomRight.x())
+            bottomRight.setX(pos.x());
+        if (pos.y() > bottomRight.y())
+            bottomRight.setY(pos.y());
+    }
+
+    // Resize the scene to fit all the nodes
+    QRectF sceneRect = myScene->sceneRect();
+    sceneRect.setLeft(topLeft.x() - 10);
+    sceneRect.setTop(topLeft.y() - 10);
+    sceneRect.setRight(bottomRight.x() + 10);
+    sceneRect.setBottom(bottomRight.y() + 10);
+
+    isRunning = false;
+    foreach (Node *node, myScene->nodes()) {
+        if (node->advance())
+            isRunning = true;
+    }
+    setAnimationRunning();
+
+    this->repaint();
+}
+
+
+
+
+
+/****************************
+ * GL related QT event handlers (protected)
+ ***************************/
 
 void GLGraphWidget::initializeGL() {
     glaInit();
@@ -48,7 +206,7 @@ void GLGraphWidget::paintGL() {
 }
 
 void GLGraphWidget::resizeGL(int w, int h) {
-    GLfloat aspect = (GLfloat)w/(GLfloat)h;
+    //GLfloat aspect = (GLfloat)w/(GLfloat)h;
 
     // Set up the Viewport transformation
     glViewport(0, 0, (GLsizei) w, (GLsizei) h);
@@ -63,11 +221,11 @@ void GLGraphWidget::resizeGL(int w, int h) {
     glMatrixMode(GL_MODELVIEW);
 }
 
-void GLGraphWidget::itemMoved() {
-    // Nothing.
-}
 
 
+/****************************
+ * GL graph drawing (private)
+ ***************************/
 
 void GLGraphWidget::drawGraphGL() {
     QPointF p;

@@ -14,19 +14,32 @@ public:
     explicit GLGraphWidget(QWidget *parent = 0);
 
     void populate();
-
     void itemMoved();
 
-protected slots:
+protected:
+    void setAnimationRunning();
+    void playPause();
+    void scaleView(qreal scaleFactor);
+    void fitToScreen();
+
+    void wheelEvent(QWheelEvent *event);
+    void keyPressEvent(QKeyEvent *event);
+    void timerEvent(QTimerEvent *event);
+
     void initializeGL();
     void paintGL();
     void resizeGL(int w, int h);
 
 private:
-    GraphScene *myScene;
-
-    GLfloat cameramat[16];
     void drawGraphGL();
+
+    GraphScene *myScene;
+    GLfloat cameramat[16];
+
+    bool isPlaying;
+    bool isRunning;
+    bool helping;
+    int timerId;
 };
 
 #endif // GLGRAPHWIDGET_H
