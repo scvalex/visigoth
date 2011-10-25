@@ -1,4 +1,5 @@
 #include "edge.h"
+#include "graphscene.h"
 #include "graphwidget.h"
 #include "node.h"
 #include "preferential.h"
@@ -9,8 +10,8 @@
 
 #include <QAbstractAnimation>
 #include <QDebug>
-#include <QGraphicsScene>
 #include <QKeyEvent>
+#include <QVector>
 
 GraphWidget::GraphWidget(QWidget *parent) :
     QGraphicsView(parent),
@@ -23,7 +24,7 @@ GraphWidget::GraphWidget(QWidget *parent) :
     timerId(0)
 {
     setMinimumSize(HELP_WIDTH + 10, HELP_HEIGHT + 10);
-    myScene = new QGraphicsScene(this);
+    myScene = new GraphScene(this);
     myScene->setBackgroundBrush(Qt::black);
     myScene->setItemIndexMethod(QGraphicsScene::NoIndex);
     setScene(myScene);
@@ -50,17 +51,12 @@ GraphWidget::GraphWidget(QWidget *parent) :
 }
 
 GraphWidget::~GraphWidget() {
-    if (algo)
-        delete algo;
+    delete myScene;
 }
 
 void GraphWidget::populate() {
-    algo = new Preferential(this);
-    for (int i(0); i < 100; ++i) {
-        algo->addVertex((qrand() % 3 ) + 1, qrand() % 100);
-    }
-
-    randomizePlacement();
+    myScene->populate();
+    myScene->randomizePlacement();
 }
 
 void GraphWidget::itemMoved() {
@@ -86,6 +82,7 @@ void GraphWidget::keyPressEvent(QKeyEvent *event) {
             delete bip;
             bip = 0;
         }
+        myScene->reset();
         populate();
         break;
     case Qt::Key_Escape:
@@ -99,7 +96,7 @@ void GraphWidget::keyPressEvent(QKeyEvent *event) {
         scaleView(1 / qreal(1.2));
         break;
     case Qt::Key_R:
-        randomizePlacement();
+        myScene->randomizePlacement();
         break;
     case Qt::Key_Space:
         playPause();
@@ -108,9 +105,7 @@ void GraphWidget::keyPressEvent(QKeyEvent *event) {
         fitToScreen();
         break;
     case Qt::Key_A:
-        if (algo) {
-            algo->addVertex((qrand() % 3 ) + 1, qrand() % 100);
-        }
+        myScene->addVertex();
         break;
     case Qt::Key_B:
         myScene->clear();
@@ -139,18 +134,16 @@ void GraphWidget::timerEvent(QTimerEvent *) {
 
     TreeCode treeCode(myScene->sceneRect());
 
+    QVector<Node*> nodeVector;
     foreach (QGraphicsItem* item, myScene->items()) {
         Node* node = qgraphicsitem_cast<Node*>(item);
         if (node) {
-            treeCode.addNode(node);
+            nodeVector.append(node);
         }
     }
 
-    foreach (QGraphicsItem *item, myScene->items()) {
-        Node *node = qgraphicsitem_cast<Node*>(item);
-        if (!node)
-            continue;
-        QPointF pos = node->calculatePosition(treeCode.getRoot());
+    foreach (Node* node, nodeVector) {
+        QPointF pos = node->calculatePosition(nodeVector);
 
         if (pos.x() < topLeft.x()) {
             topLeft.setX(pos.x());
@@ -174,11 +167,7 @@ void GraphWidget::timerEvent(QTimerEvent *) {
     sceneRect.setBottom(bottomRight.y() + 10);
 
     isRunning = false;
-    foreach (QGraphicsItem *item, myScene->items()) {
-        Node *node = qgraphicsitem_cast<Node*>(item);
-        if (!node)
-            continue;
-
+    foreach (Node *node, myScene->nodes()) {
         if (node->advance()) {
             isRunning = true;
         }
@@ -229,46 +218,6 @@ void GraphWidget::setAnimationRunning() {
     }
 }
 
-void GraphWidget::randomizePlacement() {
-    foreach (QGraphicsItem *item, myScene->items()) {
-        if (Node *node = qgraphicsitem_cast<Node*>(item))
-            node->setPos(10 + qrand() % 1000, 10 + qrand() % 600);
-    }
-    foreach (QGraphicsItem *item, myScene->items()) {
-        if (Edge *edge = qgraphicsitem_cast<Edge*>(item))
-            edge->adjust();
-    }
-}
-
 void GraphWidget::fitToScreen() {
     fitInView(myScene->sceneRect(), Qt::KeepAspectRatio);
-}
-
-bool GraphWidget::addNewEdge(Edge *edge) {
-    if (doesEdgeExist(edge->sourceNode()->tag(), edge->destNode()->tag()))
-        return false;
-    if (edge->sourceNode()->tag() >= hasEdge.size()) {
-        hasEdge.resize(edge->sourceNode()->tag() + 1);
-    }
-    if (edge->destNode()->tag() >= hasEdge.size()) {
-        hasEdge.resize(edge->destNode()->tag() + 1);
-    }
-    hasEdge[edge->sourceNode()->tag()].insert(edge->destNode()->tag());
-    myScene->addItem(edge);
-    return true;
-}
-
-Node* GraphWidget::addNode(Node *node) {
-    myScene->addItem(node);
-    return node;
-}
-
-bool GraphWidget::doesEdgeExist(int sourceTag, int destTag) {
-    if (0 <= sourceTag && sourceTag < hasEdge.size() &&
-        0 <= destTag && destTag < hasEdge.size())
-    {
-        return hasEdge[sourceTag].contains(destTag) ||
-               hasEdge[destTag].contains(sourceTag);
-    }
-    return false;
 }

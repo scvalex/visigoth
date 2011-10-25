@@ -7,11 +7,13 @@
 #include <QStaticText>
 #include <QVector>
 
-class Edge;
-class Node;
+class GraphScene;
 class Preferential;
+<<<<<<< HEAD
 class Bipartite;
 class QGraphicsScene;
+=======
+>>>>>>> origin/master
 class QPaintEvent;
 
 class GraphWidget : public QGraphicsView
@@ -25,10 +27,6 @@ public:
 
     void itemMoved();
 
-    Node* addNode(Node *n);
-    bool addNewEdge(Edge *e);
-    bool doesEdgeExist(int sourceTag, int destTag);
-
 protected:
     void keyPressEvent(QKeyEvent *event);
     void timerEvent(QTimerEvent *event);
@@ -37,7 +35,6 @@ protected:
 
     void fitToScreen();
     void playPause();
-    void randomizePlacement();
     void scaleView(qreal scaleFactor);
     void setAnimationRunning();
 
@@ -52,7 +49,7 @@ private:
     QStaticText helpText;
     bool isPlaying;
     bool isRunning;
-    QGraphicsScene *myScene;
+    GraphScene *myScene;
     int timerId;
 };
 

@@ -1,10 +1,9 @@
 #include "edge.h"
-#include "graphwidget.h"
+#include "graphscene.h"
 #include "node.h"
 #include "treenode.h"
 #include "treecode.h"
 
-#include <QGraphicsScene>
 #include <QPainter>
 
 #include <cmath>
@@ -12,7 +11,7 @@
 
 int Node::ALL_NODES(0);
 
-Node::Node(GraphWidget *graph, QGraphicsItem *parent) :
+Node::Node(GraphScene *graph, QGraphicsItem *parent) :
     QGraphicsItem(parent),
     brush(QColor::fromRgb(qrand() % 256, qrand() % 256, qrand() % 256, 180)),
     graph(graph),
@@ -34,17 +33,29 @@ void Node::addEdge(Edge *edge) {
     edgeList << edge;
 }
 
-QPointF Node::calculatePosition(TreeNode* treeNode) {
+QPointF Node::calculatePosition(QVector<Node*> nodeVector) {
     if (!scene() || scene()->mouseGrabberItem() == this) {
         newPos = pos();
         return newPos;
     }
 
     // Calculate non-edge forces
-    QPointF nonEdge = calculateNonEdgeForces(treeNode);
+    qreal xvel = 0;
+    qreal yvel = 0;
 
-    qreal xvel = nonEdge.x();
-    qreal yvel = nonEdge.y();
+    foreach (Node* node, nodeVector) {
+        QPointF vec = mapToItem(node, 0, 0);
+        qreal dx = vec.x();
+        qreal dy = vec.y();
+
+        qreal l = 2 * (dx*dx + dy*dy);
+
+        if (l > 0) {
+           xvel += (dx * 150) / l;
+           yvel += (dy * 150) / l;
+        }
+
+    }
 
     // Now all the forces that pulling items together
     double weight = (edgeList.size() + 1) * 10;
@@ -69,6 +80,7 @@ QPointF Node::calculatePosition(TreeNode* treeNode) {
     return newPos;
 }
 
+/*
 QPointF Node::calculateNonEdgeForces(TreeNode* treeNode)
 {
     if (treeNode->getSize() < 1)
@@ -102,6 +114,7 @@ QPointF Node::calculateNonEdgeForces(TreeNode* treeNode)
     }
     return vel;
 }
+*/
 
 /* Called by GraphWidget repeatedly. */
 bool Node::advance() {
@@ -143,8 +156,9 @@ void Node::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *)
 QVariant Node::itemChange(GraphicsItemChange change, const QVariant &value) {
     switch (change) {
     case ItemPositionHasChanged:
-        foreach (Edge *edge, edgeList)
+        foreach (Edge *edge, edgeList) {
             edge->adjust();
+        }
         graph->itemMoved();
         break;
     default:
@@ -166,6 +180,17 @@ void Node::hoverLeaveEvent(QGraphicsSceneHoverEvent *event) {
 
 QList<Edge*>& Node::edges() {
     return edgeList;
+}
+
+QVector<Node*> Node::neighbours() const {
+    QVector<Node*> ns;
+    foreach (Edge *e, edgeList) {
+        if (e->sourceNode() == this)
+            ns << e->destNode();
+        if (e->destNode() == this)
+            ns << e->sourceNode();
+    }
+    return ns;
 }
 
 void Node::reset() {
