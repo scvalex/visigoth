@@ -10,6 +10,7 @@
 class Edge;
 class Node;
 class Preferential;
+class Bipartite;
 class QGraphicsScene;
 class QPaintEvent;
 
@@ -45,6 +46,7 @@ private:
     static const float HELP_HEIGHT = 500;
 
     Preferential *algo;
+    Bipartite * bip;
     QVector<QSet<int> > hasEdge;
     bool helping;
     QStaticText helpText;

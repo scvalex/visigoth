@@ -3,6 +3,7 @@
 #include "node.h"
 #include "preferential.h"
 #include "treecode.h"
+#include "bipartite.h"
 
 #include <cmath>
 
@@ -14,6 +15,7 @@
 GraphWidget::GraphWidget(QWidget *parent) :
     QGraphicsView(parent),
     algo(0),
+    bip(0),
     helping(true),
     helpText(),
     isPlaying(true),
@@ -80,6 +82,10 @@ void GraphWidget::keyPressEvent(QKeyEvent *event) {
             delete algo;
             algo = 0;
         }
+        if(bip){
+            delete bip;
+            bip = 0;
+        }
         populate();
         break;
     case Qt::Key_Escape:
@@ -106,6 +112,22 @@ void GraphWidget::keyPressEvent(QKeyEvent *event) {
             algo->addVertex((qrand() % 3 ) + 1, qrand() % 100);
         }
         break;
+    case Qt::Key_B:
+        myScene->clear();
+        hasEdge.clear();
+        Node::reset();
+        if (algo) {
+            delete algo;
+            algo = 0;
+        }
+        if(bip){
+            delete bip;
+            bip = 0;
+        }
+        bip = new Bipartite(this);
+        // hard coded now, will be user input later
+        bip->genBipartite(5,5);
+        bip->showBipartite();
     default:
         QGraphicsView::keyPressEvent(event);
     }
