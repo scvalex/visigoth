@@ -3,12 +3,15 @@
 
 #include <QGraphicsItem>
 
+#include "graphscene.h"
+
 class Node;
 
 class Edge : public QGraphicsItem
 {
 public:
-    explicit Edge(Node *sourceNode, Node *destNode, QGraphicsItem *parent = 0);
+    /* Only GraphScene can construct edges */
+    friend class GraphScene;
 
     Node* sourceNode() const;
     Node* destNode() const;
@@ -19,6 +22,7 @@ public:
     void adjust();
 
 protected:
+    explicit Edge(Node *sourceNode, Node *destNode, QGraphicsItem *parent = 0);
     QRectF boundingRect() const;
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
 

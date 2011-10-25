@@ -10,7 +10,8 @@ SOURCES += main.cpp \
           edge.cpp \
           preferential.cpp \
           treecode.cpp \
-          treenode.cpp
+          treenode.cpp \
+          graphscene.cpp
 
 HEADERS += mainwindow.h \
            node.h \
@@ -18,6 +19,7 @@ HEADERS += mainwindow.h \
            edge.h \
            preferential.h \
            treenode.h \
-           treecode.h
+           treecode.h \
+           graphscene.h
 
 FORMS += mainwindow.ui

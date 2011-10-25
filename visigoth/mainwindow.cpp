@@ -32,6 +32,7 @@ void MainWindow::populate() {
 MainWindow::~MainWindow()
 {
     delete ui;
+    delete view;
 }
 
 void MainWindow::on_actionPrint_to_PDF_triggered()
