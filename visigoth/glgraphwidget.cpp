@@ -121,10 +121,20 @@ void GLGraphWidget::keyPressEvent(QKeyEvent *event)
     case Qt::Key_A:
         myScene->addVertex();
         break;
-    default:
-        //QGraphicsView::keyPressEvent(event);
-        // FIXME: Add default keypress handler in GLGraphWidget
+    case Qt::Key_Left:
+        glaCameraTranslatef(cameramat, -20.0, 0.0, 0.0);
         break;
+    case Qt::Key_Up:
+        glaCameraTranslatef(cameramat, 0.0, -20.0, 0.0);
+        break;
+    case Qt::Key_Right:
+        glaCameraTranslatef(cameramat, 20.0, 0.0, 0.0);
+        break;
+    case Qt::Key_Down:
+        glaCameraTranslatef(cameramat, 0.0, 20.0, 0.0);
+        break;
+    default:
+        QGLWidget::keyPressEvent(event);
     }
 
     this->initProjection();
