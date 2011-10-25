@@ -1,3 +1,4 @@
+#include <QMouseEvent>
 #include <QKeyEvent>
 #include <cmath>
 #include <GL/gl.h>
@@ -10,6 +11,7 @@
 #include "treecode.h"
 
 
+
 /****************************
  * GraphWidget imitation code (public)
  ***************************/
@@ -17,6 +19,7 @@
 GLGraphWidget::GLGraphWidget(QWidget *parent) :
     QGLWidget(parent),
     zoom(1.0),
+    mouse_mode(MOUSE_IDLE),
     isPlaying(true),
     isRunning(false),
     helping(true),
@@ -78,8 +81,77 @@ void GLGraphWidget::fitToScreen()
 
 void GLGraphWidget::wheelEvent(QWheelEvent *event)
 {
-    // FIXME: Implement GLGraphWidget::wheelEvent()
     scaleView(pow((double)2, event->delta() / 240.0));
+
+    this->repaint();
+}
+
+void GLGraphWidget::mousePressEvent(QMouseEvent *event)
+{
+    if (mouse_mode != MOUSE_IDLE)
+        return;
+
+    if (event->button() == Qt::LeftButton)
+    {
+        switch(0)  // Should get modifier key status here
+        {
+            case 0:  // When no modifiers are pressed
+                mouse_mode = MOUSE_TRANSLATING;
+                break;
+            //case GLUT_ACTIVE_SHIFT:
+                mouse_mode = MOUSE_ROTATING;
+                break;
+            //case GLUT_ACTIVE_SHIFT | GLUT_ACTIVE_CTRL:
+                mouse_mode = MOUSE_TRANSLATING;
+                break;
+            //case GLUT_ACTIVE_CTRL:
+                mouse_mode = MOUSE_TRANSLATING2;
+                break;
+        }
+
+        mouse_x = event->x();
+        mouse_y = event->y();
+    }
+}
+
+void GLGraphWidget::mouseReleaseEvent(QMouseEvent *event)
+{
+    (void) event;
+
+    mouse_mode = MOUSE_IDLE;
+}
+
+void GLGraphWidget::mouseMoveEvent(QMouseEvent *event)
+{
+    int dx, dy;
+
+    if (mouse_mode == MOUSE_IDLE)
+        return;
+
+    dx = event->x() - mouse_x;
+    dy = event->y() - mouse_y;
+    mouse_x = event->x();
+    mouse_y = event->y();
+
+    switch(mouse_mode)
+    {
+        case MOUSE_TRANSLATING:
+            //glaCameraTranslatef(cameramat, (0.1) * dx, (-0.1) * dy, 0.0);
+            // Modified for 2D projection and zoom
+            glaCameraTranslatef(cameramat, (GLfloat)dx/zoom, (GLfloat)dy/zoom, 0.0);
+            break;
+        case MOUSE_TRANSLATING2:
+            //glaCameraRotatef(cameramat, dx, 0.0, 1.0, 0.0);
+            //glaCameraTranslatef(cameramat, 0.0, 0.0, (-0.1) * dy);
+            break;
+        case MOUSE_ROTATING:
+            //glaCameraRotatef(cameramat, dx, 0.0, 1.0, 0.0);
+            //glaCameraRotatef(cameramat, dy, 1.0, 0.0, 0.0);
+            break;
+        case MOUSE_DRAGGING:
+        case MOUSE_IDLE:
+            break;
+    }
 
     this->repaint();
 }
@@ -119,16 +191,16 @@ void GLGraphWidget::keyPressEvent(QKeyEvent *event)
         myScene->addVertex();
         break;
     case Qt::Key_Left:
-        glaCameraTranslatef(cameramat, -20.0, 0.0, 0.0);
+        glaCameraTranslatef(cameramat, (-20.0)/zoom, 0.0, 0.0);
         break;
     case Qt::Key_Up:
-        glaCameraTranslatef(cameramat, 0.0, -20.0, 0.0);
+        glaCameraTranslatef(cameramat, 0.0, (-20.0)/zoom, 0.0);
         break;
     case Qt::Key_Right:
-        glaCameraTranslatef(cameramat, 20.0, 0.0, 0.0);
+        glaCameraTranslatef(cameramat, 20.0/zoom, 0.0, 0.0);
         break;
     case Qt::Key_Down:
-        glaCameraTranslatef(cameramat, 0.0, 20.0, 0.0);
+        glaCameraTranslatef(cameramat, 0.0, 20.0/zoom, 0.0);
         break;
     default:
         QGLWidget::keyPressEvent(event);

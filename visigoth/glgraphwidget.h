@@ -6,6 +6,14 @@
 #include "abstractgraphwidget.h"
 #include "graphscene.h"
 
+enum MOUSE_MODES {
+  MOUSE_IDLE,
+  MOUSE_ROTATING,
+  MOUSE_TRANSLATING,
+  MOUSE_TRANSLATING2,
+  MOUSE_DRAGGING
+};
+
 
 class GLGraphWidget : public QGLWidget, public AbstractGraphWidget
 {
@@ -23,6 +31,9 @@ protected:
     void fitToScreen();
 
     void wheelEvent(QWheelEvent *event);
+    void mousePressEvent(QMouseEvent *event);
+    void mouseReleaseEvent(QMouseEvent *event);
+    void mouseMoveEvent(QMouseEvent *event);
     void keyPressEvent(QKeyEvent *event);
     void timerEvent(QTimerEvent *event);
 
@@ -37,6 +48,8 @@ private:
     GraphScene *myScene;
     GLfloat cameramat[16];
     GLfloat zoom;
+    int mouse_x, mouse_y;
+    enum MOUSE_MODES mouse_mode;
 
     bool isPlaying;
     bool isRunning;
