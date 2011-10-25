@@ -1,4 +1,5 @@
 #include <QKeyEvent>
+#include <cmath>
 #include <GL/gl.h>
 
 #include "glgraphwidget.h"
@@ -66,8 +67,8 @@ void GLGraphWidget::playPause()
 
 void GLGraphWidget::scaleView(qreal scaleFactor)
 {
-    // FIXME: Implement GLGraphWidget::scaleView.
-    (void) scaleFactor;
+    zoom *= scaleFactor;
+    this->initProjection();
 }
 
 void GLGraphWidget::fitToScreen()
@@ -78,7 +79,7 @@ void GLGraphWidget::fitToScreen()
 void GLGraphWidget::wheelEvent(QWheelEvent *event)
 {
     // FIXME: Implement GLGraphWidget::wheelEvent()
-    (void) event;
+    scaleView(pow((double)2, event->delta() / 240.0));
 
     this->repaint();
 }
@@ -88,8 +89,7 @@ void GLGraphWidget::keyPressEvent(QKeyEvent *event)
     switch (event->key()) {
     case Qt::Key_H:
         helping = !helping;
-        //viewport()->update();
-        this->paintGL();
+        this->repaint();
         break;
     case Qt::Key_G:
         myScene->reset();
@@ -97,17 +97,14 @@ void GLGraphWidget::keyPressEvent(QKeyEvent *event)
         break;
     case Qt::Key_Escape:
         helping = false;
-        //viewport()->update();
-        this->paintGL();
+        this->repaint();
         break;
     case Qt::Key_Equal:
     case Qt::Key_Plus:
-        //scaleView(qreal(1.2));
-        zoom *= 1.2;
+        scaleView(1.2);
         break;
     case Qt::Key_Minus:
-        //scaleView(1 / qreal(1.2));
-        zoom /= 1.2;
+        scaleView(1.0/1.2);
         break;
     case Qt::Key_R:
         myScene->randomizePlacement();
@@ -137,7 +134,6 @@ void GLGraphWidget::keyPressEvent(QKeyEvent *event)
         QGLWidget::keyPressEvent(event);
     }
 
-    this->initProjection();
     this->repaint();
 }
 
