@@ -15,6 +15,7 @@
 
 GLGraphWidget::GLGraphWidget(QWidget *parent) :
     QGLWidget(parent),
+    zoom(1.0),
     isPlaying(true),
     isRunning(false),
     helping(true),
@@ -99,11 +100,14 @@ void GLGraphWidget::keyPressEvent(QKeyEvent *event)
         //viewport()->update();
         this->paintGL();
         break;
+    case Qt::Key_Equal:
     case Qt::Key_Plus:
-        scaleView(qreal(1.2));
+        //scaleView(qreal(1.2));
+        zoom *= 1.2;
         break;
     case Qt::Key_Minus:
-        scaleView(1 / qreal(1.2));
+        //scaleView(1 / qreal(1.2));
+        zoom /= 1.2;
         break;
     case Qt::Key_R:
         myScene->randomizePlacement();
@@ -123,6 +127,7 @@ void GLGraphWidget::keyPressEvent(QKeyEvent *event)
         break;
     }
 
+    this->initProjection();
     this->repaint();
 }
 
@@ -178,7 +183,8 @@ void GLGraphWidget::timerEvent(QTimerEvent *)
  * GL related QT event handlers (protected)
  ***************************/
 
-void GLGraphWidget::initializeGL() {
+void GLGraphWidget::initializeGL()
+{
     glaInit();
 
     // Init camera matrix
@@ -190,7 +196,8 @@ void GLGraphWidget::initializeGL() {
     glLoadIdentity();
 }
 
-void GLGraphWidget::paintGL() {
+void GLGraphWidget::paintGL()
+{
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     // Set up the camera
@@ -205,29 +212,24 @@ void GLGraphWidget::paintGL() {
     glFlush();
 }
 
-void GLGraphWidget::resizeGL(int w, int h) {
+void GLGraphWidget::resizeGL(int w, int h)
+{
     //GLfloat aspect = (GLfloat)w/(GLfloat)h;
 
     // Set up the Viewport transformation
     glViewport(0, 0, (GLsizei) w, (GLsizei) h);
 
-    // Set up the Projection transformation
-    glMatrixMode(GL_PROJECTION);
-    glLoadIdentity();
-
-    gluOrtho2D(0.0, (GLfloat)w, (GLfloat)h, 0.0);
-
-    // Switch to Model/view transformation for drawing objects
-    glMatrixMode(GL_MODELVIEW);
+    this->initProjection();
 }
 
 
 
 /****************************
- * GL graph drawing (private)
+ * GL graph drawing and projection setup (private)
  ***************************/
 
-void GLGraphWidget::drawGraphGL() {
+void GLGraphWidget::drawGraphGL()
+{
     QPointF p;
 
     // Attention, references abound!
@@ -258,4 +260,18 @@ void GLGraphWidget::drawGraphGL() {
             glVertex3f((GLfloat)p.x(), (GLfloat)p.y(), 0.0);
         }
     glEnd();
+}
+
+void GLGraphWidget::initProjection()
+{
+  //GLfloat aspect = (GLfloat)width()/(GLfloat)height();
+
+  // Set up the Projection transformation
+  glMatrixMode(GL_PROJECTION);
+  glLoadIdentity();
+
+  gluOrtho2D(0.0, (GLfloat)width()/zoom, (GLfloat)height()/zoom, 0.0);
+
+  // Switch to Model/view transformation for drawing objects
+  glMatrixMode(GL_MODELVIEW);
 }

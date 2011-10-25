@@ -32,9 +32,11 @@ protected:
 
 private:
     void drawGraphGL();
+    void initProjection();
 
     GraphScene *myScene;
     GLfloat cameramat[16];
+    GLfloat zoom;
 
     bool isPlaying;
     bool isRunning;
