@@ -3,11 +3,13 @@
 #include "graphwidget.h"
 #include "node.h"
 #include "preferential.h"
+#include "bipartite.h"
 
 GraphScene::GraphScene(GraphWidget *parent) :
     QGraphicsScene(parent),
     view(parent),
-    algo(0)
+    algo(0),
+    bip(0)
 {
 }
 
@@ -70,6 +72,14 @@ bool GraphScene::doesEdgeExist(Node *source, Node *dest) {
 
 void GraphScene::itemMoved() {
     view->itemMoved();
+}
+
+void GraphScene::createBip(){
+    bip = new Bipartite(this);
+}
+
+void GraphScene::genBip(int vSize, int uSize){
+    bip->genBipartite(vSize,uSize);
 }
 
 void GraphScene::populate() {

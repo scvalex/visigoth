@@ -119,10 +119,10 @@ void GraphWidget::keyPressEvent(QKeyEvent *event) {
             delete bip;
             bip = 0;
         }
-        bip = new Bipartite(this);
+        myScene->reset();
+        myScene->createBip();
         // hard coded now, will be user input later
-        bip->genBipartite(5,5);
-        bip->showBipartite();
+        myScene->genBip(50,40);
     default:
         QGraphicsView::keyPressEvent(event);
     }

@@ -9,11 +9,8 @@
 
 class GraphScene;
 class Preferential;
-<<<<<<< HEAD
 class Bipartite;
 class QGraphicsScene;
-=======
->>>>>>> origin/master
 class QPaintEvent;
 
 class GraphWidget : public QGraphicsView

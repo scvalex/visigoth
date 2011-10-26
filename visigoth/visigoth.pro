@@ -11,11 +11,8 @@ SOURCES += main.cpp \
           preferential.cpp \
           treecode.cpp \
           treenode.cpp \
-<<<<<<< HEAD
-    bipartite.cpp
-=======
+          bipartite.cpp \
           graphscene.cpp
->>>>>>> origin/master
 
 HEADERS += mainwindow.h \
            node.h \
@@ -24,13 +21,12 @@ HEADERS += mainwindow.h \
            preferential.h \
            treenode.h \
            treecode.h \
-<<<<<<< HEAD
-    bipartite.h
-=======
-           graphscene.h
->>>>>>> origin/master
+           bipartite.h \
+           graphscene.h \
 
 FORMS += mainwindow.ui
+
+
 
 
 

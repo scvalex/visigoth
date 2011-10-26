@@ -1,24 +1,25 @@
+#include "graphscene.h"
 #include "bipartite.h"
 
-Bipartite::Bipartite(GraphWidget *graph) : graph(graph){
+Bipartite::Bipartite(GraphScene *scene) : scene(scene){
 
-    generated = false;
+
 }
 
 void Bipartite::genBipartite(int vSize, int uSize){
 
     // initialisation
 
-    vVector = *(new QVector<Node *>(vSize));
-    uVector = *(new QVector<Node *>(uSize));
+   QVector<Node *> vVector(vSize);
+   QVector<Node *> uVector(uSize);
 
     for(int i(0); i < uSize ; ++i){
-        Node * u = new Node(graph);
+        Node * u = scene->newNode();
         uVector[i] = u;
     }
 
     for(int i(0); i < vSize ; ++i){
-        Node * v = new Node(graph);
+        Node * v =  scene->newNode();
         vVector[i] = v;
     }
 
@@ -40,12 +41,11 @@ void Bipartite::genBipartite(int vSize, int uSize){
 
             // may have to implement check for infinite looping
             double rand = fmod(qrand(),cumulativePreferences[uSize-1]);
-            Node * u = getPreference(rand);
+            Node * u = uVector[getPreference(rand)];
 
-            if(!graph->doesEdgeExist(u->tag(),v->tag())){
+            if(!scene->doesEdgeExist(u,v)){
                 *usedNodes << u;
-                Edge * e = new Edge(u,v);
-                graph->addNewEdge(e);
+                scene->newEdge(u,v);
                 n+=1;
             }
             ++cutoff;
@@ -62,8 +62,7 @@ void Bipartite::genBipartite(int vSize, int uSize){
         if(u->edges().count() == 0){
 
             Node * v = vVector[qrand()%vSize];
-            Edge * uv = new Edge(u,v);
-            graph->addNewEdge(uv);
+            scene->newEdge(u,v);
 
         }
     }
@@ -74,7 +73,7 @@ void Bipartite::genBipartite(int vSize, int uSize){
         QList<Edge *> * A = new QList<Edge *>();
 
         // Find all edges where v is the dest Node
-        foreach(Edge * e, *edgeList){
+        foreach(Edge * e, scene->edges()){
             if(e->destNode()->tag() == v->tag() ){
                 *A << e;
             }
@@ -87,46 +86,16 @@ void Bipartite::genBipartite(int vSize, int uSize){
                 Node * u2 = e2->sourceNode();
 
                 if(u1->tag() != u2->tag()){
-
-                    Edge * uu = new Edge(u1,u2);
-                        graph->addNewEdge(uu);
+                        scene->newEdge(u1,u2);
                 }
             }
         }
     }
 
-    generated = true;
-}
-
-void Bipartite::showBipartite(){
-
-    if(!generated){
-        return;
-    }
-
-    int vSize = vVector.count();
-    int uSize = uVector.count();
-
-    for(int i(0); i < vSize ; ++i){
-        graph->addNode(vVector.at(i));
-    }
-
-    for(int i(0); i < uSize ; ++i){
-        graph->addNode(uVector.at(i));
-    }
-
     vVector.clear();
     uVector.clear();
-
 }
 
-bool Bipartite::returnGenerated(){
-    return generated;
-}
-
-void Bipartite::setGenerated(bool b){
-    generated = b;
-}
 
 double Bipartite::fitnessDist(int x){
 
@@ -150,7 +119,7 @@ double Bipartite::degreeDist(int x){
 }
 
 // Return the preferred node, using binary search.
-Node* Bipartite::getPreference(double genPref) {
+int Bipartite::getPreference(double genPref) {
 
     const float E = 0.01;
     int l;
@@ -163,7 +132,7 @@ Node* Bipartite::getPreference(double genPref) {
                 i += l;
         }
     }
-    return uVector[i];
+    return i;
 }
 
 void Bipartite::updatePreference() {

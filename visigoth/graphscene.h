@@ -10,6 +10,7 @@ class Edge;
 class GraphWidget;
 class Node;
 class Preferential;
+class Bipartite;
 
 class GraphScene : public QGraphicsScene
 {
@@ -31,6 +32,10 @@ public:
 
     void populate();
 
+    void genBip(int vSize, int uSize);
+
+    void createBip();
+
     void randomizePlacement();
 
     void addVertex();
@@ -40,7 +45,8 @@ private:
     QVector<Node*> myNodes;
     QList<Edge*> myEdges;
     GraphWidget *view;
-    Preferential *algo;
+    Preferential * algo;
+    Bipartite * bip;
 };
 
 #endif // GRAPHSCENE_H
