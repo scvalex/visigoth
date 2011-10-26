@@ -105,16 +105,8 @@ void GraphWidget::timerEvent(QTimerEvent *) {
 
     TreeCode treeCode(myScene->sceneRect());
 
-    QVector<Node*> nodeVector;
-    foreach (QGraphicsItem* item, myScene->items()) {
-        Node* node = qgraphicsitem_cast<Node*>(item);
-        if (node) {
-            nodeVector.append(node);
-        }
-    }
-
-    foreach (Node* node, nodeVector) {
-        QPointF pos = node->calculatePosition(nodeVector);
+    foreach (Node* node, myScene->nodes()) {
+        QPointF pos = node->calculatePosition();
 
         if (pos.x() < topLeft.x()) {
             topLeft.setX(pos.x());
