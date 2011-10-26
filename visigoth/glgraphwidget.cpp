@@ -76,7 +76,13 @@ void GLGraphWidget::scaleView(qreal scaleFactor)
 
 void GLGraphWidget::fitToScreen()
 {
-    // FIXME: Implement GLGraphWidget::fitToScreen()
+    float aspectWidget = (float)width()/(float)height();
+    float aspectGraph = (float)myScene->width()/(float)myScene->height();
+
+    if (aspectGraph >= aspectWidget)
+        scaleView((GLfloat)width() / (GLfloat)myScene->width() / zoom);
+    else
+        scaleView((GLfloat)height() / (GLfloat)myScene->height() / zoom);
 }
 
 void GLGraphWidget::wheelEvent(QWheelEvent *event)
@@ -292,8 +298,6 @@ void GLGraphWidget::paintGL()
 
 void GLGraphWidget::resizeGL(int w, int h)
 {
-    //GLfloat aspect = (GLfloat)w/(GLfloat)h;
-
     // Set up the Viewport transformation
     glViewport(0, 0, (GLsizei) w, (GLsizei) h);
 
