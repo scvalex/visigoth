@@ -39,6 +39,7 @@ GraphWidget::GraphWidget(QWidget *parent) :
                      "<ul>"
                      "<li><em>h</em> - show this text</li>"
                      "<li><em>g</em> - generate a new graph</li>"
+                     "<li><em>b</em> - generate a new graph using bipartite method</li>"
                      "<li><em>r</em> - randomize node placement</li>"
                      "<li>&lt;<em>spc</em>&gt; - pause/play the animation</li>"
                      "<li>&lt;<em>esc</em>&gt; - return to graph view</li>"
