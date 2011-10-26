@@ -342,14 +342,16 @@ void GLGraphWidget::drawGraphGL()
 
 void GLGraphWidget::initProjection()
 {
-  //GLfloat aspect = (GLfloat)width()/(GLfloat)height();
+    // Set up the Projection transformation
+    glMatrixMode(GL_PROJECTION);
+    glLoadIdentity();
 
-  // Set up the Projection transformation
-  glMatrixMode(GL_PROJECTION);
-  glLoadIdentity();
+    // Zooming
+    glScalef(zoom, zoom, 1.0/zoom);
 
-  gluOrtho2D(0.0, (GLfloat)width()/zoom, (GLfloat)height()/zoom, 0.0);
+    // Flat projection
+    gluOrtho2D(0.0, (GLfloat)width(), (GLfloat)height(), 0.0);
 
-  // Switch to Model/view transformation for drawing objects
-  glMatrixMode(GL_MODELVIEW);
+    // Switch to Model/view transformation for drawing objects
+    glMatrixMode(GL_MODELVIEW);
 }
