@@ -6,16 +6,18 @@
 #include <QSet>
 #include <QVector>
 
+#include "abstractgraphwidget.h"
+
 class Edge;
 class GraphWidget;
 class Node;
-class Preferential;
+class Algorithm;
 
 class GraphScene : public QGraphicsScene
 {
     Q_OBJECT
 public:
-    explicit GraphScene(GraphWidget *parent = 0);
+    explicit GraphScene(AbstractGraphWidget *parent = 0);
 
     QVector<Node*>& nodes();
     QList<Edge*>& edges();
@@ -25,22 +27,26 @@ public:
     Node* newNode();
     bool newEdge(Node *source, Node *dest);
 
-    void reset();
+    void repopulate();
+    void nextAlgorithm();
 
     void itemMoved();
-
-    void populate();
 
     void randomizePlacement();
 
     void addVertex();
 
+protected:
+    void reset();
+
 private:
+    Algorithm *algo;
+    int algoId;
     QVector<QSet<int> > hasEdge;
     QVector<Node*> myNodes;
     QList<Edge*> myEdges;
-    GraphWidget *view;
-    Preferential *algo;
+    int targetNumNodes;
+    AbstractGraphWidget *view;
 };
 
 #endif // GRAPHSCENE_H

@@ -128,6 +128,13 @@ void Node::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *)
         QColor lighter = brush.color();
         lighter.setAlpha(255);
         painter->setBrush(QBrush(lighter));
+
+        // convert double to string
+        std::ostringstream strs;
+        strs << "Degree: " << edgeList.count();
+        std::string str = strs.str();
+        QString tip = QString::fromStdString(str);
+        QToolTip::showText(newPos.toPoint(),tip);
     }
     painter->drawEllipse(-10, -10, 20, 20);
 }

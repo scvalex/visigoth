@@ -9,8 +9,11 @@ SOURCES += main.cpp \
           graphwidget.cpp \
           edge.cpp \
           preferential.cpp \
+          bipartite.cpp \
           graphscene.cpp \
-    quadtree.cpp
+          glgraphwidget.cpp \
+          glancillary.c \
+          quadtree.cpp
 
 HEADERS += mainwindow.h \
            node.h \
@@ -18,6 +21,11 @@ HEADERS += mainwindow.h \
            edge.h \
            preferential.h \
            graphscene.h \
-    quadtree.h
+           glgraphwidget.h \
+           glancillary.h \
+           bipartite.h \
+           algorithm.h \
+           abstractgraphwidget.h \
+           quadtree.h
 
 FORMS += mainwindow.ui

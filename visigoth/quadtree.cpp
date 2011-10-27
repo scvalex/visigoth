@@ -51,18 +51,17 @@ void QuadTree::printTree(QuadTree::TreeNode* node) {
                     std::cout << "\t";
                 }
 
-                QuadTree::Quadrant* qchild = dynamic_cast<QuadTree::Quadrant*>(child);
+                std::cout << "Level: " << (q->getLevel() + 1) << ", width: " << child->width()
+                          << ", size: " << child->size() << ", center: " << child->center().x()
+                          << "," << child->center().y();
 
+                QuadTree::Quadrant* qchild = dynamic_cast<QuadTree::Quadrant*>(child);
                 if (qchild) {
-                    std::cout << "Level: " << (q->getLevel() + 1) << ", width: " << child->width()
-                              << ", size: " << child->size() << ", center: " << child->center().x()
-                              << "," << child->center().y() << ", quadcenter: " << qchild->getQuadrantCenter().x()
-                              << "," << qchild->getQuadrantCenter().y() << "\n";
-                } else {
-                    std::cout << "Level: " << (q->getLevel() + 1) << ", width: " << child->width()
-                              << ", size: " << child->size() << ", center: " << child->center().x()
-                              << "," << child->center().y() << "\n";
+                    std::cout << ", quadcenter: " << qchild->getQuadrantCenter().x() << "," << qchild->getQuadrantCenter().y();
                 }
+
+                std::cout << "\n";
+
                 printTree(child);
             }
         }

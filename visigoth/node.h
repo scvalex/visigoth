@@ -9,6 +9,7 @@
 #include <QGraphicsItem>
 #include <QVariant>
 #include <QToolTip>
+#include <sstream>
 
 #include "graphscene.h"
 #include "quadtree.h"

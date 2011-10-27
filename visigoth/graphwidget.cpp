@@ -4,6 +4,7 @@
 #include "node.h"
 #include "preferential.h"
 #include "quadtree.h"
+#include "abstractgraphwidget.h"
 
 #include <cmath>
 
@@ -38,6 +39,7 @@ GraphWidget::GraphWidget(QWidget *parent) :
                      "<ul>"
                      "<li><em>h</em> - show this text</li>"
                      "<li><em>g</em> - generate a new graph</li>"
+                     "<li><em>n</em> - switch to next algorithm</li>"
                      "<li><em>r</em> - randomize node placement</li>"
                      "<li>&lt;<em>spc</em>&gt; - pause/play the animation</li>"
                      "<li>&lt;<em>esc</em>&gt; - return to graph view</li>"
@@ -54,7 +56,7 @@ GraphWidget::~GraphWidget() {
 }
 
 void GraphWidget::populate() {
-    myScene->populate();
+    myScene->repopulate();
     myScene->randomizePlacement();
 }
 
@@ -70,7 +72,8 @@ void GraphWidget::keyPressEvent(QKeyEvent *event) {
         viewport()->update();
         break;
     case Qt::Key_G:
-        myScene->reset();
+        myScene->clear();
+        Node::reset();
         populate();
         break;
     case Qt::Key_Escape:
@@ -95,6 +98,10 @@ void GraphWidget::keyPressEvent(QKeyEvent *event) {
     case Qt::Key_A:
         myScene->addVertex();
         break;
+    case Qt::Key_N:
+        myScene->nextAlgorithm();
+        myScene->randomizePlacement();
+        break;
     default:
         QGraphicsView::keyPressEvent(event);
     }
@@ -106,19 +113,14 @@ void GraphWidget::timerEvent(QTimerEvent *) {
 
     QuadTree quadTree(myScene->sceneRect());
 
-    QVector<Node*> nodeVector;
-    foreach (QGraphicsItem* item, myScene->items()) {
-        Node* node = qgraphicsitem_cast<Node*>(item);
-        if (node) {
-            nodeVector.append(node);
-            quadTree.addNode(*node);
-        }
+    foreach (Node* node, myScene->nodes()) {
+        quadTree.addNode(*node);
     }
 
     // quadTree.printTree(&quadTree.root());
     // std::cout << "---------------------------------------------------\n";
 
-    foreach (Node* node, nodeVector) {
+    foreach (Node* node, myScene->nodes()) {
         QPointF pos = node->calculatePosition(quadTree.root());
 
         if (pos.x() < topLeft.x()) {
