@@ -71,8 +71,21 @@ QPointF QuadTree::Quadrant::quadrantCenter() const {
     int quadrantSize = edge / quadrants;
     int halfQuadrantSize = quadrantSize / 2;
 
-    qreal x = (qreal) (quadrantSize * this->x + ((this->x / this->x) * halfQuadrantSize));
-    qreal y = (qreal) (quadrantSize * this->y + ((this->y / this->y) * halfQuadrantSize));
+    int xsign;
+    int ysign;
+    if (this->x == 0) {
+        xsign = -1;
+    } else {
+        xsign = this->x / this->x;
+    }
+    if (this->y == 0) {
+        ysign = -1;
+    } else {
+        ysign = this->y / this->y;
+    }
+
+    qreal x = (qreal) (quadrantSize * this->x + (xsign * halfQuadrantSize));
+    qreal y = (qreal) (quadrantSize * this->y + (ysign * halfQuadrantSize));
 
     return QPointF(x, y);
 }
@@ -89,7 +102,7 @@ bool QuadTree::Quadrant::hasChildren() const {
     return _children.size() > 0;
 }
 
-QVector<QuadTree::TreeNode*> QuadTree::Quadrant::children() const {
+const QVector<QuadTree::TreeNode*>& QuadTree::Quadrant::children() const {
     return _children;
 }
 

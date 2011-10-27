@@ -11,12 +11,12 @@
 #include <QToolTip>
 
 #include "graphscene.h"
-#include "treenode.h"
+#include "quadtree.h"
 
 class Edge;
 class QGraphicsSceneHoverEvent;
 
-class Node : public QGraphicsItem, public TreeNode
+class Node : public QGraphicsItem, public QuadTree::TreeNode
 {
 public:
     /* Only GraphScene can construct Nodes. */
@@ -41,10 +41,12 @@ public:
 
     QList<Edge*>& edges();
     QVector<Node*> neighbours() const;
-    int getSize() const;
-    QPointF getCenter() const;
-    QVector<TreeNode*>& getChildren();
-    qreal getWidth() const;
+
+    int size() const;
+    QPointF center() const;
+    bool hasChildren() const;
+    const QVector<TreeNode*>& children() const;
+    qreal width() const;
 
     static void reset();
 

@@ -3,7 +3,7 @@
 #include "graphwidget.h"
 #include "node.h"
 #include "preferential.h"
-#include "treecode.h"
+#include "quadtree.h"
 
 #include <cmath>
 
@@ -102,13 +102,14 @@ void GraphWidget::timerEvent(QTimerEvent *) {
     QPointF topLeft;
     QPointF bottomRight;
 
-    TreeCode treeCode(myScene->sceneRect());
+    QuadTree quadTree(myScene->sceneRect());
 
     QVector<Node*> nodeVector;
     foreach (QGraphicsItem* item, myScene->items()) {
         Node* node = qgraphicsitem_cast<Node*>(item);
         if (node) {
             nodeVector.append(node);
+            quadTree.addNode(*node);
         }
     }
 

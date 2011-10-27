@@ -1,8 +1,7 @@
 #include "edge.h"
 #include "graphscene.h"
 #include "node.h"
-#include "treenode.h"
-#include "treecode.h"
+#include "quadtree.h"
 
 #include <QPainter>
 
@@ -190,18 +189,22 @@ void Node::reset() {
     ALL_NODES = 0;
 }
 
-int Node::getSize() const {
+int Node::size() const {
     return 1;
 }
 
-QPointF Node::getCenter() const {
+QPointF Node::center() const {
     return pos();
 }
 
-QVector<TreeNode*>& Node::getChildren() {
-    throw std::runtime_error("Node: calling getChildren() on a terminal node");
+bool Node::hasChildren() const {
+    return false;
 }
 
-qreal Node::getWidth() const {
+const QVector<QuadTree::TreeNode*>& Node::children() const {
+    throw std::runtime_error("Node: calling children() on a terminal node");
+}
+
+qreal Node::width() const {
     return 0;
 }

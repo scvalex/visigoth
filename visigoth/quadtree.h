@@ -12,7 +12,7 @@ public:
         virtual int size() const = 0;
         virtual QPointF center() const = 0;
         virtual bool hasChildren() const = 0;
-        virtual QVector<TreeNode*> children() const = 0;
+        virtual const QVector<TreeNode*>& children() const = 0;
         virtual qreal width() const = 0;
     };
 
@@ -31,7 +31,7 @@ private:
         int size() const;
         QPointF center() const;
         bool hasChildren() const;
-        QVector<TreeNode*> children() const;
+        const QVector<TreeNode*>& children() const;
         qreal width() const;
 
         void addChild(TreeNode& child);
