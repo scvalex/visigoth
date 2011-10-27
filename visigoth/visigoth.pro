@@ -9,8 +9,6 @@ SOURCES += main.cpp \
           graphwidget.cpp \
           edge.cpp \
           preferential.cpp \
-          treecode.cpp \
-          treenode.cpp \
           graphscene.cpp \
     quadtree.cpp
 
@@ -19,8 +17,6 @@ HEADERS += mainwindow.h \
            graphwidget.h \
            edge.h \
            preferential.h \
-           treenode.h \
-           treecode.h \
            graphscene.h \
     quadtree.h
 
