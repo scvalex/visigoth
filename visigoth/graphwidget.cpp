@@ -114,7 +114,7 @@ void GraphWidget::timerEvent(QTimerEvent *) {
     }
 
     foreach (Node* node, nodeVector) {
-        QPointF pos = node->calculatePosition(nodeVector);
+        QPointF pos = node->calculatePosition(quadTree.root());
 
         if (pos.x() < topLeft.x()) {
             topLeft.setX(pos.x());

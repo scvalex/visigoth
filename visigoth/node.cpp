@@ -32,29 +32,17 @@ void Node::addEdge(Edge *edge) {
     edgeList << edge;
 }
 
-QPointF Node::calculatePosition(QVector<Node*> nodeVector) {
+QPointF Node::calculatePosition(QuadTree::TreeNode& treeNode) {
     if (!scene() || scene()->mouseGrabberItem() == this) {
         newPos = pos();
         return newPos;
     }
 
     // Calculate non-edge forces
-    qreal xvel = 0;
-    qreal yvel = 0;
+    QPointF vel = calculateNonEdgeForces(&treeNode);
 
-    foreach (Node* node, nodeVector) {
-        QPointF vec = mapToItem(node, 0, 0);
-        qreal dx = vec.x();
-        qreal dy = vec.y();
-
-        qreal l = 2 * (dx*dx + dy*dy);
-
-        if (l > 0) {
-           xvel += (dx * 150) / l;
-           yvel += (dy * 150) / l;
-        }
-
-    }
+    qreal xvel = vel.x();
+    qreal yvel = vel.y();
 
     // Now all the forces that pulling items together
     double weight = (edgeList.size() + 1) * 10;
@@ -79,21 +67,21 @@ QPointF Node::calculatePosition(QVector<Node*> nodeVector) {
     return newPos;
 }
 
-/*
 QPointF Node::calculateNonEdgeForces(TreeNode* treeNode)
 {
-    if (treeNode->getSize() < 1)
+    if (treeNode->size() < 1) {
         return QPointF(0, 0);
+    }
 
-    QPointF vec(this->pos().x() - treeNode->getCenter().x(),
-                this->pos().y() - treeNode->getCenter().y());
+    QPointF vec(this->pos().x() - treeNode->center().x(),
+                this->pos().y() - treeNode->center().y());
     qreal dx = vec.x();
     qreal dy = vec.y();
 
     qreal distance = sqrt(dx*dx + dy*dy);
 
     QPointF vel;
-    if (treeNode->isFarEnough(distance) || treeNode->getSize() == 1) {
+    if (treeNode->isFarEnough(distance) || treeNode->size() == 1) {
         double l = 2.0 * (dx*dx + dy*dy);
 
         if (l > 0) {
@@ -104,7 +92,7 @@ QPointF Node::calculateNonEdgeForces(TreeNode* treeNode)
     } else {
         qreal xvel = 0;
         qreal yvel = 0;
-        foreach (TreeNode* child, treeNode->getChildren()) {
+        foreach (TreeNode* child, treeNode->children()) {
             QPointF velCh = calculateNonEdgeForces(child);
             xvel += velCh.x();
             yvel += velCh.y();
@@ -113,7 +101,6 @@ QPointF Node::calculateNonEdgeForces(TreeNode* treeNode)
     }
     return vel;
 }
-*/
 
 /* Called by GraphWidget repeatedly. */
 bool Node::advance() {

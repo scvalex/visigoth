@@ -43,6 +43,12 @@ void QuadTree::addNode(QuadTree::TreeNode& node) {
     _root->addChild(node);
 }
 
+//------ QuadTree::TreeNode
+
+bool QuadTree::TreeNode::isFarEnough(qreal distance) {
+    return (width() / distance) <= tolerance;
+}
+
 //------ QuadTree::Quadrant
 
 QuadTree::Quadrant::Quadrant(int level, int x, int y, int edge) :

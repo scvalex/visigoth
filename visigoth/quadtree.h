@@ -14,6 +14,9 @@ public:
         virtual bool hasChildren() const = 0;
         virtual const QVector<TreeNode*>& children() const = 0;
         virtual qreal width() const = 0;
+
+        bool isFarEnough(qreal distance);
+        static const qreal tolerance = 0.2;
     };
 
     static const int BASE_QUADRANT_SIZE = 25;
