@@ -58,7 +58,6 @@ Node* GraphScene::newNode() {
     Node *node = new Node(this);
     addItem(node);
     myNodes << node;
-    ++targetNumNodes;
     return node;
 }
 

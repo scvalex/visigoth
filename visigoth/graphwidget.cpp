@@ -71,7 +71,6 @@ void GraphWidget::keyPressEvent(QKeyEvent *event) {
         break;
     case Qt::Key_G:
         myScene->clear();
-        hasEdge.clear();
         Node::reset();
         populate();
         break;
@@ -98,11 +97,9 @@ void GraphWidget::keyPressEvent(QKeyEvent *event) {
         myScene->addVertex();
         break;
     case Qt::Key_N:
-        myScene->clear();
-        hasEdge.clear();
-        Node::reset();
         myScene->nextAlgorithm();
         myScene->randomizePlacement();
+        break;
     default:
         QGraphicsView::keyPressEvent(event);
     }

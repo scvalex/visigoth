@@ -39,9 +39,6 @@ private:
     static const float HELP_WIDTH = 300;
     static const float HELP_HEIGHT = 500;
 
-    Preferential *algo;
-    Bipartite * bip;
-    QVector<QSet<int> > hasEdge;
     bool helping;
     QStaticText helpText;
     bool isPlaying;
