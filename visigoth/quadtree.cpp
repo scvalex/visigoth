@@ -4,11 +4,17 @@
 #include <QRectF>
 
 #include <cmath>
-
+#include <stdexcept>
 
 QuadTree::QuadTree(QRectF boundaries)
 {
     edge = calculateEdge(boundaries);
+
+    _root = new QuadTree::Quadrant(0, 0, 0, edge);
+}
+
+QuadTree::~QuadTree() {
+    delete _root;
 }
 
 int QuadTree::calculateEdge(QRectF boundaries) const {
@@ -29,6 +35,14 @@ int QuadTree::calculateEdge(QRectF boundaries) const {
     return edge;
 }
 
+QuadTree::TreeNode& QuadTree::root() const {
+    return *_root;
+}
+
+void QuadTree::addNode(QuadTree::TreeNode& node) {
+    _root->addChild(node);
+}
+
 //------ QuadTree::Quadrant
 
 QuadTree::Quadrant::Quadrant(int level, int x, int y, int edge) :
@@ -36,24 +50,36 @@ QuadTree::Quadrant::Quadrant(int level, int x, int y, int edge) :
     x(x),
     y(y),
     edge(edge),
-    _weight(0)
+    _size(0)
 {
 }
 
-int QuadTree::Quadrant::weight() const {
-    return _weight;
+QuadTree::Quadrant::~Quadrant() {
+    if (!isTerminal()) {
+        foreach (TreeNode* node, _children) {
+            delete node;
+        }
+    }
+}
+
+int QuadTree::Quadrant::size() const {
+    return _size;
+}
+
+QPointF QuadTree::Quadrant::quadrantCenter() const {
+    int quadrants = 1 << level;
+    int quadrantSize = edge / quadrants;
+    int halfQuadrantSize = quadrantSize / 2;
+
+    qreal x = (qreal) (quadrantSize * this->x + ((this->x / this->x) * halfQuadrantSize));
+    qreal y = (qreal) (quadrantSize * this->y + ((this->y / this->y) * halfQuadrantSize));
+
+    return QPointF(x, y);
 }
 
 QPointF QuadTree::Quadrant::center() const {
     if (!hasChildren()) {
-        int quadrants = 1 << level;
-        int quadrantSize = edge / quadrants;
-        int halfQuadrantSize = quadrantSize / TREE_WAY;
-
-        qreal x = (qreal) (quadrantSize * this->x + ((this->x / this->x) * halfQuadrantSize));
-        qreal y = (qreal) (quadrantSize * this->y + ((this->y / this->y) * halfQuadrantSize));
-
-        return QPointF(x, y);
+        return quadrantCenter();
     } else {
         return _center;
     }
@@ -74,6 +100,73 @@ qreal QuadTree::Quadrant::width() const {
     return (qreal) quadrantSize;
 }
 
-QPointF QuadTree::Quadrant::addChild(QuadTree::TreeNode& node) {
-    return QPointF(0, 0);
+int QuadTree::Quadrant::childIndex(QuadTree::TreeNode& node) const {
+    QPointF qcenter = quadrantCenter();
+    QPointF ncenter = node.center();
+
+    int row;
+    int col;
+
+    if (ncenter.x() < qcenter.x()) {
+        row = 0;
+    } else {
+        row = 1;
+    }
+
+    if (ncenter.y() < qcenter.y()) {
+        col = 0;
+    } else {
+        col = 1;
+    }
+
+    return row * 2 + col;
+}
+
+void QuadTree::Quadrant::castAndAddChild(QuadTree::TreeNode* node, QuadTree::TreeNode& child) const {
+    QuadTree::Quadrant* q = dynamic_cast<QuadTree::Quadrant*>(node);
+
+    if (q == NULL) {
+        throw std::runtime_error("QuadTree::Quadrant::castAndAddChild: trying to cast a non-Quadrant.");
+    }
+
+    q->addChild(child);
+}
+
+bool QuadTree::Quadrant::isTerminal() {
+    return width() > BASE_QUADRANT_SIZE;
+}
+
+void QuadTree::Quadrant::addChild(QuadTree::TreeNode& node) {
+    if (size() < 1) {
+        _center = node.center();
+    } else {
+        // Weigh the center
+        QPointF nodeCenter = node.center();
+        int nodeSize = node.size();
+        _center = QPointF((size() * center().x() + nodeSize * nodeCenter.x()) / (size() + nodeSize),
+                          (size() * center().y() + nodeSize * nodeCenter.y()) / (size() + nodeSize));
+
+        // If it's not a terminal node, recurse down
+        if (!isTerminal()) {
+            if (size() == 1) {
+                // Create the nodes, add itself to the appropriate node
+                _children.resize(4);
+
+                for (int i = 0; i < 4; ++i) {
+                    _children[i] = new QuadTree::Quadrant(level + 1, i / 2, i % 2, edge);
+                }
+
+                castAndAddChild(_children[childIndex(*this)], *this);
+            }
+
+
+            // Add the node to the appropriate child
+            castAndAddChild(_children[childIndex(*this)], node);
+        } else {
+            // Just add the node to the list of children
+            _children.append(&node);
+        }
+    }
+
+    ++_size;
 }

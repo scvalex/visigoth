@@ -9,30 +9,32 @@ class QuadTree
 public:
     class TreeNode {
     public:
-        virtual int weight() const = 0;
+        virtual int size() const = 0;
         virtual QPointF center() const = 0;
         virtual bool hasChildren() const = 0;
-        virtual QVector<TreeNode> children() const = 0;
+        virtual QVector<TreeNode*> children() const = 0;
         virtual qreal width() const = 0;
     };
 
     static const int BASE_QUADRANT_SIZE = 25;
 
     QuadTree(QRectF boundaries);
-    // void addNode(TreeNode node);
-    // TreeNode root() const;
+    ~QuadTree();
+    void addNode(TreeNode& node);
+    TreeNode& root() const;
 
 private:
-    class Quadrant {
+    class Quadrant : public TreeNode {
     public:
         Quadrant(int level, int x, int y, int edge);
-        int weight() const;
+        ~Quadrant();
+        int size() const;
         QPointF center() const;
         bool hasChildren() const;
         QVector<TreeNode*> children() const;
         qreal width() const;
 
-        QPointF addChild(TreeNode& child);
+        void addChild(TreeNode& child);
 
     private:
         QVector<TreeNode*> _children;
@@ -40,8 +42,13 @@ private:
         int x;
         int y;
         int edge;
-        int _weight;
+        int _size;
         QPointF _center;
+
+        QPointF quadrantCenter() const;
+        int childIndex(TreeNode& node) const;
+        void castAndAddChild(TreeNode* node, TreeNode& child) const;
+        bool isTerminal();
     };
 
     static const int TREE_WAY = 2;
@@ -50,7 +57,7 @@ private:
     // The width of the edge of the square space
     int edge;
     // The root node
-    // Quadrant _root;
+    Quadrant* _root;
 
     int calculateEdge(QRectF boundaries) const;
 };
