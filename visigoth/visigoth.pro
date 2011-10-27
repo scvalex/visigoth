@@ -11,7 +11,8 @@ SOURCES += main.cpp \
           preferential.cpp \
           treecode.cpp \
           treenode.cpp \
-          graphscene.cpp
+          graphscene.cpp \
+    quadtree.cpp
 
 HEADERS += mainwindow.h \
            node.h \
@@ -20,6 +21,7 @@ HEADERS += mainwindow.h \
            preferential.h \
            treenode.h \
            treecode.h \
-           graphscene.h
+           graphscene.h \
+    quadtree.h
 
 FORMS += mainwindow.ui
