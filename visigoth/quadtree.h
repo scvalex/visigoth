@@ -54,8 +54,6 @@ private:
         bool isTerminal();
     };
 
-    static const int TREE_WAY = 2;
-
 
     // The width of the edge of the square space
     int edge;
