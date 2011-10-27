@@ -123,7 +123,7 @@ void GraphWidget::keyPressEvent(QKeyEvent *event) {
         myScene->reset();
         myScene->createBip();
         // hard coded now, will be user input later
-        myScene->genBip(50,40);
+        myScene->genBip(40,1);
     default:
         QGraphicsView::keyPressEvent(event);
     }
