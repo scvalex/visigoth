@@ -27,7 +27,6 @@ int QuadTree::calculateEdge(QRectF boundaries) const {
     qreal h = qMax(qAbs(top), qAbs(bottom)) * 2;
     qreal e = qMax(w, h);
 
-    // The number of quadrants will be lb(e / BASE_QUADRANT_SIZE)
     qreal baseQuadrants = e / (qreal) BASE_QUADRANT_SIZE;
     int edge = (1 << (int) ceil(log(baseQuadrants) / log(2.0))) * BASE_QUADRANT_SIZE;
 
