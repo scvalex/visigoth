@@ -7,9 +7,10 @@
 
 GraphScene::GraphScene(GraphWidget *parent) :
     QGraphicsScene(parent),
-    view(parent),
     algo(0),
-    bip(0)
+    algoId(0),
+    targetNumNodes(100),
+    view(parent)
 {
 }
 
@@ -19,6 +20,9 @@ void GraphScene::reset() {
     myEdges.clear();
     myNodes.clear();
     Node::reset();
+    if (algo) {
+        delete algo;
+    }
     //FIXME also free nodes and edges
 }
 
@@ -54,6 +58,7 @@ Node* GraphScene::newNode() {
     Node *node = new Node(this);
     addItem(node);
     myNodes << node;
+    ++targetNumNodes;
     return node;
 }
 
@@ -74,19 +79,22 @@ void GraphScene::itemMoved() {
     view->itemMoved();
 }
 
-void GraphScene::createBip(){
-    bip = new Bipartite(this);
-}
-
-void GraphScene::genBip(int vSize, int uSize){
-    bip->init(vSize,uSize);
-}
-
-void GraphScene::populate() {
-    algo = new Preferential(this);
-    for (int i(0); i < 200; ++i) {
-        addVertex();
+void GraphScene::repopulate() {
+    reset();
+    switch (algoId) {
+    case 0:
+        algo = new Preferential(this);
+        break;
+    case 1:
+        algo = new Bipartite(this);
+        break;
     }
+    algo->init(targetNumNodes);
+}
+
+void GraphScene::nextAlgorithm() {
+    algoId = (algoId + 1) % 2;
+    repopulate();
 }
 
 void GraphScene::randomizePlacement() {
@@ -99,6 +107,5 @@ void GraphScene::randomizePlacement() {
 }
 
 void GraphScene::addVertex() {
-    algo->addVertex((qrand() % 3 ) + 1, qrand() % 100);
+    algo->addVertex();
 }
-

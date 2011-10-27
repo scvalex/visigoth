@@ -15,8 +15,6 @@
 
 GraphWidget::GraphWidget(QWidget *parent) :
     QGraphicsView(parent),
-    algo(0),
-    bip(0),
     helping(true),
     helpText(),
     isPlaying(true),
@@ -39,7 +37,7 @@ GraphWidget::GraphWidget(QWidget *parent) :
                      "<ul>"
                      "<li><em>h</em> - show this text</li>"
                      "<li><em>g</em> - generate a new graph</li>"
-                     "<li><em>b</em> - generate a new graph using bipartite method</li>"
+                     "<li><em>n</em> - switch to next algorithm</li>"
                      "<li><em>r</em> - randomize node placement</li>"
                      "<li>&lt;<em>spc</em>&gt; - pause/play the animation</li>"
                      "<li>&lt;<em>esc</em>&gt; - return to graph view</li>"
@@ -56,7 +54,7 @@ GraphWidget::~GraphWidget() {
 }
 
 void GraphWidget::populate() {
-    myScene->populate();
+    myScene->repopulate();
     myScene->randomizePlacement();
 }
 
@@ -75,15 +73,6 @@ void GraphWidget::keyPressEvent(QKeyEvent *event) {
         myScene->clear();
         hasEdge.clear();
         Node::reset();
-        if (algo) {
-            delete algo;
-            algo = 0;
-        }
-        if(bip){
-            delete bip;
-            bip = 0;
-        }
-        myScene->reset();
         populate();
         break;
     case Qt::Key_Escape:
@@ -108,22 +97,12 @@ void GraphWidget::keyPressEvent(QKeyEvent *event) {
     case Qt::Key_A:
         myScene->addVertex();
         break;
-    case Qt::Key_B:
+    case Qt::Key_N:
         myScene->clear();
         hasEdge.clear();
         Node::reset();
-        if (algo) {
-            delete algo;
-            algo = 0;
-        }
-        if(bip){
-            delete bip;
-            bip = 0;
-        }
-        myScene->reset();
-        myScene->createBip();
-        // hard coded now, will be user input later
-        myScene->genBip(40,1);
+        myScene->nextAlgorithm();
+        myScene->randomizePlacement();
     default:
         QGraphicsView::keyPressEvent(event);
     }

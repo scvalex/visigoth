@@ -23,19 +23,6 @@ HEADERS += mainwindow.h \
            treecode.h \
            bipartite.h \
            graphscene.h \
+           algorithm.h
 
 FORMS += mainwindow.ui
-
-
-
-
-
-
-
-
-
-
-
-
-
-

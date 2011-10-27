@@ -6,6 +6,10 @@ Bipartite::Bipartite(GraphScene *scene) :
 {
 }
 
+void Bipartite::init(int size) {
+    init(size, size);
+}
+
 void Bipartite::init(int vSize, int uSize) {
    QVector<Node*> vVector(vSize);
    QVector<Node*> uVector(uSize);
@@ -84,6 +88,10 @@ void Bipartite::init(int vSize, int uSize) {
 
     vVector.clear();
     uVector.clear();
+}
+
+void Bipartite::addVertex() {
+    qDebug("Bipartite does not support adding new vertices");
 }
 
 double Bipartite::fitnessDist(int x) {

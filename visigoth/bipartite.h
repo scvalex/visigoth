@@ -1,6 +1,7 @@
 #ifndef BIPARTITE_H
 #define BIPARTITE_H
 
+#include "algorithm.h"
 #include "edge.h"
 #include "node.h"
 
@@ -12,10 +13,12 @@
 class GraphScene;
 class Bipartite;
 
-class Bipartite{
-
+class Bipartite : public Algorithm {
 public:
     Bipartite(GraphScene *scene);
+
+    void init(int size);
+    void addVertex();
 
     void init(int vSize, int uSize);
     void showBipartite();

@@ -9,8 +9,7 @@
 class Edge;
 class GraphWidget;
 class Node;
-class Preferential;
-class Bipartite;
+class Algorithm;
 
 class GraphScene : public QGraphicsScene
 {
@@ -26,27 +25,26 @@ public:
     Node* newNode();
     bool newEdge(Node *source, Node *dest);
 
-    void reset();
+    void repopulate();
+    void nextAlgorithm();
 
     void itemMoved();
-
-    void populate();
-
-    void genBip(int vSize, int uSize);
-
-    void createBip();
 
     void randomizePlacement();
 
     void addVertex();
 
+protected:
+    void reset();
+
 private:
+    Algorithm *algo;
+    int algoId;
     QVector<QSet<int> > hasEdge;
     QVector<Node*> myNodes;
     QList<Edge*> myEdges;
+    int targetNumNodes;
     GraphWidget *view;
-    Preferential * algo;
-    Bipartite * bip;
 };
 
 #endif // GRAPHSCENE_H
