@@ -79,12 +79,12 @@ void GraphScene::createBip(){
 }
 
 void GraphScene::genBip(int vSize, int uSize){
-    bip->genBipartite(vSize,uSize);
+    bip->init(vSize,uSize);
 }
 
 void GraphScene::populate() {
     algo = new Preferential(this);
-    for (int i(0); i < 100; ++i) {
+    for (int i(0); i < 200; ++i) {
         addVertex();
     }
 }

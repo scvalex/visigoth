@@ -15,11 +15,7 @@ class Preferential {
 public:
     Preferential(GraphScene *graph);
 
-    // public for demo purpose, will be made private later
-    // using preferential attachment
     void addVertex(int edgesToAdd, double p);
-    QVector<Node*>* cloneVector(QVector<Node*> *nVec);
-    bool edgeExists(int sourceTag, int destTag, QList<Edge*> *edges);
 
 protected:
     // genPef is a randomly generated number satisfing 0 <= genPref < 100
