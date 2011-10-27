@@ -1,4 +1,5 @@
 #include "graphwidget.h"
+#include "glgraphwidget.h"
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 
@@ -17,7 +18,8 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
 
-    view = new GraphWidget(this);
+    //view = new GraphWidget(this);
+    view = new GLGraphWidget(this);
 #ifdef USE_OPENGL
     view->setViewport(new QGLWidget(QGLFormat(QGL::SampleBuffers)));
 #endif
@@ -32,6 +34,7 @@ void MainWindow::populate() {
 MainWindow::~MainWindow()
 {
     delete ui;
+    delete view;
 }
 
 void MainWindow::on_actionPrint_to_PDF_triggered()
