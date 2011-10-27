@@ -6,15 +6,6 @@
 #include "abstractgraphwidget.h"
 #include "graphscene.h"
 
-enum MOUSE_MODES {
-  MOUSE_IDLE,
-  MOUSE_ROTATING,
-  MOUSE_TRANSLATING,
-  MOUSE_TRANSLATING2,
-  MOUSE_DRAGGING
-};
-
-
 class GLGraphWidget : public QGLWidget, public AbstractGraphWidget
 {
     Q_OBJECT
@@ -23,6 +14,14 @@ public:
 
     void populate();
     void itemMoved();
+
+    enum MOUSE_MODES {
+        MOUSE_IDLE,
+        MOUSE_ROTATING,
+        MOUSE_TRANSLATING,
+        MOUSE_TRANSLATING2,
+        MOUSE_DRAGGING
+    };
 
 protected:
     void setAnimationRunning();
@@ -48,12 +47,12 @@ private:
     GraphScene *myScene;
     GLfloat cameramat[16];
     GLfloat zoom;
-    int mouse_x, mouse_y;
-    enum MOUSE_MODES mouse_mode;
+    int mouseX, mouseY;
+    enum MOUSE_MODES mouseMode;
 
+    bool helping;
     bool isPlaying;
     bool isRunning;
-    bool helping;
     int timerId;
 };
 

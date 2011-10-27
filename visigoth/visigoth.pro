@@ -27,6 +27,7 @@ HEADERS += mainwindow.h \
            glgraphwidget.h \
            glancillary.h \
            bipartite.h \
-           algorithm.h
+           algorithm.h \
+           abstractgraphwidget.h
 
 FORMS += mainwindow.ui
