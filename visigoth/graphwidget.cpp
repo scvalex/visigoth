@@ -12,6 +12,8 @@
 #include <QKeyEvent>
 #include <QVector>
 
+#include <iostream>
+
 GraphWidget::GraphWidget(QWidget *parent) :
     QGraphicsView(parent),
     helping(true),
@@ -112,6 +114,9 @@ void GraphWidget::timerEvent(QTimerEvent *) {
             quadTree.addNode(*node);
         }
     }
+
+    quadTree.printTree(&quadTree.root());
+    std::cout << "---------------------------------------------------\n";
 
     foreach (Node* node, nodeVector) {
         QPointF pos = node->calculatePosition(quadTree.root());

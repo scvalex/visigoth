@@ -74,7 +74,7 @@ void GraphScene::itemMoved() {
 
 void GraphScene::populate() {
     algo = new Preferential(this);
-    for (int i(0); i < 100; ++i) {
+    for (int i(0); i < 20; ++i) {
         addVertex();
     }
 }

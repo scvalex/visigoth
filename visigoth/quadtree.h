@@ -3,6 +3,7 @@
 
 #include <QRectF>
 #include <QVector>
+#include <QPointF>
 
 class QuadTree
 {
@@ -16,7 +17,7 @@ public:
         virtual qreal width() const = 0;
 
         bool isFarEnough(qreal distance);
-        static const qreal tolerance = 0.2;
+        static const qreal tolerance = 0.1;
     };
 
     static const int BASE_QUADRANT_SIZE = 25;
@@ -26,10 +27,12 @@ public:
     void addNode(TreeNode& node);
     TreeNode& root() const;
 
+    void printTree(TreeNode* node);
+
 private:
     class Quadrant : public TreeNode {
     public:
-        Quadrant(int level, int x, int y, int edge);
+        Quadrant(int level, QPointF center, int edge);
         ~Quadrant();
         int size() const;
         QPointF center() const;
@@ -39,16 +42,16 @@ private:
 
         void addChild(TreeNode& child);
 
+        int getLevel();
+
     private:
         QVector<TreeNode*> _children;
         int level;
-        int x;
-        int y;
-        int edge;
+        QPointF quadrantCenter;
+        int _width;
         int _size;
         QPointF _center;
 
-        QPointF quadrantCenter() const;
         int childIndex(TreeNode& node) const;
         void castAndAddChild(TreeNode* node, TreeNode& child) const;
         bool isTerminal();
