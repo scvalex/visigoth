@@ -17,10 +17,10 @@ public:
         virtual qreal width() const = 0;
 
         bool isFarEnough(qreal distance);
-        static const qreal tolerance = 0.1;
+        static const qreal tolerance = 0.3;
     };
 
-    static const int BASE_QUADRANT_SIZE = 25;
+    static const int BASE_QUADRANT_SIZE = 30;
 
     QuadTree(QRectF boundaries);
     ~QuadTree();
@@ -42,7 +42,8 @@ private:
 
         void addChild(TreeNode& child);
 
-        int getLevel();
+        int getLevel() const;
+        QPointF getQuadrantCenter() const;
 
     private:
         QVector<TreeNode*> _children;

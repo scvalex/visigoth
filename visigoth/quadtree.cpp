@@ -51,9 +51,18 @@ void QuadTree::printTree(QuadTree::TreeNode* node) {
                     std::cout << "\t";
                 }
 
-                std::cout << "Level: " << (q->getLevel() + 1) << ", width: " << child->width()
-                          << ", size: " << child->size() << ", center: " << child->center().x()
-                          << "," << child->center().y() << "\n";
+                QuadTree::Quadrant* qchild = dynamic_cast<QuadTree::Quadrant*>(child);
+
+                if (qchild) {
+                    std::cout << "Level: " << (q->getLevel() + 1) << ", width: " << child->width()
+                              << ", size: " << child->size() << ", center: " << child->center().x()
+                              << "," << child->center().y() << ", quadcenter: " << qchild->getQuadrantCenter().x()
+                              << "," << qchild->getQuadrantCenter().y() << "\n";
+                } else {
+                    std::cout << "Level: " << (q->getLevel() + 1) << ", width: " << child->width()
+                              << ", size: " << child->size() << ", center: " << child->center().x()
+                              << "," << child->center().y() << "\n";
+                }
                 printTree(child);
             }
         }
@@ -104,27 +113,7 @@ qreal QuadTree::Quadrant::width() const {
     return (qreal) _width;
 }
 
-int QuadTree::Quadrant::childIndex(QuadTree::TreeNode& node) const {
-    QPointF ncenter = node.center();
-
-    int row;
-    int col;
-
-    if (ncenter.x() > quadrantCenter.x()) {
-        col = 0;
-    } else {
-        col = 1;
-    }
-
-    if (ncenter.y() > quadrantCenter.y()) {
-        row = 0;
-    } else {
-        row = 1;
-    }
-
-    return row * 2 + col;
-}
- void QuadTree::Quadrant::castAndAddChild(QuadTree::TreeNode* node, QuadTree::TreeNode& child) const {
+void QuadTree::Quadrant::castAndAddChild(QuadTree::TreeNode* node, QuadTree::TreeNode& child) const {
     QuadTree::Quadrant* q = dynamic_cast<QuadTree::Quadrant*>(node);
 
     if (q == NULL) {
@@ -155,30 +144,47 @@ void QuadTree::Quadrant::addChild(QuadTree::TreeNode& node) {
             int diff = _width / 2;
 
             for (int i = 0; i < 4; ++i) {
-                int row = i / 2;
-                int col = i % 2;
                 int xsign;
                 int ysign;
-                if (row == 0) {
-                    ysign = 1;
-                } else {
-                    ysign = -1;
-                }
-                if (col == 0) {
-                    xsign = 1;
-                } else {
+                switch (i) {
+                case 0:
                     xsign = -1;
+                    ysign = 1;
+                    break;
+                case 1:
+                    xsign = 1;
+                    ysign = 1;
+                    break;
+                case 2:
+                    xsign = -1;
+                    ysign = -1;
+                    break;
+                case 3:
+                    xsign = 1;
+                    ysign = -1;
+                    break;
+                default:
+                    break;
                 }
 
-                QPointF childCenter(quadrantCenter.x() + (diff * xsign),
-                                    quadrantCenter.y() + (diff * ysign));
+                QPointF childCenter(quadrantCenter.x() + ((diff / 2) * xsign),
+                                    quadrantCenter.y() + ((diff / 2) * ysign));
                 _children[i] = new QuadTree::Quadrant(level + 1, childCenter, diff);
             }
+
+
         }
 
-
-        // Add the node to the appropriate child
-        castAndAddChild(_children[childIndex(*this)], node);
+        // Add the node recursively
+        if (node.center().x() < quadrantCenter.x() && node.center().y() >= quadrantCenter.y()) {
+            castAndAddChild(_children[0], node);
+        } else if (node.center().x() >= quadrantCenter.x() && node.center().y() >= quadrantCenter.y()) {
+            castAndAddChild(_children[1], node);
+        } else if (node.center().x() < quadrantCenter.x() && node.center().y() < quadrantCenter.y()) {
+            castAndAddChild(_children[2], node);
+        } else {
+            castAndAddChild(_children[3], node);
+        }
     } else {
         // Just add the node to the list of children
         _children.append(&node);
@@ -187,6 +193,10 @@ void QuadTree::Quadrant::addChild(QuadTree::TreeNode& node) {
     ++_size;
 }
 
-int QuadTree::Quadrant::getLevel() {
+int QuadTree::Quadrant::getLevel() const {
     return level;
+}
+
+QPointF QuadTree::Quadrant::getQuadrantCenter() const {
+    return quadrantCenter;
 }

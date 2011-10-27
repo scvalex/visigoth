@@ -115,8 +115,8 @@ void GraphWidget::timerEvent(QTimerEvent *) {
         }
     }
 
-    quadTree.printTree(&quadTree.root());
-    std::cout << "---------------------------------------------------\n";
+    // quadTree.printTree(&quadTree.root());
+    // std::cout << "---------------------------------------------------\n";
 
     foreach (Node* node, nodeVector) {
         QPointF pos = node->calculatePosition(quadTree.root());
