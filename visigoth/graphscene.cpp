@@ -1,11 +1,11 @@
 #include "edge.h"
 #include "graphscene.h"
-#include "graphwidget.h"
+#include "abstractgraphwidget.h"
 #include "node.h"
 #include "preferential.h"
 
-GraphScene::GraphScene(GraphWidget *parent) :
-    QGraphicsScene(parent),
+GraphScene::GraphScene(AbstractGraphWidget *parent) :
+    //QGraphicsScene(parent),
     view(parent),
     algo(0)
 {
