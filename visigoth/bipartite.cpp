@@ -30,34 +30,32 @@ void Bipartite::init(int vSize, int uSize) {
     // have to edit this for case uSize = 1
     for (int i(0); i < vSize; ++i) {
         Node *v = vVector[i];
-        QList<Node*> *usedNodes = new QList<Node*>();
+        QList<Node*> usedNodes;
 
         int n = 0;
         double degree = degreeDist(i);
         int cutoff = 0;
 
-        while ((n < degree) && usedNodes->count() < uSize && cutoff < 100) {
+        while ((n < degree) && usedNodes.count() < uSize && cutoff < 100) {
 
             // may have to implement check for infinite looping
             double rand = fmod(qrand(),cumulativePreferences[uSize-1]);
             Node *u = uVector[getPreference(rand)];
 
             if (!scene->doesEdgeExist(u,v)) {
-                *usedNodes << u;
+                usedNodes << u;
                 scene->newEdge(u,v);
-                n+=1;
+                n += 1;
             }
             ++cutoff;
         }
-
-        usedNodes->clear();
     }
 
     for (int i(0); i < uSize; ++i) {
         Node *u = uVector[i];
         // if not connected
         if (u->edges().count() == 0) {
-            Node *v = vVector[qrand()%vSize];
+            Node *v = vVector[qrand() % vSize];
             scene->newEdge(u,v);
         }
     }
@@ -65,17 +63,17 @@ void Bipartite::init(int vSize, int uSize) {
     for (int i(0); i < vSize; ++i) {
         Node *v = vVector[i];
 
-        QList<Edge*> *A = new QList<Edge*>();
+        QList<Edge*> A;
 
         // Find all edges where v is the dest Node
         foreach (Edge *e, scene->edges()) {
             if (e->destNode()->tag() == v->tag()) {
-                *A << e;
+                A << e;
             }
         }
 
-        foreach (Edge *e1, *A) {
-            foreach (Edge *e2, *A) {
+        foreach (Edge *e1, A) {
+            foreach (Edge *e2, A) {
                 Node *u1 = e1->sourceNode();
                 Node *u2 = e2->sourceNode();
 
@@ -136,7 +134,7 @@ void Bipartite::updatePreference() {
     }
 
     for (int i(0); i < uVector.count(); ++i) {
-        Node * node = uVector[i];
+        Node *node = uVector[i];
         cumulativePreferences[node->tag()] = prefCumulative;
         prefCumulative += fitnessDist(node->tag() + 1);
     }
