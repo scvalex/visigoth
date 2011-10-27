@@ -12,7 +12,9 @@ SOURCES += main.cpp \
           treecode.cpp \
           treenode.cpp \
           bipartite.cpp \
-          graphscene.cpp
+          graphscene.cpp \
+          glgraphwidget.cpp \
+          glancillary.c
 
 HEADERS += mainwindow.h \
            node.h \
@@ -21,8 +23,10 @@ HEADERS += mainwindow.h \
            preferential.h \
            treenode.h \
            treecode.h \
-           bipartite.h \
            graphscene.h \
+           glgraphwidget.h \
+           glancillary.h \
+           bipartite.h \
            algorithm.h
 
 FORMS += mainwindow.ui

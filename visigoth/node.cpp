@@ -33,7 +33,7 @@ void Node::addEdge(Edge *edge) {
     edgeList << edge;
 }
 
-QPointF Node::calculatePosition(QVector<Node*> nodeVector) {
+QPointF Node::calculatePosition() {
     if (!scene() || scene()->mouseGrabberItem() == this) {
         newPos = pos();
         return newPos;
@@ -43,7 +43,7 @@ QPointF Node::calculatePosition(QVector<Node*> nodeVector) {
     qreal xvel = 0;
     qreal yvel = 0;
 
-    foreach (Node* node, nodeVector) {
+    foreach (Node* node, graph->nodes()) {
         QPointF vec = mapToItem(node, 0, 0);
         qreal dx = vec.x();
         qreal dy = vec.y();

@@ -1,12 +1,12 @@
 #include "edge.h"
 #include "graphscene.h"
-#include "graphwidget.h"
+#include "abstractgraphwidget.h"
 #include "node.h"
 #include "preferential.h"
 #include "bipartite.h"
 
-GraphScene::GraphScene(GraphWidget *parent) :
-    QGraphicsScene(parent),
+GraphScene::GraphScene(AbstractGraphWidget *parent) :
+    //QGraphicsScene(parent),
     algo(0),
     algoId(0),
     targetNumNodes(100),
