@@ -24,10 +24,10 @@
 GLGraphWidget::GLGraphWidget(QWidget *parent) :
     QGLWidget(parent),
     zoom(1.0),
-    mouse_mode(MOUSE_IDLE),
+    mouseMode(MOUSE_IDLE),
+    helping(true),
     isPlaying(true),
     isRunning(false),
-    helping(true),
     timerId(0)
 {
     setFocusPolicy(Qt::StrongFocus);
@@ -39,7 +39,7 @@ GLGraphWidget::GLGraphWidget(QWidget *parent) :
 
 void GLGraphWidget::populate()
 {
-    myScene->populate();
+    myScene->repopulate();
     myScene->randomizePlacement();
 }
 
@@ -99,7 +99,7 @@ void GLGraphWidget::wheelEvent(QWheelEvent *event)
 
 void GLGraphWidget::mousePressEvent(QMouseEvent *event)
 {
-    if (mouse_mode != MOUSE_IDLE)
+    if (mouseMode != MOUSE_IDLE)
         return;
 
     if (event->button() == Qt::LeftButton)
@@ -107,21 +107,21 @@ void GLGraphWidget::mousePressEvent(QMouseEvent *event)
         switch(0)  // Should get modifier key status here
         {
             case 0:  // When no modifiers are pressed
-                mouse_mode = MOUSE_TRANSLATING;
+                mouseMode = MOUSE_TRANSLATING;
                 break;
             //case GLUT_ACTIVE_SHIFT:
-                mouse_mode = MOUSE_ROTATING;
+                mouseMode = MOUSE_ROTATING;
                 break;
             //case GLUT_ACTIVE_SHIFT | GLUT_ACTIVE_CTRL:
-                mouse_mode = MOUSE_TRANSLATING;
+                mouseMode = MOUSE_TRANSLATING;
                 break;
             //case GLUT_ACTIVE_CTRL:
-                mouse_mode = MOUSE_TRANSLATING2;
+                mouseMode = MOUSE_TRANSLATING2;
                 break;
         }
 
-        mouse_x = event->x();
-        mouse_y = event->y();
+        mouseX = event->x();
+        mouseY = event->y();
     }
 }
 
@@ -129,22 +129,22 @@ void GLGraphWidget::mouseReleaseEvent(QMouseEvent *event)
 {
     (void) event;
 
-    mouse_mode = MOUSE_IDLE;
+    mouseMode = MOUSE_IDLE;
 }
 
 void GLGraphWidget::mouseMoveEvent(QMouseEvent *event)
 {
     int dx, dy;
 
-    if (mouse_mode == MOUSE_IDLE)
+    if (mouseMode == MOUSE_IDLE)
         return;
 
-    dx = event->x() - mouse_x;
-    dy = event->y() - mouse_y;
-    mouse_x = event->x();
-    mouse_y = event->y();
+    dx = event->x() - mouseX;
+    dy = event->y() - mouseY;
+    mouseX = event->x();
+    mouseY = event->y();
 
-    switch(mouse_mode)
+    switch(mouseMode)
     {
         case MOUSE_TRANSLATING:
             //glaCameraTranslatef(cameramat, (0.1) * dx, (-0.1) * dy, 0.0);
@@ -175,7 +175,6 @@ void GLGraphWidget::keyPressEvent(QKeyEvent *event)
         this->repaint();
         break;
     case Qt::Key_G:
-        myScene->reset();
         populate();
         break;
     case Qt::Key_Escape:
@@ -200,6 +199,10 @@ void GLGraphWidget::keyPressEvent(QKeyEvent *event)
         break;
     case Qt::Key_A:
         myScene->addVertex();
+        break;
+    case Qt::Key_N:
+        myScene->nextAlgorithm();
+        myScene->randomizePlacement();
         break;
     case Qt::Key_Left:
         glaCameraTranslatef(cameramat, (-20.0)/zoom, 0.0, 0.0);

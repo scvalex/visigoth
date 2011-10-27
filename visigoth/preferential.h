@@ -1,6 +1,7 @@
 #ifndef PREFERENTIAL_H
 #define PREFERENTIAL_H
 
+#include "algorithm.h"
 #include "edge.h"
 #include "node.h"
 
@@ -11,17 +12,16 @@
 class GraphScene;
 class Preferential;
 
-class Preferential {
+class Preferential : public Algorithm {
 public:
     Preferential(GraphScene *graph);
 
-    // public for demo purpose, will be made private later
-    // using preferential attachment
-    void addVertex(int edgesToAdd, double p);
-    QVector<Node*>* cloneVector(QVector<Node*> *nVec);
-    bool edgeExists(int sourceTag, int destTag, QList<Edge*> *edges);
+    void init(int size);
+    void addVertex();
 
 protected:
+    void addVertex(int edgesToAdd, double p);
+
     // genPef is a randomly generated number satisfing 0 <= genPref < 100
     void addNewEdges(int edgesToAdd,
                      Node *vertex, QVector<Node*> neighbours,

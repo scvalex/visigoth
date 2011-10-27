@@ -11,6 +11,8 @@
 
 class GraphScene;
 class Preferential;
+class Bipartite;
+class QGraphicsScene;
 class QPaintEvent;
 
 class GraphWidget : public QGraphicsView, public AbstractGraphWidget
@@ -39,7 +41,6 @@ private:
     static const float HELP_WIDTH = 300;
     static const float HELP_HEIGHT = 500;
 
-    Preferential *algo;
     bool helping;
     QStaticText helpText;
     bool isPlaying;

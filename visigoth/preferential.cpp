@@ -7,6 +7,16 @@ Preferential::Preferential(GraphScene *graph) :
     updatePreference(graph->nodes(), 2 * graph->edges().size());
 }
 
+void Preferential::init(int size) {
+    for (int i(0); i < size; ++i) {
+        addVertex();
+    }
+}
+
+void Preferential::addVertex() {
+    addVertex((qrand() % 3 ) + 1, qrand() % 100);
+}
+
 // Add vertex using preferential attachment with clustering.
 void Preferential::addVertex(int edgesToAdd, double p) {
     Node *vPref;

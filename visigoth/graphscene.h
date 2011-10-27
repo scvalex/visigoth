@@ -11,7 +11,7 @@
 class Edge;
 class GraphWidget;
 class Node;
-class Preferential;
+class Algorithm;
 
 class GraphScene : public QGraphicsScene
 {
@@ -27,22 +27,26 @@ public:
     Node* newNode();
     bool newEdge(Node *source, Node *dest);
 
-    void reset();
+    void repopulate();
+    void nextAlgorithm();
 
     void itemMoved();
-
-    void populate();
 
     void randomizePlacement();
 
     void addVertex();
 
+protected:
+    void reset();
+
 private:
+    Algorithm *algo;
+    int algoId;
     QVector<QSet<int> > hasEdge;
     QVector<Node*> myNodes;
     QList<Edge*> myEdges;
+    int targetNumNodes;
     AbstractGraphWidget *view;
-    Preferential *algo;
 };
 
 #endif // GRAPHSCENE_H
