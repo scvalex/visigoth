@@ -7,6 +7,9 @@
 #include <QPointF>
 #include <QRectF>
 
+// ---------------------------------------------------------------------------
+// QuadTree
+
 QuadTree::QuadTree(QRectF boundaries)
 {
     edge = calculateEdge(boundaries);
@@ -42,38 +45,16 @@ void QuadTree::addNode(QuadTree::TreeNode& node) {
     _root->addChild(node);
 }
 
-void QuadTree::printTree(QuadTree::TreeNode* node) {
-        QuadTree::Quadrant* q = dynamic_cast<QuadTree::Quadrant*>(node);
 
-        if (q != NULL) {
-        foreach (QuadTree::TreeNode* child, node->children()) {
-                for (int i = 0; i < q->getLevel(); i++) {
-                    std::cout << "\t";
-                }
-
-                std::cout << "Level: " << (q->getLevel() + 1) << ", width: " << child->width()
-                          << ", size: " << child->size() << ", center: " << child->center().x()
-                          << "," << child->center().y();
-
-                QuadTree::Quadrant* qchild = dynamic_cast<QuadTree::Quadrant*>(child);
-                if (qchild) {
-                    std::cout << ", quadcenter: " << qchild->getQuadrantCenter().x() << "," << qchild->getQuadrantCenter().y();
-                }
-
-                std::cout << "\n";
-
-                printTree(child);
-            }
-        }
-}
-
-//------ QuadTree::TreeNode
+// ---------------------------------------------------------------------------
+// QuadTree::TreeNode
 
 bool QuadTree::TreeNode::isFarEnough(qreal distance) {
     return (width() / distance) <= tolerance;
 }
 
-//------ QuadTree::Quadrant
+// ---------------------------------------------------------------------------
+// QuadTree::Quadrant
 
 QuadTree::Quadrant::Quadrant(int level, QPointF center, int width) :
     level(level),
@@ -190,6 +171,34 @@ void QuadTree::Quadrant::addChild(QuadTree::TreeNode& node) {
     }
 
     ++_size;
+}
+
+// ---------------------------------------------------------------------------
+// Debug functions
+
+void QuadTree::printTree(QuadTree::TreeNode* node) {
+        QuadTree::Quadrant* q = dynamic_cast<QuadTree::Quadrant*>(node);
+
+        if (q != NULL) {
+        foreach (QuadTree::TreeNode* child, node->children()) {
+                for (int i = 0; i < q->getLevel(); i++) {
+                    std::cout << "\t";
+                }
+
+                std::cout << "Level: " << (q->getLevel() + 1) << ", width: " << child->width()
+                          << ", size: " << child->size() << ", center: " << child->center().x()
+                          << "," << child->center().y();
+
+                QuadTree::Quadrant* qchild = dynamic_cast<QuadTree::Quadrant*>(child);
+                if (qchild) {
+                    std::cout << ", quadcenter: " << qchild->getQuadrantCenter().x() << "," << qchild->getQuadrantCenter().y();
+                }
+
+                std::cout << "\n";
+
+                printTree(child);
+            }
+        }
 }
 
 int QuadTree::Quadrant::getLevel() const {

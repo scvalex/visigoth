@@ -17,7 +17,7 @@ public:
         virtual qreal width() const = 0;
 
         bool isFarEnough(qreal distance);
-        static const qreal tolerance = 0.3;
+        static const qreal tolerance = 0.2;
     };
 
     static const int BASE_QUADRANT_SIZE = 30;
@@ -27,7 +27,7 @@ public:
     void addNode(TreeNode& node);
     TreeNode& root() const;
 
-    void printTree(TreeNode* node);
+    void printTree(TreeNode* node); // Debug
 
 private:
     class Quadrant : public TreeNode {
@@ -42,6 +42,7 @@ private:
 
         void addChild(TreeNode& child);
 
+        // Both this functions are needed by printTree() only, which is useful to debug.
         int getLevel() const;
         QPointF getQuadrantCenter() const;
 
