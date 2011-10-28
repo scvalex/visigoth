@@ -218,7 +218,7 @@ void QuadTree::Quadrant::addChild(QuadTree::TreeNode& node) {
 // Debug functions
 
 // Prints the tree in a nice way.
-void QuadTree::printTree(QuadTree::TreeNode* node) {
+void QuadTree::printTree(QuadTree::TreeNode* node) const {
         QuadTree::Quadrant* q = dynamic_cast<QuadTree::Quadrant*>(node);
 
         if (q != NULL) {

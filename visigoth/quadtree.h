@@ -16,10 +16,15 @@ public:
         virtual const QVector<TreeNode*>& children() const = 0;
         virtual qreal width() const = 0;
 
+        // Checks if a node is "far enough", that is if we should calculate the force based
+        // on the current node.
         bool isFarEnough(qreal distance);
+
+        // A fixed tolerance. The higher the tolerance, the more unstable the graph.
         static const qreal tolerance = 0.2;
     };
 
+    // The size of the smallest quadrants.
     static const int BASE_QUADRANT_SIZE = 30;
 
     QuadTree(QRectF boundaries);
@@ -27,7 +32,7 @@ public:
     void addNode(TreeNode& node);
     TreeNode& root() const;
 
-    void printTree(TreeNode* node); // Debug
+    void printTree(TreeNode* node) const; // Debug
 
 private:
     class Quadrant : public TreeNode {
@@ -44,6 +49,8 @@ private:
 
         // Both this functions are needed by printTree() only, which is useful to debug.
         int getLevel() const;
+        // While center() returns the center of gravity, based on the contained nodes,
+        // this returns the center of the original quadrant.
         QPointF getQuadrantCenter() const;
 
     private:
@@ -60,8 +67,6 @@ private:
         QPointF weightedMiddle(TreeNode& node1, TreeNode& node2) const;
     };
 
-
-    // The root node
     Quadrant* _root;
 
     int calculateWidth(QRectF boundaries) const;
