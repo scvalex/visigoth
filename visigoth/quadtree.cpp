@@ -138,6 +138,68 @@ inline QPointF QuadTree::Quadrant::weightedMiddle(QuadTree::TreeNode& node1, Qua
 
 }
 
+void QuadTree::Quadrant::allocateChildren() {
+    // We'll have 4 children, since we're splitting the current quadrant in 4 squares
+    _children.resize(4);
+
+    // This will be the width of the children nodes
+    int childWidth = _width / 2;
+
+    for (int i = 0; i < 4; ++i) {
+
+        // The various children will have quadrant centers translated by childWidth / 2 from the
+        // parent node's quadrant center, so we'll need to add/subtract childWidth / 2 to the current
+        // quadrant center, depending on the position.
+        int xsign;
+        int ysign;
+        switch (i) {
+        // Top left
+        case 0:
+            xsign = -1;
+            ysign = 1;
+            break;
+        // Top right
+        case 1:
+            xsign = 1;
+            ysign = 1;
+            break;
+        // Bottom left
+        case 2:
+            xsign = -1;
+            ysign = -1;
+            break;
+        // Bottom right
+        case 3:
+            xsign = 1;
+            ysign = -1;
+            break;
+        default:
+            break;
+        }
+
+        QPointF childCenter(quadrantCenter.x() + ((childWidth / 2) * xsign),
+                            quadrantCenter.y() + ((childWidth / 2) * ysign));
+        _children[i] = new QuadTree::Quadrant(level + 1, childCenter, childWidth);
+    }
+}
+
+void QuadTree::Quadrant::addChildToChildren(QuadTree::TreeNode& node) {
+    // Add the node recursively, inspecting which child it belongs to.
+   if (node.center().x() < quadrantCenter.x() && node.center().y() >= quadrantCenter.y()) {
+       // Top left
+       castAndAddChild(_children[0], node);
+   } else if (node.center().x() >= quadrantCenter.x() && node.center().y() >= quadrantCenter.y()) {
+       // Top right
+       castAndAddChild(_children[1], node);
+   } else if (node.center().x() < quadrantCenter.x() && node.center().y() < quadrantCenter.y()) {
+       // Bottom left
+       castAndAddChild(_children[2], node);
+   } else {
+       // Bottom right
+       castAndAddChild(_children[3], node);
+   }
+}
+
 void QuadTree::Quadrant::addChild(QuadTree::TreeNode& node) {
     // Weigh the center with the new node
     _center = weightedMiddle(*this, node);
@@ -146,71 +208,16 @@ void QuadTree::Quadrant::addChild(QuadTree::TreeNode& node) {
     if (!isTerminal()) {
         // If the node has no children, create them
         if (_children.size() < 4) {
-            // We'll have 4 children, since we're splitting the current quadrant in 4 squares
-            _children.resize(4);
-
-            // This will be the width of the children nodes
-            int childWidth = _width / 2;
-
-            for (int i = 0; i < 4; ++i) {
-
-                // The various children will have quadrant centers translated by childWidth / 2 from the
-                // parent node's quadrant center, so we'll need to add/subtract childWidth / 2 to the current
-                // quadrant center, depending on the position.
-                int xsign;
-                int ysign;
-                switch (i) {
-                // Top left
-                case 0:
-                    xsign = -1;
-                    ysign = 1;
-                    break;
-                // Top right
-                case 1:
-                    xsign = 1;
-                    ysign = 1;
-                    break;
-                // Bottom left
-                case 2:
-                    xsign = -1;
-                    ysign = -1;
-                    break;
-                // Bottom right
-                case 3:
-                    xsign = 1;
-                    ysign = -1;
-                    break;
-                default:
-                    break;
-                }
-
-                QPointF childCenter(quadrantCenter.x() + ((childWidth / 2) * xsign),
-                                    quadrantCenter.y() + ((childWidth / 2) * ysign));
-                _children[i] = new QuadTree::Quadrant(level + 1, childCenter, childWidth);
-            }
-
-
+            allocateChildren();
         }
 
-        // Add the node recursively, inspecting which child it belongs to.
-        if (node.center().x() < quadrantCenter.x() && node.center().y() >= quadrantCenter.y()) {
-            // Top left
-            castAndAddChild(_children[0], node);
-        } else if (node.center().x() >= quadrantCenter.x() && node.center().y() >= quadrantCenter.y()) {
-            // Top right
-            castAndAddChild(_children[1], node);
-        } else if (node.center().x() < quadrantCenter.x() && node.center().y() < quadrantCenter.y()) {
-            // Bottom left
-            castAndAddChild(_children[2], node);
-        } else {
-            // Bottom right
-            castAndAddChild(_children[3], node);
-        }
+        addChildToChildren(node);
     } else {
         // If it's a terminal node, just add the node to the list of children
         _children.append(&node);
     }
 
+    // Increase the size
     ++_size;
 }
 

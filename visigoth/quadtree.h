@@ -65,6 +65,8 @@ private:
         void castAndAddChild(TreeNode* node, TreeNode& child) const;
         bool isTerminal();
         QPointF weightedMiddle(TreeNode& node1, TreeNode& node2) const;
+        void allocateChildren();
+        void addChildToChildren(TreeNode& node);
     };
 
     Quadrant* _root;
