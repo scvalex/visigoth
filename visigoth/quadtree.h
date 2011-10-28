@@ -57,15 +57,14 @@ private:
         int childIndex(TreeNode& node) const;
         void castAndAddChild(TreeNode* node, TreeNode& child) const;
         bool isTerminal();
+        QPointF weightedMiddle(TreeNode& node1, TreeNode& node2) const;
     };
 
 
-    // The width of the edge of the square space
-    int edge;
     // The root node
     Quadrant* _root;
 
-    int calculateEdge(QRectF boundaries) const;
+    int calculateWidth(QRectF boundaries) const;
 };
 
 #endif // QUADTREE_H
