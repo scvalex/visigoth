@@ -10,7 +10,6 @@
 
 #include "glgraphwidget.h"
 #include "glancillary.h"        // gla*()
-
 #include "edge.h"
 #include "node.h"
 #include "quadtree.h"

@@ -226,28 +226,29 @@ void QuadTree::Quadrant::addChild(QuadTree::TreeNode& node) {
 
 // Prints the tree in a nice way.
 void QuadTree::printTree(QuadTree::TreeNode* node) const {
-        QuadTree::Quadrant* q = dynamic_cast<QuadTree::Quadrant*>(node);
+    QuadTree::Quadrant* q = dynamic_cast<QuadTree::Quadrant*>(node);
 
-        if (q != NULL) {
+    if (q != NULL) {
         foreach (QuadTree::TreeNode* child, node->children()) {
-                for (int i = 0; i < q->getLevel(); i++) {
-                    std::cout << "\t";
-                }
-
-                std::cout << "Level: " << (q->getLevel() + 1) << ", width: " << child->width()
-                          << ", size: " << child->size() << ", center: " << child->center().x()
-                          << "," << child->center().y();
-
-                QuadTree::Quadrant* qchild = dynamic_cast<QuadTree::Quadrant*>(child);
-                if (qchild) {
-                    std::cout << ", quadcenter: " << qchild->getQuadrantCenter().x() << "," << qchild->getQuadrantCenter().y();
-                }
-
-                std::cout << "\n";
-
-                printTree(child);
+            for (int i = 0; i < q->getLevel(); i++) {
+                std::cout << "\t";
             }
+
+            std::cout << "Level: " << (q->getLevel() + 1) << ", width: " << child->width()
+                      << ", size: " << child->size() << ", center: " << child->center().x()
+                      << "," << child->center().y();
+
+            QuadTree::Quadrant* qchild = dynamic_cast<QuadTree::Quadrant*>(child);
+            if (qchild) {
+                std::cout << ", quadcenter: " << qchild->getQuadrantCenter().x()
+                          << "," << qchild->getQuadrantCenter().y();
+            }
+
+            std::cout << "\n";
+
+            printTree(child);
         }
+    }
 }
 
 int QuadTree::Quadrant::getLevel() const {
