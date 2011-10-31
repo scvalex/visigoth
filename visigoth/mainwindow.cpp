@@ -1,3 +1,4 @@
+#include "algorithm.h"
 #include "graphwidget.h"
 #include "glgraphwidget.h"
 #include "mainwindow.h"
@@ -5,6 +6,7 @@
 
 #include <QDesktopWidget>
 #include <QDir>
+#include <QDockWidget>
 #include <QFileDialog>
 #include <QPrinter>
 
@@ -14,7 +16,8 @@
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
-    ui(new Ui::MainWindow)
+    ui(new Ui::MainWindow),
+    algoCtl(0)
 {
     ui->setupUi(this);
 
@@ -25,6 +28,8 @@ MainWindow::MainWindow(QWidget *parent) :
 #endif
     setCentralWidget(view);
     qsrand(23);
+
+    connect(view, SIGNAL(algorithmChanged(Algorithm*)), this, SLOT(onAlgorithmChanged(Algorithm*)));
 }
 
 void MainWindow::populate() {
@@ -59,5 +64,21 @@ void MainWindow::on_actionPrint_to_PDF_triggered()
     //.arg(format));
     if (!fileName.isEmpty()) {
         pixmap.save(fileName, format.toAscii());
+    }
+}
+
+void MainWindow::onAlgorithmChanged(Algorithm *newAlgo) {
+    QWidget *ctl = newAlgo->newControlWidget(this);
+    if (algoCtl) {
+        removeDockWidget(algoCtl);
+        delete algoCtl->widget();
+        delete algoCtl;
+        algoCtl = 0;
+    }
+    if (ctl) {
+        QDockWidget *dock = new QDockWidget(this);
+        dock->setWidget(ctl);
+        addDockWidget(Qt::RightDockWidgetArea, dock);
+        algoCtl = dock;
     }
 }

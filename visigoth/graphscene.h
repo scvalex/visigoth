@@ -29,6 +29,7 @@ public:
 
     void repopulate();
     void nextAlgorithm();
+    Algorithm* algorithm() const;
 
     void itemMoved();
 

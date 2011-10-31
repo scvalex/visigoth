@@ -1,7 +1,10 @@
 #include "graphscene.h"
 #include "preferential.h"
 
+#include <QWidget>
+
 Preferential::Preferential(GraphScene *graph) :
+    Algorithm(graph),
     graph(graph)
 {
     updatePreference(graph->nodes(), 2 * graph->edges().size());
@@ -15,6 +18,10 @@ void Preferential::init(int size) {
 
 void Preferential::addVertex() {
     addVertex((qrand() % 3 ) + 1, qrand() % 100);
+}
+
+QWidget* Preferential::newControlWidget(QWidget *parent) {
+    return 0;
 }
 
 // Add vertex using preferential attachment with clustering.

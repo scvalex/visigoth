@@ -7,21 +7,31 @@
 
 #include <QList>
 #include <QMap>
+#include <QObject>
+#include <QString>
 #include <QVector>
 #include <QtCore/qmath.h>
 
 class GraphScene;
 class Bipartite;
+class QWidget;
 
 class Bipartite : public Algorithm {
+    Q_OBJECT
+
 public:
     Bipartite(GraphScene *scene);
+    virtual ~Bipartite();
 
     void init(int size);
     void addVertex();
+    QWidget* newControlWidget(QWidget *parent = 0);
 
     void init(int vSize, int uSize);
     void showBipartite();
+
+private slots:
+    void onUSizeChanged(const QString &newValue);
 
 private:
     // Both preference funcs will only be used on vector set U

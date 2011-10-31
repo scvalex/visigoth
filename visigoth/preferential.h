@@ -7,17 +7,22 @@
 
 #include <QList>
 #include <QMap>
+#include <QObject>
 #include <QVector>
 
 class GraphScene;
 class Preferential;
+class QWidget;
 
 class Preferential : public Algorithm {
+    Q_OBJECT
+
 public:
     Preferential(GraphScene *graph);
 
     void init(int size);
     void addVertex();
+    QWidget *newControlWidget(QWidget *parent = 0);
 
 protected:
     void addVertex(int edgesToAdd, double p);

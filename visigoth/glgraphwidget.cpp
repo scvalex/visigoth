@@ -33,6 +33,8 @@ GLGraphWidget::GLGraphWidget(QWidget *parent) :
     myScene = new GraphScene(this);
     myScene->setBackgroundBrush(Qt::black);
     myScene->setItemIndexMethod(QGraphicsScene::NoIndex);
+
+    emit algorithmChanged(myScene->algorithm());
 }
 
 void GLGraphWidget::populate()
@@ -201,6 +203,7 @@ void GLGraphWidget::keyPressEvent(QKeyEvent *event)
     case Qt::Key_N:
         myScene->nextAlgorithm();
         myScene->randomizePlacement();
+        emit algorithmChanged(myScene->algorithm());
         break;
     case Qt::Key_Left:
         glaCameraTranslatef(cameramat, (-20.0)/zoom, 0.0, 0.0);

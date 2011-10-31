@@ -32,7 +32,7 @@ void Node::addEdge(Edge *edge) {
     edgeList << edge;
 }
 
-QPointF Node::calculatePosition(QuadTree::TreeNode& treeNode) {
+QPointF Node::calculatePosition(QuadTree::TreeNode &treeNode) {
     if (!scene() || scene()->mouseGrabberItem() == this) {
         newPos = pos();
         return newPos;

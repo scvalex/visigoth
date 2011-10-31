@@ -49,6 +49,8 @@ GraphWidget::GraphWidget(QWidget *parent) :
                      "</p>"
                      );
     helpText.setTextWidth(HELP_WIDTH - 10);
+
+    emit algorithmChanged(myScene->algorithm());
 }
 
 GraphWidget::~GraphWidget() {
@@ -101,6 +103,7 @@ void GraphWidget::keyPressEvent(QKeyEvent *event) {
     case Qt::Key_N:
         myScene->nextAlgorithm();
         myScene->randomizePlacement();
+        emit algorithmChanged(myScene->algorithm());
         break;
     default:
         QGraphicsView::keyPressEvent(event);

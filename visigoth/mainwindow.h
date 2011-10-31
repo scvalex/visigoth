@@ -7,10 +7,12 @@
 #include <QMainWindow>
 #include <QGraphicsView>
 
+class Algorithm;
+class QDockWidget;
+
 namespace Ui {
     class MainWindow;
 }
-
 
 class MainWindow : public QMainWindow
 {
@@ -24,11 +26,13 @@ public:
 
 private slots:
     void on_actionPrint_to_PDF_triggered();
+    void onAlgorithmChanged(Algorithm *newAlgo);
 
 private:
     Ui::MainWindow *ui;
     //GraphWidget *view;
     GLGraphWidget *view;
+    QDockWidget *algoCtl;
 };
 
 #endif // MAINWINDOW_H

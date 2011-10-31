@@ -9,6 +9,7 @@
 
 #include "abstractgraphwidget.h"
 
+class Algorithm;
 class GraphScene;
 class Preferential;
 class Bipartite;
@@ -25,6 +26,9 @@ public:
     void populate();
 
     void itemMoved();
+
+signals:
+    void algorithmChanged(Algorithm *newAlgo);
 
 protected:
     void keyPressEvent(QKeyEvent *event);

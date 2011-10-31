@@ -1,9 +1,17 @@
 #include "graphscene.h"
 #include "bipartite.h"
+#include "ui_bipartitecontrol.h"
+
+#include <QDebug>
+#include <QWidget>
 
 Bipartite::Bipartite(GraphScene *scene) :
+    Algorithm(scene),
     scene(scene)
 {
+}
+
+Bipartite::~Bipartite() {
 }
 
 void Bipartite::init(int size) {
@@ -92,6 +100,14 @@ void Bipartite::addVertex() {
     qDebug("Bipartite does not support adding new vertices");
 }
 
+QWidget* Bipartite::newControlWidget(QWidget *parent) {
+    QWidget *ctl = new QWidget(parent);
+    Ui::BipartiteControl *bipCtl = new Ui::BipartiteControl();
+    bipCtl->setupUi(ctl);
+    connect(bipCtl->uSizeEdit, SIGNAL(textChanged(const QString&)), this, SLOT(onUSizeChanged(const QString&)));
+    return ctl;
+}
+
 double Bipartite::fitnessDist(int x) {
     if (x == 0) {
         return 0;
@@ -138,4 +154,8 @@ void Bipartite::updatePreference() {
         cumulativePreferences[node->tag()] = prefCumulative;
         prefCumulative += fitnessDist(node->tag() + 1);
     }
+}
+
+void Bipartite::onUSizeChanged(const QString &newValue) {
+    qDebug() << "U size changed to " << newValue;
 }

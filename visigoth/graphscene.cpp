@@ -9,7 +9,7 @@ GraphScene::GraphScene(AbstractGraphWidget *parent) :
     //QGraphicsScene(parent),
     algo(0),
     algoId(0),
-    targetNumNodes(1000),
+    targetNumNodes(600),
     view(parent)
 {
 }
@@ -94,6 +94,10 @@ void GraphScene::repopulate() {
 void GraphScene::nextAlgorithm() {
     algoId = (algoId + 1) % 2;
     repopulate();
+}
+
+Algorithm* GraphScene::algorithm() const {
+    return algo;
 }
 
 void GraphScene::randomizePlacement() {
