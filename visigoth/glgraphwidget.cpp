@@ -1,5 +1,3 @@
-#include <stdio.h>
-
 #include <QMouseEvent>
 #include <QKeyEvent>
 #include <cmath>
@@ -413,17 +411,6 @@ void GLGraphWidget::selectGL(int x, int y)
 
             hits = glRenderMode(GL_RENDER);
 
-            for (i = 0; i < hits; i++)
-                printf("Number: %d\n"
-                    "Min Z: %d\n"
-                    "Max Z: %d\n"
-                    "Name on stack: %d\n",
-                    (GLubyte)namebuf[i * 4],
-                    (GLubyte)namebuf[i * 4 + 1],
-                    (GLubyte)namebuf[i * 4 + 2],
-                    (GLubyte)namebuf[i * 4 + 3]
-                    );
-
             if (hits)
             {
                 QBrush *b = node->getBrush();
@@ -431,13 +418,10 @@ void GLGraphWidget::selectGL(int x, int y)
             }
         }
 
-
-
   // Reset projection
   glMatrixMode(GL_PROJECTION);
   glPopMatrix();
 
   glMatrixMode(GL_MODELVIEW);
-  //glFlush();
   this->repaint();
 }
