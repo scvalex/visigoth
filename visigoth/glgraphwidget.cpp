@@ -385,7 +385,7 @@ void GLGraphWidget::selectGL(int x, int y)
     glMatrixMode(GL_PROJECTION);
     glPushMatrix();
         glLoadIdentity();
-        gluPickMatrix(x, y, 10.0, 10.0, view);
+        gluPickMatrix(x, y, 5.0*zoom, 5.0*zoom, view);
         //glMultMatrixf(projmat);
         glScalef(zoom, zoom, 1.0/zoom);
         gluOrtho2D(0.0, (GLfloat)width(), (GLfloat)height(), 0.0);
