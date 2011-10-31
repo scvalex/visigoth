@@ -12,7 +12,8 @@ int Node::ALL_NODES(0);
 
 Node::Node(GraphScene *graph, QGraphicsItem *parent) :
     QGraphicsItem(parent),
-    brush(QColor::fromRgb(qrand() % 256, qrand() % 256, qrand() % 256, 180)),
+    //brush(QColor::fromRgb(qrand() % 256, qrand() % 256, qrand() % 256, 180)),
+    brush(QColor::fromRgbF(0.0, 1.0, 0.3, 0.7)),
     graph(graph),
     hovering(false)
 {
@@ -201,4 +202,8 @@ const QVector<QuadTree::TreeNode*>& Node::children() const {
 
 qreal Node::width() const {
     return 0;
+}
+
+QBrush* Node::getBrush() {
+    return &brush;
 }

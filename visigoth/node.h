@@ -51,6 +51,8 @@ public:
 
     static void reset();
 
+    QBrush* getBrush();
+
 protected:
     explicit Node(GraphScene *graph, QGraphicsItem *parent = 0);
 

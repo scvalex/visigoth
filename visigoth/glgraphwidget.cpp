@@ -1,3 +1,5 @@
+#include <stdio.h>
+
 #include <QMouseEvent>
 #include <QKeyEvent>
 #include <cmath>
@@ -93,6 +95,12 @@ void GLGraphWidget::wheelEvent(QWheelEvent *event)
     scaleView(pow((double)2, event->delta() / 240.0));
 
     this->repaint();
+}
+
+void GLGraphWidget::mouseDoubleClickEvent(QMouseEvent *event)
+{
+    if (event->button() == Qt::LeftButton)
+        selectGL(event->x(), event->y());
 }
 
 void GLGraphWidget::mousePressEvent(QMouseEvent *event)
@@ -314,18 +322,12 @@ void GLGraphWidget::resizeGL(int w, int h)
 
 void GLGraphWidget::drawGraphGL()
 {
-    QPointF p;
-
-    // Attention, references abound!
-    QVector<Node*> &nodeVector = myScene->nodes();
-    QList<Edge*> &edgeList= myScene->edges();
-
     // Draw edges
     glColor4f(0.0, 0.0, 1.0, 0.5);
-    foreach (Edge* edge, edgeList)
+    foreach (Edge* edge, myScene->edges())
     {
         glBegin(GL_LINE_STRIP);
-            p = edge->sourceNode()->pos();
+            QPointF p = edge->sourceNode()->pos();
             glVertex3f((GLfloat)p.x(), (GLfloat)p.y(), 0.0);
             p = edge->destNode()->pos();
             glVertex3f((GLfloat)p.x(), (GLfloat)p.y(), 0.0);
@@ -335,12 +337,13 @@ void GLGraphWidget::drawGraphGL()
     // Draw nodes
     glPointSize(5.0);
     glBegin(GL_POINTS);
-        foreach (Node* node, nodeVector)
+        foreach (Node* node, myScene->nodes())
         {
-            //glLoadName(i);    // Load point number into depth buffer for selection
-            //glColor4f(n->color, 1.0, 0.3, 0.7);
-            glColor4f(0.0, 1.0, 0.3, 0.7);
-            p = node->pos();
+            QColor c = node->getBrush()->color();
+            glColor4f(c.redF(), c.greenF(), c.blueF(), c.alphaF());
+            //glColor4f(0.0, 1.0, 0.3, 0.7);
+
+            QPointF p = node->pos();
             glVertex3f((GLfloat)p.x(), (GLfloat)p.y(), 0.0);
         }
     glEnd();
@@ -360,4 +363,81 @@ void GLGraphWidget::initProjection()
 
     // Switch to Model/view transformation for drawing objects
     glMatrixMode(GL_MODELVIEW);
+}
+
+void GLGraphWidget::selectGL(int x, int y)
+{
+    int i;
+    GLuint namebuf[64] = {0};
+    GLint hits;
+    GLint view[4];
+    GLfloat projmat[16];
+
+
+    // Account for inverse Y coordinate
+    glGetIntegerv(GL_VIEWPORT, view);
+    y = view[3] - y;
+
+    glSelectBuffer(64, namebuf);
+
+    // Restrict projection matrix to selection area
+    glGetFloatv(GL_PROJECTION_MATRIX, projmat);
+    glMatrixMode(GL_PROJECTION);
+    glPushMatrix();
+        glLoadIdentity();
+        gluPickMatrix(x, y, 10.0, 10.0, view);
+        //glMultMatrixf(projmat);
+        glScalef(zoom, zoom, 1.0/zoom);
+        gluOrtho2D(0.0, (GLfloat)width(), (GLfloat)height(), 0.0);
+
+        // Redraw points to fill selection buffer
+        glMatrixMode(GL_MODELVIEW);
+
+        foreach (Node* node, myScene->nodes())
+        {
+            glSelectBuffer(64, namebuf);
+            glRenderMode(GL_SELECT);
+
+            // Reset name stack
+            glInitNames();
+            glPushName(0);
+
+            // Draw the node
+            QPointF p = node->pos();
+            glColor4f(1.0, 0.0, 0.0, 1.0);
+            glPointSize(5.0);
+            glBegin(GL_POINTS);
+                //glLoadName(0);
+                glVertex3f((GLfloat)p.x(), (GLfloat)p.y(), 0.0);
+            glEnd();
+
+            hits = glRenderMode(GL_RENDER);
+
+            for (i = 0; i < hits; i++)
+                printf("Number: %d\n"
+                    "Min Z: %d\n"
+                    "Max Z: %d\n"
+                    "Name on stack: %d\n",
+                    (GLubyte)namebuf[i * 4],
+                    (GLubyte)namebuf[i * 4 + 1],
+                    (GLubyte)namebuf[i * 4 + 2],
+                    (GLubyte)namebuf[i * 4 + 3]
+                    );
+
+            if (hits)
+            {
+                QBrush *b = node->getBrush();
+                b->setColor(QColor::fromRgbF(1.0, 0.0, 0.0, 1.0));
+            }
+        }
+
+
+
+  // Reset projection
+  glMatrixMode(GL_PROJECTION);
+  glPopMatrix();
+
+  glMatrixMode(GL_MODELVIEW);
+  //glFlush();
+  this->repaint();
 }
