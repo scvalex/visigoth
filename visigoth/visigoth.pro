@@ -9,28 +9,26 @@ SOURCES += main.cpp \
           graphwidget.cpp \
           edge.cpp \
           preferential.cpp \
-          treecode.cpp \
-          treenode.cpp \
           bipartite.cpp \
           graphscene.cpp \
           glgraphwidget.cpp \
           glancillary.c \
-    erdosRenyi.cpp
+          erdosRenyi.cpp \
+          quadtree.cpp
 
 HEADERS += mainwindow.h \
            node.h \
            graphwidget.h \
            edge.h \
            preferential.h \
-           treenode.h \
-           treecode.h \
            graphscene.h \
            glgraphwidget.h \
            glancillary.h \
            bipartite.h \
            algorithm.h \
            abstractgraphwidget.h \
-    erdosRenyi.h
+           erdosRenyi.h \
+           quadtree.h
 
 FORMS += mainwindow.ui
 
