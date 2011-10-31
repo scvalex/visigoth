@@ -335,7 +335,7 @@ void GLGraphWidget::drawGraphGL()
     }
 
     // Draw nodes
-    glPointSize(5.0);
+    glPointSize(5.0 * zoom);
     glBegin(GL_POINTS);
         foreach (Node* node, myScene->nodes())
         {
@@ -405,7 +405,7 @@ void GLGraphWidget::selectGL(int x, int y)
             // Draw the node
             QPointF p = node->pos();
             glColor4f(1.0, 0.0, 0.0, 1.0);
-            glPointSize(5.0);
+            glPointSize(5.0 * zoom);
             glBegin(GL_POINTS);
                 //glLoadName(0);
                 glVertex3f((GLfloat)p.x(), (GLfloat)p.y(), 0.0);
