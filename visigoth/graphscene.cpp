@@ -4,6 +4,7 @@
 #include "node.h"
 #include "preferential.h"
 #include "bipartite.h"
+#include "erdosRenyi.h"
 
 GraphScene::GraphScene(AbstractGraphWidget *parent) :
     //QGraphicsScene(parent),
@@ -91,12 +92,15 @@ void GraphScene::repopulate() {
     case 1:
         algo = new Bipartite(this);
         break;
+    case 2:
+        algo = new ErdosRenyi(this);
+        break;
     }
     algo->init(targetNumNodes);
 }
 
 void GraphScene::nextAlgorithm() {
-    algoId = (algoId + 1) % 2;
+    algoId = (algoId + 1) % 3;
     repopulate();
 }
 
