@@ -7,6 +7,8 @@
 
 Bipartite::Bipartite(GraphScene *scene) :
     Algorithm(scene),
+    uSize(40),
+    vSize(1),
     scene(scene)
 {
 }
@@ -15,7 +17,7 @@ Bipartite::~Bipartite() {
 }
 
 void Bipartite::init(int size) {
-    init(size, size);
+    init(uSize, vSize);
 }
 
 void Bipartite::init(int vSize, int uSize) {
@@ -105,6 +107,7 @@ QWidget* Bipartite::newControlWidget(QWidget *parent) {
     Ui::BipartiteControl *bipCtl = new Ui::BipartiteControl();
     bipCtl->setupUi(ctl);
     connect(bipCtl->uSizeEdit, SIGNAL(textChanged(const QString&)), this, SLOT(onUSizeChanged(const QString&)));
+    connect(bipCtl->vSizeEdit, SIGNAL(textChanged(const QString&)), this, SLOT(onVSizeChanged(const QString&)));
     return ctl;
 }
 
@@ -157,5 +160,9 @@ void Bipartite::updatePreference() {
 }
 
 void Bipartite::onUSizeChanged(const QString &newValue) {
-    qDebug() << "U size changed to " << newValue;
+    uSize = newValue.toInt();
+}
+
+void Bipartite::onVSizeChanged(const QString &newValue) {
+    vSize = newValue.toInt();
 }

@@ -32,6 +32,7 @@ public:
 
 private slots:
     void onUSizeChanged(const QString &newValue);
+    void onVSizeChanged(const QString &newValue);
 
 private:
     // Both preference funcs will only be used on vector set U
@@ -45,6 +46,9 @@ private:
        During the graph generation */
     QVector<Node*> vVector;
     QVector<Node*> uVector;
+
+    int uSize;
+    int vSize;
 
     // used for selecting a node by preferential seleciton
     QMap<int, double> cumulativePreferences;
