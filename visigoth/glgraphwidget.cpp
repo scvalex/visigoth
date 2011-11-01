@@ -14,6 +14,7 @@
 #include "node.h"
 #include "quadtree.h"
 
+#include <cstdio>
 
 /****************************
  * GraphWidget imitation code (public)
@@ -35,14 +36,12 @@ GLGraphWidget::GLGraphWidget(QWidget *parent) :
     myScene->setItemIndexMethod(QGraphicsScene::NoIndex);
 }
 
-void GLGraphWidget::populate()
-{
+void GLGraphWidget::populate() {
     myScene->repopulate();
     myScene->randomizePlacement();
 }
 
-void GLGraphWidget::itemMoved()
-{
+void GLGraphWidget::itemMoved() {
     isRunning = true;
     setAnimationRunning();
 }
@@ -53,8 +52,7 @@ void GLGraphWidget::itemMoved()
  * GraphWidget imitation code (protected)
  ***************************/
 
-void GLGraphWidget::setAnimationRunning()
-{
+void GLGraphWidget::setAnimationRunning() {
     if (isPlaying && isRunning && !timerId)
         timerId = startTimer(1000 / 25);
     else if ((!isPlaying || !isRunning) && timerId) {
@@ -63,22 +61,19 @@ void GLGraphWidget::setAnimationRunning()
     }
 }
 
-void GLGraphWidget::playPause()
-{
+void GLGraphWidget::playPause() {
     isPlaying = !isPlaying;
     setAnimationRunning();
 
     this->repaint();
 }
 
-void GLGraphWidget::scaleView(qreal scaleFactor)
-{
+void GLGraphWidget::scaleView(qreal scaleFactor) {
     zoom *= scaleFactor;
     this->initProjection();
 }
 
-void GLGraphWidget::fitToScreen()
-{
+void GLGraphWidget::fitToScreen() {
     float aspectWidget = (float)width()/(float)height();
     float aspectGraph = (float)myScene->width()/(float)myScene->height();
 
@@ -88,27 +83,29 @@ void GLGraphWidget::fitToScreen()
         scaleView((GLfloat)height() / (GLfloat)myScene->height() / zoom);
 }
 
-void GLGraphWidget::wheelEvent(QWheelEvent *event)
-{
+void GLGraphWidget::wheelEvent(QWheelEvent *event) {
     scaleView(pow((double)2, event->delta() / 240.0));
 
     this->repaint();
 }
 
-void GLGraphWidget::mouseDoubleClickEvent(QMouseEvent *event)
-{
-    if (event->button() == Qt::LeftButton)
-        selectGL(event->x(), event->y());
+void GLGraphWidget::mouseDoubleClickEvent(QMouseEvent *event) {
+    if (event->button() == Qt::LeftButton) {
+        Node* hitNode = selectGL(event->x(), event->y());
+
+        if (hitNode) {
+            QBrush *b = hitNode->getBrush();
+            b->setColor(QColor::fromRgbF(1.0, 0.0, 0.0, 1.0));
+        }
+    }
 }
 
-void GLGraphWidget::mousePressEvent(QMouseEvent *event)
-{
+void GLGraphWidget::mousePressEvent(QMouseEvent *event) {
     if (mouseMode != MOUSE_IDLE)
         return;
 
-    if (event->button() == Qt::LeftButton)
-    {
-        switch(0)  // Should get modifier key status here
+    if (event->button() == Qt::LeftButton) {
+        switch(0)  // FIXME: Should get modifier key status here
         {
             case 0:  // When no modifiers are pressed
                 mouseMode = MOUSE_TRANSLATING;
@@ -123,21 +120,26 @@ void GLGraphWidget::mousePressEvent(QMouseEvent *event)
                 mouseMode = MOUSE_TRANSLATING2;
                 break;
         }
+    } else if (event->button() == Qt::RightButton) {
+        Node* hitNode = selectGL(event->x(), event->y());
 
-        mouseX = event->x();
-        mouseY = event->y();
+        if (hitNode) {
+            draggedNode = hitNode;
+            mouseMode = MOUSE_DRAGGING;
+        }
     }
+
+    mouseX = event->x();
+    mouseY = event->y();
 }
 
-void GLGraphWidget::mouseReleaseEvent(QMouseEvent *event)
-{
+void GLGraphWidget::mouseReleaseEvent(QMouseEvent *event) {
     (void) event;
 
     mouseMode = MOUSE_IDLE;
 }
 
-void GLGraphWidget::mouseMoveEvent(QMouseEvent *event)
-{
+void GLGraphWidget::mouseMoveEvent(QMouseEvent *event) {
     int dx, dy;
 
     if (mouseMode == MOUSE_IDLE)
@@ -148,8 +150,7 @@ void GLGraphWidget::mouseMoveEvent(QMouseEvent *event)
     mouseX = event->x();
     mouseY = event->y();
 
-    switch(mouseMode)
-    {
+    switch(mouseMode) {
         case MOUSE_TRANSLATING:
             //glaCameraTranslatef(cameramat, (0.1) * dx, (-0.1) * dy, 0.0);
             // Modified for 2D projection and zoom
@@ -171,8 +172,7 @@ void GLGraphWidget::mouseMoveEvent(QMouseEvent *event)
     this->repaint();
 }
 
-void GLGraphWidget::keyPressEvent(QKeyEvent *event)
-{
+void GLGraphWidget::keyPressEvent(QKeyEvent *event) {
     switch (event->key()) {
     case Qt::Key_H:
         helping = !helping;
@@ -227,8 +227,7 @@ void GLGraphWidget::keyPressEvent(QKeyEvent *event)
     this->repaint();
 }
 
-void GLGraphWidget::timerEvent(QTimerEvent *)
-{
+void GLGraphWidget::timerEvent(QTimerEvent *) {
     QPointF topLeft;
     QPointF bottomRight;
 
@@ -259,8 +258,9 @@ void GLGraphWidget::timerEvent(QTimerEvent *)
 
     isRunning = false;
     foreach (Node *node, myScene->nodes()) {
-        if (node->advance())
+        if (node->advance()) {
             isRunning = true;
+        }
     }
     setAnimationRunning();
 
@@ -275,8 +275,7 @@ void GLGraphWidget::timerEvent(QTimerEvent *)
  * GL related QT event handlers (protected)
  ***************************/
 
-void GLGraphWidget::initializeGL()
-{
+void GLGraphWidget::initializeGL() {
     glaInit();
 
     // Init camera matrix
@@ -288,8 +287,7 @@ void GLGraphWidget::initializeGL()
     glLoadIdentity();
 }
 
-void GLGraphWidget::paintGL()
-{
+void GLGraphWidget::paintGL() {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     // Set up the camera
@@ -304,8 +302,7 @@ void GLGraphWidget::paintGL()
     glFlush();
 }
 
-void GLGraphWidget::resizeGL(int w, int h)
-{
+void GLGraphWidget::resizeGL(int w, int h) {
     // Set up the Viewport transformation
     glViewport(0, 0, (GLsizei) w, (GLsizei) h);
 
@@ -338,11 +335,14 @@ inline void GLGraphWidget::drawNode(Node* node) {
     glEnd();
 }
 
-void GLGraphWidget::drawGraphGL()
-{
+void GLGraphWidget::drawGraphGL() {
+    // If there is a dragged node, draw it where the mouse is.
+    if (mouseMode == MOUSE_DRAGGING) {
+        // draggedNode->setPos(mouseX, mouseY);
+    }
+
     // Draw edges
-    foreach (Edge* edge, myScene->edges())
-    {
+    foreach (Edge* edge, myScene->edges()) {
         QColor *c = edge->getColour();
         glColor4f(c->redF(), c->greenF(), c->blueF(), c->alphaF());
         //glColor4f(0.0, 0.0, 1.0, 0.5);
@@ -360,8 +360,7 @@ void GLGraphWidget::drawGraphGL()
     }
 }
 
-void GLGraphWidget::initProjection()
-{
+void GLGraphWidget::initProjection() {
     // Set up the Projection transformation
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
@@ -376,8 +375,10 @@ void GLGraphWidget::initProjection()
     glMatrixMode(GL_MODELVIEW);
 }
 
-void GLGraphWidget::selectGL(int x, int y)
+Node* GLGraphWidget::selectGL(int x, int y)
 {
+    Node* hitNode = NULL;
+
     GLuint namebuf[64] = {0};
     GLint hits;
     GLint view[4];
@@ -420,8 +421,7 @@ void GLGraphWidget::selectGL(int x, int y)
             hits = glRenderMode(GL_RENDER);
 
             if (hits) {
-                QBrush *b = node->getBrush();
-                b->setColor(QColor::fromRgbF(1.0, 0.0, 0.0, 1.0));
+                hitNode = node;
 
                 break;
             }
@@ -433,4 +433,6 @@ void GLGraphWidget::selectGL(int x, int y)
 
   glMatrixMode(GL_MODELVIEW);
   this->repaint();
+
+  return hitNode;
 }

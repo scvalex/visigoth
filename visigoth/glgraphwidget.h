@@ -45,13 +45,14 @@ private:
     inline void drawNode(Node* node);
     void drawGraphGL();
     void initProjection();
-    void selectGL(int x, int y);
+    Node* selectGL(int x, int y);
 
     GraphScene *myScene;
     GLfloat cameramat[16];
     GLfloat zoom;
     int mouseX, mouseY;
     enum MOUSE_MODES mouseMode;
+    Node* draggedNode;
 
     bool helping;
     bool isPlaying;
