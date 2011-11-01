@@ -15,7 +15,9 @@ Node::Node(GraphScene *graph, QGraphicsItem *parent) :
     QGraphicsItem(parent),
     brush(QColor::fromRgb(qrand() % 256, qrand() % 256, qrand() % 256, 180)),
     graph(graph),
-    hovering(false)
+    hovering(false),
+    visited(false),
+    distance(0)
 {
     myTag = ALL_NODES++;
     setFlag(ItemIsMovable);
@@ -211,4 +213,23 @@ QVector<TreeNode*>& Node::getChildren() {
 
 qreal Node::getWidth() const {
     return 0;
+}
+
+bool Node::getVisited(){
+
+    return visited;
+}
+
+void Node::setVisited(bool v){
+
+    visited = v ;
+}
+int Node::getDistance(){
+
+    return distance;
+}
+
+void Node::setDistance(int d){
+
+    distance = d;
 }

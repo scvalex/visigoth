@@ -9,12 +9,77 @@ Statistics::Statistics(GraphScene *scene): graph(scene){
 
 double Statistics::averageLength(){
 
+    QVector<Node *> nodes = graph->nodes();
+
+    double allLengths = 0;
+    int N = nodes.count();
+
+    for(int i(0); i < N; ++i){
+
+        allLengths+=lengthSum(nodes[i]);
+        for(int j(0); j < N; ++j){
+
+            nodes[j]->setDistance(0);
+            nodes[j]->setVisited(false);
+        }
+
+    }
+
+    return allLengths/ (double) (N*(N-1));
+
+
+}
+
+double Statistics::lengthSum(Node * s){
+
+    // init
+    QList<Node *> queue;
+    queue.append(s);
+    double retLength = 0;
+    s->setVisited(true);
+
+    /*
+        finding the distances to all other nodes
+        using breadth first search
+    */
+
+    while(!queue.empty()){
+
+        Node * parent = queue.first();
+
+        QList<Edge *> edges = parent->edges();
+
+        foreach(Edge * e, edges){
+
+            Node * n;
+
+            if(e->sourceNode()->tag() == parent->tag()){
+                n = e->destNode();
+            }
+
+            else{
+                n = e->sourceNode();
+            }
+
+            if(!n->getVisited()){
+                n->setVisited(true);
+                n->setDistance(parent->getDistance()+1);
+                queue.append(n);
+            }
+
+        }
+
+        queue.removeFirst();
+        retLength+=parent->getDistance();
+
+    }
+
 
 
 
 
     // placeholder
-    return 0.0;
+    return retLength;
 
 }
 
@@ -141,6 +206,7 @@ int Statistics::intersectionCount(QVector<Node *> vec1, QVector<Node *> vec2){
 
     return retVec.count();
 }
+
 
 
 

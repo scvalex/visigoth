@@ -23,13 +23,13 @@ public:
     double clusteringDegree(int degree);
     double smallWorldIndex();
 
-
-
 private:
 
     GraphScene * graph;
+
     QVector<int> shoretstDistance();
     int intersectionCount(QVector<Node *> vec1, QVector<Node *> vec2);
+    double lengthSum(Node * s);
     QVector<Node *> buildNeighbourVector(Node * n);
 
 };

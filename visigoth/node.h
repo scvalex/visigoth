@@ -46,6 +46,11 @@ public:
     QPointF getCenter() const;
     QVector<TreeNode*>& getChildren();
     qreal getWidth() const;
+    bool getVisited();
+    void setVisited(bool v);
+    int getDistance();
+    void setDistance(int v);
+
 
     static void reset();
 
@@ -66,6 +71,10 @@ private:
     bool hovering;
     int myTag;
     QPointF newPos;
+
+    // vars for average length
+    bool visited;
+    int distance;
 
     QPointF mapPoint(QPointF source, QPointF dest);
     QPointF calculateNonEdgeForces(TreeNode* treeNode);
