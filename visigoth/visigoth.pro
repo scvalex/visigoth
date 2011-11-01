@@ -14,7 +14,8 @@ SOURCES += main.cpp \
           bipartite.cpp \
           graphscene.cpp \
           glgraphwidget.cpp \
-          glancillary.c
+          glancillary.c \
+    statistics.cpp
 
 HEADERS += mainwindow.h \
            node.h \
@@ -28,6 +29,9 @@ HEADERS += mainwindow.h \
            glancillary.h \
            bipartite.h \
            algorithm.h \
-           abstractgraphwidget.h
+           abstractgraphwidget.h \
+    statistics.h
 
 FORMS += mainwindow.ui
+
+

@@ -289,7 +289,7 @@ void GLGraphWidget::paintGL()
     glLoadMatrixf(cameramat);
 
     // Draw the old example objects
-    glaDrawExample();
+   // glaDrawExample();
 
     // Draw the graph
     drawGraphGL();

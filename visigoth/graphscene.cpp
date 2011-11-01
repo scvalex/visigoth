@@ -10,8 +10,11 @@ GraphScene::GraphScene(AbstractGraphWidget *parent) :
     algo(0),
     algoId(0),
     targetNumNodes(100),
-    view(parent)
+    view(parent),
+    degreeCount(100)
 {
+
+
 }
 
 void GraphScene::reset() {
@@ -19,6 +22,7 @@ void GraphScene::reset() {
     hasEdge.clear();
     myEdges.clear();
     myNodes.clear();
+    degreeCount.clear();
     Node::reset();
     if (algo) {
         delete algo;
@@ -51,6 +55,8 @@ bool GraphScene::newEdge(Node *source, Node *dest) {
     hasEdge[dest->tag()].insert(source->tag());
     addItem(edge);
     myEdges << edge;
+    updateDegreeCount(source);
+    updateDegreeCount(dest);
     return true;
 }
 
@@ -107,4 +113,29 @@ void GraphScene::randomizePlacement() {
 
 void GraphScene::addVertex() {
     algo->addVertex();
+}
+
+// Pre: degree is valid
+QList<Node *> GraphScene::getDegreeList(int degree){
+
+    return degreeCount[degree-1];
+}
+
+// Pre: Node has just been given a new edge
+void GraphScene::updateDegreeCount(Node *node){
+
+
+    int degree = node->edges().count();
+
+    if(degree > degreeCount.count()){
+        degreeCount.resize(degree);
+    }
+
+    degreeCount[degree-1].append(node);
+
+    if(degree > 1){
+        degreeCount[degree-2].removeOne(node);
+    }
+
+
 }
