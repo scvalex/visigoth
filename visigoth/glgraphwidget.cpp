@@ -335,12 +335,13 @@ void GLGraphWidget::drawGraphGL()
     // Draw nodes
     glColor4f(0.0, 1.0, 0.3, 0.7);
     foreach (Node* node, nodeVector) {
-        int radius = node->edges().size() / 2;
-        radius = radius > 0 ? radius : 1;
+        float radius = (log(node->edges().size()) / log(2)) + 1.0;
         p = node->pos();
 
-        glBegin(GL_LINE_LOOP);
-            int step = 180 / (radius > 50 ? 50 : radius);
+        glBegin(GL_TRIANGLE_FAN);
+        // glBegin(GL_LINE_LOOP);
+            // int step = 180 / (radius > 50 ? 50 : (int) radius);
+            int step = 30;
             for (int angle(0); angle < 360; angle += step) {
                 GLfloat rangle = (GLfloat) angle * (3.1415926 / 180.0);
                 glVertex3f((GLfloat)p.x() + sin(rangle) * radius,
