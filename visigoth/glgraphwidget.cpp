@@ -333,17 +333,22 @@ void GLGraphWidget::drawGraphGL()
     }
 
     // Draw nodes
-    glPointSize(5.0);
-    glBegin(GL_POINTS);
-        foreach (Node* node, nodeVector)
-        {
-            //glLoadName(i);    // Load point number into depth buffer for selection
-            //glColor4f(n->color, 1.0, 0.3, 0.7);
-            glColor4f(0.0, 1.0, 0.3, 0.7);
-            p = node->pos();
-            glVertex3f((GLfloat)p.x(), (GLfloat)p.y(), 0.0);
-        }
-    glEnd();
+    glColor4f(0.0, 1.0, 0.3, 0.7);
+    foreach (Node* node, nodeVector) {
+        int radius = node->edges().size() / 2;
+        radius = radius > 0 ? radius : 1;
+        p = node->pos();
+
+        glBegin(GL_LINE_LOOP);
+            int step = 180 / (radius > 50 ? 50 : radius);
+            for (int angle(0); angle < 360; angle += step) {
+                GLfloat rangle = (GLfloat) angle * (3.1415926 / 180.0);
+                glVertex3f((GLfloat)p.x() + sin(rangle) * radius,
+                           (GLfloat)p.y() + cos(rangle) * radius,
+                           0.0);
+            }
+        glEnd();
+    }
 }
 
 void GLGraphWidget::initProjection()
