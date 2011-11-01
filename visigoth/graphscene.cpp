@@ -17,6 +17,12 @@ GraphScene::GraphScene(AbstractGraphWidget *parent) :
 void GraphScene::reset() {
     clear();
     hasEdge.clear();
+    foreach (Node* node, myNodes) {
+        delete node;
+    }
+    foreach (Edge* edge, myEdges) {
+        delete edge;
+    }
     myEdges.clear();
     myNodes.clear();
     Node::reset();
