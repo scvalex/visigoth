@@ -321,9 +321,11 @@ void GLGraphWidget::resizeGL(int w, int h)
 void GLGraphWidget::drawGraphGL()
 {
     // Draw edges
-    glColor4f(0.0, 0.0, 1.0, 0.5);
     foreach (Edge* edge, myScene->edges())
     {
+        QColor *c = edge->getColour();
+        glColor4f(c->redF(), c->greenF(), c->blueF(), c->alphaF());
+        //glColor4f(0.0, 0.0, 1.0, 0.5);
         glBegin(GL_LINE_STRIP);
             QPointF p = edge->sourceNode()->pos();
             glVertex3f((GLfloat)p.x(), (GLfloat)p.y(), 0.0);
@@ -365,7 +367,6 @@ void GLGraphWidget::initProjection()
 
 void GLGraphWidget::selectGL(int x, int y)
 {
-    int i;
     GLuint namebuf[64] = {0};
     GLint hits;
     GLint view[4];
