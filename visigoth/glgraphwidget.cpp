@@ -318,6 +318,26 @@ void GLGraphWidget::resizeGL(int w, int h)
  * GL graph drawing and projection setup (private)
  ***************************/
 
+inline void GLGraphWidget::drawNode(Node* node) {
+    QColor c = node->getBrush()->color();
+    glColor4f(c.redF(), c.greenF(), c.blueF(), c.alphaF());
+
+    float radius = (log(node->edges().size()) / log(2)) + 1.0;
+    QPointF p = node->pos();
+
+    glBegin(GL_TRIANGLE_FAN);
+    // glBegin(GL_LINE_LOOP);
+        // int step = 180 / (radius > 50 ? 50 : (int) radius);
+        int step = 30;
+        for (int angle(0); angle < 360; angle += step) {
+            GLfloat rangle = (GLfloat) angle * (3.1415926 / 180.0);
+            glVertex3f((GLfloat)p.x() + sin(rangle) * radius,
+                       (GLfloat)p.y() + cos(rangle) * radius,
+                       0.0);
+        }
+    glEnd();
+}
+
 void GLGraphWidget::drawGraphGL()
 {
     // Draw edges
@@ -335,25 +355,8 @@ void GLGraphWidget::drawGraphGL()
     }
 
     // Draw nodes
-    glColor4f(0.0, 1.0, 0.3, 0.7);
     foreach (Node* node, myScene->nodes()) {
-        QColor c = node->getBrush()->color();
-        glColor4f(c.redF(), c.greenF(), c.blueF(), c.alphaF());
-
-        float radius = (log(node->edges().size()) / log(2)) + 1.0;
-        QPointF p = node->pos();
-
-        glBegin(GL_TRIANGLE_FAN);
-        // glBegin(GL_LINE_LOOP);
-            // int step = 180 / (radius > 50 ? 50 : (int) radius);
-            int step = 30;
-            for (int angle(0); angle < 360; angle += step) {
-                GLfloat rangle = (GLfloat) angle * (3.1415926 / 180.0);
-                glVertex3f((GLfloat)p.x() + sin(rangle) * radius,
-                           (GLfloat)p.y() + cos(rangle) * radius,
-                           0.0);
-            }
-        glEnd();
+        drawNode(node);
     }
 }
 
@@ -392,7 +395,7 @@ void GLGraphWidget::selectGL(int x, int y)
     glMatrixMode(GL_PROJECTION);
     glPushMatrix();
         glLoadIdentity();
-        gluPickMatrix(x, y, 5.0*zoom, 5.0*zoom, view);
+        gluPickMatrix(x, y, 1.0, 1.0, view);
         //glMultMatrixf(projmat);
         glScalef(zoom, zoom, 1.0/zoom);
         gluOrtho2D(0.0, (GLfloat)width(), (GLfloat)height(), 0.0);
@@ -410,13 +413,7 @@ void GLGraphWidget::selectGL(int x, int y)
             glPushName(0);
 
             // Draw the node
-            QPointF p = node->pos();
-            glColor4f(1.0, 0.0, 0.0, 1.0);
-            glPointSize(5.0 * zoom);
-            glBegin(GL_POINTS);
-                //glLoadName(0);
-                glVertex3f((GLfloat)p.x(), (GLfloat)p.y(), 0.0);
-            glEnd();
+            drawNode(node);
 
             hits = glRenderMode(GL_RENDER);
 

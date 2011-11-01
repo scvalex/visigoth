@@ -42,6 +42,7 @@ protected:
     void resizeGL(int w, int h);
 
 private:
+    inline void drawNode(Node* node);
     void drawGraphGL();
     void initProjection();
     void selectGL(int x, int y);
