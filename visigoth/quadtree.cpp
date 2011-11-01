@@ -81,9 +81,11 @@ QuadTree::Quadrant::Quadrant(int level, QPointF center, int width) :
 }
 
 QuadTree::Quadrant::~Quadrant() {
-    if (!isTerminal()) {
-        foreach (TreeNode* node, _children) {
-            delete node;
+    foreach (TreeNode* node, _children) {
+        QuadTree::Quadrant* quadrant = dynamic_cast<QuadTree::Quadrant*>(node);
+
+        if (quadrant) {
+            delete quadrant;
         }
     }
 }
