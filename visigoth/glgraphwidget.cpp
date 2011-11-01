@@ -14,7 +14,6 @@
 #include "node.h"
 #include "quadtree.h"
 
-#include <cstdio>
 
 /****************************
  * GraphWidget imitation code (public)
@@ -98,6 +97,8 @@ void GLGraphWidget::mouseDoubleClickEvent(QMouseEvent *event) {
             b->setColor(QColor::fromRgbF(1.0, 0.0, 0.0, 1.0));
         }
     }
+
+    this->repaint();
 }
 
 void GLGraphWidget::mousePressEvent(QMouseEvent *event) {
@@ -338,7 +339,18 @@ inline void GLGraphWidget::drawNode(Node* node) {
 void GLGraphWidget::drawGraphGL() {
     // If there is a dragged node, draw it where the mouse is.
     if (mouseMode == MOUSE_DRAGGING) {
-        // draggedNode->setPos(mouseX, mouseY);
+        GLdouble model[16], proj[16];
+        GLint view[4];
+        GLdouble newX, newY, newZ;
+
+        glGetDoublev(GL_MODELVIEW_MATRIX, model);
+        glGetDoublev(GL_PROJECTION_MATRIX, proj);
+        glGetIntegerv(GL_VIEWPORT, view);
+        gluUnProject((GLdouble)mouseX, (GLdouble)(view[3] - mouseY), 0.0,
+                    model, proj, view,
+                    &newX, &newY, &newZ);
+
+        draggedNode->setPos(newX, newY);
     }
 
     // Draw edges
@@ -397,9 +409,7 @@ Node* GLGraphWidget::selectGL(int x, int y)
     glPushMatrix();
         glLoadIdentity();
         gluPickMatrix(x, y, 1.0, 1.0, view);
-        //glMultMatrixf(projmat);
-        glScalef(zoom, zoom, 1.0/zoom);
-        gluOrtho2D(0.0, (GLfloat)width(), (GLfloat)height(), 0.0);
+        glMultMatrixf(projmat);
 
         // Redraw points to fill selection buffer
         glMatrixMode(GL_MODELVIEW);
