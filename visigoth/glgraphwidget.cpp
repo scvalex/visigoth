@@ -403,8 +403,10 @@ void GLGraphWidget::selectGL(int x, int y)
         // Redraw points to fill selection buffer
         glMatrixMode(GL_MODELVIEW);
 
-        foreach (Node* node, myScene->nodes())
-        {
+        QVector<Node*>& nodes = myScene->nodes();
+        for (int i = nodes.size() - 1; i >= 0; --i) {
+            Node* node = nodes[i];
+
             glSelectBuffer(64, namebuf);
             glRenderMode(GL_SELECT);
 
@@ -417,10 +419,11 @@ void GLGraphWidget::selectGL(int x, int y)
 
             hits = glRenderMode(GL_RENDER);
 
-            if (hits)
-            {
+            if (hits) {
                 QBrush *b = node->getBrush();
                 b->setColor(QColor::fromRgbF(1.0, 0.0, 0.0, 1.0));
+
+                break;
             }
         }
 
