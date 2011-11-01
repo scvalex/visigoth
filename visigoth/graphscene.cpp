@@ -9,9 +9,9 @@ GraphScene::GraphScene(AbstractGraphWidget *parent) :
     //QGraphicsScene(parent),
     algo(0),
     algoId(0),
-    targetNumNodes(100),
     view(parent),
-    degreeCount(100)
+    degreeCount(100),
+    targetNumNodes(1000)
 {
 
 

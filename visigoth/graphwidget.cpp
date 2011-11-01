@@ -3,7 +3,7 @@
 #include "graphwidget.h"
 #include "node.h"
 #include "preferential.h"
-#include "treecode.h"
+#include "quadtree.h"
 #include "abstractgraphwidget.h"
 
 #include <cmath>
@@ -12,6 +12,8 @@
 #include <QDebug>
 #include <QKeyEvent>
 #include <QVector>
+
+#include <iostream>
 
 GraphWidget::GraphWidget(QWidget *parent) :
     QGraphicsView(parent),
@@ -109,10 +111,17 @@ void GraphWidget::timerEvent(QTimerEvent *) {
     QPointF topLeft;
     QPointF bottomRight;
 
-    TreeCode treeCode(myScene->sceneRect());
+    QuadTree quadTree(myScene->sceneRect());
 
     foreach (Node* node, myScene->nodes()) {
-        QPointF pos = node->calculatePosition();
+        quadTree.addNode(*node);
+    }
+
+    // quadTree.printTree(&quadTree.root());
+    // std::cout << "---------------------------------------------------\n";
+
+    foreach (Node* node, myScene->nodes()) {
+        QPointF pos = node->calculatePosition(quadTree.root());
 
         if (pos.x() < topLeft.x()) {
             topLeft.setX(pos.x());

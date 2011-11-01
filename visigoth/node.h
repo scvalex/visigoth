@@ -12,12 +12,12 @@
 #include <sstream>
 
 #include "graphscene.h"
-#include "treenode.h"
+#include "quadtree.h"
 
 class Edge;
 class QGraphicsSceneHoverEvent;
 
-class Node : public QGraphicsItem, public TreeNode
+class Node : public QGraphicsItem, public QuadTree::TreeNode
 {
 public:
     /* Only GraphScene can construct Nodes. */
@@ -28,7 +28,7 @@ public:
     int tag() const;
 
     /* Return the new position. */
-    QPointF calculatePosition();
+    QPointF calculatePosition(QuadTree::TreeNode& treeNode);
 
     bool advance();
 
@@ -50,7 +50,11 @@ public:
     void setVisited(bool v);
     int getDistance();
     void setDistance(int v);
-
+    int size() const;
+    QPointF center() const;
+    bool hasChildren() const;
+    const QVector<TreeNode*>& children() const;
+    qreal width() const;
 
     static void reset();
 

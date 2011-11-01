@@ -10,11 +10,9 @@
 
 #include "glgraphwidget.h"
 #include "glancillary.h"        // gla*()
-
 #include "edge.h"
 #include "node.h"
-#include "treecode.h"
-
+#include "quadtree.h"
 
 
 /****************************
@@ -228,10 +226,13 @@ void GLGraphWidget::timerEvent(QTimerEvent *)
     QPointF topLeft;
     QPointF bottomRight;
 
-    TreeCode treeCode(myScene->sceneRect());
+    QuadTree quadTree(myScene->sceneRect());
+    foreach (Node* node, myScene->nodes()) {
+        quadTree.addNode(*node);
+    }
 
     foreach (Node* node, myScene->nodes()) {
-        QPointF pos = node->calculatePosition();
+        QPointF pos = node->calculatePosition(quadTree.root());
 
         if (pos.x() < topLeft.x())
             topLeft.setX(pos.x());
