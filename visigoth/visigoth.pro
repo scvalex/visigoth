@@ -4,22 +4,19 @@ TARGET = visigoth
 TEMPLATE = app
 
 SOURCES += main.cpp \
-          mainwindow.cpp \
-          node.cpp \
-          graphwidget.cpp \
-          edge.cpp \
-          preferential.cpp \
-          bipartite.cpp \
-          graphscene.cpp \
-          glgraphwidget.cpp \
-          glancillary.c \
-          statistics.cpp \
-          quadtree.cpp
-
+           mainwindow.cpp \
+           node.cpp \
+           edge.cpp \
+           preferential.cpp \
+           bipartite.cpp \
+           graphscene.cpp \
+           glgraphwidget.cpp \
+           glancillary.c \
+           statistics.cpp \
+           quadtree.cpp
 
 HEADERS += mainwindow.h \
            node.h \
-           graphwidget.h \
            edge.h \
            preferential.h \
            graphscene.h \
