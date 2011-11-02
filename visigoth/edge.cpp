@@ -7,7 +7,7 @@
 Edge::Edge(Node *sourceNode, Node *destNode, QGraphicsItem *parent) :
     QGraphicsItem(parent),
     //brush(QColor::fromRgb(0, 165, 211, 238))
-    colour(QColor::fromRgbF(0.0, 0.0, 1.0, 0.5))
+    myColour(QColor::fromRgbF(0.0, 0.0, 1.0, 0.5))
 {
     setAcceptedMouseButtons(0);
     dest = destNode;
@@ -61,10 +61,10 @@ void Edge::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *)
     if (qFuzzyCompare(line.length(), qreal(0.0)))
         return;
 
-    painter->setPen(QPen(colour, 1, Qt::SolidLine));
+    painter->setPen(QPen(myColour, 1, Qt::SolidLine));
     painter->drawLine(line);
 }
 
-QColor* Edge::getColour() {
-    return &colour;
+QColor& Edge::colour() {
+    return myColour;
 }

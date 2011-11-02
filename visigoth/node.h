@@ -51,7 +51,8 @@ public:
 
     static void reset();
 
-    QBrush* getBrush();
+    QBrush& brush();
+    void setBrush(const QBrush &b);
 
 protected:
     explicit Node(GraphScene *graph, QGraphicsItem *parent = 0);
@@ -64,7 +65,7 @@ protected:
 private:
     static int ALL_NODES;
 
-    QBrush brush;
+    QBrush myBrush;
     QList<Edge*> edgeList;
     GraphScene *graph;
     bool hovering;

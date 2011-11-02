@@ -90,11 +90,10 @@ void GLGraphWidget::wheelEvent(QWheelEvent *event) {
 
 void GLGraphWidget::mouseDoubleClickEvent(QMouseEvent *event) {
     if (event->button() == Qt::LeftButton) {
-        Node* hitNode = selectGL(event->x(), event->y());
+        Node *hitNode = selectGL(event->x(), event->y());
 
         if (hitNode) {
-            QBrush *b = hitNode->getBrush();
-            b->setColor(QColor::fromRgbF(1.0, 0.0, 0.0, 1.0));
+            hitNode->setBrush(QColor::fromRgbF(1.0, 0.0, 0.0, 1.0));
         }
     }
 
@@ -106,8 +105,7 @@ void GLGraphWidget::mousePressEvent(QMouseEvent *event) {
         return;
 
     if (event->button() == Qt::LeftButton) {
-        switch(0)  // FIXME: Should get modifier key status here
-        {
+        switch (0) { // FIXME: Should get modifier key status here
             case 0:  // When no modifiers are pressed
                 mouseMode = MOUSE_TRANSLATING;
                 break;
@@ -122,7 +120,7 @@ void GLGraphWidget::mousePressEvent(QMouseEvent *event) {
                 break;
         }
     } else if (event->button() == Qt::RightButton) {
-        Node* hitNode = selectGL(event->x(), event->y());
+        Node *hitNode = selectGL(event->x(), event->y());
 
         if (hitNode) {
             draggedNode = hitNode;
@@ -317,7 +315,7 @@ void GLGraphWidget::resizeGL(int w, int h) {
  ***************************/
 
 inline void GLGraphWidget::drawNode(Node* node) {
-    QColor c = node->getBrush()->color();
+    QColor c = node->brush().color();
     glColor4f(c.redF(), c.greenF(), c.blueF(), c.alphaF());
 
     float radius = (log(node->edges().size()) / log(2)) + 1.0;
@@ -355,8 +353,8 @@ void GLGraphWidget::drawGraphGL() {
 
     // Draw edges
     foreach (Edge* edge, myScene->edges()) {
-        QColor *c = edge->getColour();
-        glColor4f(c->redF(), c->greenF(), c->blueF(), c->alphaF());
+        const QColor c = edge->colour();
+        glColor4f(c.redF(), c.greenF(), c.blueF(), c.alphaF());
         //glColor4f(0.0, 0.0, 1.0, 0.5);
         glBegin(GL_LINE_STRIP);
             QPointF p = edge->sourceNode()->pos();
@@ -414,10 +412,8 @@ Node* GLGraphWidget::selectGL(int x, int y)
         // Redraw points to fill selection buffer
         glMatrixMode(GL_MODELVIEW);
 
-        QVector<Node*>& nodes = myScene->nodes();
+        QVector<Node*> &nodes = myScene->nodes();
         for (int i = nodes.size() - 1; i >= 0; --i) {
-            Node* node = nodes[i];
-
             glSelectBuffer(64, namebuf);
             glRenderMode(GL_SELECT);
 
@@ -426,13 +422,12 @@ Node* GLGraphWidget::selectGL(int x, int y)
             glPushName(0);
 
             // Draw the node
-            drawNode(node);
+            drawNode(nodes[i]);
 
             hits = glRenderMode(GL_RENDER);
 
             if (hits) {
-                hitNode = node;
-
+                hitNode = nodes[i];
                 break;
             }
         }
