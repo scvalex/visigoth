@@ -32,5 +32,3 @@ HEADERS += mainwindow.h \
            quadtree.h
 
 FORMS += mainwindow.ui
-
-

@@ -59,6 +59,7 @@ bool GraphScene::newEdge(Node *source, Node *dest) {
     myEdges << edge;
     updateDegreeCount(source);
     updateDegreeCount(dest);
+
     return true;
 }
 
@@ -66,6 +67,7 @@ Node* GraphScene::newNode() {
     Node *node = new Node(this);
     addItem(node);
     myNodes << node;
+
     return node;
 }
 
@@ -118,50 +120,30 @@ void GraphScene::addVertex() {
 }
 
 // Pre: degree is valid
-QList<Node *> GraphScene::getDegreeList(int degree){
-
+QList<Node *> GraphScene::getDegreeList(int degree) {
     return degreeCount[degree-1];
 }
 
 // Pre: Node has just been given a new edge
-void GraphScene::updateDegreeCount(Node *node){
-
-
+void GraphScene::updateDegreeCount(Node *node) {
     int degree = node->edges().count();
 
-    if(degree > degreeCount.count()){
+    if(degree > degreeCount.count())
         degreeCount.resize(degree);
-    }
 
     degreeCount[degree-1].append(node);
 
-    if(degree > 1){
+    if(degree > 1)
         degreeCount[degree-2].removeOne(node);
-    }
-
-
 }
 
-void GraphScene::calculateMetrics(){
-
-    if(!stats){
+void GraphScene::calculateMetrics() {
+    if(!stats)
         stats = new Statistics(this);
-    }
 
     metricVector[0] = stats->averageDegree();
-
     metricVector[1] = stats->averageLength();
-
-    metricVector[2] = stats->custeringAvg();
-
-    metricVector[3] = stats->clusteringCoeff(myNodes[qrand()%myNodes.count()]);
-
+    metricVector[2] = stats->clusteringAvg();
+    metricVector[3] = stats->clusteringCoeff(myNodes[qrand() % myNodes.count()]);
     metricVector[4] = stats->clusteringDegree(6);
-
-    double debug = metricVector[4];
-
-
-
-
-
 }

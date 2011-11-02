@@ -13,25 +13,22 @@ class GraphScene;
 class Statistics {
 
 public:
-
     Statistics(GraphScene* scene);
 
     double averageDegree();
     double averageLength();
-    double clusteringCoeff(Node * node);
-    double custeringAvg();
+    double clusteringAvg();
+    double clusteringCoeff(Node *node);
     double clusteringDegree(int degree);
-    double smallWorldIndex();
+    //double smallWorldIndex();
 
 private:
-
     GraphScene* graph;
 
-    QVector<int> shoretstDistance();
-    int intersectionCount(QVector<Node *> vec1, QVector<Node *> vec2);
-    double lengthSum(Node * s);
-    QVector<Node *> buildNeighbourVector(Node * n);
-
+    //QVector<int> shortestDistance();
+    double lengthSum(Node *s);
+    QVector<Node*> buildNeighbourVector(Node *n);
+    int intersectionCount(QVector<Node*> vec1, QVector<Node*> vec2);
 };
 
 #endif // STATISTICS_H

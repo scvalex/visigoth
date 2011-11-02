@@ -37,15 +37,13 @@ public:
 
     void addVertex();
 
-    QList<Node *> getDegreeList(int degree);
+    QList<Node*> getDegreeList(int degree);
 
     void calculateMetrics();
 
-
-
 protected:
     void reset();
-    void updateDegreeCount(Node * node);
+    void updateDegreeCount(Node *node);
 
 private:
     Algorithm *algo;
@@ -56,7 +54,7 @@ private:
     QList<Edge*> myEdges;
     int targetNumNodes;
     AbstractGraphWidget *view;
-    QVector<QList<Node *> > degreeCount;
+    QVector<QList<Node*> > degreeCount;
     QVector<double> metricVector;
 
 };
