@@ -24,6 +24,9 @@ public:
     void addVertex();
     QWidget *newControlWidget(QWidget *parent = 0);
 
+protected slots:
+    void onSizeChanged(int newSize);
+
 protected:
     void addVertex(bool saveSize = false);
     void addVertex(int edgesToAdd, double p);

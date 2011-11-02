@@ -1,5 +1,4 @@
 #include "algorithm.h"
-#include "graphwidget.h"
 #include "glgraphwidget.h"
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
@@ -10,10 +9,6 @@
 #include <QFileDialog>
 #include <QPrinter>
 
-#ifdef USE_OPENGL
-#include <QGLWidget>
-#endif
-
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow),
@@ -21,15 +16,12 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
 
-    //view = new GraphWidget(this);
     view = new GLGraphWidget(this);
-#ifdef USE_OPENGL
-    view->setViewport(new QGLWidget(QGLFormat(QGL::SampleBuffers)));
-#endif
     setCentralWidget(view);
     qsrand(23);
 
     connect(view, SIGNAL(algorithmChanged(Algorithm*)), this, SLOT(onAlgorithmChanged(Algorithm*)));
+    view->init();
 }
 
 void MainWindow::populate() {

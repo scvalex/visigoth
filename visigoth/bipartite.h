@@ -31,8 +31,8 @@ public:
     void showBipartite();
 
 private slots:
-    void onUSizeChanged(int);
-    void onVSizeChanged(int);
+    void onUSizeChanged(int newSize);
+    void onVSizeChanged(int newSize);
 
 private:
     // Both preference funcs will only be used on vector set U

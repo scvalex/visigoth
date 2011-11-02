@@ -154,10 +154,10 @@ void Bipartite::updatePreference() {
     }
 }
 
-void Bipartite::onUSizeChanged(int newValue) {
-    uSize = newValue;
+void Bipartite::onUSizeChanged(int newSize) {
+    uSize = newSize;
 }
 
-void Bipartite::onVSizeChanged(int newValue) {
-    vSize = newValue;
+void Bipartite::onVSizeChanged(int newSize) {
+    vSize = newSize;
 }

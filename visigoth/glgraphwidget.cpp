@@ -30,10 +30,13 @@ GLGraphWidget::GLGraphWidget(QWidget *parent) :
 {
     setFocusPolicy(Qt::StrongFocus);
 
+}
+
+void GLGraphWidget::init() {
     myScene = new GraphScene(this);
     myScene->setBackgroundBrush(Qt::black);
     myScene->setItemIndexMethod(QGraphicsScene::NoIndex);
-
+    populate();
     emit algorithmChanged(myScene->algorithm());
 }
 
@@ -46,8 +49,6 @@ void GLGraphWidget::itemMoved() {
     isRunning = true;
     setAnimationRunning();
 }
-
-
 
 /****************************
  * GraphWidget imitation code (protected)

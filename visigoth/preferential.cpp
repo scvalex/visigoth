@@ -1,5 +1,6 @@
 #include "graphscene.h"
 #include "preferential.h"
+#include "ui_preferentialcontrol.h"
 
 #include <QWidget>
 
@@ -31,7 +32,11 @@ void Preferential::addVertex(bool saveSize) {
 }
 
 QWidget* Preferential::newControlWidget(QWidget *parent) {
-    return 0;
+    QWidget *ctl = new QWidget(parent);
+    Ui::PreferentialControl *prefCtl = new Ui::PreferentialControl();
+    prefCtl->setupUi(ctl);
+    connect(prefCtl->sizeEdit, SIGNAL(valueChanged(int)), this, SLOT(onSizeChanged(int)));
+    return ctl;
 }
 
 // Add vertex using preferential attachment with clustering.
@@ -159,4 +164,8 @@ QVector<Node*> Preferential::getIntersection(QVector<Node*> vec1, QVector<Node*>
 double Preferential::genRandom(){
     double main = qrand() % 100;
     return main + (( qrand() % 100 ) / 100 );
+}
+
+void Preferential::onSizeChanged(int newSize) {
+    size = newSize;
 }
