@@ -2,6 +2,7 @@
 #define EDGE_H
 
 #include <QGraphicsItem>
+#include <QColor>
 
 #include "graphscene.h"
 
@@ -21,6 +22,8 @@ public:
 
     void adjust();
 
+    QColor& colour();
+
 protected:
     explicit Edge(Node *sourceNode, Node *destNode, QGraphicsItem *parent = 0);
     QRectF boundingRect() const;
@@ -31,6 +34,8 @@ private:
     QPointF destPoint;
     Node *source;
     QPointF sourcePoint;
+
+    QColor myColour;
 };
 
 #endif // EDGE_H
