@@ -100,7 +100,7 @@ void GraphScene::repopulate() {
 }
 
 void GraphScene::nextAlgorithm() {
-    algoId = (algoId + 1) % 3;
+    algoId = (algoId + 1) % 2;
     repopulate();
 }
 
