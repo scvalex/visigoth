@@ -1,7 +1,6 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
-#include "graphwidget.h"
 #include "glgraphwidget.h"
 
 #include <QMainWindow>
