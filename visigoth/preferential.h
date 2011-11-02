@@ -20,11 +20,12 @@ class Preferential : public Algorithm {
 public:
     Preferential(GraphScene *graph);
 
-    void init(int size);
+    void reset();
     void addVertex();
     QWidget *newControlWidget(QWidget *parent = 0);
 
 protected:
+    void addVertex(bool saveSize = false);
     void addVertex(int edgesToAdd, double p);
 
     // genPef is a randomly generated number satisfing 0 <= genPref < 100
@@ -43,6 +44,8 @@ private:
     QMap<int, double> cumulativePreferences;
     // used for display purposes only
     QMap<int, double> preferences;
+
+    int size;
 };
 
 #endif // PREFERENTIAL_H

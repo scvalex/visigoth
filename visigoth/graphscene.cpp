@@ -9,7 +9,6 @@ GraphScene::GraphScene(AbstractGraphWidget *parent) :
     //QGraphicsScene(parent),
     algo(0),
     algoId(0),
-    targetNumNodes(600),
     view(parent)
 {
 }
@@ -20,9 +19,6 @@ void GraphScene::reset() {
     myEdges.clear();
     myNodes.clear();
     Node::reset();
-    if (algo) {
-        delete algo;
-    }
     //FIXME also free nodes and edges
 }
 
@@ -82,16 +78,24 @@ void GraphScene::repopulate() {
     reset();
     switch (algoId) {
     case 0:
-        algo = new Preferential(this);
+        if (!algo) {
+            algo = new Preferential(this);
+        }
         break;
     case 1:
-        algo = new Bipartite(this);
+        if (!algo) {
+            algo = new Bipartite(this);
+        }
         break;
     }
-    algo->init(targetNumNodes);
+    algo->reset();
 }
 
 void GraphScene::nextAlgorithm() {
+    if (algo) {
+        delete algo;
+        algo = 0;
+    }
     algoId = (algoId + 1) % 2;
     repopulate();
 }

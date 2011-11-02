@@ -23,7 +23,7 @@ public:
     Bipartite(GraphScene *scene);
     virtual ~Bipartite();
 
-    void init(int size);
+    void reset();
     void addVertex();
     QWidget* newControlWidget(QWidget *parent = 0);
 
@@ -42,16 +42,13 @@ private:
     double degreeDist(int x);
     double fitnessDist(int x);
 
-    /* vVector and uVector exist since we have two disjoint sets
-       During the graph generation */
     QVector<Node*> vVector;
     QVector<Node*> uVector;
+    QMap<int, double> cumulativePreferences;
 
     int uSize;
     int vSize;
 
-    // used for selecting a node by preferential seleciton
-    QMap<int, double> cumulativePreferences;
     GraphScene *scene;
 };
 

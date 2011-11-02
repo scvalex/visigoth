@@ -16,22 +16,17 @@ Bipartite::Bipartite(GraphScene *scene) :
 Bipartite::~Bipartite() {
 }
 
-void Bipartite::init(int size) {
-    init(uSize, vSize);
-}
-
-void Bipartite::init(int vSize, int uSize) {
-   QVector<Node*> vVector(vSize);
-   QVector<Node*> uVector(uSize);
+void Bipartite::reset() {
+    uVector.clear();
+    vVector.clear();
+    cumulativePreferences.clear();
 
     for (int i(0); i < uSize; ++i) {
-        Node *u = scene->newNode();
-        uVector[i] = u;
+        uVector << scene->newNode();
     }
 
     for (int i(0); i < vSize; ++i) {
-        Node *v =  scene->newNode();
-        vVector[i] = v;
+        vVector << scene->newNode();
     }
 
     // Use class edgeList
@@ -49,7 +44,7 @@ void Bipartite::init(int vSize, int uSize) {
         while ((n < degree) && usedNodes.count() < uSize && cutoff < 100) {
 
             // may have to implement check for infinite looping
-            double rand = fmod(qrand(),cumulativePreferences[uSize-1]);
+            double rand = fmod(qrand(), cumulativePreferences[uSize-1]);
             Node *u = uVector[getPreference(rand)];
 
             if (!scene->doesEdgeExist(u,v)) {

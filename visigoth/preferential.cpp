@@ -5,19 +5,29 @@
 
 Preferential::Preferential(GraphScene *graph) :
     Algorithm(graph),
-    graph(graph)
+    graph(graph),
+    size(1000)
 {
     updatePreference(graph->nodes(), 2 * graph->edges().size());
 }
 
-void Preferential::init(int size) {
+void Preferential::reset() {
+    preferences.clear();
+    cumulativePreferences.clear();
     for (int i(0); i < size; ++i) {
-        addVertex();
+        addVertex(false);
     }
 }
 
 void Preferential::addVertex() {
+    addVertex(true);
+}
+
+void Preferential::addVertex(bool saveSize) {
     addVertex((qrand() % 3 ) + 1, qrand() % 100);
+    if (saveSize) {
+        ++size;
+    }
 }
 
 QWidget* Preferential::newControlWidget(QWidget *parent) {

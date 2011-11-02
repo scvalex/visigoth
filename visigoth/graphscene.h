@@ -46,7 +46,6 @@ private:
     QVector<QSet<int> > hasEdge;
     QVector<Node*> myNodes;
     QList<Edge*> myEdges;
-    int targetNumNodes;
     AbstractGraphWidget *view;
 };
 
