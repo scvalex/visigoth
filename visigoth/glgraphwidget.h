@@ -35,6 +35,7 @@ protected:
     void fitToScreen();
 
     void wheelEvent(QWheelEvent *event);
+    void mouseDoubleClickEvent(QMouseEvent *event);
     void mousePressEvent(QMouseEvent *event);
     void mouseReleaseEvent(QMouseEvent *event);
     void mouseMoveEvent(QMouseEvent *event);
@@ -47,13 +48,16 @@ protected:
 
 private:
     void drawGraphGL();
+    void drawNode(Node *node);
     void initProjection();
+    Node *selectGL(int x, int y);
 
     GraphScene *myScene;
     GLfloat cameramat[16];
     GLfloat zoom;
     int mouseX, mouseY;
     enum MOUSE_MODES mouseMode;
+    Node *draggedNode;
 
     bool helping;
     bool isPlaying;
