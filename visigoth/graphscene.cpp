@@ -4,16 +4,18 @@
 #include "node.h"
 #include "preferential.h"
 #include "bipartite.h"
+#include "statistics.h"
 
 GraphScene::GraphScene(AbstractGraphWidget *parent) :
     //QGraphicsScene(parent),
     algo(0),
+    stats(0),
     algoId(0),
+    targetNumNodes(1000),
     view(parent),
     degreeCount(100),
-    targetNumNodes(1000)
+    metricVector(5,0.0)
 {
-
 
 }
 
@@ -98,7 +100,7 @@ void GraphScene::repopulate() {
 }
 
 void GraphScene::nextAlgorithm() {
-    algoId = (algoId + 1) % 2;
+    algoId = (algoId + 1) % 3;
     repopulate();
 }
 
@@ -136,6 +138,30 @@ void GraphScene::updateDegreeCount(Node *node){
     if(degree > 1){
         degreeCount[degree-2].removeOne(node);
     }
+
+
+}
+
+void GraphScene::calculateMetrics(){
+
+    if(!stats){
+        stats = new Statistics(this);
+    }
+
+    metricVector[0] = stats->averageDegree();
+
+    metricVector[1] = stats->averageLength();
+
+    metricVector[2] = stats->custeringAvg();
+
+    metricVector[3] = stats->clusteringCoeff(myNodes[qrand()%myNodes.count()]);
+
+    metricVector[4] = stats->clusteringDegree(6);
+
+    double debug = metricVector[4];
+
+
+
 
 
 }
