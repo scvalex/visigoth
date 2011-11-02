@@ -41,19 +41,6 @@
        </property>
       </widget>
      </item>
-     <item row="0" column="1">
-      <widget class="QLineEdit" name="uSizeEdit">
-       <property name="inputMethodHints">
-        <set>Qt::ImhDigitsOnly</set>
-       </property>
-       <property name="text">
-        <string>40</string>
-       </property>
-       <property name="alignment">
-        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-       </property>
-      </widget>
-     </item>
      <item row="1" column="0">
       <widget class="QLabel" name="label_2">
        <property name="text">
@@ -61,16 +48,23 @@
        </property>
       </widget>
      </item>
+     <item row="0" column="1">
+      <widget class="QSpinBox" name="uSizeEdit">
+       <property name="maximum">
+        <number>10000</number>
+       </property>
+       <property name="value">
+        <number>40</number>
+       </property>
+      </widget>
+     </item>
      <item row="1" column="1">
-      <widget class="QLineEdit" name="vSizeEdit">
-       <property name="inputMethodHints">
-        <set>Qt::ImhDigitsOnly</set>
+      <widget class="QSpinBox" name="vSizeEdit">
+       <property name="maximum">
+        <number>10000</number>
        </property>
-       <property name="text">
-        <string>1</string>
-       </property>
-       <property name="alignment">
-        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+       <property name="value">
+        <number>1</number>
        </property>
       </widget>
      </item>

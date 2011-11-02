@@ -101,8 +101,8 @@ QWidget* Bipartite::newControlWidget(QWidget *parent) {
     QWidget *ctl = new QWidget(parent);
     Ui::BipartiteControl *bipCtl = new Ui::BipartiteControl();
     bipCtl->setupUi(ctl);
-    connect(bipCtl->uSizeEdit, SIGNAL(textChanged(const QString&)), this, SLOT(onUSizeChanged(const QString&)));
-    connect(bipCtl->vSizeEdit, SIGNAL(textChanged(const QString&)), this, SLOT(onVSizeChanged(const QString&)));
+    connect(bipCtl->uSizeEdit, SIGNAL(valueChanged(int)), this, SLOT(onUSizeChanged(int)));
+    connect(bipCtl->vSizeEdit, SIGNAL(valueChanged(int)), this, SLOT(onVSizeChanged(int)));
     return ctl;
 }
 
@@ -154,10 +154,10 @@ void Bipartite::updatePreference() {
     }
 }
 
-void Bipartite::onUSizeChanged(const QString &newValue) {
-    uSize = newValue.toInt();
+void Bipartite::onUSizeChanged(int newValue) {
+    uSize = newValue;
 }
 
-void Bipartite::onVSizeChanged(const QString &newValue) {
-    vSize = newValue.toInt();
+void Bipartite::onVSizeChanged(int newValue) {
+    vSize = newValue;
 }

@@ -31,8 +31,8 @@ public:
     void showBipartite();
 
 private slots:
-    void onUSizeChanged(const QString &newValue);
-    void onVSizeChanged(const QString &newValue);
+    void onUSizeChanged(int);
+    void onVSizeChanged(int);
 
 private:
     // Both preference funcs will only be used on vector set U
