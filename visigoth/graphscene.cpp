@@ -14,7 +14,7 @@ GraphScene::GraphScene(AbstractGraphWidget *parent) :
     targetNumNodes(1000),
     view(parent),
     degreeCount(100),
-    metricVector(5,0.0)
+    metricVector(5, 0.0)
 {
 
 }
@@ -121,7 +121,7 @@ void GraphScene::addVertex() {
 
 // Pre: degree is valid
 QList<Node *> GraphScene::getDegreeList(int degree) {
-    return degreeCount[degree-1];
+    return degreeCount[degree - 1];
 }
 
 // Pre: Node has just been given a new edge
@@ -131,10 +131,10 @@ void GraphScene::updateDegreeCount(Node *node) {
     if(degree > degreeCount.count())
         degreeCount.resize(degree);
 
-    degreeCount[degree-1].append(node);
+    degreeCount[degree - 1].append(node);
 
     if(degree > 1)
-        degreeCount[degree-2].removeOne(node);
+        degreeCount[degree - 2].removeOne(node);
 }
 
 void GraphScene::calculateMetrics() {

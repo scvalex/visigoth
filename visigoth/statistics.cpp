@@ -9,32 +9,27 @@ double Statistics::averageDegree() {
 }
 
 double Statistics::averageLength() {
-    QVector<Node *> nodes = graph->nodes();
-
     double allLengths = 0;
-    int N = nodes.count();
 
-    for (int i(0); i < N; ++i) {
-        allLengths += lengthSum(nodes[i]);
-        for(int j(0); j < N; ++j) {
-            nodes[j]->setDistance(0);
-            nodes[j]->setVisited(false);
+    foreach (Node *n, graph->nodes()) {
+        allLengths += lengthSum(n);
+        foreach (Node *m, graph->nodes()) {
+            m->setDistance(0);
+            m->setVisited(false);
         }
     }
 
-    return allLengths / (double)(N*(N-1));
+    return allLengths / (double)(nodes.count()*(nodes.count() - 1));
 }
 
 double Statistics::clusteringAvg() {
-    QVector<Node*> nodes = graph->nodes();
     double clusterCumulative = 0.0;
-    int size = nodes.count();
 
-    for(int i(0); i < size; ++i) {
-        clusterCumulative += clusteringCoeff(nodes[i]);
+    foreach (Node *n, graph->nodes()) {
+        clusterCumulative += clusteringCoeff(n);
     }
 
-    return clusterCumulative / (double)size;
+    return clusterCumulative / (double)nodes.count();
 }
 
 double Statistics::clusteringCoeff(Node *node) {
