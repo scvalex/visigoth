@@ -12,6 +12,7 @@
 class GraphScene;
 class Preferential;
 class Bipartite;
+class Barabasialbert;
 class QGraphicsScene;
 class QPaintEvent;
 

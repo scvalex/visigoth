@@ -12,7 +12,8 @@ int Node::ALL_NODES(0);
 
 Node::Node(GraphScene *graph, QGraphicsItem *parent) :
     QGraphicsItem(parent),
-    brush(QColor::fromRgb(qrand() % 256, qrand() % 256, qrand() % 256, 180)),
+    //brush(QColor::fromRgb(qrand() % 256, qrand() % 256, qrand() % 256, 180)),
+    brush(QColor::fromRgbF(0.0, 1.0, 0.3, 0.7)),
     graph(graph),
     hovering(false),
     visited(false),
@@ -222,4 +223,9 @@ int Node::getDistance(){
 void Node::setDistance(int d){
 
     distance = d;
+}
+
+QBrush* Node::getBrush() {
+    return &brush;
+
 }

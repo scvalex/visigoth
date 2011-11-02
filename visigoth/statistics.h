@@ -14,7 +14,7 @@ class Statistics {
 
 public:
 
-    Statistics(GraphScene * scene);
+    Statistics(GraphScene* scene);
 
     double averageDegree();
     double averageLength();
@@ -25,7 +25,7 @@ public:
 
 private:
 
-    GraphScene * graph;
+    GraphScene* graph;
 
     QVector<int> shoretstDistance();
     int intersectionCount(QVector<Node *> vec1, QVector<Node *> vec2);

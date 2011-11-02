@@ -75,10 +75,6 @@ double Statistics::lengthSum(Node * s){
     }
 
 
-
-
-
-    // placeholder
     return retLength;
 
 }
@@ -117,21 +113,22 @@ double Statistics::clusteringCoeff(Node *node){
 
     }
 
-    return 2*intersection/(k*(k-1));
+    return k > 1 ? (2*intersection)/(double) (k*(k-1)) : 0 ;
 
 }
 
 double Statistics::custeringAvg(){
 
     QVector<Node *> nodes = graph->nodes();
-    double clusterCumulative = 0;
+    double clusterCumulative = 0.0;
     int size = nodes.count();
 
     for(int i(0); i < size; ++i){
         clusterCumulative+= clusteringCoeff(nodes[i]);
+
     }
 
-    return clusterCumulative/size;
+    return clusterCumulative/(double) size;
 
 
 }

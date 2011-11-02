@@ -14,7 +14,8 @@ SOURCES += main.cpp \
           glgraphwidget.cpp \
           glancillary.c \
           statistics.cpp \
-          quadtree.cpp
+          quadtree.cpp \
+          barabasialbert.cpp
 
 
 HEADERS += mainwindow.h \
@@ -29,8 +30,11 @@ HEADERS += mainwindow.h \
            algorithm.h \
            abstractgraphwidget.h \
            statistics.h \
-           quadtree.h
+           quadtree.h \
+           barabasialbert.h
 
 FORMS += mainwindow.ui
+
+
 
 
