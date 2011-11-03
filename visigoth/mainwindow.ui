@@ -42,6 +42,20 @@
    <addaction name="menuView"/>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
+  <widget class="QToolBar" name="quickBar">
+   <property name="windowTitle">
+    <string>QuickBar</string>
+   </property>
+   <attribute name="toolBarArea">
+    <enum>LeftToolBarArea</enum>
+   </attribute>
+   <attribute name="toolBarBreak">
+    <bool>false</bool>
+   </attribute>
+   <addaction name="newNodeAct"/>
+   <addaction name="randomizeAct"/>
+   <addaction name="generateAct"/>
+  </widget>
   <action name="exportToAct">
    <property name="text">
     <string>Export to ...</string>
@@ -59,6 +73,30 @@
    </property>
    <property name="toolTip">
     <string>Toggle the algorithm control panel</string>
+   </property>
+  </action>
+  <action name="newNodeAct">
+   <property name="text">
+    <string>New Node</string>
+   </property>
+   <property name="toolTip">
+    <string>Add a new node to the graph</string>
+   </property>
+  </action>
+  <action name="randomizeAct">
+   <property name="text">
+    <string>Randomize</string>
+   </property>
+   <property name="toolTip">
+    <string>Randomize the nodes' positions</string>
+   </property>
+  </action>
+  <action name="generateAct">
+   <property name="text">
+    <string>Generate</string>
+   </property>
+   <property name="toolTip">
+    <string>Generate a new graph</string>
    </property>
   </action>
  </widget>
