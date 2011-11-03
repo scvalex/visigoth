@@ -31,9 +31,7 @@ private slots:
     void onAlgorithmChanged(Algorithm *newAlgo);
 
 private:
-    bool controlVisible;
     Ui::MainWindow *ui;
-    //GraphWidget *view;
     GLGraphWidget *view;
     QDockWidget *algoCtl;
 };
