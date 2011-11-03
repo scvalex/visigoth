@@ -41,6 +41,9 @@ public:
 
     void calculateMetrics();
 
+    void calculateForces();
+    bool isRunning();
+
 protected:
     void reset();
     void updateDegreeCount(Node *node);
@@ -56,6 +59,7 @@ private:
     AbstractGraphWidget *view;
     QVector<QList<Node*> > degreeCount;
     QVector<double> metricVector;
+    bool running;
 
 };
 
