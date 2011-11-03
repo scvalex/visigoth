@@ -33,3 +33,6 @@ FORMS += mainwindow.ui \
          bipartitecontrol.ui \
          preferentialcontrol.ui
 
+
+unix: CONFIG += link_pkgconfig
+unix: PKGCONFIG += QJson
