@@ -14,7 +14,8 @@ SOURCES += main.cpp \
            glancillary.c \
            algorithm.cpp \
            statistics.cpp \
-           quadtree.cpp
+           quadtree.cpp \
+    twitter.cpp
 
 HEADERS += mainwindow.h \
            node.h \
@@ -27,7 +28,8 @@ HEADERS += mainwindow.h \
            algorithm.h \
            abstractgraphwidget.h \
            statistics.h \
-           quadtree.h
+           quadtree.h \
+    twitter.h
 
 FORMS += mainwindow.ui \
          bipartitecontrol.ui \
@@ -36,3 +38,5 @@ FORMS += mainwindow.ui \
 
 unix: CONFIG += link_pkgconfig
 unix: PKGCONFIG += QJson
+
+
