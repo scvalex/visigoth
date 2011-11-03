@@ -8,8 +8,8 @@
 Bipartite::Bipartite(GraphScene *scene) :
     Algorithm(scene),
     ctlW(0),
-    uSize(40),
-    vSize(1),
+    uSize(START_USIZE),
+    vSize(START_VSIZE),
     scene(scene)
 {
 }

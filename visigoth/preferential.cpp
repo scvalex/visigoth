@@ -8,7 +8,7 @@ Preferential::Preferential(GraphScene *graph) :
     Algorithm(graph),
     graph(graph),
     ctlW(0),
-    size(1000)
+    size(START_NODES)
 {
     updatePreference(graph->nodes(), 2 * graph->edges().size());
 }
