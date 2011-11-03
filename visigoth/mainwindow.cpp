@@ -11,6 +11,7 @@
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
+    controlVisible(true),
     ui(new Ui::MainWindow),
     algoCtl(0)
 {
@@ -60,13 +61,23 @@ void MainWindow::exportTo() {
 }
 
 void MainWindow::toggleShowControl(bool enabled) {
-    qDebug("toggled");
+    if (controlVisible == enabled)
+        return;
+
+    if (!controlVisible) {
+        addDockWidget(Qt::RightDockWidgetArea, algoCtl);
+    } else {
+        removeDockWidget(algoCtl);
+    }
+
+    controlVisible = enabled;
 }
 
 void MainWindow::onAlgorithmChanged(Algorithm *newAlgo) {
     QWidget *ctl = newAlgo->controlWidget(this);
     if (algoCtl) {
-        removeDockWidget(algoCtl);
+        if (controlVisible)
+            removeDockWidget(algoCtl);
         delete algoCtl->widget();
         delete algoCtl;
         algoCtl = 0;
@@ -74,7 +85,8 @@ void MainWindow::onAlgorithmChanged(Algorithm *newAlgo) {
     if (ctl) {
         QDockWidget *dock = new QDockWidget(this);
         dock->setWidget(ctl);
-        addDockWidget(Qt::RightDockWidgetArea, dock);
         algoCtl = dock;
+        if (controlVisible)
+            addDockWidget(Qt::RightDockWidgetArea, algoCtl);
     }
 }
