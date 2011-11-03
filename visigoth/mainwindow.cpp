@@ -15,6 +15,7 @@ MainWindow::MainWindow(QWidget *parent) :
     algoCtl(0)
 {
     ui->setupUi(this);
+    connect(ui->toggleControl, SIGNAL(toggled(bool)), this, SLOT(toggleShowControl(bool)));
 
     view = new GLGraphWidget(this);
     setCentralWidget(view);
@@ -57,6 +58,10 @@ void MainWindow::on_actionPrint_to_PDF_triggered()
     if (!fileName.isEmpty()) {
         pixmap.save(fileName, format.toAscii());
     }
+}
+
+void MainWindow::toggleShowControl(bool enabled) {
+    qDebug("toggled");
 }
 
 void MainWindow::onAlgorithmChanged(Algorithm *newAlgo) {

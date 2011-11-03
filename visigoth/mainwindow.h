@@ -23,8 +23,11 @@ public:
 
     void populate();
 
-private slots:
+public slots:
     void on_actionPrint_to_PDF_triggered();
+    void toggleShowControl(bool enabled);
+
+private slots:
     void onAlgorithmChanged(Algorithm *newAlgo);
 
 private:
