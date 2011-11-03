@@ -12,6 +12,7 @@ class Edge;
 class GraphWidget;
 class Node;
 class Algorithm;
+class Statistics;
 
 class GraphScene : public QGraphicsScene
 {
@@ -37,16 +38,29 @@ public:
 
     void addVertex();
 
+    QList<Node*> getDegreeList(int degree);
+
+    void calculateMetrics();
+
+    void calculateForces();
+    bool isRunning();
+
 protected:
     void reset();
+    void updateDegreeCount(Node *node);
 
 private:
     Algorithm *algo;
+    Statistics *stats;
     int algoId;
     QVector<QSet<int> > hasEdge;
     QVector<Node*> myNodes;
     QList<Edge*> myEdges;
     AbstractGraphWidget *view;
+    QVector<QList<Node*> > degreeCount;
+    QVector<double> metricVector;
+    bool running;
+
 };
 
 #endif // GRAPHSCENE_H

@@ -12,8 +12,9 @@ SOURCES += main.cpp \
            graphscene.cpp \
            glgraphwidget.cpp \
            glancillary.c \
-           quadtree.cpp \
-           algorithm.cpp
+           algorithm.cpp \
+           statistics.cpp \
+           quadtree.cpp
 
 HEADERS += mainwindow.h \
            node.h \
@@ -25,9 +26,10 @@ HEADERS += mainwindow.h \
            bipartite.h \
            algorithm.h \
            abstractgraphwidget.h \
+           statistics.h \
            quadtree.h
 
 FORMS += mainwindow.ui \
          bipartitecontrol.ui \
-    preferentialcontrol.ui
+         preferentialcontrol.ui
 

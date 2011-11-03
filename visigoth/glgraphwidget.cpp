@@ -25,7 +25,6 @@ GLGraphWidget::GLGraphWidget(QWidget *parent) :
     mouseMode(MOUSE_IDLE),
     helping(true),
     isPlaying(true),
-    isRunning(false),
     timerId(0)
 {
     setFocusPolicy(Qt::StrongFocus);
@@ -46,7 +45,6 @@ void GLGraphWidget::populate() {
 }
 
 void GLGraphWidget::itemMoved() {
-    isRunning = true;
     setAnimationRunning();
 }
 
@@ -55,9 +53,9 @@ void GLGraphWidget::itemMoved() {
  ***************************/
 
 void GLGraphWidget::setAnimationRunning() {
-    if (isPlaying && isRunning && !timerId)
+    if (isPlaying && myScene->isRunning() && !timerId)
         timerId = startTimer(1000 / 25);
-    else if ((!isPlaying || !isRunning) && timerId) {
+    else if ((!isPlaying || !myScene->isRunning()) && timerId) {
         killTimer(timerId);
         timerId = 0;
     }
@@ -223,6 +221,9 @@ void GLGraphWidget::keyPressEvent(QKeyEvent *event) {
     case Qt::Key_Down:
         glaCameraTranslatef(cameramat, 0.0, 20.0/zoom, 0.0);
         break;
+    case Qt::Key_S:
+         myScene->calculateMetrics();
+        break;
     default:
         QGLWidget::keyPressEvent(event);
     }
@@ -231,40 +232,8 @@ void GLGraphWidget::keyPressEvent(QKeyEvent *event) {
 }
 
 void GLGraphWidget::timerEvent(QTimerEvent *) {
-    QPointF topLeft;
-    QPointF bottomRight;
+    myScene->calculateForces();
 
-    QuadTree quadTree(myScene->sceneRect());
-    foreach (Node* node, myScene->nodes()) {
-        quadTree.addNode(*node);
-    }
-
-    foreach (Node* node, myScene->nodes()) {
-        QPointF pos = node->calculatePosition(quadTree.root());
-
-        if (pos.x() < topLeft.x())
-            topLeft.setX(pos.x());
-        if (pos.y() < topLeft.y())
-            topLeft.setY(pos.y());
-        if (pos.x() > bottomRight.x())
-            bottomRight.setX(pos.x());
-        if (pos.y() > bottomRight.y())
-            bottomRight.setY(pos.y());
-    }
-
-    // Resize the scene to fit all the nodes
-    QRectF sceneRect = myScene->sceneRect();
-    sceneRect.setLeft(topLeft.x() - 10);
-    sceneRect.setTop(topLeft.y() - 10);
-    sceneRect.setRight(bottomRight.x() + 10);
-    sceneRect.setBottom(bottomRight.y() + 10);
-
-    isRunning = false;
-    foreach (Node *node, myScene->nodes()) {
-        if (node->advance()) {
-            isRunning = true;
-        }
-    }
     setAnimationRunning();
 
     this->repaint();
