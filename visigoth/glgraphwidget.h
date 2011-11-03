@@ -6,12 +6,15 @@
 #include "abstractgraphwidget.h"
 #include "graphscene.h"
 
+class Algorithm;
+
 class GLGraphWidget : public QGLWidget, public AbstractGraphWidget
 {
     Q_OBJECT
 public:
     explicit GLGraphWidget(QWidget *parent = 0);
 
+    void init();
     void populate();
     void itemMoved();
 
@@ -22,6 +25,9 @@ public:
         MOUSE_TRANSLATING2,
         MOUSE_DRAGGING
     };
+
+signals:
+    void algorithmChanged(Algorithm *newAlgo);
 
 protected:
     void setAnimationRunning();

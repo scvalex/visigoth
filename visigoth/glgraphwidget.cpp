@@ -29,9 +29,14 @@ GLGraphWidget::GLGraphWidget(QWidget *parent) :
 {
     setFocusPolicy(Qt::StrongFocus);
 
+}
+
+void GLGraphWidget::init() {
     myScene = new GraphScene(this);
     myScene->setBackgroundBrush(Qt::black);
     myScene->setItemIndexMethod(QGraphicsScene::NoIndex);
+    populate();
+    emit algorithmChanged(myScene->algorithm());
 }
 
 void GLGraphWidget::populate() {
@@ -42,8 +47,6 @@ void GLGraphWidget::populate() {
 void GLGraphWidget::itemMoved() {
     setAnimationRunning();
 }
-
-
 
 /****************************
  * GraphWidget imitation code (protected)
@@ -204,6 +207,7 @@ void GLGraphWidget::keyPressEvent(QKeyEvent *event) {
     case Qt::Key_N:
         myScene->nextAlgorithm();
         myScene->randomizePlacement();
+        emit algorithmChanged(myScene->algorithm());
         break;
     case Qt::Key_Left:
         glaCameraTranslatef(cameramat, (-20.0)/zoom, 0.0, 0.0);

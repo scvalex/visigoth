@@ -30,6 +30,7 @@ public:
 
     void repopulate();
     void nextAlgorithm();
+    Algorithm* algorithm() const;
 
     void itemMoved();
 
@@ -55,7 +56,6 @@ private:
     QVector<QSet<int> > hasEdge;
     QVector<Node*> myNodes;
     QList<Edge*> myEdges;
-    int targetNumNodes;
     AbstractGraphWidget *view;
     QVector<QList<Node*> > degreeCount;
     QVector<double> metricVector;

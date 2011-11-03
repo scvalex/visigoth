@@ -11,13 +11,11 @@ GraphScene::GraphScene(AbstractGraphWidget *parent) :
     algo(0),
     stats(0),
     algoId(0),
-    targetNumNodes(1000),
     view(parent),
     degreeCount(100),
     metricVector(5, 0.0),
     running(false)
 {
-
 }
 
 void GraphScene::reset() {
@@ -27,9 +25,6 @@ void GraphScene::reset() {
     myNodes.clear();
     degreeCount.clear();
     Node::reset();
-    if (algo) {
-        delete algo;
-    }
     //FIXME also free nodes and edges
 }
 
@@ -94,18 +89,30 @@ void GraphScene::repopulate() {
     reset();
     switch (algoId) {
     case 0:
-        algo = new Preferential(this);
+        if (!algo) {
+            algo = new Preferential(this);
+        }
         break;
     case 1:
-        algo = new Bipartite(this);
+        if (!algo) {
+            algo = new Bipartite(this);
+        }
         break;
     }
-    algo->init(targetNumNodes);
+    algo->reset();
 }
 
 void GraphScene::nextAlgorithm() {
+    if (algo) {
+        delete algo;
+        algo = 0;
+    }
     algoId = (algoId + 1) % 2;
     repopulate();
+}
+
+Algorithm* GraphScene::algorithm() const {
+    return algo;
 }
 
 void GraphScene::randomizePlacement() {
