@@ -24,7 +24,7 @@ public:
     void populate();
 
 public slots:
-    void on_actionPrint_to_PDF_triggered();
+    void exportTo();
     void toggleShowControl(bool enabled);
 
 private slots:

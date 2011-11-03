@@ -30,24 +30,24 @@
     <property name="title">
      <string>&amp;File</string>
     </property>
-    <addaction name="actionPrint_to_PDF"/>
+    <addaction name="exportToAct"/>
    </widget>
    <widget class="QMenu" name="menuView">
     <property name="title">
      <string>&amp;View</string>
     </property>
-    <addaction name="toggleControl"/>
+    <addaction name="toggleControlAct"/>
    </widget>
    <addaction name="menu_File"/>
    <addaction name="menuView"/>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
-  <action name="actionPrint_to_PDF">
+  <action name="exportToAct">
    <property name="text">
     <string>Export to ...</string>
    </property>
   </action>
-  <action name="toggleControl">
+  <action name="toggleControlAct">
    <property name="checkable">
     <bool>true</bool>
    </property>

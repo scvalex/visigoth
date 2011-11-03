@@ -15,7 +15,8 @@ MainWindow::MainWindow(QWidget *parent) :
     algoCtl(0)
 {
     ui->setupUi(this);
-    connect(ui->toggleControl, SIGNAL(toggled(bool)), this, SLOT(toggleShowControl(bool)));
+    connect(ui->exportToAct, SIGNAL(triggered()), this, SLOT(exportTo()));
+    connect(ui->toggleControlAct, SIGNAL(toggled(bool)), this, SLOT(toggleShowControl(bool)));
 
     view = new GLGraphWidget(this);
     setCentralWidget(view);
@@ -29,14 +30,12 @@ void MainWindow::populate() {
     view->populate();
 }
 
-MainWindow::~MainWindow()
-{
+MainWindow::~MainWindow() {
     delete ui;
     delete view;
 }
 
-void MainWindow::on_actionPrint_to_PDF_triggered()
-{
+void MainWindow::exportTo() {
     //first commented version took a screenshot of the whole screen, compared to
     //the 2nd version which now takes only the Widget;
 
