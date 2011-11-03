@@ -4,6 +4,7 @@
 
 #include <QDebug>
 #include <QWidget>
+#include <QMessageBox>
 
 Bipartite::Bipartite(GraphScene *scene) :
     Algorithm(scene),
@@ -96,6 +97,9 @@ void Bipartite::reset() {
 
 void Bipartite::addVertex() {
     qDebug("Bipartite does not support adding new vertices");
+    QMessageBox msgBox;
+    msgBox.setText("Bipartite model does not support adding new vertices");
+    msgBox.exec();
 }
 
 QWidget* Bipartite::controlWidget(QWidget *parent) {

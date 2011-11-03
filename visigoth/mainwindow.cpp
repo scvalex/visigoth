@@ -2,6 +2,8 @@
 #include "glgraphwidget.h"
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
+#include "preferential.h"
+#include "graphscene.h"
 
 #include <QDesktopWidget>
 #include <QDir>
@@ -15,8 +17,14 @@ MainWindow::MainWindow(QWidget *parent) :
     algoCtl(0)
 {
     ui->setupUi(this);
+
+
     connect(ui->exportToAct, SIGNAL(triggered()), this, SLOT(exportTo()));
     connect(ui->toggleControlAct, SIGNAL(toggled(bool)), this, SLOT(toggleShowControl(bool)));
+    connect(ui->newNodeAct, SIGNAL(triggered()), this, SLOT(addNewNode()));
+    connect(ui->randomizeAct, SIGNAL(triggered()), this, SLOT(randomizeGraph()));
+    connect(ui->generateAct, SIGNAL(triggered()), this, SLOT(generateNewGraph()));
+    connect(ui->ChangeAlgorithmAct, SIGNAL(triggered()), this, SLOT(changeAlgorithm()));
 
     view = new GLGraphWidget(this);
     setCentralWidget(view);
@@ -59,6 +67,24 @@ void MainWindow::exportTo() {
     }
 }
 
+void MainWindow::generateNewGraph() {
+    populate();
+}
+
+void MainWindow::changeAlgorithm() {
+    view->myScene->nextAlgorithm();
+    view->myScene->randomizePlacement();
+    onAlgorithmChanged(view->myScene->algorithm());
+}
+
+void MainWindow::addNewNode() {
+    view->myScene->addVertex();
+}
+
+void MainWindow::randomizeGraph() {
+    view->myScene->randomizePlacement();
+}
+
 void MainWindow::toggleShowControl(bool enabled) {
     if (algoCtl)
         algoCtl->setVisible(enabled);
@@ -80,3 +106,4 @@ void MainWindow::onAlgorithmChanged(Algorithm *newAlgo) {
         addDockWidget(Qt::RightDockWidgetArea, algoCtl);
     }
 }
+

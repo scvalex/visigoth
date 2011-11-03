@@ -29,6 +29,10 @@ public slots:
 
 private slots:
     void onAlgorithmChanged(Algorithm *newAlgo);
+    void addNewNode();
+    void randomizeGraph();
+    void generateNewGraph();
+    void changeAlgorithm();
 
 private:
     Ui::MainWindow *ui;

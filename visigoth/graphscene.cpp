@@ -59,6 +59,7 @@ bool GraphScene::newEdge(Node *source, Node *dest) {
     return true;
 }
 
+// used only by the algorithms
 Node* GraphScene::newNode() {
     Node *node = new Node(this);
     addItem(node);

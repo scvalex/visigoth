@@ -18,11 +18,11 @@
     <widget class="QLabel" name="label">
      <property name="font">
       <font>
-       <pointsize>11</pointsize>
+       <pointsize>12</pointsize>
       </font>
      </property>
      <property name="text">
-      <string>Preferential Control</string>
+      <string>     Preferential Control</string>
      </property>
     </widget>
    </item>

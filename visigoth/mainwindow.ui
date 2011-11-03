@@ -23,7 +23,7 @@
      <x>0</x>
      <y>0</y>
      <width>400</width>
-     <height>21</height>
+     <height>22</height>
     </rect>
    </property>
    <widget class="QMenu" name="menu_File">
@@ -55,6 +55,7 @@
    <addaction name="newNodeAct"/>
    <addaction name="randomizeAct"/>
    <addaction name="generateAct"/>
+   <addaction name="ChangeAlgorithmAct"/>
   </widget>
   <action name="exportToAct">
    <property name="text">
@@ -97,6 +98,14 @@
    </property>
    <property name="toolTip">
     <string>Generate a new graph</string>
+   </property>
+  </action>
+  <action name="ChangeAlgorithmAct">
+   <property name="text">
+    <string>Change Algorithm</string>
+   </property>
+   <property name="toolTip">
+    <string>change the current algorithm with another one</string>
    </property>
   </action>
  </widget>
