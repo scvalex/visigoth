@@ -19,7 +19,7 @@ double Statistics::averageLength() {
         }
     }
 
-    return allLengths / (double)(nodes.count()*(nodes.count() - 1));
+    return allLengths / (double)(graph->nodes().count()*(graph->nodes().count() - 1));
 }
 
 double Statistics::clusteringAvg() {
@@ -29,7 +29,7 @@ double Statistics::clusteringAvg() {
         clusterCumulative += clusteringCoeff(n);
     }
 
-    return clusterCumulative / (double)nodes.count();
+    return clusterCumulative / (double)graph->nodes().count();
 }
 
 double Statistics::clusteringCoeff(Node *node) {
