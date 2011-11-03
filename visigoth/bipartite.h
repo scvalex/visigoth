@@ -25,7 +25,7 @@ public:
 
     void reset();
     void addVertex();
-    QWidget* newControlWidget(QWidget *parent = 0);
+    QWidget* controlWidget(QWidget *parent = 0);
 
     void init(int vSize, int uSize);
     void showBipartite();
@@ -35,6 +35,8 @@ private slots:
     void onVSizeChanged(int newSize);
 
 private:
+    QWidget *ctlW;
+
     // Both preference funcs will only be used on vector set U
     int getPreference(double genPref);
     void updatePreference();

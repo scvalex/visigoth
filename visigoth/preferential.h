@@ -22,7 +22,7 @@ public:
 
     void reset();
     void addVertex();
-    QWidget *newControlWidget(QWidget *parent = 0);
+    QWidget* controlWidget(QWidget *parent = 0);
 
 protected slots:
     void onSizeChanged(int newSize);
@@ -42,6 +42,7 @@ protected:
 
 private:
     GraphScene *graph;
+    QWidget *ctlW;
 
     // used for selecting a node by preferential seleciton
     QMap<int, double> cumulativePreferences;

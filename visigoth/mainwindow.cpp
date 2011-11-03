@@ -60,7 +60,7 @@ void MainWindow::on_actionPrint_to_PDF_triggered()
 }
 
 void MainWindow::onAlgorithmChanged(Algorithm *newAlgo) {
-    QWidget *ctl = newAlgo->newControlWidget(this);
+    QWidget *ctl = newAlgo->controlWidget(this);
     if (algoCtl) {
         removeDockWidget(algoCtl);
         delete algoCtl->widget();

@@ -7,6 +7,7 @@
 Preferential::Preferential(GraphScene *graph) :
     Algorithm(graph),
     graph(graph),
+    ctlW(0),
     size(1000)
 {
     updatePreference(graph->nodes(), 2 * graph->edges().size());
@@ -31,12 +32,14 @@ void Preferential::addVertex(bool saveSize) {
     }
 }
 
-QWidget* Preferential::newControlWidget(QWidget *parent) {
-    QWidget *ctl = new QWidget(parent);
-    Ui::PreferentialControl *prefCtl = new Ui::PreferentialControl();
-    prefCtl->setupUi(ctl);
-    connect(prefCtl->sizeEdit, SIGNAL(valueChanged(int)), this, SLOT(onSizeChanged(int)));
-    return ctl;
+QWidget* Preferential::controlWidget(QWidget *parent) {
+    if (!ctlW) {
+        ctlW = new QWidget(parent);
+        Ui::PreferentialControl *prefCtl = new Ui::PreferentialControl();
+        prefCtl->setupUi(ctlW);
+        connect(prefCtl->sizeEdit, SIGNAL(valueChanged(int)), this, SLOT(onSizeChanged(int)));
+    }
+    return ctlW;
 }
 
 // Add vertex using preferential attachment with clustering.

@@ -7,6 +7,7 @@
 
 Bipartite::Bipartite(GraphScene *scene) :
     Algorithm(scene),
+    ctlW(0),
     uSize(40),
     vSize(1),
     scene(scene)
@@ -97,13 +98,15 @@ void Bipartite::addVertex() {
     qDebug("Bipartite does not support adding new vertices");
 }
 
-QWidget* Bipartite::newControlWidget(QWidget *parent) {
-    QWidget *ctl = new QWidget(parent);
-    Ui::BipartiteControl *bipCtl = new Ui::BipartiteControl();
-    bipCtl->setupUi(ctl);
-    connect(bipCtl->uSizeEdit, SIGNAL(valueChanged(int)), this, SLOT(onUSizeChanged(int)));
-    connect(bipCtl->vSizeEdit, SIGNAL(valueChanged(int)), this, SLOT(onVSizeChanged(int)));
-    return ctl;
+QWidget* Bipartite::controlWidget(QWidget *parent) {
+    if (!ctlW) {
+        ctlW = new QWidget(parent);
+        Ui::BipartiteControl *bipCtl = new Ui::BipartiteControl();
+        bipCtl->setupUi(ctlW);
+        connect(bipCtl->uSizeEdit, SIGNAL(valueChanged(int)), this, SLOT(onUSizeChanged(int)));
+        connect(bipCtl->vSizeEdit, SIGNAL(valueChanged(int)), this, SLOT(onVSizeChanged(int)));
+    }
+    return ctlW;
 }
 
 double Bipartite::fitnessDist(int x) {

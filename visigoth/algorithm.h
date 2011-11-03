@@ -14,7 +14,7 @@ public:
 
     virtual void reset() = 0;
     virtual void addVertex() = 0;
-    virtual QWidget* newControlWidget(QWidget *parent = 0) = 0;
+    virtual QWidget* controlWidget(QWidget *parent = 0) = 0;
 };
 
 #endif // ALGORITHM_H
