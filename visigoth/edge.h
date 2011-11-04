@@ -22,7 +22,7 @@ public:
 
     void adjust();
 
-    QColor* getColour();
+    QColor& colour();
 
 protected:
     explicit Edge(Node *sourceNode, Node *destNode, QGraphicsItem *parent = 0);
@@ -35,7 +35,7 @@ private:
     Node *source;
     QPointF sourcePoint;
 
-    QColor colour;
+    QColor myColour;
 };
 
 #endif // EDGE_H

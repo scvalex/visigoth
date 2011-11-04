@@ -12,8 +12,8 @@ int Node::ALL_NODES(0);
 
 Node::Node(GraphScene *graph, QGraphicsItem *parent) :
     QGraphicsItem(parent),
-    //brush(QColor::fromRgb(qrand() % 256, qrand() % 256, qrand() % 256, 180)),
-    brush(QColor::fromRgbF(0.0, 1.0, 0.3, 0.7)),
+    //myBrush(QColor::fromRgb(qrand() % 256, qrand() % 256, qrand() % 256, 180)),
+    myBrush(QColor::fromRgbF(0.0, 1.0, 0.3, 0.7)),
     graph(graph),
     hovering(false),
     visited(false),
@@ -35,7 +35,7 @@ void Node::addEdge(Edge *edge) {
     edgeList << edge;
 }
 
-QPointF Node::calculatePosition(QuadTree::TreeNode& treeNode) {
+QPointF Node::calculatePosition(QuadTree::TreeNode &treeNode) {
     if (!scene() || scene()->mouseGrabberItem() == this) {
         newPos = pos();
         return newPos;
@@ -126,9 +126,9 @@ QPainterPath Node::shape() const {
 void Node::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *) {
     painter->setPen(Qt::NoPen);
     if (!hovering) {
-        painter->setBrush(brush);
+        painter->setBrush(myBrush);
     } else {
-        QColor lighter = brush.color();
+        QColor lighter = myBrush.color();
         lighter.setAlpha(255);
         painter->setBrush(QBrush(lighter));
 
@@ -225,7 +225,10 @@ void Node::setDistance(int d){
     distance = d;
 }
 
-QBrush* Node::getBrush() {
-    return &brush;
+QBrush& Node::brush() {
+    return myBrush;
+}
 
+void Node::setBrush(const QBrush &b) {
+    myBrush = b;
 }

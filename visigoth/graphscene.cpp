@@ -7,15 +7,16 @@
 #include "statistics.h"
 #include "barabasialbert.h"
 
+
 GraphScene::GraphScene(AbstractGraphWidget *parent) :
     //QGraphicsScene(parent),
     algo(0),
     stats(0),
     algoId(0),
-    targetNumNodes(20),
     view(parent),
-    degreeCount(6),
-    metricVector(5,0.0)
+    degreeCount(1),
+    metricVector(6, 0.0),
+    running(false)
 {
 
 }
@@ -27,9 +28,6 @@ void GraphScene::reset() {
     myNodes.clear();
     degreeCount.clear();
     Node::reset();
-    if (algo) {
-        delete algo;
-    }
     //FIXME also free nodes and edges
 }
 
@@ -60,6 +58,7 @@ bool GraphScene::newEdge(Node *source, Node *dest) {
     myEdges << edge;
     updateDegreeCount(source);
     updateDegreeCount(dest);
+
     return true;
 }
 
@@ -67,6 +66,7 @@ Node* GraphScene::newNode() {
     Node *node = new Node(this);
     addItem(node);
     myNodes << node;
+
     return node;
 }
 
@@ -84,6 +84,7 @@ bool GraphScene::doesEdgeExist(Node *source, Node *dest) {
 }
 
 void GraphScene::itemMoved() {
+    running = true;
     view->itemMoved();
 }
 
@@ -91,21 +92,36 @@ void GraphScene::repopulate() {
     reset();
     switch (algoId) {
     case 0:
-        algo = new Preferential(this);
+        if (!algo) {
+            algo = new Preferential(this);
+        }
         break;
     case 1:
-        algo = new Bipartite(this);
+        if (!algo) {
+            algo = new Bipartite(this);
+        }
         break;
     case 2:
-        algo = new Barabasialbert(this);
+        if (!algo) {
+            algo = new Barabasialbert(this);
+        }
         break;
     }
-    algo->init(targetNumNodes);
+    algo->reset();
 }
 
 void GraphScene::nextAlgorithm() {
+
     algoId = (algoId + 1) % 3;
+    if (algo) {
+        delete algo;
+        algo = 0;
+    }
     repopulate();
+}
+
+Algorithm* GraphScene::algorithm() const {
+    return algo;
 }
 
 void GraphScene::randomizePlacement() {
@@ -122,50 +138,87 @@ void GraphScene::addVertex() {
 }
 
 // Pre: degree is valid
-QList<Node *> GraphScene::getDegreeList(int degree){
-
-    return degreeCount[degree-1];
+QList<Node *> GraphScene::getDegreeList(int degree) {
+    return degreeCount[degree - 1];
 }
 
 // Pre: Node has just been given a new edge
-void GraphScene::updateDegreeCount(Node *node){
-
-
+void GraphScene::updateDegreeCount(Node *node) {
     int degree = node->edges().count();
 
-    if(degree > degreeCount.count()){
+    if(degree > degreeCount.count())
         degreeCount.resize(degree);
-    }
 
-    degreeCount[degree-1].append(node);
+    degreeCount[degree - 1].append(node);
 
-    if(degree > 1){
-        degreeCount[degree-2].removeOne(node);
-    }
-
-
+    if(degree > 1)
+        degreeCount[degree - 2].removeOne(node);
 }
 
-void GraphScene::calculateMetrics(){
-
-    if(!stats){
+void GraphScene::calculateMetrics() {
+    if(!stats)
         stats = new Statistics(this);
-    }
 
     metricVector[0] = stats->averageDegree();
-
-    metricVector[1] = stats->averageLength();
-
-    metricVector[2] = stats->custeringAvg();
-
-    metricVector[3] = stats->clusteringCoeff(myNodes[qrand()%myNodes.count()]);
-
+    //metricVector[1] = stats->averageLength();
+    metricVector[2] = stats->clusteringAvg();
+    metricVector[3] = stats->clusteringCoeff(myNodes[qrand() % myNodes.count()]);
     metricVector[4] = stats->clusteringDegree(6);
-
-    double debug = metricVector[4];
-
-
-
-
+    metricVector[5] = stats->powerLawExponent();
 
 }
+
+void GraphScene::calculateForces() {
+    QPointF topLeft;
+    QPointF bottomRight;
+
+    QuadTree quadTree(sceneRect());
+    foreach (Node* node, nodes()) {
+        quadTree.addNode(*node);
+    }
+
+    foreach (Node* node, nodes()) {
+        QPointF pos = node->calculatePosition(quadTree.root());
+
+        if (pos.x() < topLeft.x())
+            topLeft.setX(pos.x());
+        if (pos.y() < topLeft.y())
+            topLeft.setY(pos.y());
+        if (pos.x() > bottomRight.x())
+            bottomRight.setX(pos.x());
+        if (pos.y() > bottomRight.y())
+            bottomRight.setY(pos.y());
+    }
+
+    // Resize the scene to fit all the nodes
+    sceneRect().setLeft(topLeft.x() - 10);
+    sceneRect().setTop(topLeft.y() - 10);
+    sceneRect().setRight(bottomRight.x() + 10);
+    sceneRect().setBottom(bottomRight.y() + 10);
+
+    running = false;
+    foreach (Node *node, nodes()) {
+        if (node->advance()) {
+            running = true;
+        }
+    }
+}
+
+bool GraphScene::isRunning() {
+    return true;
+}
+
+int GraphScene::maxDegree(){
+
+    return degreeCount.count();
+}
+
+int GraphScene::nodeCount(int degree){
+
+    /*
+    actually it is degree is one less than the degree we are looking for
+    But since this is only used by statistics.cpp it does not matter
+    */
+    return degreeCount[degree].count();
+}
+

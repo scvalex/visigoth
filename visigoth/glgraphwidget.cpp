@@ -14,7 +14,6 @@
 #include "node.h"
 #include "quadtree.h"
 
-#include <cstdio>
 
 /****************************
  * GraphWidget imitation code (public)
@@ -26,14 +25,18 @@ GLGraphWidget::GLGraphWidget(QWidget *parent) :
     mouseMode(MOUSE_IDLE),
     helping(true),
     isPlaying(true),
-    isRunning(false),
     timerId(0)
 {
     setFocusPolicy(Qt::StrongFocus);
 
+}
+
+void GLGraphWidget::init() {
     myScene = new GraphScene(this);
     myScene->setBackgroundBrush(Qt::black);
     myScene->setItemIndexMethod(QGraphicsScene::NoIndex);
+    populate();
+    emit algorithmChanged(myScene->algorithm());
 }
 
 void GLGraphWidget::populate() {
@@ -42,20 +45,17 @@ void GLGraphWidget::populate() {
 }
 
 void GLGraphWidget::itemMoved() {
-    isRunning = true;
     setAnimationRunning();
 }
-
-
 
 /****************************
  * GraphWidget imitation code (protected)
  ***************************/
 
 void GLGraphWidget::setAnimationRunning() {
-    if (isPlaying && isRunning && !timerId)
+    if (isPlaying && myScene->isRunning() && !timerId)
         timerId = startTimer(1000 / 25);
-    else if ((!isPlaying || !isRunning) && timerId) {
+    else if ((!isPlaying || !myScene->isRunning()) && timerId) {
         killTimer(timerId);
         timerId = 0;
     }
@@ -91,13 +91,14 @@ void GLGraphWidget::wheelEvent(QWheelEvent *event) {
 
 void GLGraphWidget::mouseDoubleClickEvent(QMouseEvent *event) {
     if (event->button() == Qt::LeftButton) {
-        Node* hitNode = selectGL(event->x(), event->y());
+        Node *hitNode = selectGL(event->x(), event->y());
 
         if (hitNode) {
-            QBrush *b = hitNode->getBrush();
-            b->setColor(QColor::fromRgbF(1.0, 0.0, 0.0, 1.0));
+            hitNode->setBrush(QColor::fromRgbF(1.0, 0.0, 0.0, 1.0));
         }
     }
+
+    this->repaint();
 }
 
 void GLGraphWidget::mousePressEvent(QMouseEvent *event) {
@@ -105,8 +106,7 @@ void GLGraphWidget::mousePressEvent(QMouseEvent *event) {
         return;
 
     if (event->button() == Qt::LeftButton) {
-        switch(0)  // FIXME: Should get modifier key status here
-        {
+        switch (0) { // FIXME: Should get modifier key status here
             case 0:  // When no modifiers are pressed
                 mouseMode = MOUSE_TRANSLATING;
                 break;
@@ -121,7 +121,7 @@ void GLGraphWidget::mousePressEvent(QMouseEvent *event) {
                 break;
         }
     } else if (event->button() == Qt::RightButton) {
-        Node* hitNode = selectGL(event->x(), event->y());
+        Node *hitNode = selectGL(event->x(), event->y());
 
         if (hitNode) {
             draggedNode = hitNode;
@@ -207,6 +207,7 @@ void GLGraphWidget::keyPressEvent(QKeyEvent *event) {
     case Qt::Key_N:
         myScene->nextAlgorithm();
         myScene->randomizePlacement();
+        emit algorithmChanged(myScene->algorithm());
         break;
     case Qt::Key_Left:
         glaCameraTranslatef(cameramat, (-20.0)/zoom, 0.0, 0.0);
@@ -231,40 +232,8 @@ void GLGraphWidget::keyPressEvent(QKeyEvent *event) {
 }
 
 void GLGraphWidget::timerEvent(QTimerEvent *) {
-    QPointF topLeft;
-    QPointF bottomRight;
+    myScene->calculateForces();
 
-    QuadTree quadTree(myScene->sceneRect());
-    foreach (Node* node, myScene->nodes()) {
-        quadTree.addNode(*node);
-    }
-
-    foreach (Node* node, myScene->nodes()) {
-        QPointF pos = node->calculatePosition(quadTree.root());
-
-        if (pos.x() < topLeft.x())
-            topLeft.setX(pos.x());
-        if (pos.y() < topLeft.y())
-            topLeft.setY(pos.y());
-        if (pos.x() > bottomRight.x())
-            bottomRight.setX(pos.x());
-        if (pos.y() > bottomRight.y())
-            bottomRight.setY(pos.y());
-    }
-
-    // Resize the scene to fit all the nodes
-    QRectF sceneRect = myScene->sceneRect();
-    sceneRect.setLeft(topLeft.x() - 10);
-    sceneRect.setTop(topLeft.y() - 10);
-    sceneRect.setRight(bottomRight.x() + 10);
-    sceneRect.setBottom(bottomRight.y() + 10);
-
-    isRunning = false;
-    foreach (Node *node, myScene->nodes()) {
-        if (node->advance()) {
-            isRunning = true;
-        }
-    }
     setAnimationRunning();
 
     this->repaint();
@@ -297,7 +266,7 @@ void GLGraphWidget::paintGL() {
     glLoadMatrixf(cameramat);
 
     // Draw the old example objects
-   // glaDrawExample();
+    glaDrawExample();
 
     // Draw the graph
     drawGraphGL();
@@ -319,7 +288,7 @@ void GLGraphWidget::resizeGL(int w, int h) {
  ***************************/
 
 inline void GLGraphWidget::drawNode(Node* node) {
-    QColor c = node->getBrush()->color();
+    QColor c = node->brush().color();
     glColor4f(c.redF(), c.greenF(), c.blueF(), c.alphaF());
 
     float radius = (log(node->edges().size()) / log(2)) + 1.0;
@@ -341,13 +310,24 @@ inline void GLGraphWidget::drawNode(Node* node) {
 void GLGraphWidget::drawGraphGL() {
     // If there is a dragged node, draw it where the mouse is.
     if (mouseMode == MOUSE_DRAGGING) {
-        // draggedNode->setPos(mouseX, mouseY);
+        GLdouble model[16], proj[16];
+        GLint view[4];
+        GLdouble newX, newY, newZ;
+
+        glGetDoublev(GL_MODELVIEW_MATRIX, model);
+        glGetDoublev(GL_PROJECTION_MATRIX, proj);
+        glGetIntegerv(GL_VIEWPORT, view);
+        gluUnProject((GLdouble)mouseX, (GLdouble)(view[3] - mouseY), 0.0,
+                    model, proj, view,
+                    &newX, &newY, &newZ);
+
+        draggedNode->setPos(newX, newY);
     }
 
     // Draw edges
     foreach (Edge* edge, myScene->edges()) {
-        QColor *c = edge->getColour();
-        glColor4f(c->redF(), c->greenF(), c->blueF(), c->alphaF());
+        const QColor c = edge->colour();
+        glColor4f(c.redF(), c.greenF(), c.blueF(), c.alphaF());
         //glColor4f(0.0, 0.0, 1.0, 0.5);
         glBegin(GL_LINE_STRIP);
             QPointF p = edge->sourceNode()->pos();
@@ -400,17 +380,13 @@ Node* GLGraphWidget::selectGL(int x, int y)
     glPushMatrix();
         glLoadIdentity();
         gluPickMatrix(x, y, 1.0, 1.0, view);
-        //glMultMatrixf(projmat);
-        glScalef(zoom, zoom, 1.0/zoom);
-        gluOrtho2D(0.0, (GLfloat)width(), (GLfloat)height(), 0.0);
+        glMultMatrixf(projmat);
 
         // Redraw points to fill selection buffer
         glMatrixMode(GL_MODELVIEW);
 
-        QVector<Node*>& nodes = myScene->nodes();
+        QVector<Node*> &nodes = myScene->nodes();
         for (int i = nodes.size() - 1; i >= 0; --i) {
-            Node* node = nodes[i];
-
             glSelectBuffer(64, namebuf);
             glRenderMode(GL_SELECT);
 
@@ -419,13 +395,12 @@ Node* GLGraphWidget::selectGL(int x, int y)
             glPushName(0);
 
             // Draw the node
-            drawNode(node);
+            drawNode(nodes[i]);
 
             hits = glRenderMode(GL_RENDER);
 
             if (hits) {
-                hitNode = node;
-
+                hitNode = nodes[i];
                 break;
             }
         }

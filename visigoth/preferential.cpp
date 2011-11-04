@@ -1,20 +1,45 @@
 #include "graphscene.h"
 #include "preferential.h"
+#include "ui_preferentialcontrol.h"
+
+#include <QWidget>
 
 Preferential::Preferential(GraphScene *graph) :
-    graph(graph)
+    Algorithm(graph),
+    graph(graph),
+    ctlW(0),
+    size(START_NODES)
 {
     updatePreference(graph->nodes(), 2 * graph->edges().size());
 }
 
-void Preferential::init(int size) {
+void Preferential::reset() {
+    preferences.clear();
+    cumulativePreferences.clear();
     for (int i(0); i < size; ++i) {
-        addVertex();
+        addVertex(false);
     }
 }
 
 void Preferential::addVertex() {
-    addVertex((qrand() % 3 ) + 1, qrand() % 100);
+    addVertex(true);
+}
+
+void Preferential::addVertex(bool saveSize) {
+    addVertex((qrand() % 300 ) + 1, qrand() % 100);
+    if (saveSize) {
+        ++size;
+    }
+}
+
+QWidget* Preferential::controlWidget(QWidget *parent) {
+    if (!ctlW) {
+        ctlW = new QWidget(parent);
+        Ui::PreferentialControl *prefCtl = new Ui::PreferentialControl();
+        prefCtl->setupUi(ctlW);
+        connect(prefCtl->sizeEdit, SIGNAL(valueChanged(int)), this, SLOT(onSizeChanged(int)));
+    }
+    return ctlW;
 }
 
 // Add vertex using preferential attachment with clustering.
@@ -142,4 +167,8 @@ QVector<Node*> Preferential::getIntersection(QVector<Node*> vec1, QVector<Node*>
 double Preferential::genRandom(){
     double main = qrand() % 100;
     return main + (( qrand() % 100 ) / 100 );
+}
+
+void Preferential::onSizeChanged(int newSize) {
+    size = newSize;
 }

@@ -11,15 +11,24 @@
 
 class GraphScene;
 class Barabasialbert;
+class QWidget;
 
 class Barabasialbert : public Algorithm {
+
+    Q_OBJECT
+
 public:
     Barabasialbert(GraphScene *graph);
 
-    void init(int size);
+    void reset();
     void addVertex();
+    QWidget* controlWidget(QWidget *parent = 0);
+
+protected slots:
+    void onSizeChanged(int newSize);
 
 protected:
+    void addVertex(bool saveSize = false);
     void addVertex(int edgesToAdd, double p);
 
     double genRandom();
@@ -27,12 +36,15 @@ protected:
     void updatePreference(const QVector<Node*> &nodes, int numEdges);
 
 private:
+    static const int START_NODES = 100;
     GraphScene *graph;
 
     // used for selecting a node by preferential seleciton
     QMap<int, double> cumulativePreferences;
     // used for display purposes only
     QMap<int, double> preferences;
+
+    int size;
 };
 
 #endif // BARABASIALBERT_H

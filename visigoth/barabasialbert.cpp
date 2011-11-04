@@ -1,22 +1,39 @@
 #include "graphscene.h"
 #include "barabasialbert.h"
 
-
+#include <QWidget>
 
 Barabasialbert::Barabasialbert(GraphScene *graph) :
-    graph(graph)
+    graph(graph),
+    size(START_NODES)
 {
     updatePreference(graph->nodes(), 2 * graph->edges().size());
 }
 
-void Barabasialbert::init(int size) {
+void Barabasialbert::reset(){
+
+    preferences.clear();
+    cumulativePreferences.clear();
     for (int i(0); i < size; ++i) {
-        addVertex();
+        addVertex(false);
     }
+
+}
+
+QWidget* Barabasialbert::controlWidget(QWidget *parent) {
+
+    return 0;
 }
 
 void Barabasialbert::addVertex() {
+    addVertex(true);
+}
+
+void Barabasialbert::addVertex(bool saveSize) {
     addVertex((qrand() % 3 ) + 1, qrand() % 100);
+    if (saveSize) {
+        ++size;
+    }
 }
 
 // Add vertex using preferential attachment without clustering.
@@ -95,5 +112,9 @@ Node* Barabasialbert::getPreference(const QVector<Node*> &nodes, double genPref)
 double Barabasialbert::genRandom(){
     double main = qrand() % 100;
     return main + (( qrand() % 100 ) / 100 );
+}
+
+void Barabasialbert::onSizeChanged(int newSize) {
+    size = newSize;
 }
 

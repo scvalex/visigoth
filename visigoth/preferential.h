@@ -7,19 +7,28 @@
 
 #include <QList>
 #include <QMap>
+#include <QObject>
 #include <QVector>
 
 class GraphScene;
 class Preferential;
+class QWidget;
 
 class Preferential : public Algorithm {
+    Q_OBJECT
+
 public:
     Preferential(GraphScene *graph);
 
-    void init(int size);
+    void reset();
     void addVertex();
+    QWidget* controlWidget(QWidget *parent = 0);
+
+protected slots:
+    void onSizeChanged(int newSize);
 
 protected:
+    void addVertex(bool saveSize = false);
     void addVertex(int edgesToAdd, double p);
 
     // genPef is a randomly generated number satisfing 0 <= genPref < 100
@@ -32,12 +41,16 @@ protected:
     void updatePreference(const QVector<Node*> &nodes, int numEdges);
 
 private:
+    static const int START_NODES = 1300;
     GraphScene *graph;
+    QWidget *ctlW;
 
     // used for selecting a node by preferential seleciton
     QMap<int, double> cumulativePreferences;
     // used for display purposes only
     QMap<int, double> preferences;
+
+    int size;
 };
 
 #endif // PREFERENTIAL_H
