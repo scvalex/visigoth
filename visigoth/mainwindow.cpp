@@ -35,22 +35,23 @@ MainWindow::MainWindow(QWidget *parent) :
     view = new GLGraphWidget(this);
     setCentralWidget(view);
 
-    myComboBox = new QComboBox;
+    qsrand(23);
 
+    myComboBox = new QComboBox(this);
     QStringList text;
     text.append("Bipartite Model");
     text.append("Preferential Attachment");
-
     myComboBox->addItems(text);
 
-    ui->quickBar->addWidget(myComboBox);
-
-    connect(myComboBox, SIGNAL(currentIndexChanged(const QString &)) , this, SLOT(onComboBoxActivated(const QString &)));
-
-    qsrand(23);
+    QDockWidget *dock = new QDockWidget(this);
+    dock->setWidget(myComboBox);
+    dock->setWindowTitle("Algorithm Chooser");
+    addDockWidget(Qt::RightDockWidgetArea, dock);
 
     connect(view, SIGNAL(algorithmChanged(Algorithm*)), this, SLOT(onAlgorithmChanged(Algorithm*)));
     view->init();
+
+    connect(myComboBox, SIGNAL(currentIndexChanged(const QString &)) , this, SLOT(onComboBoxActivated(const QString &)));
 }
 
 void MainWindow::populate() {
