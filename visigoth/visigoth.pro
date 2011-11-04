@@ -1,4 +1,4 @@
-QT += core gui opengl
+QT += core gui opengl oauth xml
 
 TARGET = visigoth
 TEMPLATE = app
@@ -15,7 +15,7 @@ SOURCES += main.cpp \
            algorithm.cpp \
            statistics.cpp \
            quadtree.cpp \
-    twitter.cpp
+           twitter.cpp
 
 HEADERS += mainwindow.h \
            node.h \
@@ -29,14 +29,8 @@ HEADERS += mainwindow.h \
            abstractgraphwidget.h \
            statistics.h \
            quadtree.h \
-    twitter.h
+           twitter.h
 
 FORMS += mainwindow.ui \
          bipartitecontrol.ui \
          preferentialcontrol.ui
-
-
-unix: CONFIG += link_pkgconfig
-unix: PKGCONFIG += QJson
-
-
