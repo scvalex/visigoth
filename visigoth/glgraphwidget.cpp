@@ -48,6 +48,10 @@ void GLGraphWidget::itemMoved() {
     setAnimationRunning();
 }
 
+GraphScene* GLGraphWidget::scene() const {
+    return myScene;
+}
+
 /****************************
  * GraphWidget imitation code (protected)
  ***************************/
