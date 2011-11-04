@@ -5,6 +5,7 @@
 
 #include <QMainWindow>
 #include <QGraphicsView>
+#include <QComboBox>
 
 class Algorithm;
 class QDockWidget;
@@ -32,12 +33,15 @@ private slots:
     void addNewNode();
     void randomizeGraph();
     void generateNewGraph();
-    void changeAlgorithm();
+
+    void onComboBoxActivated(const QString &text);
 
 private:
     Ui::MainWindow *ui;
     GLGraphWidget *view;
     QDockWidget *algoCtl;
+    Algorithm *algo;
+    QComboBox *myComboBox;
 };
 
 #endif // MAINWINDOW_H

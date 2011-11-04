@@ -4,12 +4,19 @@
 #include "ui_mainwindow.h"
 #include "preferential.h"
 #include "graphscene.h"
+#include "bipartite.h"
+
 
 #include <QDesktopWidget>
 #include <QDir>
 #include <QDockWidget>
 #include <QFileDialog>
 #include <QPrinter>
+#include <QComboBox>
+#include <QStringList>
+#include <QObject>
+#include <QAction>
+#include <QMessageBox>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -24,10 +31,22 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->newNodeAct, SIGNAL(triggered()), this, SLOT(addNewNode()));
     connect(ui->randomizeAct, SIGNAL(triggered()), this, SLOT(randomizeGraph()));
     connect(ui->generateAct, SIGNAL(triggered()), this, SLOT(generateNewGraph()));
-    connect(ui->ChangeAlgorithmAct, SIGNAL(triggered()), this, SLOT(changeAlgorithm()));
 
     view = new GLGraphWidget(this);
     setCentralWidget(view);
+
+    myComboBox = new QComboBox;
+
+    QStringList text;
+    text.append("Bipartite Model");
+    text.append("Preferential Attachment");
+
+    myComboBox->addItems(text);
+
+    ui->quickBar->addWidget(myComboBox);
+
+    connect(myComboBox, SIGNAL(currentIndexChanged(const QString &)) , this, SLOT(onComboBoxActivated(const QString &)));
+
     qsrand(23);
 
     connect(view, SIGNAL(algorithmChanged(Algorithm*)), this, SLOT(onAlgorithmChanged(Algorithm*)));
@@ -71,14 +90,16 @@ void MainWindow::generateNewGraph() {
     populate();
 }
 
-void MainWindow::changeAlgorithm() {
-    view->scene()->nextAlgorithm();
-    view->scene()->randomizePlacement();
-    onAlgorithmChanged(view->scene()->algorithm());
-}
-
 void MainWindow::addNewNode() {
-    view->scene()->addVertex();
+    //view->scene()->addVertex();
+    if (myComboBox->currentText() == "Bipartite Model") {
+        QMessageBox msgBox;
+        msgBox.setText("Bipartite model does not support adding new vertices");
+        msgBox.exec();
+    } else if (myComboBox->currentText() == "Preferential Attachment") {
+        algo->addVertex();
+    }
+
 }
 
 void MainWindow::randomizeGraph() {
@@ -107,3 +128,21 @@ void MainWindow::onAlgorithmChanged(Algorithm *newAlgo) {
     }
 }
 
+
+void MainWindow::onComboBoxActivated(const QString &text)
+{
+    if (text == "Bipartite Model") {
+        view->scene()->reset();
+        algo = new Bipartite(view->scene());
+        algo->reset();
+        view->scene()->randomizePlacement();
+        onAlgorithmChanged(algo);
+    } else if (text == "Preferential Attachment") {
+        view->scene()->reset();
+        algo = new Preferential(view->scene());
+        algo->reset();
+        view->scene()->randomizePlacement();
+        onAlgorithmChanged(algo);
+
+    }
+}

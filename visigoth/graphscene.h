@@ -44,9 +44,9 @@ public:
 
     void calculateForces();
     bool isRunning();
+    void reset();
 
 protected:
-    void reset();
     void updateDegreeCount(Node *node);
 
 private:

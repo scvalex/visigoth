@@ -91,17 +91,18 @@ void GraphScene::repopulate() {
     switch (algoId) {
     case 0:
         if (!algo) {
-            algo = new Preferential(this);
+            algo = new Bipartite(this);
         }
         break;
     case 1:
         if (!algo) {
-            algo = new Bipartite(this);
+            algo = new Preferential(this);
         }
         break;
     }
     algo->reset();
 }
+
 
 void GraphScene::nextAlgorithm() {
     if (algo) {
