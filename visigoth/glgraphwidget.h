@@ -26,7 +26,7 @@ public:
         MOUSE_DRAGGING
     };
 
-    GraphScene *myScene;
+    GraphScene* scene() const;
 
 signals:
     void algorithmChanged(Algorithm *newAlgo);
@@ -55,6 +55,7 @@ private:
     void initProjection();
     Node *selectGL(int x, int y);
 
+    GraphScene *myScene;
 
     GLfloat cameramat[16];
     GLfloat zoom;

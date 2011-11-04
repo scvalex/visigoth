@@ -72,17 +72,17 @@ void MainWindow::generateNewGraph() {
 }
 
 void MainWindow::changeAlgorithm() {
-    view->myScene->nextAlgorithm();
-    view->myScene->randomizePlacement();
-    onAlgorithmChanged(view->myScene->algorithm());
+    view->scene()->nextAlgorithm();
+    view->scene()->randomizePlacement();
+    onAlgorithmChanged(view->scene()->algorithm());
 }
 
 void MainWindow::addNewNode() {
-    view->myScene->addVertex();
+    view->scene()->addVertex();
 }
 
 void MainWindow::randomizeGraph() {
-    view->myScene->randomizePlacement();
+    view->scene()->randomizePlacement();
 }
 
 void MainWindow::toggleShowControl(bool enabled) {
