@@ -32,14 +32,7 @@
     </property>
     <addaction name="exportToAct"/>
    </widget>
-   <widget class="QMenu" name="menuView">
-    <property name="title">
-     <string>&amp;View</string>
-    </property>
-    <addaction name="toggleControlAct"/>
-   </widget>
    <addaction name="menu_File"/>
-   <addaction name="menuView"/>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
   <widget class="QToolBar" name="quickBar">
@@ -94,20 +87,6 @@
   <action name="exportToAct">
    <property name="text">
     <string>Export to ...</string>
-   </property>
-  </action>
-  <action name="toggleControlAct">
-   <property name="checkable">
-    <bool>true</bool>
-   </property>
-   <property name="checked">
-    <bool>true</bool>
-   </property>
-   <property name="text">
-    <string>Control</string>
-   </property>
-   <property name="toolTip">
-    <string>Toggle the algorithm control panel</string>
    </property>
   </action>
   <action name="newNodeAct">

@@ -28,7 +28,6 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->setupUi(this);
 
     connect(ui->exportToAct, SIGNAL(triggered()), this, SLOT(exportTo()));
-    connect(ui->toggleControlAct, SIGNAL(toggled(bool)), this, SLOT(toggleShowControl(bool)));
 
     view = new GLGraphWidget(this);
     setCentralWidget(view);
@@ -74,11 +73,6 @@ void MainWindow::exportTo() {
     }
 }
 
-void MainWindow::toggleShowControl(bool enabled) {
-    if (algoCtl)
-        algoCtl->setVisible(enabled);
-}
-
 void MainWindow::onAlgorithmChanged(Algorithm *newAlgo) {
     QWidget *ctl = newAlgo->controlWidget(this);
     if (algoCtl) {
@@ -92,7 +86,6 @@ void MainWindow::onAlgorithmChanged(Algorithm *newAlgo) {
         dock->setWidget(ctl);
         dock->setWindowTitle("Algorithm Control");
         algoCtl = dock;
-        algoCtl->setVisible(ui->toggleControlAct->isChecked());
         addDockWidget(Qt::RightDockWidgetArea, algoCtl);
     }
 }

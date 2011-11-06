@@ -24,7 +24,6 @@ public:
 
 public slots:
     void exportTo();
-    void toggleShowControl(bool enabled);
 
 private slots:
     void onAlgorithmChanged(Algorithm *newAlgo);
