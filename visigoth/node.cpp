@@ -13,10 +13,12 @@ int Node::ALL_NODES(0);
 
 Node::Node(GraphScene *graph, QGraphicsItem *parent) :
     QGraphicsItem(parent),
-    //brush(QColor::fromRgb(50,150,255,255)),
-    brush(QColor::fromRgb(qrand() % 256, qrand() % 256, qrand() % 256, 180)),
+    //myBrush(QColor::fromRgb(qrand() % 256, qrand() % 256, qrand() % 256, 180)),
+    myBrush(QColor::fromRgbF(0.0, 1.0, 0.3, 0.7)),
     graph(graph),
-    highlighted(false)
+    hovering(false),
+    visited(false),
+    distance(0)
 {
     myTag = ALL_NODES++;
     setFlag(ItemIsMovable);
@@ -35,7 +37,7 @@ void Node::addEdge(Edge *edge) {
     edgeList << edge;
 }
 
-QPointF Node::calculatePosition(QuadTree::TreeNode& treeNode) {
+QPointF Node::calculatePosition(QuadTree::TreeNode &treeNode) {
     if (!scene() || scene()->mouseGrabberItem() == this) {
         newPos = pos();
         return newPos;
@@ -125,11 +127,10 @@ QPainterPath Node::shape() const {
 
 void Node::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *) {
     painter->setPen(Qt::NoPen);
-    if (!isHighlighted()) {
-        painter->setBrush(brush);
-
+    if (hovering) {
+        painter->setBrush(myBrush);
     } else {
-        QColor lighter = brush.color();
+        QColor lighter = myBrush.color();
         lighter.setAlpha(255);
         painter->setBrush(QBrush(lighter));
 
@@ -160,12 +161,12 @@ QVariant Node::itemChange(GraphicsItemChange change, const QVariant &value) {
 }
 
 void Node::hoverEnterEvent(QGraphicsSceneHoverEvent *event) {
-    this->highlight();
+    hovering = true;
     QGraphicsItem::hoverEnterEvent(event);
 }
 
 void Node::hoverLeaveEvent(QGraphicsSceneHoverEvent *event) {
-    this->unHighlight();
+    hovering = false;
     QGraphicsItem::hoverLeaveEvent(event);
 }
 
@@ -208,14 +209,25 @@ qreal Node::width() const {
     return 0;
 }
 
-void Node::highlight() {
-    this->highlighted = true;
+bool Node::getVisited(){
+    return visited;
 }
 
-void Node::unHighlight() {
-    this->highlighted = false;
+void Node::setVisited(bool v){
+    visited = v ;
+}
+int Node::getDistance(){
+    return distance;
 }
 
-bool Node::isHighlighted() const {
-    return this->highlighted;
+void Node::setDistance(int d){
+    distance = d;
+}
+
+QBrush& Node::brush() {
+    return myBrush;
+}
+
+void Node::setBrush(const QBrush &b) {
+    myBrush = b;
 }

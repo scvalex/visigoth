@@ -8,22 +8,25 @@
 #include <QList>
 #include <QMap>
 #include <QVector>
-#include <QtCore/qmath.h>
 
 class GraphScene;
-class ErdosRenyi;
+class QWidget;
 
 class ErdosRenyi : public Algorithm {
+    Q_OBJECT
 public:
-    ErdosRenyi(GraphScene *scene);
+    ErdosRenyi(GraphScene *scene = 0);
+    virtual ~ErdosRenyi();
 
-    void init(int size);
+    void reset();
     void addVertex();
-
-    void init(int size, double probability);
+    QWidget* controlWidget(QWidget *parent = 0);
 
 private:
     GraphScene *scene;
+
+    int size;
+    double probability;
 };
 
 #endif // ERDOSRENYI_H

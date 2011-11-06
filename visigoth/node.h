@@ -43,7 +43,14 @@ public:
 
     QList<Edge*>& edges();
     QVector<Node*> neighbours() const;
-
+    int getSize() const;
+    QPointF getCenter() const;
+    QVector<TreeNode*>& getChildren();
+    qreal getWidth() const;
+    bool getVisited();
+    void setVisited(bool v);
+    int getDistance();
+    void setDistance(int v);
     int size() const;
     QPointF center() const;
     bool hasChildren() const;
@@ -54,7 +61,11 @@ public:
     void unHighlight();
     bool isHighlighted() const;
 
+    QBrush& brush();
+    void setBrush(const QBrush &b);
+
     static void reset();
+
 protected:
     explicit Node(GraphScene *graph, QGraphicsItem *parent = 0);
 
@@ -66,12 +77,16 @@ protected:
 private:
     static int ALL_NODES;
 
-    QBrush brush;
+    QBrush myBrush;
     QList<Edge*> edgeList;
     GraphScene *graph;
     bool hovering;
     int myTag;
     QPointF newPos;
+
+    // vars for average length
+    bool visited;
+    int distance;
 
     QPointF mapPoint(QPointF source, QPointF dest);
     QPointF calculateNonEdgeForces(TreeNode* treeNode);

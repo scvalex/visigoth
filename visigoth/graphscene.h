@@ -3,6 +3,7 @@
 
 #include <QGraphicsScene>
 #include <QList>
+#include <QMap>
 #include <QSet>
 #include <QVector>
 
@@ -12,6 +13,7 @@ class Edge;
 class GraphWidget;
 class Node;
 class Algorithm;
+class Statistics;
 
 class GraphScene : public QGraphicsScene
 {
@@ -28,7 +30,7 @@ public:
     bool newEdge(Node *source, Node *dest);
 
     void repopulate();
-    void nextAlgorithm();
+    Algorithm* algorithm() const;
     void modifyNodesNumber(int nodesNB);
 
     void itemMoved();
@@ -37,17 +39,44 @@ public:
 
     void addVertex();
 
-protected:
+    QList<Node*> getDegreeList(int degree);
+
+    void calculateMetrics();
+
+    void calculateForces();
+    bool isRunning();
     void reset();
 
+    QList<QString> algorithms() const;
+
+public slots:
+    void chooseAlgorithm(const QString &name);
+
+signals:
+    void algorithmChanged(Algorithm *newAlgo);
+
+protected:
+    void updateDegreeCount(Node *node);
+
 private:
+    enum ALGOS {
+        BIPARTITE_MODEL,
+        PREFERENTIAL_ATTACHAMENT,
+        ERDOS_RENYI
+    };
+
     Algorithm *algo;
+    Statistics *stats;
     int algoId;
     QVector<QSet<int> > hasEdge;
     QVector<Node*> myNodes;
     QList<Edge*> myEdges;
-    int targetNumNodes;
     AbstractGraphWidget *view;
+    QVector<QList<Node*> > degreeCount;
+    QVector<double> metricVector;
+    bool running;
+
+    QMap<QString, int> myAlgorithms;
 };
 
 #endif // GRAPHSCENE_H

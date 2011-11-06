@@ -4,21 +4,21 @@ TARGET = visigoth
 TEMPLATE = app
 
 SOURCES += main.cpp \
-          mainwindow.cpp \
-          node.cpp \
-          graphwidget.cpp \
-          edge.cpp \
-          preferential.cpp \
-          bipartite.cpp \
-          graphscene.cpp \
-          glgraphwidget.cpp \
-          glancillary.c \
-          erdosRenyi.cpp \
-          quadtree.cpp
+           mainwindow.cpp \
+           node.cpp \
+           edge.cpp \
+           preferential.cpp \
+           bipartite.cpp \
+           graphscene.cpp \
+           glgraphwidget.cpp \
+           glancillary.c \
+           algorithm.cpp \
+           statistics.cpp \
+           quadtree.cpp \
+    erdosrenyi.cpp
 
 HEADERS += mainwindow.h \
            node.h \
-           graphwidget.h \
            edge.h \
            preferential.h \
            graphscene.h \
@@ -27,18 +27,13 @@ HEADERS += mainwindow.h \
            bipartite.h \
            algorithm.h \
            abstractgraphwidget.h \
-           erdosRenyi.h \
-           quadtree.h
+           statistics.h \
+           quadtree.h \
+    erdosrenyi.h
 
-FORMS += mainwindow.ui
-
-
-
-
-
-
-
-
+FORMS += mainwindow.ui \
+         bipartitecontrol.ui \
+         preferentialcontrol.ui
 
 
 

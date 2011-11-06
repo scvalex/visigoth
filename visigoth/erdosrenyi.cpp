@@ -1,20 +1,24 @@
 #include "graphscene.h"
-#include "erdosRenyi.h"
+#include "erdosrenyi.h"
+
+#include <QtCore/qmath.h>
 
 ErdosRenyi::ErdosRenyi(GraphScene *scene) :
-    scene(scene)
+    Algorithm(scene),
+    scene(scene),
+    size(60),
+    probability(0.4)
 {
 }
 
-void ErdosRenyi::init(int size) {
-    init(size, 0.6);
+ErdosRenyi::~ErdosRenyi() {
 }
 
 void ErdosRenyi::addVertex() {
-
+    qDebug("Cannot add vertex to Erdos-Renyi graph");
 }
 
-void ErdosRenyi::init(int size, double probability) {
+void ErdosRenyi::reset() {
     QVector<Node*> nodesVector(size);
 
     for (int i(0); i < size; ++i) {
@@ -22,7 +26,7 @@ void ErdosRenyi::init(int size, double probability) {
         nodesVector[i] = node;
     }
 
-    for (int i(0); i < size; ++i)
+    for (int i(0); i < size; ++i) {
         for (int j(i+1); j < size; ++j) {
             int rand = qrand() % 2;
             if ( rand < probability ) {
@@ -31,6 +35,9 @@ void ErdosRenyi::init(int size, double probability) {
                 continue;
             }
         }
+    }
 }
 
-
+QWidget* ErdosRenyi::controlWidget(QWidget *parent) {
+    return 0;
+}

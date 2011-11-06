@@ -2,9 +2,12 @@
 #define GLGRAPHWIDGET_H
 
 #include <QGLWidget>
+#include <QList>
 
 #include "abstractgraphwidget.h"
 #include "graphscene.h"
+
+class Algorithm;
 
 class GLGraphWidget : public QGLWidget, public AbstractGraphWidget
 {
@@ -12,7 +15,6 @@ class GLGraphWidget : public QGLWidget, public AbstractGraphWidget
 public:
     explicit GLGraphWidget(QWidget *parent = 0);
 
-    void populate();
     void itemMoved();
 
     enum MOUSE_MODES {
@@ -23,14 +25,25 @@ public:
         MOUSE_DRAGGING
     };
 
+    QList<QString> algorithms() const;
+
+public slots:
+    void populate();
+    void randomizePlacement();
+    void addVertex();
+    void chooseAlgorithm(const QString &name);
+
+signals:
+    void algorithmChanged(Algorithm *newAlgo);
+
 protected:
     void setAnimationRunning();
     void playPause();
-    void getUserInput();
     void scaleView(qreal scaleFactor);
     void fitToScreen();
 
     void wheelEvent(QWheelEvent *event);
+    void mouseDoubleClickEvent(QMouseEvent *event);
     void mousePressEvent(QMouseEvent *event);
     void mouseReleaseEvent(QMouseEvent *event);
     void mouseMoveEvent(QMouseEvent *event);
@@ -43,14 +56,17 @@ protected:
 
 private:
     void drawGraphGL();
+    void drawNode(Node *node);
     void initProjection();
+    Node *selectGL(int x, int y);
 
     GraphScene *myScene;
+
     GLfloat cameramat[16];
     GLfloat zoom;
     int mouseX, mouseY;
     enum MOUSE_MODES mouseMode;
-    static const int BASE_NODES_NUMBER = 100;
+    Node *draggedNode;
 
     bool helping;
     bool isPlaying;

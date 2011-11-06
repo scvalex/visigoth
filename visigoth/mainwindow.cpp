@@ -1,44 +1,55 @@
-#include "graphwidget.h"
+#include "algorithm.h"
 #include "glgraphwidget.h"
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
+#include "preferential.h"
+#include "graphscene.h"
+#include "bipartite.h"
+
 
 #include <QDesktopWidget>
 #include <QDir>
+#include <QDockWidget>
 #include <QFileDialog>
 #include <QPrinter>
-
-#ifdef USE_OPENGL
-#include <QGLWidget>
-#endif
+#include <QComboBox>
+#include <QStringList>
+#include <QObject>
+#include <QAction>
+#include <QMessageBox>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
-    ui(new Ui::MainWindow)
+    ui(new Ui::MainWindow),
+    algoCtl(0)
 {
+    qsrand(23);
+
     ui->setupUi(this);
 
-    //view = new GraphWidget(this);
-    view = new GLGraphWidget(this);
-#ifdef USE_OPENGL
-    view->setViewport(new QGLWidget(QGLFormat(QGL::SampleBuffers)));
-#endif
-    setCentralWidget(view);
-    qsrand(23);
-}
+    connect(ui->exportToAct, SIGNAL(triggered()), this, SLOT(exportTo()));
 
-void MainWindow::populate() {
+    view = new GLGraphWidget(this);
+    setCentralWidget(view);
+
+    connect(ui->newNodeAct, SIGNAL(triggered()), view, SLOT(addVertex()));
+    connect(ui->randomizeAct, SIGNAL(triggered()), view, SLOT(randomizePlacement()));
+    connect(ui->generateAct, SIGNAL(triggered()), view, SLOT(populate()));
+    connect(view, SIGNAL(algorithmChanged(Algorithm*)), this, SLOT(onAlgorithmChanged(Algorithm*)));
+
+    ui->chooserCombo->addItems(view->algorithms());
+    connect(ui->chooserCombo, SIGNAL(currentIndexChanged(const QString &)), view, SLOT(chooseAlgorithm(const QString &)));
+
+    view->chooseAlgorithm(ui->chooserCombo->currentText());
+
     view->populate();
 }
 
-MainWindow::~MainWindow()
-{
+MainWindow::~MainWindow() {
     delete ui;
-    delete view;
 }
 
-void MainWindow::on_actionPrint_to_PDF_triggered()
-{
+void MainWindow::exportTo() {
     //first commented version took a screenshot of the whole screen, compared to
     //the 2nd version which now takes only the Widget;
 
@@ -59,5 +70,22 @@ void MainWindow::on_actionPrint_to_PDF_triggered()
     //.arg(format));
     if (!fileName.isEmpty()) {
         pixmap.save(fileName, format.toAscii());
+    }
+}
+
+void MainWindow::onAlgorithmChanged(Algorithm *newAlgo) {
+    QWidget *ctl = newAlgo->controlWidget(this);
+    if (algoCtl) {
+        removeDockWidget(algoCtl);
+        delete algoCtl->widget();
+        delete algoCtl;
+        algoCtl = 0;
+    }
+    if (ctl) {
+        QDockWidget *dock = new QDockWidget(this);
+        dock->setWidget(ctl);
+        dock->setWindowTitle("Algorithm Control");
+        algoCtl = dock;
+        addDockWidget(Qt::RightDockWidgetArea, algoCtl);
     }
 }

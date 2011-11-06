@@ -1,27 +1,34 @@
 #include "graphscene.h"
 #include "bipartite.h"
+#include "ui_bipartitecontrol.h"
+
+#include <QDebug>
+#include <QWidget>
+#include <QMessageBox>
 
 Bipartite::Bipartite(GraphScene *scene) :
+    Algorithm(scene),
+    ctlW(0),
+    uSize(START_USIZE),
+    vSize(START_VSIZE),
     scene(scene)
 {
 }
 
-void Bipartite::init(int size) {
-    init(size, size);
+Bipartite::~Bipartite() {
 }
 
-void Bipartite::init(int vSize, int uSize) {
-   QVector<Node*> vVector(vSize);
-   QVector<Node*> uVector(uSize);
+void Bipartite::reset() {
+    uVector.clear();
+    vVector.clear();
+    cumulativePreferences.clear();
 
     for (int i(0); i < uSize; ++i) {
-        Node *u = scene->newNode();
-        uVector[i] = u;
+        uVector << scene->newNode();
     }
 
     for (int i(0); i < vSize; ++i) {
-        Node *v =  scene->newNode();
-        vVector[i] = v;
+        vVector << scene->newNode();
     }
 
     // Use class edgeList
@@ -39,7 +46,7 @@ void Bipartite::init(int vSize, int uSize) {
         while ((n < degree) && usedNodes.count() < uSize && cutoff < 100) {
 
             // may have to implement check for infinite looping
-            double rand = fmod(qrand(),cumulativePreferences[uSize-1]);
+            double rand = fmod(qrand(), cumulativePreferences[uSize-1]);
             Node *u = uVector[getPreference(rand)];
 
             if (!scene->doesEdgeExist(u,v)) {
@@ -92,6 +99,17 @@ void Bipartite::addVertex() {
     qDebug("Bipartite does not support adding new vertices");
 }
 
+QWidget* Bipartite::controlWidget(QWidget *parent) {
+    if (!ctlW) {
+        ctlW = new QWidget(parent);
+        Ui::BipartiteControl *bipCtl = new Ui::BipartiteControl();
+        bipCtl->setupUi(ctlW);
+        connect(bipCtl->uSizeEdit, SIGNAL(valueChanged(int)), this, SLOT(onUSizeChanged(int)));
+        connect(bipCtl->vSizeEdit, SIGNAL(valueChanged(int)), this, SLOT(onVSizeChanged(int)));
+    }
+    return ctlW;
+}
+
 double Bipartite::fitnessDist(int x) {
     if (x == 0) {
         return 0;
@@ -138,4 +156,12 @@ void Bipartite::updatePreference() {
         cumulativePreferences[node->tag()] = prefCumulative;
         prefCumulative += fitnessDist(node->tag() + 1);
     }
+}
+
+void Bipartite::onUSizeChanged(int newSize) {
+    uSize = newSize;
+}
+
+void Bipartite::onVSizeChanged(int newSize) {
+    vSize = newSize;
 }
