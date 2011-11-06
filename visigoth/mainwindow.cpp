@@ -25,14 +25,14 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
 
+    view = new GLGraphWidget(this);
 
     connect(ui->exportToAct, SIGNAL(triggered()), this, SLOT(exportTo()));
     connect(ui->toggleControlAct, SIGNAL(toggled(bool)), this, SLOT(toggleShowControl(bool)));
     connect(ui->newNodeAct, SIGNAL(triggered()), this, SLOT(addNewNode()));
     connect(ui->randomizeAct, SIGNAL(triggered()), this, SLOT(randomizeGraph()));
-    connect(ui->generateAct, SIGNAL(triggered()), this, SLOT(generateNewGraph()));
+    connect(ui->generateAct, SIGNAL(triggered()), view, SLOT(populate()));
 
-    view = new GLGraphWidget(this);
     setCentralWidget(view);
 
     qsrand(23);
@@ -52,9 +52,7 @@ MainWindow::MainWindow(QWidget *parent) :
     view->init();
 
     connect(myComboBox, SIGNAL(currentIndexChanged(const QString &)) , this, SLOT(onComboBoxActivated(const QString &)));
-}
 
-void MainWindow::populate() {
     view->populate();
 }
 
@@ -85,10 +83,6 @@ void MainWindow::exportTo() {
     if (!fileName.isEmpty()) {
         pixmap.save(fileName, format.toAscii());
     }
-}
-
-void MainWindow::generateNewGraph() {
-    populate();
 }
 
 void MainWindow::addNewNode() {

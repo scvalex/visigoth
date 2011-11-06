@@ -15,7 +15,6 @@ public:
     explicit GLGraphWidget(QWidget *parent = 0);
 
     void init();
-    void populate();
     void itemMoved();
 
     enum MOUSE_MODES {
@@ -27,6 +26,9 @@ public:
     };
 
     GraphScene* scene() const;
+
+public slots:
+    void populate();
 
 signals:
     void algorithmChanged(Algorithm *newAlgo);

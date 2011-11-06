@@ -22,8 +22,6 @@ public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
 
-    void populate();
-
 public slots:
     void exportTo();
     void toggleShowControl(bool enabled);
@@ -32,7 +30,6 @@ private slots:
     void onAlgorithmChanged(Algorithm *newAlgo);
     void addNewNode();
     void randomizeGraph();
-    void generateNewGraph();
 
     void onComboBoxActivated(const QString &text);
 
