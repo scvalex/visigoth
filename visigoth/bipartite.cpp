@@ -4,6 +4,7 @@
 
 #include <QDebug>
 #include <QWidget>
+#include <QMessageBox>
 
 Bipartite::Bipartite(GraphScene *scene) :
     Algorithm(scene),

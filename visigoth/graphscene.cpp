@@ -10,12 +10,17 @@ GraphScene::GraphScene(AbstractGraphWidget *parent) :
     //QGraphicsScene(parent),
     algo(0),
     stats(0),
-    algoId(0),
     view(parent),
     degreeCount(100),
     metricVector(5, 0.0),
     running(false)
 {
+    myAlgorithms["Preferential Attachament"] = PREFERENTIAL_ATTACHAMENT;
+    myAlgorithms["Bipartite Model"] = BIPARTITE_MODEL;
+}
+
+QList<QString> GraphScene::algorithms() const {
+    return myAlgorithms.keys();
 }
 
 void GraphScene::reset() {
@@ -59,6 +64,7 @@ bool GraphScene::newEdge(Node *source, Node *dest) {
     return true;
 }
 
+// used only by the algorithms
 Node* GraphScene::newNode() {
     Node *node = new Node(this);
     addItem(node);
@@ -85,30 +91,32 @@ void GraphScene::itemMoved() {
     view->itemMoved();
 }
 
-void GraphScene::repopulate() {
-    reset();
-    switch (algoId) {
-    case 0:
-        if (!algo) {
-            algo = new Preferential(this);
-        }
-        break;
-    case 1:
-        if (!algo) {
-            algo = new Bipartite(this);
-        }
-        break;
-    }
-    algo->reset();
-}
-
-void GraphScene::nextAlgorithm() {
+void GraphScene::chooseAlgorithm(const QString &name) {
     if (algo) {
         delete algo;
         algo = 0;
     }
-    algoId = (algoId + 1) % 2;
+    algoId = myAlgorithms[name];
     repopulate();
+
+    emit algorithmChanged(algo);
+}
+
+void GraphScene::repopulate() {
+    reset();
+    switch (algoId) {
+    case BIPARTITE_MODEL:
+        if (!algo) {
+            algo = new Bipartite(this);
+        }
+        break;
+    case PREFERENTIAL_ATTACHAMENT:
+        if (!algo) {
+            algo = new Preferential(this);
+        }
+        break;
+    }
+    algo->reset();
 }
 
 Algorithm* GraphScene::algorithm() const {

@@ -2,38 +2,51 @@
 #include "glgraphwidget.h"
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
+#include "preferential.h"
+#include "graphscene.h"
+#include "bipartite.h"
+
 
 #include <QDesktopWidget>
 #include <QDir>
 #include <QDockWidget>
 #include <QFileDialog>
 #include <QPrinter>
+#include <QComboBox>
+#include <QStringList>
+#include <QObject>
+#include <QAction>
+#include <QMessageBox>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
-    controlVisible(true),
     ui(new Ui::MainWindow),
     algoCtl(0)
 {
+    qsrand(23);
+
     ui->setupUi(this);
+
     connect(ui->exportToAct, SIGNAL(triggered()), this, SLOT(exportTo()));
-    connect(ui->toggleControlAct, SIGNAL(toggled(bool)), this, SLOT(toggleShowControl(bool)));
 
     view = new GLGraphWidget(this);
     setCentralWidget(view);
-    qsrand(23);
 
+    connect(ui->newNodeAct, SIGNAL(triggered()), view, SLOT(addVertex()));
+    connect(ui->randomizeAct, SIGNAL(triggered()), view, SLOT(randomizePlacement()));
+    connect(ui->generateAct, SIGNAL(triggered()), view, SLOT(populate()));
     connect(view, SIGNAL(algorithmChanged(Algorithm*)), this, SLOT(onAlgorithmChanged(Algorithm*)));
-    view->init();
-}
 
-void MainWindow::populate() {
+    ui->chooserCombo->addItems(view->algorithms());
+    connect(ui->chooserCombo, SIGNAL(currentIndexChanged(const QString &)), view, SLOT(chooseAlgorithm(const QString &)));
+
+    view->chooseAlgorithm(ui->chooserCombo->currentText());
+
     view->populate();
 }
 
 MainWindow::~MainWindow() {
     delete ui;
-    delete view;
 }
 
 void MainWindow::exportTo() {
@@ -60,24 +73,10 @@ void MainWindow::exportTo() {
     }
 }
 
-void MainWindow::toggleShowControl(bool enabled) {
-    if (controlVisible == enabled)
-        return;
-
-    if (!controlVisible) {
-        addDockWidget(Qt::RightDockWidgetArea, algoCtl);
-    } else {
-        removeDockWidget(algoCtl);
-    }
-
-    controlVisible = enabled;
-}
-
 void MainWindow::onAlgorithmChanged(Algorithm *newAlgo) {
     QWidget *ctl = newAlgo->controlWidget(this);
     if (algoCtl) {
-        if (controlVisible)
-            removeDockWidget(algoCtl);
+        removeDockWidget(algoCtl);
         delete algoCtl->widget();
         delete algoCtl;
         algoCtl = 0;
@@ -85,8 +84,8 @@ void MainWindow::onAlgorithmChanged(Algorithm *newAlgo) {
     if (ctl) {
         QDockWidget *dock = new QDockWidget(this);
         dock->setWidget(ctl);
+        dock->setWindowTitle("Algorithm Control");
         algoCtl = dock;
-        if (controlVisible)
-            addDockWidget(Qt::RightDockWidgetArea, algoCtl);
+        addDockWidget(Qt::RightDockWidgetArea, algoCtl);
     }
 }

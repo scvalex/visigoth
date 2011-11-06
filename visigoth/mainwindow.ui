@@ -31,38 +31,114 @@
      <string>&amp;File</string>
     </property>
     <addaction name="exportToAct"/>
-   </widget>
-   <widget class="QMenu" name="menuView">
-    <property name="title">
-     <string>&amp;View</string>
-    </property>
-    <addaction name="toggleControlAct"/>
+    <addaction name="separator"/>
+    <addaction name="quitAct"/>
    </widget>
    <addaction name="menu_File"/>
-   <addaction name="menuView"/>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
+  <widget class="QToolBar" name="quickBar">
+   <property name="windowTitle">
+    <string>QuickBar</string>
+   </property>
+   <attribute name="toolBarArea">
+    <enum>TopToolBarArea</enum>
+   </attribute>
+   <attribute name="toolBarBreak">
+    <bool>false</bool>
+   </attribute>
+   <addaction name="newNodeAct"/>
+   <addaction name="randomizeAct"/>
+   <addaction name="generateAct"/>
+  </widget>
+  <widget class="QDockWidget" name="chooserDock">
+   <property name="windowTitle">
+    <string>Algorithm Chooser</string>
+   </property>
+   <attribute name="dockWidgetArea">
+    <number>2</number>
+   </attribute>
+   <widget class="QWidget" name="dockWidgetContents_2">
+    <layout class="QVBoxLayout" name="verticalLayout">
+     <item>
+      <widget class="QComboBox" name="chooserCombo">
+       <property name="sizeAdjustPolicy">
+        <enum>QComboBox::AdjustToMinimumContentsLength</enum>
+       </property>
+       <property name="minimumContentsLength">
+        <number>20</number>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <spacer name="verticalSpacer">
+       <property name="orientation">
+        <enum>Qt::Vertical</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>20</width>
+         <height>40</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+    </layout>
+   </widget>
+  </widget>
   <action name="exportToAct">
    <property name="text">
     <string>Export to ...</string>
    </property>
   </action>
-  <action name="toggleControlAct">
-   <property name="checkable">
-    <bool>true</bool>
-   </property>
-   <property name="checked">
-    <bool>true</bool>
-   </property>
+  <action name="newNodeAct">
    <property name="text">
-    <string>Control</string>
+    <string>New Node</string>
    </property>
    <property name="toolTip">
-    <string>Toggle the algorithm control panel</string>
+    <string>Add a new node to the graph</string>
+   </property>
+  </action>
+  <action name="randomizeAct">
+   <property name="text">
+    <string>Randomize</string>
+   </property>
+   <property name="toolTip">
+    <string>Randomize the nodes' positions</string>
+   </property>
+  </action>
+  <action name="generateAct">
+   <property name="text">
+    <string>Generate</string>
+   </property>
+   <property name="toolTip">
+    <string>Generate a new graph</string>
+   </property>
+  </action>
+  <action name="quitAct">
+   <property name="text">
+    <string>&amp;Quit</string>
    </property>
   </action>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <resources/>
- <connections/>
+ <connections>
+  <connection>
+   <sender>quitAct</sender>
+   <signal>triggered()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>close()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>199</x>
+     <y>149</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
 </ui>
