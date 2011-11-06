@@ -41,7 +41,7 @@ void GLGraphWidget::init() {
 
 void GLGraphWidget::populate() {
     myScene->repopulate();
-    myScene->randomizePlacement();
+    randomizePlacement();
 }
 
 void GLGraphWidget::itemMoved() {
@@ -50,6 +50,10 @@ void GLGraphWidget::itemMoved() {
 
 GraphScene* GLGraphWidget::scene() const {
     return myScene;
+}
+
+void GLGraphWidget::randomizePlacement() {
+    myScene->randomizePlacement();
 }
 
 /****************************
@@ -197,7 +201,7 @@ void GLGraphWidget::keyPressEvent(QKeyEvent *event) {
         scaleView(1.0/1.2);
         break;
     case Qt::Key_R:
-        myScene->randomizePlacement();
+        randomizePlacement();
         break;
     case Qt::Key_Space:
         playPause();
@@ -210,7 +214,7 @@ void GLGraphWidget::keyPressEvent(QKeyEvent *event) {
         break;
     case Qt::Key_N:
         myScene->nextAlgorithm();
-        myScene->randomizePlacement();
+        randomizePlacement();
         emit algorithmChanged(myScene->algorithm());
         break;
     case Qt::Key_Left:

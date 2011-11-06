@@ -30,7 +30,7 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->exportToAct, SIGNAL(triggered()), this, SLOT(exportTo()));
     connect(ui->toggleControlAct, SIGNAL(toggled(bool)), this, SLOT(toggleShowControl(bool)));
     connect(ui->newNodeAct, SIGNAL(triggered()), this, SLOT(addNewNode()));
-    connect(ui->randomizeAct, SIGNAL(triggered()), this, SLOT(randomizeGraph()));
+    connect(ui->randomizeAct, SIGNAL(triggered()), view, SLOT(randomizePlacement()));
     connect(ui->generateAct, SIGNAL(triggered()), view, SLOT(populate()));
 
     setCentralWidget(view);
@@ -97,10 +97,6 @@ void MainWindow::addNewNode() {
 
 }
 
-void MainWindow::randomizeGraph() {
-    view->scene()->randomizePlacement();
-}
-
 void MainWindow::toggleShowControl(bool enabled) {
     if (algoCtl)
         algoCtl->setVisible(enabled);
@@ -130,13 +126,13 @@ void MainWindow::onComboBoxActivated(const QString &text)
         view->scene()->reset();
         algo = new Bipartite(view->scene());
         algo->reset();
-        view->scene()->randomizePlacement();
+        view->randomizePlacement();
         onAlgorithmChanged(algo);
     } else if (text == "Preferential Attachment") {
         view->scene()->reset();
         algo = new Preferential(view->scene());
         algo->reset();
-        view->scene()->randomizePlacement();
+        view->randomizePlacement();
         onAlgorithmChanged(algo);
 
     }

@@ -29,6 +29,7 @@ public:
 
 public slots:
     void populate();
+    void randomizePlacement();
 
 signals:
     void algorithmChanged(Algorithm *newAlgo);
