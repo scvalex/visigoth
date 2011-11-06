@@ -38,18 +38,12 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->generateAct, SIGNAL(triggered()), view, SLOT(populate()));
     connect(view, SIGNAL(algorithmChanged(Algorithm*)), this, SLOT(onAlgorithmChanged(Algorithm*)));
 
-    myComboBox = new QComboBox(this);
     QStringList text;
     text.append("Bipartite Model");
     text.append("Preferential Attachment");
-    myComboBox->addItems(text);
 
-    connect(myComboBox, SIGNAL(currentIndexChanged(const QString &)), this, SLOT(onComboBoxActivated(const QString &)));
-
-    QDockWidget *dock = new QDockWidget(this);
-    dock->setWidget(myComboBox);
-    dock->setWindowTitle("Algorithm Chooser");
-    addDockWidget(Qt::RightDockWidgetArea, dock);
+    ui->chooserCombo->addItems(text);
+    connect(ui->chooserCombo, SIGNAL(currentIndexChanged(const QString &)), this, SLOT(onComboBoxActivated(const QString &)));
 
     view->populate();
 }
