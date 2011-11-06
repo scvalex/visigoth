@@ -14,7 +14,6 @@ class GLGraphWidget : public QGLWidget, public AbstractGraphWidget
 public:
     explicit GLGraphWidget(QWidget *parent = 0);
 
-    void init();
     void itemMoved();
 
     enum MOUSE_MODES {

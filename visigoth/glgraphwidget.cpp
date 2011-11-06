@@ -28,15 +28,9 @@ GLGraphWidget::GLGraphWidget(QWidget *parent) :
     timerId(0)
 {
     setFocusPolicy(Qt::StrongFocus);
-
-}
-
-void GLGraphWidget::init() {
     myScene = new GraphScene(this);
     myScene->setBackgroundBrush(Qt::black);
     myScene->setItemIndexMethod(QGraphicsScene::NoIndex);
-    populate();
-    emit algorithmChanged(myScene->algorithm());
 }
 
 void GLGraphWidget::populate() {

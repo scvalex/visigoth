@@ -23,19 +23,20 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow),
     algoCtl(0)
 {
-    ui->setupUi(this);
+    qsrand(23);
 
-    view = new GLGraphWidget(this);
+    ui->setupUi(this);
 
     connect(ui->exportToAct, SIGNAL(triggered()), this, SLOT(exportTo()));
     connect(ui->toggleControlAct, SIGNAL(toggled(bool)), this, SLOT(toggleShowControl(bool)));
+
+    view = new GLGraphWidget(this);
+    setCentralWidget(view);
+
     connect(ui->newNodeAct, SIGNAL(triggered()), view, SLOT(addVertex()));
     connect(ui->randomizeAct, SIGNAL(triggered()), view, SLOT(randomizePlacement()));
     connect(ui->generateAct, SIGNAL(triggered()), view, SLOT(populate()));
-
-    setCentralWidget(view);
-
-    qsrand(23);
+    connect(view, SIGNAL(algorithmChanged(Algorithm*)), this, SLOT(onAlgorithmChanged(Algorithm*)));
 
     myComboBox = new QComboBox(this);
     QStringList text;
@@ -43,22 +44,18 @@ MainWindow::MainWindow(QWidget *parent) :
     text.append("Preferential Attachment");
     myComboBox->addItems(text);
 
+    connect(myComboBox, SIGNAL(currentIndexChanged(const QString &)), this, SLOT(onComboBoxActivated(const QString &)));
+
     QDockWidget *dock = new QDockWidget(this);
     dock->setWidget(myComboBox);
     dock->setWindowTitle("Algorithm Chooser");
     addDockWidget(Qt::RightDockWidgetArea, dock);
-
-    connect(view, SIGNAL(algorithmChanged(Algorithm*)), this, SLOT(onAlgorithmChanged(Algorithm*)));
-    view->init();
-
-    connect(myComboBox, SIGNAL(currentIndexChanged(const QString &)) , this, SLOT(onComboBoxActivated(const QString &)));
 
     view->populate();
 }
 
 MainWindow::~MainWindow() {
     delete ui;
-    delete view;
 }
 
 void MainWindow::exportTo() {
