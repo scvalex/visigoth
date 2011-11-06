@@ -30,6 +30,7 @@ public:
 public slots:
     void populate();
     void randomizePlacement();
+    void addVertex();
 
 signals:
     void algorithmChanged(Algorithm *newAlgo);

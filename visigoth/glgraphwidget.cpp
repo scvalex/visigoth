@@ -56,6 +56,10 @@ void GLGraphWidget::randomizePlacement() {
     myScene->randomizePlacement();
 }
 
+void GLGraphWidget::addVertex() {
+    myScene->addVertex();
+}
+
 /****************************
  * GraphWidget imitation code (protected)
  ***************************/
@@ -210,7 +214,7 @@ void GLGraphWidget::keyPressEvent(QKeyEvent *event) {
         fitToScreen();
         break;
     case Qt::Key_A:
-        myScene->addVertex();
+        addVertex();
         break;
     case Qt::Key_N:
         myScene->nextAlgorithm();

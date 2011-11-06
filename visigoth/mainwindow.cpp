@@ -29,7 +29,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
     connect(ui->exportToAct, SIGNAL(triggered()), this, SLOT(exportTo()));
     connect(ui->toggleControlAct, SIGNAL(toggled(bool)), this, SLOT(toggleShowControl(bool)));
-    connect(ui->newNodeAct, SIGNAL(triggered()), this, SLOT(addNewNode()));
+    connect(ui->newNodeAct, SIGNAL(triggered()), view, SLOT(addVertex()));
     connect(ui->randomizeAct, SIGNAL(triggered()), view, SLOT(randomizePlacement()));
     connect(ui->generateAct, SIGNAL(triggered()), view, SLOT(populate()));
 
@@ -83,18 +83,6 @@ void MainWindow::exportTo() {
     if (!fileName.isEmpty()) {
         pixmap.save(fileName, format.toAscii());
     }
-}
-
-void MainWindow::addNewNode() {
-    //view->scene()->addVertex();
-    if (myComboBox->currentText() == "Bipartite Model") {
-        QMessageBox msgBox;
-        msgBox.setText("Bipartite model does not support adding new vertices");
-        msgBox.exec();
-    } else if (myComboBox->currentText() == "Preferential Attachment") {
-        algo->addVertex();
-    }
-
 }
 
 void MainWindow::toggleShowControl(bool enabled) {
