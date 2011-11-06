@@ -10,7 +10,6 @@ GraphScene::GraphScene(AbstractGraphWidget *parent) :
     //QGraphicsScene(parent),
     algo(0),
     stats(0),
-    algoId(0),
     view(parent),
     degreeCount(100),
     metricVector(5, 0.0),

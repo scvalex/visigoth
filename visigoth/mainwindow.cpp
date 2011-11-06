@@ -41,6 +41,8 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->chooserCombo->addItems(view->algorithms());
     connect(ui->chooserCombo, SIGNAL(currentIndexChanged(const QString &)), view, SLOT(chooseAlgorithm(const QString &)));
 
+    view->chooseAlgorithm(ui->chooserCombo->currentText());
+
     view->populate();
 }
 
@@ -90,6 +92,7 @@ void MainWindow::onAlgorithmChanged(Algorithm *newAlgo) {
         dock->setWidget(ctl);
         dock->setWindowTitle("Algorithm Control");
         algoCtl = dock;
+        algoCtl->setVisible(ui->toggleControlAct->isChecked());
         addDockWidget(Qt::RightDockWidgetArea, algoCtl);
     }
 }
