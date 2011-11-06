@@ -24,8 +24,10 @@ public:
 
 public slots:
     void exportTo();
+
 private slots:
     void onAlgorithmChanged(Algorithm *newAlgo);
+
 private:
     Ui::MainWindow *ui;
     GLGraphWidget *view;

@@ -4,7 +4,6 @@
 #include "quadtree.h"
 
 #include <QPainter>
-#include <QVector>
 
 #include <cmath>
 #include <stdexcept>
@@ -22,7 +21,6 @@ Node::Node(GraphScene *graph, QGraphicsItem *parent) :
 {
     myTag = ALL_NODES++;
     setFlag(ItemIsMovable);
-    setFlag(ItemIsSelectable);
     setFlag(ItemSendsGeometryChanges);
     setCacheMode(DeviceCoordinateCache);
     setZValue(100);
@@ -37,7 +35,7 @@ void Node::addEdge(Edge *edge) {
     edgeList << edge;
 }
 
-QPointF Node::calculatePosition(QuadTree::TreeNode &treeNode) {
+QPointF Node::calculatePosition(TreeNode &treeNode) {
     if (!scene() || scene()->mouseGrabberItem() == this) {
         newPos = pos();
         return newPos;
@@ -72,8 +70,7 @@ QPointF Node::calculatePosition(QuadTree::TreeNode &treeNode) {
     return newPos;
 }
 
-QPointF Node::calculateNonEdgeForces(QuadTree::TreeNode* treeNode)
-{
+QPointF Node::calculateNonEdgeForces(QuadTree::TreeNode* treeNode) {
     if (treeNode->size() < 1) {
         return QPointF(0, 0);
     }
@@ -127,21 +124,13 @@ QPainterPath Node::shape() const {
 
 void Node::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *) {
     painter->setPen(Qt::NoPen);
-    if (hovering) {
+    if (!hovering) {
         painter->setBrush(myBrush);
     } else {
         QColor lighter = myBrush.color();
         lighter.setAlpha(255);
         painter->setBrush(QBrush(lighter));
-
-        // convert double to string
-        std::ostringstream strs;
-        strs << "Degree: " << edgeList.count();
-        std::string str = strs.str();
-        QString tip = QString::fromStdString(str);
-        QToolTip::showText(newPos.toPoint(),tip);
     }
-
     painter->drawEllipse(-10, -10, 20, 20);
 }
 

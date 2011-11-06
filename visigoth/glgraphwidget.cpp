@@ -2,7 +2,6 @@
 #include <QMouseEvent>
 #include <QKeyEvent>
 #include <cmath>
-#include <QInputDialog>
 
 #ifdef __APPLE__
 #include <OpenGL/gl.h>

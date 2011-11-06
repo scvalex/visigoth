@@ -31,7 +31,6 @@ public:
 
     void repopulate();
     Algorithm* algorithm() const;
-    void modifyNodesNumber(int nodesNB);
 
     void itemMoved();
 

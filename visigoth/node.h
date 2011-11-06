@@ -10,8 +10,6 @@
 #include <QVariant>
 #include <QToolTip>
 
-#include <sstream>
-
 #include "graphscene.h"
 #include "quadtree.h"
 
@@ -57,10 +55,6 @@ public:
     const QVector<TreeNode*>& children() const;
     qreal width() const;
 
-    void highlight();
-    void unHighlight();
-    bool isHighlighted() const;
-
     QBrush& brush();
     void setBrush(const QBrush &b);
 
@@ -90,8 +84,6 @@ private:
 
     QPointF mapPoint(QPointF source, QPointF dest);
     QPointF calculateNonEdgeForces(TreeNode* treeNode);
-
-    bool highlighted;
 };
 
 #endif // NODE_H
