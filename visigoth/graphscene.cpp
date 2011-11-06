@@ -16,6 +16,12 @@ GraphScene::GraphScene(AbstractGraphWidget *parent) :
     metricVector(5, 0.0),
     running(false)
 {
+    myAlgorithms["Preferential Attachament"] = PREFERENTIAL_ATTACHAMENT;
+    myAlgorithms["Bipartite Model"] = BIPARTITE_MODEL;
+}
+
+QList<QString> GraphScene::algorithms() const {
+    return myAlgorithms.keys();
 }
 
 void GraphScene::reset() {
@@ -86,31 +92,32 @@ void GraphScene::itemMoved() {
     view->itemMoved();
 }
 
+void GraphScene::chooseAlgorithm(const QString &name) {
+    if (algo) {
+        delete algo;
+        algo = 0;
+    }
+    algoId = myAlgorithms[name];
+    repopulate();
+
+    emit algorithmChanged(algo);
+}
+
 void GraphScene::repopulate() {
     reset();
     switch (algoId) {
-    case 0:
+    case BIPARTITE_MODEL:
         if (!algo) {
             algo = new Bipartite(this);
         }
         break;
-    case 1:
+    case PREFERENTIAL_ATTACHAMENT:
         if (!algo) {
             algo = new Preferential(this);
         }
         break;
     }
     algo->reset();
-}
-
-
-void GraphScene::nextAlgorithm() {
-    if (algo) {
-        delete algo;
-        algo = 0;
-    }
-    algoId = (algoId + 1) % 2;
-    repopulate();
 }
 
 Algorithm* GraphScene::algorithm() const {

@@ -2,6 +2,7 @@
 #define GLGRAPHWIDGET_H
 
 #include <QGLWidget>
+#include <QList>
 
 #include "abstractgraphwidget.h"
 #include "graphscene.h"
@@ -24,12 +25,13 @@ public:
         MOUSE_DRAGGING
     };
 
-    GraphScene* scene() const;
+    QList<QString> algorithms() const;
 
 public slots:
     void populate();
     void randomizePlacement();
     void addVertex();
+    void chooseAlgorithm(const QString &name);
 
 signals:
     void algorithmChanged(Algorithm *newAlgo);

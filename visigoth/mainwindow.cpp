@@ -38,12 +38,8 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->generateAct, SIGNAL(triggered()), view, SLOT(populate()));
     connect(view, SIGNAL(algorithmChanged(Algorithm*)), this, SLOT(onAlgorithmChanged(Algorithm*)));
 
-    QStringList text;
-    text.append("Bipartite Model");
-    text.append("Preferential Attachment");
-
-    ui->chooserCombo->addItems(text);
-    connect(ui->chooserCombo, SIGNAL(currentIndexChanged(const QString &)), this, SLOT(onComboBoxActivated(const QString &)));
+    ui->chooserCombo->addItems(view->algorithms());
+    connect(ui->chooserCombo, SIGNAL(currentIndexChanged(const QString &)), view, SLOT(chooseAlgorithm(const QString &)));
 
     view->populate();
 }
@@ -95,24 +91,5 @@ void MainWindow::onAlgorithmChanged(Algorithm *newAlgo) {
         dock->setWindowTitle("Algorithm Control");
         algoCtl = dock;
         addDockWidget(Qt::RightDockWidgetArea, algoCtl);
-    }
-}
-
-
-void MainWindow::onComboBoxActivated(const QString &text)
-{
-    if (text == "Bipartite Model") {
-        view->scene()->reset();
-        algo = new Bipartite(view->scene());
-        algo->reset();
-        view->randomizePlacement();
-        onAlgorithmChanged(algo);
-    } else if (text == "Preferential Attachment") {
-        view->scene()->reset();
-        algo = new Preferential(view->scene());
-        algo->reset();
-        view->randomizePlacement();
-        onAlgorithmChanged(algo);
-
     }
 }

@@ -29,14 +29,10 @@ public slots:
 private slots:
     void onAlgorithmChanged(Algorithm *newAlgo);
 
-    void onComboBoxActivated(const QString &text);
-
 private:
     Ui::MainWindow *ui;
     GLGraphWidget *view;
     QDockWidget *algoCtl;
-    Algorithm *algo;
-    QComboBox *myComboBox;
 };
 
 #endif // MAINWINDOW_H

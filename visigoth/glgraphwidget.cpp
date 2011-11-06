@@ -1,3 +1,4 @@
+#include <QDebug>
 #include <QMouseEvent>
 #include <QKeyEvent>
 #include <cmath>
@@ -31,6 +32,11 @@ GLGraphWidget::GLGraphWidget(QWidget *parent) :
     myScene = new GraphScene(this);
     myScene->setBackgroundBrush(Qt::black);
     myScene->setItemIndexMethod(QGraphicsScene::NoIndex);
+    connect(myScene, SIGNAL(algorithmChanged(Algorithm*)), this, SIGNAL(algorithmChanged(Algorithm*)));
+}
+
+QList<QString> GLGraphWidget::algorithms() const {
+    return myScene->algorithms();
 }
 
 void GLGraphWidget::populate() {
@@ -42,16 +48,17 @@ void GLGraphWidget::itemMoved() {
     setAnimationRunning();
 }
 
-GraphScene* GLGraphWidget::scene() const {
-    return myScene;
-}
-
 void GLGraphWidget::randomizePlacement() {
     myScene->randomizePlacement();
 }
 
 void GLGraphWidget::addVertex() {
     myScene->addVertex();
+}
+
+void GLGraphWidget::chooseAlgorithm(const QString &name) {
+    myScene->chooseAlgorithm(name);
+    randomizePlacement();
 }
 
 /****************************
@@ -209,11 +216,6 @@ void GLGraphWidget::keyPressEvent(QKeyEvent *event) {
         break;
     case Qt::Key_A:
         addVertex();
-        break;
-    case Qt::Key_N:
-        myScene->nextAlgorithm();
-        randomizePlacement();
-        emit algorithmChanged(myScene->algorithm());
         break;
     case Qt::Key_Left:
         glaCameraTranslatef(cameramat, (-20.0)/zoom, 0.0, 0.0);
