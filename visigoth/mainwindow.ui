@@ -31,6 +31,8 @@
      <string>&amp;File</string>
     </property>
     <addaction name="exportToAct"/>
+    <addaction name="separator"/>
+    <addaction name="quitAct"/>
    </widget>
    <addaction name="menu_File"/>
   </widget>
@@ -113,8 +115,30 @@
     <string>Generate a new graph</string>
    </property>
   </action>
+  <action name="quitAct">
+   <property name="text">
+    <string>&amp;Quit</string>
+   </property>
+  </action>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <resources/>
- <connections/>
+ <connections>
+  <connection>
+   <sender>quitAct</sender>
+   <signal>triggered()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>close()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>199</x>
+     <y>149</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
 </ui>
