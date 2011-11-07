@@ -65,7 +65,7 @@ void Barabasialbert::addVertex(int edgesToAdd, double p) {
 
         usedNodes << vPref;
 
-        if (usedNodes.count() >= numNodes)
+        if (usedNodes.size() >= numNodes)
             break;
     }
 
@@ -76,7 +76,7 @@ void Barabasialbert::addVertex(int edgesToAdd, double p) {
 void Barabasialbert::updatePreference(const QVector<Node*> &nodes, int totalDegree) {
     int prefCumulative = 0;
 
-    if (nodes.count() == 1) {
+    if (nodes.size() == 1) {
         preferences[nodes.first()->tag()] = 100;
         cumulativePreferences[nodes.first()->tag()] = 100;
         return;
@@ -95,11 +95,11 @@ void Barabasialbert::updatePreference(const QVector<Node*> &nodes, int totalDegr
 Node* Barabasialbert::getPreference(const QVector<Node*> &nodes, double genPref) {
     const float E = 0.01;
     int l;
-    for (l = 1; l < nodes.count(); l <<= 1)
+    for (l = 1; l < nodes.size(); l <<= 1)
         ;
     int i(0);
     for (; l > 0; l >>= 1) {
-        if (l + i < nodes.count()) {
+        if (l + i < nodes.size()) {
             if (cumulativePreferences[l + i] <= genPref + E)
                 i += l;
         }

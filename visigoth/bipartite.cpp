@@ -42,7 +42,7 @@ void Bipartite::reset() {
         double degree = degreeDist(i);
         int cutoff = 0;
 
-        while ((n < degree) && usedNodes.count() < uSize && cutoff < 100) {
+        while ((n < degree) && usedNodes.size() < uSize && cutoff < 100) {
 
             // may have to implement check for infinite looping
             double rand = fmod(qrand(), cumulativePreferences[uSize-1]);
@@ -60,7 +60,7 @@ void Bipartite::reset() {
     for (int i(0); i < uSize; ++i) {
         Node *u = uVector[i];
         // if not connected
-        if (u->edges().count() == 0) {
+        if (u->edges().size() == 0) {
             Node *v = vVector[qrand() % vSize];
             scene->newEdge(u,v);
         }
@@ -130,11 +130,11 @@ double Bipartite::degreeDist(int x) {
 int Bipartite::getPreference(double genPref) {
     const float E = 0.01;
     int l;
-    for (l = 1; l < uVector.count(); l <<= 1)
+    for (l = 1; l < uVector.size(); l <<= 1)
         ;
     int i(0);
     for (; l > 0; l >>= 1) {
-        if (l + i < uVector.count()) {
+        if (l + i < uVector.size()) {
             if (cumulativePreferences[l + i] <= genPref + E)
                 i += l;
         }
@@ -145,12 +145,12 @@ int Bipartite::getPreference(double genPref) {
 void Bipartite::updatePreference() {
     double prefCumulative = 0;
 
-    if (uVector.count() == 1) {
+    if (uVector.size() == 1) {
         cumulativePreferences[0] = 1;
         return;
     }
 
-    for (int i(0); i < uVector.count(); ++i) {
+    for (int i(0); i < uVector.size(); ++i) {
         Node *node = uVector[i];
         cumulativePreferences[node->tag()] = prefCumulative;
         prefCumulative += fitnessDist(node->tag() + 1);

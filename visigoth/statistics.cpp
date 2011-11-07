@@ -20,7 +20,7 @@ double Statistics::averageLength() {
         }
     }
 
-    return allLengths / (double)(graph->nodes().count()*(graph->nodes().count() - 1));
+    return allLengths / (double)(graph->nodes().size()*(graph->nodes().size() - 1));
 }
 
 double Statistics::clusteringAvg() {
@@ -77,7 +77,7 @@ double Statistics::clusteringDegree(int degree) {
 
 QVector<Node*> Statistics::buildNeighbourVector(Node *n) {
     QList<Edge*> eList = n->edges();
-    QVector<Node*> retVec(eList.count());
+    QVector<Node*> retVec(eList.size());
 
     while(!eList.empty()) {
         Edge *e = eList.takeFirst();
@@ -132,12 +132,12 @@ int Statistics::intersectionCount(QVector<Node*> vec1, QVector<Node*> vec2) {
     QVector<Node*> *longerVec;
     int length;
 
-    if (vec1.count() > vec2.count()) {
-        length = vec1.count();
+    if (vec1.size() > vec2.size()) {
+        length = vec1.size();
         shorterVec = &vec2;
         longerVec = &vec1;
     } else {
-       length = vec2.count();
+        length = vec2.size();
        shorterVec = &vec1;
        longerVec = &vec2;
     }
@@ -153,41 +153,58 @@ int Statistics::intersectionCount(QVector<Node*> vec1, QVector<Node*> vec2) {
 }
 
 
-// Takes x measurement on a log ( base 10 ) scale
 double Statistics::powerLawExponent(){
 
 
     //Made a list here incase we want to plot the data in a widget.
     QList<Point> plot;
 
-    int logCounter = 0;
-    int counter = 1;
+    //int logCounter = 0;
+    double x(0);
 
     int maxDegree = graph->maxDegree();
-    for(double i(0); i < maxDegree ; i = (i+1) * qPow(10,logCounter)){
+    for(double i(0); i < maxDegree ; ++i){
 
-        double x = i + 1*qPow(10,logCounter);
+        x = i+1;
         double count = graph->nodeCount(i);
-        double y =  count/(double) graph->nodes().count();
+        double y =  count/(double) graph->nodes().size();
 
-        Point p(x,y);
-
-        plot << p;
-        ++counter;
-
-        if( counter == 10){
-            ++logCounter;
-            counter = 0;
+        if( y != 0 && x!= 1 )
+        {
+            Point p(qLn(x),qLn(y));
+            plot << p;
         }
 
     }
 
     double deltaY = 0.0;
     double deltaX = 0.0;
+    int c = 0;
+    double debug1 = 0;
+    double debug2 = 0;
+
+
 
     foreach(Point p, plot){
-        deltaY+= -1.0 * (p.getY() - deltaY);
-        deltaX = p.getX() - 1;
+
+        // init calculation
+        if(c == 0){
+           //yPrev = p.getY();
+           deltaY = p.getY();
+           deltaX = p.getX();
+           debug1 = deltaY;
+           ++c;
+
+        }
+
+        else if (c == plot.size() -1){
+            deltaY = p.getY() - deltaY;
+            deltaX = p.getX() - deltaX;
+            debug2 = p.getY();
+            ++c;
+        }
+
+        else{ ++c; }
     }
 
     double debug = deltaY/deltaX;

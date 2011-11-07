@@ -26,7 +26,7 @@ void Preferential::addVertex() {
 }
 
 void Preferential::addVertex(bool saveSize) {
-    addVertex((qrand() % 300 ) + 1, qrand() % 100);
+    addVertex((qrand() % 3 ) + 1, qrand() % 100);
     if (saveSize) {
         ++size;
     }
@@ -75,7 +75,7 @@ void Preferential::addVertex(int edgesToAdd, double p) {
             addNewEdges(edgesToAdd, vertex, vPref->neighbours(), usedNodes);
         }
 
-        if (usedNodes.count() >= numNodes)
+        if (usedNodes.size() >= numNodes)
             break;
     }
 
@@ -85,7 +85,7 @@ void Preferential::addVertex(int edgesToAdd, double p) {
 void Preferential::addNewEdges(int edgesToAdd,
                                Node *vertex, QVector<Node*> neighbours,
                                QList<Node*> &usedNodes) {
-    int length = neighbours.count();
+    int length = neighbours.size();
 
     while (edgesToAdd > 0 && !(neighbours.empty())) {
         int rand = qrand() % length;
@@ -99,14 +99,14 @@ void Preferential::addNewEdges(int edgesToAdd,
             neighbours.remove(rand);
         }
 
-        length = neighbours.count();
+        length = neighbours.size();
     }
 }
 
 void Preferential::updatePreference(const QVector<Node*> &nodes, int totalDegree) {
     int prefCumulative = 0;
 
-    if (nodes.count() == 1) {
+    if (nodes.size() == 1) {
         preferences[nodes.first()->tag()] = 100;
         cumulativePreferences[nodes.first()->tag()] = 100;
         return;
@@ -125,11 +125,11 @@ void Preferential::updatePreference(const QVector<Node*> &nodes, int totalDegree
 Node* Preferential::getPreference(const QVector<Node*> &nodes, double genPref) {
     const float E = 0.01;
     int l;
-    for (l = 1; l < nodes.count(); l <<= 1)
+    for (l = 1; l < nodes.size(); l <<= 1)
         ;
     int i(0);
     for (; l > 0; l >>= 1) {
-        if (l + i < nodes.count()) {
+        if (l + i < nodes.size()) {
             if (cumulativePreferences[l + i] <= genPref + E)
                 i += l;
         }
@@ -142,12 +142,12 @@ QVector<Node*> Preferential::getIntersection(QVector<Node*> vec1, QVector<Node*>
     QVector<Node*> *shorterVec;
     QVector<Node*> *longerVec;
     int length;
-    if (vec1.count() > vec2.count()) {
-        length = vec1.count();
+    if (vec1.size() > vec2.size()) {
+        length = vec1.size();
         shorterVec = &vec2;
         longerVec = &vec1;
     } else {
-       length = vec2.count();
+       length = vec2.size();
        shorterVec = &vec1;
        longerVec = &vec2;
     }

@@ -36,7 +36,7 @@ protected:
     void updatePreference(const QVector<Node*> &nodes, int numEdges);
 
 private:
-    static const int START_NODES = 100;
+    static const int START_NODES = 2000;
     GraphScene *graph;
 
     // used for selecting a node by preferential seleciton

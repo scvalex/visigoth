@@ -25,6 +25,7 @@ public:
     int maxDegree();
     // returns the number of nodes with degree "degree"
     int nodeCount(int degree);
+    void degreeRemove(Node *n);
 
     bool doesEdgeExist(Node *source, Node *dest);
 

@@ -8,5 +8,5 @@ int main(int argc, char *argv[])
     w.populate();
     w.showMaximized();
 
-    return a.exec();
+     return a.exec();
 }
