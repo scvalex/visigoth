@@ -22,8 +22,13 @@ public:
     void addVertex();
     QWidget* controlWidget(QWidget *parent = 0);
 
+private slots:
+    void onNodesChanged(int newValue);
+    void onProbabilityChanged(double newValue);
+
 private:
     GraphScene *scene;
+    QWidget *ctlW;
 
     int size;
     double probability;

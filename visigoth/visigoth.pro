@@ -33,4 +33,6 @@ HEADERS += mainwindow.h \
 
 FORMS += mainwindow.ui \
          bipartitecontrol.ui \
-         preferentialcontrol.ui
+         preferentialcontrol.ui \
+    erdoscontrol.ui
+

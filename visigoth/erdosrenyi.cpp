@@ -1,13 +1,16 @@
 #include "graphscene.h"
 #include "erdosrenyi.h"
+#include "ui_erdoscontrol.h"
 
 #include <QtCore/qmath.h>
+#include <cstdlib>
 
 ErdosRenyi::ErdosRenyi(GraphScene *scene) :
     Algorithm(scene),
     scene(scene),
+    ctlW(0),
     size(60),
-    probability(0.4)
+    probability(0.1)
 {
 }
 
@@ -15,7 +18,11 @@ ErdosRenyi::~ErdosRenyi() {
 }
 
 void ErdosRenyi::addVertex() {
-    qDebug("Cannot add vertex to Erdos-Renyi graph");
+    Node *node = scene->newNode();
+    foreach (Node *other, scene->nodes()) {
+        if ((double)qrand() / RAND_MAX < probability)
+            scene->newEdge(node, other);
+    }
 }
 
 void ErdosRenyi::reset() {
@@ -28,9 +35,8 @@ void ErdosRenyi::reset() {
 
     for (int i(0); i < size; ++i) {
         for (int j(i+1); j < size; ++j) {
-            int rand = qrand() % 2;
-            if ( rand < probability ) {
-                scene->newEdge(nodesVector[i],nodesVector[j]);
+            if ((double)qrand() / RAND_MAX < probability) {
+                scene->newEdge(nodesVector[i], nodesVector[j]);
             } else {
                 continue;
             }
@@ -39,5 +45,20 @@ void ErdosRenyi::reset() {
 }
 
 QWidget* ErdosRenyi::controlWidget(QWidget *parent) {
-    return 0;
+    if (!ctlW) {
+        ctlW = new QWidget(parent);
+        Ui::ErdosControl *erCtl = new Ui::ErdosControl();
+        erCtl->setupUi(ctlW);
+        connect(erCtl->nodesSpin, SIGNAL(valueChanged(int)), this, SLOT(onNodesChanged(int)));
+        connect(erCtl->probabilitySpin, SIGNAL(valueChanged(double)), this, SLOT(onProbabilityChanged(double)));
+    }
+    return ctlW;
+}
+
+void ErdosRenyi::onNodesChanged(int newValue) {
+    size = newValue;
+}
+
+void ErdosRenyi::onProbabilityChanged(double newValue) {
+    probability = newValue;
 }
