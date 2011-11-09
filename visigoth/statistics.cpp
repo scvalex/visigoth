@@ -20,7 +20,8 @@ double Statistics::averageLength() {
         }
     }
 
-    return allLengths / (double)(graph->nodes().size()*(graph->nodes().size() - 1));
+    double debug =  allLengths / (double)(graph->nodes().size()*(graph->nodes().size() - 1));
+    return debug;
 }
 
 double Statistics::clusteringAvg() {
@@ -30,7 +31,8 @@ double Statistics::clusteringAvg() {
         clusterCumulative += clusteringCoeff(n);
     }
 
-    return clusterCumulative / (double)graph->nodes().count();
+    double debug = clusterCumulative / (double)graph->nodes().size();
+    return debug;
 
 }
 
@@ -159,20 +161,29 @@ double Statistics::powerLawExponent(){
     //Made a list here incase we want to plot the data in a widget.
     QList<Point> plot;
 
-    //int logCounter = 0;
+    int logCounter = 0;
     double x(0);
 
     int maxDegree = graph->maxDegree();
-    for(double i(0); i < maxDegree ; ++i){
+    for(double i(0); x < maxDegree ; ++i){
 
-        x = i+1;
-        double count = graph->nodeCount(i);
+        x = (i+1)*qPow(10,logCounter);
+        if(x >=maxDegree){
+            break;
+        }
+        double count = graph->nodeCount(x);
         double y =  count/(double) graph->nodes().size();
+
 
         if( y != 0 && x!= 1 )
         {
             Point p(qLn(x),qLn(y));
             plot << p;
+        }
+
+        if(i == 9){
+           ++logCounter;
+            i=0;
         }
 
     }

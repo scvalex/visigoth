@@ -26,7 +26,7 @@ void Preferential::addVertex() {
 }
 
 void Preferential::addVertex(bool saveSize) {
-    addVertex((qrand() % 3 ) + 1, qrand() % 100);
+    addVertex((qrand() % 5 ) + 1, qrand() % 100);
     if (saveSize) {
         ++size;
     }
@@ -61,10 +61,10 @@ void Preferential::addVertex(int edgesToAdd, double p) {
     while (edgesToAdd > 0) {
         vPref = getPreference(nodes, genRandom());
         int cutOff;
-        for (cutOff = 0; cutOff < 100 && !graph->newEdge(vertex, vPref); ++cutOff) {
+        for (cutOff = 0; cutOff < 1000 && !graph->newEdge(vertex, vPref); ++cutOff) {
             vPref = getPreference(nodes, genRandom());
         }
-        if (cutOff == 100)
+        if (cutOff == 1000)
             break;
 
         --edgesToAdd;

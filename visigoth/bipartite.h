@@ -35,8 +35,8 @@ private slots:
     void onVSizeChanged(int newSize);
 
 private:
-    static const int START_USIZE = 10;
-    static const int START_VSIZE = 50;
+    static const int START_USIZE = 1000;
+    static const int START_VSIZE = 30;
     QWidget *ctlW;
 
     // Both preference funcs will only be used on vector set U

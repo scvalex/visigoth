@@ -30,7 +30,7 @@ void Barabasialbert::addVertex() {
 }
 
 void Barabasialbert::addVertex(bool saveSize) {
-    addVertex((qrand() % 3 ) + 1, qrand() % 100);
+    addVertex((qrand() % 5 ) + 1, qrand() % 100);
     if (saveSize) {
         ++size;
     }

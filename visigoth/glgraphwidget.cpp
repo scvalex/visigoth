@@ -204,6 +204,13 @@ void GLGraphWidget::keyPressEvent(QKeyEvent *event) {
     case Qt::Key_A:
         myScene->addVertex();
         break;
+        // D for Debug
+    case Qt::Key_D:
+        for(int i(0); i < 30; ++i){
+          myScene->addVertex();
+          myScene->randomizePlacement();
+        }
+        break;
     case Qt::Key_N:
         myScene->nextAlgorithm();
         myScene->randomizePlacement();
