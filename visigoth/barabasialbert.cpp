@@ -30,7 +30,7 @@ void Barabasialbert::addVertex() {
 }
 
 void Barabasialbert::addVertex(bool saveSize) {
-    addVertex((qrand() % 5 ) + 1, qrand() % 100);
+    addVertex((qrand() % 3 ) + 1, qrand() % 100);
     if (saveSize) {
         ++size;
     }
@@ -93,7 +93,7 @@ void Barabasialbert::updatePreference(const QVector<Node*> &nodes, int totalDegr
 
 // Return the preferred node, using binary search.
 Node* Barabasialbert::getPreference(const QVector<Node*> &nodes, double genPref) {
-    const float E = 0.01;
+    const float E = 0.0001;
     int l;
     for (l = 1; l < nodes.size(); l <<= 1)
         ;
@@ -108,10 +108,10 @@ Node* Barabasialbert::getPreference(const QVector<Node*> &nodes, double genPref)
 }
 
 
-// Generate random double with 2 precision.
+// Generate random double with 4 precision.
 double Barabasialbert::genRandom(){
     double main = qrand() % 100;
-    return main + (( qrand() % 100 ) / 100 );
+    return main + (( qrand() % 10000 ) / 10000 );
 }
 
 void Barabasialbert::onSizeChanged(int newSize) {
