@@ -27,6 +27,7 @@ public:
 protected slots:
     void onSizeChanged(int newSize);
     void repopulate();
+    void onDegreeChanged(int newDegree);
 
 protected:
     void addVertex(bool saveSize = false);
@@ -52,6 +53,7 @@ private:
     QMap<int, double> preferences;
 
     int size;
+    int nodeDegree;
 };
 
 #endif // PREFERENTIAL_H
