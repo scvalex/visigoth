@@ -30,6 +30,7 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->exportToAct, SIGNAL(triggered()), this, SLOT(exportTo()));
 
     view = new GLGraphWidget(this);
+
     setCentralWidget(view);
 
     connect(ui->newNodeAct, SIGNAL(triggered()), view, SLOT(addVertex()));

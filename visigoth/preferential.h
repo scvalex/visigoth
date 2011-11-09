@@ -26,6 +26,7 @@ public:
 
 protected slots:
     void onSizeChanged(int newSize);
+    void repopulate();
 
 protected:
     void addVertex(bool saveSize = false);
