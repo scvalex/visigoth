@@ -76,6 +76,9 @@ private:
     QList<Edge*> myEdges;
     AbstractGraphWidget *view;
     QVector<QList<Node*> > degreeCount;
+
+    // Metrics
+
     QVector<double> metricVector;
     bool running;
 

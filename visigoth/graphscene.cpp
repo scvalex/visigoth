@@ -126,8 +126,6 @@ void GraphScene::repopulate() {
     algo->reset();
 }
 
-
-
 Algorithm* GraphScene::algorithm() const {
     return algo;
 }
