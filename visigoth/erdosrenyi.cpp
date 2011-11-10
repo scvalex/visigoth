@@ -9,8 +9,8 @@ ErdosRenyi::ErdosRenyi(GraphScene *scene) :
     Algorithm(scene),
     scene(scene),
     ctlW(0),
-    size(60),
-    probability(0.1)
+    size(START_SIZE),
+    probability(START_PROBABILITY)
 {
 }
 
@@ -19,6 +19,7 @@ ErdosRenyi::~ErdosRenyi() {
 
 void ErdosRenyi::addVertex() {
     Node *node = scene->newNode();
+
     foreach (Node *other, scene->nodes()) {
         if ((double)qrand() / RAND_MAX < probability)
             scene->newEdge(node, other);
@@ -52,6 +53,7 @@ QWidget* ErdosRenyi::controlWidget(QWidget *parent) {
         connect(erCtl->nodesSpin, SIGNAL(valueChanged(int)), this, SLOT(onNodesChanged(int)));
         connect(erCtl->probabilitySpin, SIGNAL(valueChanged(double)), this, SLOT(onProbabilityChanged(double)));
     }
+
     return ctlW;
 }
 

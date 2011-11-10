@@ -2,12 +2,6 @@
 #define ERDOSRENYI_H
 
 #include "algorithm.h"
-#include "edge.h"
-#include "node.h"
-
-#include <QList>
-#include <QMap>
-#include <QVector>
 
 class GraphScene;
 class QWidget;
@@ -27,6 +21,9 @@ private slots:
     void onProbabilityChanged(double newValue);
 
 private:
+    static const int START_SIZE = 60;
+    static const double START_PROBABILITY = 0.1;
+
     GraphScene *scene;
     QWidget *ctlW;
 
