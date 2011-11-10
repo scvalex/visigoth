@@ -14,6 +14,7 @@ SOURCES += main.cpp \
            glancillary.c \
            algorithm.cpp \
            statistics.cpp \
+           barabasialbert.cpp \
            quadtree.cpp \
            erdosrenyi.cpp
 
@@ -28,6 +29,7 @@ HEADERS += mainwindow.h \
            algorithm.h \
            abstractgraphwidget.h \
            statistics.h \
+           barabasialbert.h \
            quadtree.h \
            erdosrenyi.h
 
@@ -35,4 +37,3 @@ FORMS += mainwindow.ui \
          bipartitecontrol.ui \
          preferentialcontrol.ui \
     erdoscontrol.ui
-

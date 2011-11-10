@@ -166,9 +166,9 @@ QList<Edge*>& Node::edges() {
 QVector<Node*> Node::neighbours() const {
     QVector<Node*> ns;
     foreach (Edge *e, edgeList) {
-        if (e->sourceNode() == this)
+        if (e->sourceNode()->tag() == this->tag())
             ns << e->destNode();
-        if (e->destNode() == this)
+        if (e->destNode()->tag() == this->tag())
             ns << e->sourceNode();
     }
     return ns;

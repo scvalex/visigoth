@@ -215,7 +215,7 @@ void GLGraphWidget::keyPressEvent(QKeyEvent *event) {
         fitToScreen();
         break;
     case Qt::Key_A:
-        addVertex();
+        myScene->addVertex();
         break;
     case Qt::Key_Left:
         glaCameraTranslatef(cameramat, (-20.0)/zoom, 0.0, 0.0);
@@ -230,7 +230,7 @@ void GLGraphWidget::keyPressEvent(QKeyEvent *event) {
         glaCameraTranslatef(cameramat, 0.0, 20.0/zoom, 0.0);
         break;
     case Qt::Key_S:
-         myScene->calculateMetrics();
+        myScene->calculateMetrics();
         break;
     default:
         QGLWidget::keyPressEvent(event);

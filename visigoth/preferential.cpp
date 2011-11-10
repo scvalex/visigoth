@@ -71,10 +71,10 @@ void Preferential::addVertex(int edgesToAdd, double p) {
     while (edgesToAdd > 0) {
         vPref = getPreference(nodes, genRandom());
         int cutOff;
-        for (cutOff = 0; cutOff < 100 && !graph->newEdge(vertex, vPref); ++cutOff) {
+        for (cutOff = 0; cutOff < 1000 && !graph->newEdge(vertex, vPref); ++cutOff) {
             vPref = getPreference(nodes, genRandom());
         }
-        if (cutOff == 100)
+        if (cutOff == 1000)
             break;
 
         --edgesToAdd;
@@ -85,7 +85,7 @@ void Preferential::addVertex(int edgesToAdd, double p) {
             addNewEdges(edgesToAdd, vertex, vPref->neighbours(), usedNodes);
         }
 
-        if (usedNodes.count() >= numNodes)
+        if (usedNodes.size() >= numNodes)
             break;
     }
 
@@ -95,7 +95,7 @@ void Preferential::addVertex(int edgesToAdd, double p) {
 void Preferential::addNewEdges(int edgesToAdd,
                                Node *vertex, QVector<Node*> neighbours,
                                QList<Node*> &usedNodes) {
-    int length = neighbours.count();
+    int length = neighbours.size();
 
     while (edgesToAdd > 0 && !(neighbours.empty())) {
         int rand = qrand() % length;
@@ -109,14 +109,14 @@ void Preferential::addNewEdges(int edgesToAdd,
             neighbours.remove(rand);
         }
 
-        length = neighbours.count();
+        length = neighbours.size();
     }
 }
 
 void Preferential::updatePreference(const QVector<Node*> &nodes, int totalDegree) {
     int prefCumulative = 0;
 
-    if (nodes.count() == 1) {
+    if (nodes.size() == 1) {
         preferences[nodes.first()->tag()] = 100;
         cumulativePreferences[nodes.first()->tag()] = 100;
         return;
@@ -133,13 +133,13 @@ void Preferential::updatePreference(const QVector<Node*> &nodes, int totalDegree
 
 // Return the preferred node, using binary search.
 Node* Preferential::getPreference(const QVector<Node*> &nodes, double genPref) {
-    const float E = 0.01;
+    const float E = 0.0001;
     int l;
-    for (l = 1; l < nodes.count(); l <<= 1)
+    for (l = 1; l < nodes.size(); l <<= 1)
         ;
     int i(0);
     for (; l > 0; l >>= 1) {
-        if (l + i < nodes.count()) {
+        if (l + i < nodes.size()) {
             if (cumulativePreferences[l + i] <= genPref + E)
                 i += l;
         }
@@ -152,12 +152,12 @@ QVector<Node*> Preferential::getIntersection(QVector<Node*> vec1, QVector<Node*>
     QVector<Node*> *shorterVec;
     QVector<Node*> *longerVec;
     int length;
-    if (vec1.count() > vec2.count()) {
-        length = vec1.count();
+    if (vec1.size() > vec2.size()) {
+        length = vec1.size();
         shorterVec = &vec2;
         longerVec = &vec1;
     } else {
-       length = vec2.count();
+       length = vec2.size();
        shorterVec = &vec1;
        longerVec = &vec2;
     }
@@ -173,10 +173,10 @@ QVector<Node*> Preferential::getIntersection(QVector<Node*> vec1, QVector<Node*>
     return retVec;
 }
 
-// Generate random double with 2 precision.
+// Generate random double with 4 precision.
 double Preferential::genRandom(){
     double main = qrand() % 100;
-    return main + (( qrand() % 100 ) / 100 );
+    return main + (( qrand() % 10000 ) / 10000 );
 }
 
 void Preferential::onSizeChanged(int newSize) {
