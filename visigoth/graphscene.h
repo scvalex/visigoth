@@ -21,8 +21,8 @@ class GraphScene : public QGraphicsScene
 public:
     explicit GraphScene(AbstractGraphWidget *parent = 0);
 
-    QVector<Node*>& nodes() const;
-    QList<Edge*>& edges() const;
+    QVector<Node*>& nodes();
+    QList<Edge*>& edges();
     int maxDegree() const;
     // returns the number of nodes with degree "degree"
     int nodeCount(int degree) const;

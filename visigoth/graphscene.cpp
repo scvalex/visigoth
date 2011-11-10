@@ -15,8 +15,8 @@ GraphScene::GraphScene(AbstractGraphWidget *parent) :
     stats(0),
     view(parent),
     degreeCount(1),
-    metricVector(6, 0.0),
-    running(false)
+    running(false),
+    metricVector(6, 0.0)
 {
 
     myAlgorithms["Preferential Attachament"] = PREFERENTIAL_ATTACHAMENT;
@@ -38,11 +38,11 @@ void GraphScene::reset() {
     //FIXME also free nodes and edges
 }
 
-QVector<Node*>& GraphScene::nodes() const {
+QVector<Node*>& GraphScene::nodes() {
     return myNodes;
 }
 
-QList<Edge*>& GraphScene::edges() const {
+QList<Edge*>& GraphScene::edges() {
     return myEdges;
 }
 
@@ -228,7 +228,7 @@ int GraphScene::nodeCount(int degree) const {
     return degreeCount[degree].size();
 }
 
-void GraphScene::degreeRemove(Node *n){
+void GraphScene::degreeRemove(Node *n) {
     int degree = n->edges().size();
 
     QList<Node*> list = degreeCount[degree-2];
