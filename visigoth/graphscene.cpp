@@ -6,8 +6,6 @@
 #include "bipartite.h"
 #include "erdosrenyi.h"
 #include "statistics.h"
-#include "barabasialbert.h"
-
 
 GraphScene::GraphScene(AbstractGraphWidget *parent) :
     //QGraphicsScene(parent),
@@ -18,7 +16,6 @@ GraphScene::GraphScene(AbstractGraphWidget *parent) :
     running(false),
     metricVector(6, 0.0)
 {
-
     myAlgorithms["Preferential Attachament"] = PREFERENTIAL_ATTACHAMENT;
     myAlgorithms["Bipartite Model"] = BIPARTITE_MODEL;
     myAlgorithms["Erdos Renyi"] = ERDOS_RENYI;
