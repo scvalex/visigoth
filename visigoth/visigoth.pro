@@ -16,7 +16,8 @@ SOURCES += main.cpp \
            statistics.cpp \
            barabasialbert.cpp \
            quadtree.cpp \
-    point.cpp
+           point.cpp \
+           erdosrenyi.cpp
 
 HEADERS += mainwindow.h \
            node.h \
@@ -31,11 +32,13 @@ HEADERS += mainwindow.h \
            statistics.h \
            barabasialbert.h \
            quadtree.h \
-    point.h
+           point.h \
+           erdosrenyi.h
 
 FORMS += mainwindow.ui \
          bipartitecontrol.ui \
-         preferentialcontrol.ui
+         preferentialcontrol.ui \
+    erdoscontrol.ui
 
 
 

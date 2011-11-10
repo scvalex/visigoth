@@ -3,6 +3,7 @@
 
 #include <QGraphicsScene>
 #include <QList>
+#include <QMap>
 #include <QSet>
 #include <QVector>
 
@@ -33,7 +34,6 @@ public:
     bool newEdge(Node *source, Node *dest);
 
     void repopulate();
-    void nextAlgorithm();
     Algorithm* algorithm() const;
 
     void itemMoved();
@@ -48,12 +48,26 @@ public:
 
     void calculateForces();
     bool isRunning();
+    void reset();
+
+    QList<QString> algorithms() const;
+
+public slots:
+    void chooseAlgorithm(const QString &name);
+
+signals:
+    void algorithmChanged(Algorithm *newAlgo);
 
 protected:
-    void reset();
     void updateDegreeCount(Node *node);
 
 private:
+    enum ALGOS {
+        BIPARTITE_MODEL,
+        PREFERENTIAL_ATTACHAMENT,
+        ERDOS_RENYI
+    };
+
     Algorithm *algo;
     Statistics *stats;
     int algoId;
@@ -65,6 +79,7 @@ private:
     QVector<double> metricVector;
     bool running;
 
+    QMap<QString, int> myAlgorithms;
 };
 
 #endif // GRAPHSCENE_H

@@ -8,7 +8,8 @@ Preferential::Preferential(GraphScene *graph) :
     Algorithm(graph),
     graph(graph),
     ctlW(0),
-    size(START_NODES)
+    size(START_NODES),
+    nodeDegree(START_DEGREE)
 {
     updatePreference(graph->nodes(), 2 * graph->edges().size());
 }
@@ -26,7 +27,8 @@ void Preferential::addVertex() {
 }
 
 void Preferential::addVertex(bool saveSize) {
-    addVertex((qrand() % 3 ) + 1, qrand() % 100);
+
+    addVertex(nodeDegree, qrand() % 100);
     if (saveSize) {
         ++size;
     }
@@ -38,8 +40,16 @@ QWidget* Preferential::controlWidget(QWidget *parent) {
         Ui::PreferentialControl *prefCtl = new Ui::PreferentialControl();
         prefCtl->setupUi(ctlW);
         connect(prefCtl->sizeEdit, SIGNAL(valueChanged(int)), this, SLOT(onSizeChanged(int)));
+        connect(prefCtl->sizeEdit, SIGNAL(editingFinished()), this, SLOT(repopulate()));
+        connect(prefCtl->degreeEdit, SIGNAL(valueChanged(int)), this, SLOT(onDegreeChanged(int)));
+        connect(prefCtl->degreeEdit, SIGNAL(editingFinished()), this, SLOT(repopulate()));
     }
     return ctlW;
+}
+
+void Preferential::repopulate() {
+    graph->repopulate();
+    graph->randomizePlacement();
 }
 
 // Add vertex using preferential attachment with clustering.
@@ -171,4 +181,8 @@ double Preferential::genRandom(){
 
 void Preferential::onSizeChanged(int newSize) {
     size = newSize;
+}
+
+void Preferential::onDegreeChanged(int newDegree) {
+    nodeDegree = newDegree;
 }

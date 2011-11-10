@@ -177,6 +177,7 @@ double Statistics::powerLawExponent(){
 
         if( y != 0 && x!= 1 )
         {
+            // incase we want to plot
             Point p(qLn(x),qLn(y));
             plot << p;
         }

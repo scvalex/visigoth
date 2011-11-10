@@ -26,6 +26,8 @@ public:
 
 protected slots:
     void onSizeChanged(int newSize);
+    void repopulate();
+    void onDegreeChanged(int newDegree);
 
 protected:
     void addVertex(bool saveSize = false);
@@ -41,7 +43,10 @@ protected:
     void updatePreference(const QVector<Node*> &nodes, int numEdges);
 
 private:
-    static const int START_NODES = 1300;
+
+    static const int START_NODES = 600;
+    static const int START_DEGREE = 3;
+
     GraphScene *graph;
     QWidget *ctlW;
 
@@ -51,6 +56,7 @@ private:
     QMap<int, double> preferences;
 
     int size;
+    int nodeDegree;
 };
 
 #endif // PREFERENTIAL_H
