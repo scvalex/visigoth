@@ -41,6 +41,9 @@
    <property name="windowTitle">
     <string>QuickBar</string>
    </property>
+   <property name="movable">
+    <bool>false</bool>
+   </property>
    <attribute name="toolBarArea">
     <enum>TopToolBarArea</enum>
    </attribute>
