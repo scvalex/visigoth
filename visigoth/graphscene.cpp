@@ -6,6 +6,7 @@
 #include "bipartite.h"
 #include "erdosrenyi.h"
 #include "statistics.h"
+#include "barabasialbert.h"
 
 GraphScene::GraphScene(AbstractGraphWidget *parent) :
     //QGraphicsScene(parent),
@@ -19,6 +20,7 @@ GraphScene::GraphScene(AbstractGraphWidget *parent) :
     myAlgorithms["Preferential Attachament"] = PREFERENTIAL_ATTACHAMENT;
     myAlgorithms["Bipartite Model"] = BIPARTITE_MODEL;
     myAlgorithms["Erdos Renyi"] = ERDOS_RENYI;
+    myAlgorithms["Barabasi Albert"] = BARABASI_ALBERT;
 }
 
 QList<QString> GraphScene::algorithms() const {
@@ -117,6 +119,9 @@ void GraphScene::repopulate() {
             break;
         case ERDOS_RENYI:
             algo = new ErdosRenyi(this);
+            break;
+        case BARABASI_ALBERT:
+            algo = new BarabasiAlbert(this);
             break;
         }
     }

@@ -65,7 +65,8 @@ private:
     enum ALGOS {
         BIPARTITE_MODEL,
         PREFERENTIAL_ATTACHAMENT,
-        ERDOS_RENYI
+        ERDOS_RENYI,
+        BARABASI_ALBERT
     };
 
     Algorithm *algo;

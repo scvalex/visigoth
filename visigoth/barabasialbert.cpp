@@ -1,13 +1,17 @@
-#include "graphscene.h"
 #include "barabasialbert.h"
 
 #include <QWidget>
 
 BarabasiAlbert::BarabasiAlbert(GraphScene *graph) :
+    Algorithm(graph),
     graph(graph),
     size(START_NODES)
 {
     updatePreference(graph->nodes(), 2 * graph->edges().size());
+}
+
+BarabasiAlbert::~BarabasiAlbert() {
+
 }
 
 void BarabasiAlbert::reset(){
