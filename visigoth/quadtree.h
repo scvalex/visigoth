@@ -21,7 +21,7 @@ public:
         bool isFarEnough(qreal distance);
 
         // A fixed tolerance. The higher the tolerance, the more unstable the graph.
-        static const qreal tolerance = 0;
+        static const qreal tolerance = 0.2;
     };
 
     // The size of the smallest quadrants.

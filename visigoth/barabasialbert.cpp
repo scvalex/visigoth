@@ -120,4 +120,3 @@ double BarabasiAlbert::genRandom(){
 void BarabasiAlbert::onSizeChanged(int newSize) {
     size = newSize;
 }
-

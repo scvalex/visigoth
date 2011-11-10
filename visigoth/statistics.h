@@ -4,12 +4,10 @@
 #include "edge.h"
 #include "node.h"
 
-
 #include <QList>
 #include <QMap>
 #include <QVector>
 #include <QtCore/qmath.h>
-
 
 class GraphScene;
 
@@ -28,7 +26,6 @@ public:
 private:
     GraphScene* graph;
 
-    //QVector<int> shortestDistance();
     double lengthSum(Node *s);
     QVector<Node*> buildNeighbourVector(Node *n);
     int intersectionCount(QVector<Node*> vec1, QVector<Node*> vec2);
