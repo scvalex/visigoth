@@ -8,11 +8,11 @@ Statistics::Statistics(GraphScene *scene):
 {
 }
 
-double Statistics::averageDegree() {
+double Statistics::degreeAvg() {
     return (2 * graph->edges().count()) / graph->nodes().count();
 }
 
-double Statistics::averageLength() {
+double Statistics::lengthAvg() {
     double allLengths = 0;
 
     foreach (Node *n, graph->nodes()) {

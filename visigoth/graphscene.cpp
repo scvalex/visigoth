@@ -8,14 +8,15 @@
 #include "statistics.h"
 #include "barabasialbert.h"
 
+#include <iostream>
+
 GraphScene::GraphScene(AbstractGraphWidget *parent) :
     //QGraphicsScene(parent),
     algo(0),
     stats(0),
     view(parent),
     degreeCount(1),
-    running(false),
-    metricVector(6, 0.0)
+    running(false)
 {
     myAlgorithms["Preferential Attachament"] = PREFERENTIAL_ATTACHAMENT;
     myAlgorithms["Bipartite Model"] = BIPARTITE_MODEL;
@@ -126,6 +127,8 @@ void GraphScene::repopulate() {
         }
     }
     algo->reset();
+
+    calculateMetrics();
 }
 
 Algorithm* GraphScene::algorithm() const {
@@ -143,6 +146,8 @@ void GraphScene::randomizePlacement() {
 
 void GraphScene::addVertex() {
     algo->addVertex();
+
+    calculateMetrics();
 }
 
 // Pre: degree is valid
@@ -168,13 +173,8 @@ void GraphScene::calculateMetrics() {
     if(!stats)
         stats = new Statistics(this);
 
-    metricVector[0] = stats->averageDegree();
-    //metricVector[1] = stats->averageLength();
-    metricVector[2] = stats->clusteringAvg();
-    metricVector[3] = stats->clusteringCoeff(myNodes[qrand() % myNodes.count()]);
-    //metricVector[4] = stats->clusteringDegree(6);
-    metricVector[5] = stats->powerLawExponent();
-
+    std::cout << stats->degreeAvg() << " " << stats->lengthAvg() << " " << stats->clusteringAvg()
+                 << " " << stats->powerLawExponent() << "\n";
 }
 
 void GraphScene::calculateForces() {

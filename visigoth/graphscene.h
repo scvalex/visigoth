@@ -79,9 +79,6 @@ private:
     QVector<QList<Node*> > degreeCount;
     bool running;
     QMap<QString, int> myAlgorithms;
-
-    // Metrics
-    QVector<double> metricVector;
 };
 
 #endif // GRAPHSCENE_H

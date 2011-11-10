@@ -15,8 +15,8 @@ class Statistics {
 public:
     Statistics(GraphScene* scene);
 
-    double averageDegree();
-    double averageLength();
+    double degreeAvg();
+    double lengthAvg();
     double clusteringAvg();
     double clusteringCoeff(Node *node);
     double clusteringDegree(int degree);
