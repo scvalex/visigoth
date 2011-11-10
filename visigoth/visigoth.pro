@@ -23,7 +23,6 @@ HEADERS += mainwindow.h \
            edge.h \
            preferential.h \
            graphscene.h \
-           glgraphwidget.h \
            glancillary.h \
            bipartite.h \
            algorithm.h \
