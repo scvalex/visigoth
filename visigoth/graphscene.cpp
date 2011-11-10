@@ -4,6 +4,7 @@
 #include "node.h"
 #include "preferential.h"
 #include "bipartite.h"
+#include "erdosrenyi.h"
 #include "statistics.h"
 
 GraphScene::GraphScene(AbstractGraphWidget *parent) :
@@ -17,6 +18,7 @@ GraphScene::GraphScene(AbstractGraphWidget *parent) :
 {
     myAlgorithms["Preferential Attachament"] = PREFERENTIAL_ATTACHAMENT;
     myAlgorithms["Bipartite Model"] = BIPARTITE_MODEL;
+    myAlgorithms["Erdos Renyi"] = ERDOS_RENYI;
 }
 
 QList<QString> GraphScene::algorithms() const {
@@ -104,17 +106,18 @@ void GraphScene::chooseAlgorithm(const QString &name) {
 
 void GraphScene::repopulate() {
     reset();
-    switch (algoId) {
-    case BIPARTITE_MODEL:
-        if (!algo) {
+    if (!algo) {
+        switch (algoId) {
+        case BIPARTITE_MODEL:
             algo = new Bipartite(this);
-        }
-        break;
-    case PREFERENTIAL_ATTACHAMENT:
-        if (!algo) {
+            break;
+        case PREFERENTIAL_ATTACHAMENT:
             algo = new Preferential(this);
+            break;
+        case ERDOS_RENYI:
+            algo = new ErdosRenyi(this);
+            break;
         }
-        break;
     }
     algo->reset();
 }

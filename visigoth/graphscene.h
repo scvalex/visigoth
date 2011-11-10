@@ -60,7 +60,8 @@ protected:
 private:
     enum ALGOS {
         BIPARTITE_MODEL,
-        PREFERENTIAL_ATTACHAMENT
+        PREFERENTIAL_ATTACHAMENT,
+        ERDOS_RENYI
     };
 
     Algorithm *algo;

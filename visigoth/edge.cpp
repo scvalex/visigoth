@@ -1,7 +1,5 @@
 #include "node.h"
 #include "edge.h"
-
-#include <QDebug>
 #include <QPainter>
 
 Edge::Edge(Node *sourceNode, Node *destNode, QGraphicsItem *parent) :
@@ -46,10 +44,10 @@ void Edge::adjust() {
 QRectF Edge::boundingRect() const {
     if (!source || !dest)
         return QRectF();
+
     return QRectF(sourcePoint, QSizeF(destPoint.x() - sourcePoint.x(),
                                       destPoint.y() - sourcePoint.y()))
             .normalized();
-
 }
 
 

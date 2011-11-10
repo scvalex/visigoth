@@ -9,7 +9,6 @@
 #include <QGraphicsItem>
 #include <QVariant>
 #include <QToolTip>
-#include <sstream>
 
 #include "graphscene.h"
 #include "quadtree.h"
@@ -56,10 +55,10 @@ public:
     const QVector<TreeNode*>& children() const;
     qreal width() const;
 
-    static void reset();
-
     QBrush& brush();
     void setBrush(const QBrush &b);
+
+    static void reset();
 
 protected:
     explicit Node(GraphScene *graph, QGraphicsItem *parent = 0);
