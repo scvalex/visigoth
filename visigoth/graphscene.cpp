@@ -38,11 +38,11 @@ void GraphScene::reset() {
     //FIXME also free nodes and edges
 }
 
-QVector<Node*>& GraphScene::nodes() {
+QVector<Node*>& GraphScene::nodes() const {
     return myNodes;
 }
 
-QList<Edge*>& GraphScene::edges() {
+QList<Edge*>& GraphScene::edges() const {
     return myEdges;
 }
 
@@ -78,13 +78,13 @@ Node* GraphScene::newNode() {
     return node;
 }
 
-bool GraphScene::doesEdgeExist(Node *source, Node *dest) {
+bool GraphScene::doesEdgeExist(Node *source, Node *dest) const {
     int sourceTag = source->tag();
     int destTag = dest->tag();
 
     if (0 <= sourceTag && sourceTag < hasEdge.size() &&
-        0 <= destTag && destTag < hasEdge.size())
-    {
+        0 <= destTag && destTag < hasEdge.size()) {
+        // We consider an edge always to be connected to itself
         return hasEdge[sourceTag].contains(destTag) ||
                hasEdge[destTag].contains(sourceTag) ||
                source->tag() == dest->tag();
@@ -144,7 +144,7 @@ void GraphScene::addVertex() {
 }
 
 // Pre: degree is valid
-QList<Node *> GraphScene::getDegreeList(int degree) {
+QList<Node *> GraphScene::getDegreeList(int degree) const {
     return degreeCount[degree - 1];
 }
 
@@ -211,17 +211,16 @@ void GraphScene::calculateForces() {
     }
 }
 
-bool GraphScene::isRunning() {
+bool GraphScene::isRunning() const {
     return true;
 }
 
-int GraphScene::maxDegree(){
+int GraphScene::maxDegree() const {
 
     return degreeCount.count();
 }
 
-int GraphScene::nodeCount(int degree){
-
+int GraphScene::nodeCount(int degree) const {
     /*
     actually it is degree is one less than the degree we are looking for
     But since this is only used by statistics.cpp it does not matter
@@ -230,7 +229,6 @@ int GraphScene::nodeCount(int degree){
 }
 
 void GraphScene::degreeRemove(Node *n){
-
     int degree = n->edges().size();
 
     QList<Node*> list = degreeCount[degree-2];
@@ -243,9 +241,6 @@ void GraphScene::degreeRemove(Node *n){
         }
 
         ++counter;
-
     }
-
-
 }
 
