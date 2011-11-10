@@ -10,15 +10,14 @@
 #include <QVector>
 
 class GraphScene;
-class Barabasialbert;
 class QWidget;
 
-class Barabasialbert : public Algorithm {
+class BarabasiAlbert : public Algorithm {
 
     Q_OBJECT
 
 public:
-    Barabasialbert(GraphScene *graph);
+    BarabasiAlbert(GraphScene *graph);
 
     void reset();
     void addVertex();
