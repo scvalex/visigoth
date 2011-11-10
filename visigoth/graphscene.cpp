@@ -8,8 +8,6 @@
 #include "statistics.h"
 #include "barabasialbert.h"
 
-#include <iostream>
-
 GraphScene::GraphScene(AbstractGraphWidget *parent) :
     //QGraphicsScene(parent),
     algo(0),
@@ -166,15 +164,13 @@ void GraphScene::updateDegreeCount(Node *node) {
 
     if(degree > 1)
          degreeRemove(node);
-
 }
 
 void GraphScene::calculateMetrics() {
     if(!stats)
         stats = new Statistics(this);
 
-    std::cout << stats->degreeAvg() << " " << stats->lengthAvg() << " " << stats->clusteringAvg()
-                 << " " << stats->powerLawExponent() << "\n";
+    // Do something with the metrics
 }
 
 void GraphScene::calculateForces() {
@@ -245,4 +241,3 @@ void GraphScene::degreeRemove(Node *n) {
         ++counter;
     }
 }
-
