@@ -9,7 +9,7 @@ Preferential::Preferential(GraphScene *graph) :
     graph(graph),
     ctlW(0),
     size(START_NODES),
-    nodeDegree(3)
+    nodeDegree(START_DEGREE)
 {
     updatePreference(graph->nodes(), 2 * graph->edges().size());
 }
