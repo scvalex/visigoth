@@ -127,8 +127,6 @@ void GraphScene::repopulate() {
         }
     }
     algo->reset();
-
-    calculateMetrics();
 }
 
 Algorithm* GraphScene::algorithm() const {
@@ -142,6 +140,8 @@ void GraphScene::randomizePlacement() {
     foreach (Edge *edge, edges()) {
         edge->adjust();
     }
+
+    calculateMetrics();
 }
 
 void GraphScene::addVertex() {
