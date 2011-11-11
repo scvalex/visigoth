@@ -119,17 +119,18 @@ void GLGraphWidget::mousePressEvent(QMouseEvent *event) {
         return;
 
     if (event->button() == Qt::LeftButton) {
-        switch (0) { // FIXME: Should get modifier key status here
+        switch (event->modifiers()) {
             case 0:  // When no modifiers are pressed
                 mouseMode = MOUSE_TRANSLATING;
                 break;
-            //case GLUT_ACTIVE_SHIFT:
+            case Qt::ShiftModifier:
                 mouseMode = MOUSE_ROTATING;
                 break;
-            //case GLUT_ACTIVE_SHIFT | GLUT_ACTIVE_CTRL:
+            // FIXME: Use Shift + Ctrl instead
+            case Qt::AltModifier:
                 mouseMode = MOUSE_TRANSLATING;
                 break;
-            //case GLUT_ACTIVE_CTRL:
+            case Qt::ControlModifier:
                 mouseMode = MOUSE_TRANSLATING2;
                 break;
         }
@@ -165,17 +166,17 @@ void GLGraphWidget::mouseMoveEvent(QMouseEvent *event) {
 
     switch(mouseMode) {
         case MOUSE_TRANSLATING:
-            //glaCameraTranslatef(cameramat, (0.1) * dx, (-0.1) * dy, 0.0);
+            glaCameraTranslatef(cameramat, (3.0) * dx, (-3.0) * dy, 0.0);
             // Modified for 2D projection and zoom
-            glaCameraTranslatef(cameramat, (GLfloat)dx/zoom, (GLfloat)dy/zoom, 0.0);
+            //glaCameraTranslatef(cameramat, (GLfloat)dx/zoom, (GLfloat)dy/zoom, 0.0);
             break;
         case MOUSE_TRANSLATING2:
-            //glaCameraRotatef(cameramat, dx, 0.0, 1.0, 0.0);
-            //glaCameraTranslatef(cameramat, 0.0, 0.0, (-0.1) * dy);
+            glaCameraRotatef(cameramat, dx, 0.0, 1.0, 0.0);
+            glaCameraTranslatef(cameramat, 0.0, 0.0, (-3.0) * dy);
             break;
         case MOUSE_ROTATING:
-            //glaCameraRotatef(cameramat, dx, 0.0, 1.0, 0.0);
-            //glaCameraRotatef(cameramat, dy, 1.0, 0.0, 0.0);
+            glaCameraRotatef(cameramat, dx, 0.0, 1.0, 0.0);
+            glaCameraRotatef(cameramat, dy, 1.0, 0.0, 0.0);
             break;
         case MOUSE_DRAGGING:
         case MOUSE_IDLE:
@@ -360,7 +361,10 @@ void GLGraphWidget::initProjection() {
     glScalef(zoom, zoom, 1.0/zoom);
 
     // Flat projection
-    gluOrtho2D(0.0, (GLfloat)width(), (GLfloat)height(), 0.0);
+    //gluOrtho2D(0.0, (GLfloat)width(), (GLfloat)height(), 0.0);
+
+    // Persective projection
+    gluPerspective(90, (GLfloat)width()/(GLfloat)height(), 0.0001, 100000.0);
 
     // Switch to Model/view transformation for drawing objects
     glMatrixMode(GL_MODELVIEW);
