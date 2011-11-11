@@ -83,6 +83,11 @@ void GLGraphWidget::playPause() {
 
 void GLGraphWidget::scaleView(qreal scaleFactor) {
     zoom *= scaleFactor;
+
+    // Clamped zoom to keep the graph from disappearing in 3D rendering nirvana
+    if (zoom < 1.0)
+        zoom = 1.0;
+
     this->initProjection();
 }
 
