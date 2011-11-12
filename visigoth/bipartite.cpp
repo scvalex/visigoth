@@ -1,6 +1,8 @@
 #include "graphscene.h"
 #include "bipartite.h"
 #include "ui_bipartitecontrol.h"
+#include "ui_mainwindow.h"
+#include "mainwindow.h"
 
 #include <QDebug>
 #include <QWidget>

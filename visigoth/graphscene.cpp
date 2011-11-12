@@ -14,7 +14,8 @@ GraphScene::GraphScene(AbstractGraphWidget *parent) :
     stats(0),
     view(parent),
     degreeCount(1),
-    running(false)
+    running(false),
+    canAddNewVertex(true)
 {
     myAlgorithms["Preferential Attachament"] = PREFERENTIAL_ATTACHAMENT;
     myAlgorithms["Bipartite Model"] = BIPARTITE_MODEL;
@@ -112,15 +113,19 @@ void GraphScene::repopulate() {
         switch (algoId) {
         case BIPARTITE_MODEL:
             algo = new Bipartite(this);
+            canAddNewVertex = false;
             break;
         case PREFERENTIAL_ATTACHAMENT:
             algo = new Preferential(this);
+            canAddNewVertex = true;
             break;
         case ERDOS_RENYI:
             algo = new ErdosRenyi(this);
+            canAddNewVertex = true;
             break;
         case BARABASI_ALBERT:
             algo = new BarabasiAlbert(this);
+            canAddNewVertex = true;
             break;
         }
     }

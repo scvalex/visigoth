@@ -89,4 +89,11 @@ void MainWindow::onAlgorithmChanged(Algorithm *newAlgo) {
         algoCtl = dock;
         addDockWidget(Qt::RightDockWidgetArea, algoCtl);
     }
+
+
+    if (!view->myScene->canAddNewVertex) {
+        ui->newNodeAct->setEnabled(false);
+    } else {
+        ui->newNodeAct->setEnabled(true);
+    }
 }
