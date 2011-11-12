@@ -19,6 +19,7 @@ public:
 private slots:
     void onNodesChanged(int newValue);
     void onProbabilityChanged(double newValue);
+    void repopulate();
 
 private:
     static const int START_SIZE = 60;
