@@ -8,6 +8,10 @@
 class GraphScene;
 class QWidget;
 
+namespace QOAuth {
+    class Interface;
+};
+
 class Twitter : public Algorithm
 {
     Q_OBJECT
@@ -18,6 +22,13 @@ public:
     void reset();
     void addVertex();
     QWidget* controlWidget(QWidget *parent);
+
+    void login();
+
+private:
+    QOAuth::Interface *oauth;
+    QByteArray token;
+    QByteArray tokenSecret;
 };
 
 #endif // TWITTER_H

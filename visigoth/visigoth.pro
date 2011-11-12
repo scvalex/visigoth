@@ -1,4 +1,6 @@
-QT += core gui opengl oauth xml
+QT += core gui opengl xml
+
+CONFIG += oauth
 
 TARGET = visigoth
 TEMPLATE = app
@@ -13,10 +15,9 @@ SOURCES += main.cpp \
            glgraphwidget.cpp \
            glancillary.c \
            algorithm.cpp \
-           statistics.cpp \
-           quadtree.cpp \
            twitter.cpp \
            barabasialbert.cpp \
+           statistics.cpp \
            quadtree.cpp \
            erdosrenyi.cpp
 

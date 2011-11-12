@@ -7,6 +7,7 @@
 #include "erdosrenyi.h"
 #include "statistics.h"
 #include "barabasialbert.h"
+#include "twitter.h"
 
 GraphScene::GraphScene(AbstractGraphWidget *parent) :
     //QGraphicsScene(parent),
@@ -20,6 +21,7 @@ GraphScene::GraphScene(AbstractGraphWidget *parent) :
     myAlgorithms["Bipartite Model"] = BIPARTITE_MODEL;
     myAlgorithms["Erdos Renyi"] = ERDOS_RENYI;
     myAlgorithms["Barabasi Albert"] = BARABASI_ALBERT;
+    myAlgorithms["Twitter"] = TWITTER;
 }
 
 QList<QString> GraphScene::algorithms() const {
@@ -122,6 +124,9 @@ void GraphScene::repopulate() {
         case BARABASI_ALBERT:
             algo = new BarabasiAlbert(this);
             break;
+        case TWITTER:
+            algo = new Twitter(this);
+            break;
         }
     }
     algo->reset();
@@ -167,8 +172,9 @@ void GraphScene::updateDegreeCount(Node *node) {
 }
 
 void GraphScene::calculateMetrics() {
-    if(!stats)
+    if(!stats) {
         stats = new Statistics(this);
+    }
 
     // Do something with the metrics
 }

@@ -7,5 +7,8 @@ int main(int argc, char *argv[])
     MainWindow w;
     w.showMaximized();
 
+    QCoreApplication::setOrganizationName("Visigoth");
+    QCoreApplication::setApplicationName("Visigoth");
+
     return a.exec();
 }
