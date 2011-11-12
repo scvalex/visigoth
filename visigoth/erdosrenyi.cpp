@@ -51,9 +51,9 @@ QWidget* ErdosRenyi::controlWidget(QWidget *parent) {
         Ui::ErdosControl *erCtl = new Ui::ErdosControl();
         erCtl->setupUi(ctlW);
         connect(erCtl->nodesSpin, SIGNAL(valueChanged(int)), this, SLOT(onNodesChanged(int)));
-        connect(erCtl->nodesSpin, SIGNAL(editingFinished()), this, SLOT(repopulate()));
+        //connect(erCtl->nodesSpin, SIGNAL(editingFinished()), this, SLOT(repopulate()));
         connect(erCtl->probabilitySpin, SIGNAL(valueChanged(double)), this, SLOT(onProbabilityChanged(double)));
-        connect(erCtl->probabilitySpin, SIGNAL(editingFinished()), this, SLOT(repopulate()));
+        //connect(erCtl->probabilitySpin, SIGNAL(editingFinished()), this, SLOT(repopulate()));
     }
 
     return ctlW;
@@ -66,8 +66,10 @@ void ErdosRenyi::repopulate() {
 
 void ErdosRenyi::onNodesChanged(int newValue) {
     size = newValue;
+    repopulate();
 }
 
 void ErdosRenyi::onProbabilityChanged(double newValue) {
     probability = newValue;
+    repopulate();
 }

@@ -40,9 +40,9 @@ QWidget* Preferential::controlWidget(QWidget *parent) {
         Ui::PreferentialControl *prefCtl = new Ui::PreferentialControl();
         prefCtl->setupUi(ctlW);
         connect(prefCtl->sizeEdit, SIGNAL(valueChanged(int)), this, SLOT(onSizeChanged(int)));
-        connect(prefCtl->sizeEdit, SIGNAL(editingFinished()), this, SLOT(repopulate()));
+        //connect(prefCtl->sizeEdit, SIGNAL(editingFinished()), this, SLOT(repopulate()));
         connect(prefCtl->degreeEdit, SIGNAL(valueChanged(int)), this, SLOT(onDegreeChanged(int)));
-        connect(prefCtl->degreeEdit, SIGNAL(editingFinished()), this, SLOT(repopulate()));
+        //connect(prefCtl->degreeEdit, SIGNAL(editingFinished()), this, SLOT(repopulate()));
     }
     return ctlW;
 }
@@ -181,8 +181,10 @@ double Preferential::genRandom(){
 
 void Preferential::onSizeChanged(int newSize) {
     size = newSize;
+    repopulate();
 }
 
 void Preferential::onDegreeChanged(int newDegree) {
     nodeDegree = newDegree;
+    repopulate();
 }
