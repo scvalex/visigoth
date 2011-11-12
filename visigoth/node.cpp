@@ -35,7 +35,7 @@ void Node::addEdge(Edge *edge) {
     edgeList << edge;
 }
 
-QPointF Node::calculatePosition(QuadTree::TreeNode &treeNode) {
+QPointF Node::calculatePosition(TreeNode &treeNode) {
     if (!scene() || scene()->mouseGrabberItem() == this) {
         newPos = pos();
         return newPos;
@@ -70,8 +70,7 @@ QPointF Node::calculatePosition(QuadTree::TreeNode &treeNode) {
     return newPos;
 }
 
-QPointF Node::calculateNonEdgeForces(TreeNode* treeNode)
-{
+QPointF Node::calculateNonEdgeForces(QuadTree::TreeNode* treeNode) {
     if (treeNode->size() < 1) {
         return QPointF(0, 0);
     }
@@ -80,10 +79,10 @@ QPointF Node::calculateNonEdgeForces(TreeNode* treeNode)
                 this->pos().y() - treeNode->center().y());
     qreal dx = vec.x();
     qreal dy = vec.y();
-
     qreal distance = sqrt(dx*dx + dy*dy);
 
     QPointF vel;
+
     if (treeNode->isFarEnough(distance) || treeNode->size() == 1) {
         double l = 2.0 * (dx*dx + dy*dy);
 
@@ -131,13 +130,6 @@ void Node::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *)
         QColor lighter = myBrush.color();
         lighter.setAlpha(255);
         painter->setBrush(QBrush(lighter));
-
-        // convert double to string
-        std::ostringstream strs;
-        strs << "Degree: " << edgeList.count();
-        std::string str = strs.str();
-        QString tip = QString::fromStdString(str);
-        QToolTip::showText(newPos.toPoint(),tip);
     }
     painter->drawEllipse(-10, -10, 20, 20);
 }
@@ -174,9 +166,9 @@ QList<Edge*>& Node::edges() {
 QVector<Node*> Node::neighbours() const {
     QVector<Node*> ns;
     foreach (Edge *e, edgeList) {
-        if (e->sourceNode() == this)
+        if (e->sourceNode()->tag() == this->tag())
             ns << e->destNode();
-        if (e->destNode() == this)
+        if (e->destNode()->tag() == this->tag())
             ns << e->sourceNode();
     }
     return ns;
@@ -207,21 +199,17 @@ qreal Node::width() const {
 }
 
 bool Node::getVisited(){
-
     return visited;
 }
 
 void Node::setVisited(bool v){
-
     visited = v ;
 }
 int Node::getDistance(){
-
     return distance;
 }
 
 void Node::setDistance(int d){
-
     distance = d;
 }
 

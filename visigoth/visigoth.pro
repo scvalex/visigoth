@@ -15,7 +15,10 @@ SOURCES += main.cpp \
            algorithm.cpp \
            statistics.cpp \
            quadtree.cpp \
-           twitter.cpp
+           twitter.cpp \
+           barabasialbert.cpp \
+           quadtree.cpp \
+           erdosrenyi.cpp
 
 HEADERS += mainwindow.h \
            node.h \
@@ -29,8 +32,11 @@ HEADERS += mainwindow.h \
            abstractgraphwidget.h \
            statistics.h \
            quadtree.h \
-           twitter.h
+           twitter.h \
+           barabasialbert.h \
+           erdosrenyi.h
 
 FORMS += mainwindow.ui \
          bipartitecontrol.ui \
-         preferentialcontrol.ui
+         preferentialcontrol.ui \
+         erdoscontrol.ui

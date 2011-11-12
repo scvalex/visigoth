@@ -5,6 +5,7 @@
 
 #include <QMainWindow>
 #include <QGraphicsView>
+#include <QComboBox>
 
 class Algorithm;
 class QDockWidget;
@@ -21,19 +22,14 @@ public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
 
-    void populate();
-
 public slots:
     void exportTo();
-    void toggleShowControl(bool enabled);
 
 private slots:
     void onAlgorithmChanged(Algorithm *newAlgo);
 
 private:
-    bool controlVisible;
     Ui::MainWindow *ui;
-    //GraphWidget *view;
     GLGraphWidget *view;
     QDockWidget *algoCtl;
 };

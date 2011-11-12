@@ -1,3 +1,4 @@
+#include <QDebug>
 #include <QMouseEvent>
 #include <QKeyEvent>
 #include <cmath>
@@ -28,24 +29,36 @@ GLGraphWidget::GLGraphWidget(QWidget *parent) :
     timerId(0)
 {
     setFocusPolicy(Qt::StrongFocus);
-
-}
-
-void GLGraphWidget::init() {
     myScene = new GraphScene(this);
     myScene->setBackgroundBrush(Qt::black);
     myScene->setItemIndexMethod(QGraphicsScene::NoIndex);
-    populate();
-    emit algorithmChanged(myScene->algorithm());
+    connect(myScene, SIGNAL(algorithmChanged(Algorithm*)), this, SIGNAL(algorithmChanged(Algorithm*)));
+}
+
+QList<QString> GLGraphWidget::algorithms() const {
+    return myScene->algorithms();
 }
 
 void GLGraphWidget::populate() {
     myScene->repopulate();
-    myScene->randomizePlacement();
+    randomizePlacement();
 }
 
 void GLGraphWidget::itemMoved() {
     setAnimationRunning();
+}
+
+void GLGraphWidget::randomizePlacement() {
+    myScene->randomizePlacement();
+}
+
+void GLGraphWidget::addVertex() {
+    myScene->addVertex();
+}
+
+void GLGraphWidget::chooseAlgorithm(const QString &name) {
+    myScene->chooseAlgorithm(name);
+    randomizePlacement();
 }
 
 /****************************
@@ -193,7 +206,7 @@ void GLGraphWidget::keyPressEvent(QKeyEvent *event) {
         scaleView(1.0/1.2);
         break;
     case Qt::Key_R:
-        myScene->randomizePlacement();
+        randomizePlacement();
         break;
     case Qt::Key_Space:
         playPause();
@@ -203,11 +216,6 @@ void GLGraphWidget::keyPressEvent(QKeyEvent *event) {
         break;
     case Qt::Key_A:
         myScene->addVertex();
-        break;
-    case Qt::Key_N:
-        myScene->nextAlgorithm();
-        myScene->randomizePlacement();
-        emit algorithmChanged(myScene->algorithm());
         break;
     case Qt::Key_Left:
         glaCameraTranslatef(cameramat, (-20.0)/zoom, 0.0, 0.0);
@@ -222,7 +230,7 @@ void GLGraphWidget::keyPressEvent(QKeyEvent *event) {
         glaCameraTranslatef(cameramat, 0.0, 20.0/zoom, 0.0);
         break;
     case Qt::Key_S:
-         myScene->calculateMetrics();
+        myScene->calculateMetrics();
         break;
     default:
         QGLWidget::keyPressEvent(event);

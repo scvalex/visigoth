@@ -2,6 +2,7 @@
 #define GLGRAPHWIDGET_H
 
 #include <QGLWidget>
+#include <QList>
 
 #include "abstractgraphwidget.h"
 #include "graphscene.h"
@@ -14,8 +15,6 @@ class GLGraphWidget : public QGLWidget, public AbstractGraphWidget
 public:
     explicit GLGraphWidget(QWidget *parent = 0);
 
-    void init();
-    void populate();
     void itemMoved();
 
     enum MOUSE_MODES {
@@ -25,6 +24,14 @@ public:
         MOUSE_TRANSLATING2,
         MOUSE_DRAGGING
     };
+
+    QList<QString> algorithms() const;
+
+public slots:
+    void populate();
+    void randomizePlacement();
+    void addVertex();
+    void chooseAlgorithm(const QString &name);
 
 signals:
     void algorithmChanged(Algorithm *newAlgo);
@@ -54,6 +61,7 @@ private:
     Node *selectGL(int x, int y);
 
     GraphScene *myScene;
+
     GLfloat cameramat[16];
     GLfloat zoom;
     int mouseX, mouseY;
