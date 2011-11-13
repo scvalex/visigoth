@@ -40,4 +40,5 @@ HEADERS += mainwindow.h \
 FORMS += mainwindow.ui \
          bipartitecontrol.ui \
          preferentialcontrol.ui \
-         erdoscontrol.ui
+         erdoscontrol.ui \
+         twitauthdialog.ui

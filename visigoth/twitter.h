@@ -12,6 +12,10 @@ namespace QOAuth {
     class Interface;
 };
 
+namespace Ui {
+    class TwitterAuthDialog;
+};
+
 class Twitter : public Algorithm
 {
     Q_OBJECT
@@ -23,10 +27,11 @@ public:
     void addVertex();
     QWidget* controlWidget(QWidget *parent);
 
-    void login();
+    bool login();
 
 private:
     QOAuth::Interface *oauth;
+    Ui::TwitterAuthDialog *authD;
     QByteArray token;
     QByteArray tokenSecret;
 };

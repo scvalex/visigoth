@@ -21,7 +21,7 @@ GraphScene::GraphScene(AbstractGraphWidget *parent) :
     myAlgorithms["Bipartite Model"] = BIPARTITE_MODEL;
     myAlgorithms["Erdos Renyi"] = ERDOS_RENYI;
     myAlgorithms["Barabasi Albert"] = BARABASI_ALBERT;
-    myAlgorithms["Twitter"] = TWITTER;
+    myAlgorithms["ATwitter"] = TWITTER;
 }
 
 QList<QString> GraphScene::algorithms() const {
