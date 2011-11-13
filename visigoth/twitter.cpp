@@ -36,13 +36,11 @@ QWidget* Twitter::controlWidget(QWidget *parent) {
 bool Twitter::login() {
     token = QByteArray("");
     tokenSecret = QByteArray("");
-    QOAuth::ParamMap map;
-    map.insert("oauth_callback_url", "oob");
     QOAuth::ParamMap reply = oauth->requestToken("https://api.twitter.com/oauth/request_token",
                                                  QOAuth::GET, QOAuth::HMAC_SHA1);
     if (oauth->error() == QOAuth::NoError) {
-        token = reply.value(QByteArray("oauth_token"));
-        tokenSecret = reply.value(QByteArray("oauth_token_secret"));
+        token = reply.value(QOAuth::tokenParameterName());
+        tokenSecret = reply.value(QOAuth::tokenSecretParameterName());
         qDebug("Got unauthrized request token");
     } else {
         qDebug("Could not get request token");
@@ -50,7 +48,8 @@ bool Twitter::login() {
     }
 
     QUrl twitterAuthorizationURL("https://api.twitter.com/oauth/authorize");
-    twitterAuthorizationURL.addQueryItem("oauth_token", token);
+    twitterAuthorizationURL.addQueryItem(QOAuth::tokenParameterName(), token);
+    twitterAuthorizationURL.addQueryItem("oauth_callback_url", "oob");
     QDesktopServices::openUrl(twitterAuthorizationURL);
 
     qDebug("Opening the Dialog of Secrets");
@@ -66,7 +65,7 @@ bool Twitter::login() {
     QString secret = authD->pinEdit->text();
     qDebug() << "Secret is" << secret;
 
-    map.clear();
+    QOAuth::ParamMap map;
     map.insert("oauth_verifier", secret.toAscii());
     reply = oauth->accessToken("https://api.twitter.com/oauth/access_token", QOAuth::POST, token,
                                tokenSecret, QOAuth::HMAC_SHA1, map);
@@ -77,6 +76,7 @@ bool Twitter::login() {
         qDebug("Access token received");
     } else {
         qDebug("(access token)Got error: %d", oauth->error());
+        return false;
     }
     return true;
 }

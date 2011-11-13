@@ -71,7 +71,7 @@ Please login and enter your PIN here:</string>
      <item>
       <widget class="QLineEdit" name="pinEdit">
        <property name="maxLength">
-        <number>6</number>
+        <number>12</number>
        </property>
        <property name="placeholderText">
         <string comment="PIN" extracomment="PIN"/>
