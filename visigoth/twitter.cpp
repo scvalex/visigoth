@@ -4,6 +4,12 @@
 
 #include <QDebug>
 #include <QDesktopServices>
+#include <QDomDocument>
+#include <QDomNode>
+#include <QDomNodeList>
+#include <QNetworkAccessManager>
+#include <QNetworkRequest>
+#include <QNetworkReply>
 #include <QSettings>
 #include <QUrl>
 #include <QWidget>
@@ -12,12 +18,16 @@
 Twitter::Twitter(GraphScene *scene) :
     Algorithm(scene),
     oauth(new QOAuth::Interface(this)),
-    authD(0)
+    authD(0),
+    net(new QNetworkAccessManager(this))
 {
     oauth->setConsumerKey("zaeBj6kxsz2P0N7O1LwUWg");
     oauth->setConsumerSecret("8yf2EkBuH9vNr1D3XlM1RKZ9GkoXKAfpNLLBfwzwg");
     oauth->setRequestTimeout(10000);
-    login();
+    connect(net, SIGNAL(finished(QNetworkReply*)), this, SLOT(replyGot(QNetworkReply*)));
+    if (login()) {
+        getFollowers("rchatley");
+    }
 }
 
 Twitter::~Twitter() {
@@ -79,4 +89,42 @@ bool Twitter::login() {
         return false;
     }
     return true;
+}
+
+void Twitter::getFollowers(QString username) {
+    qDebug() << "Getting followers for" << username;
+
+    QString requestUrl("http://api.twitter.com/1/followers/ids.xml");
+
+    QOAuth::ParamMap map;
+    QByteArray authH = oauth->createParametersString(requestUrl, QOAuth::GET, token, tokenSecret, QOAuth::HMAC_SHA1, map,
+                                                     QOAuth::ParseForHeaderArguments);
+
+    QUrl url(requestUrl);
+    url.addQueryItem("screen_name", username.toAscii());
+
+    QNetworkRequest request;
+    request.setUrl(url);
+    request.setRawHeader("Authorization", authH);
+    net->get(request);
+}
+
+void Twitter::replyGot(QNetworkReply *reply) {
+    if (reply->error() != QNetworkReply::NoError) {
+        qDebug("Network error: %d.  Huh.", reply->error());
+        return;
+    }
+
+    QDomDocument doc;
+    if (!doc.setContent(reply)) {
+        qDebug("Error parsing reply");
+        return;
+    }
+
+    QDomNodeList ns = doc.elementsByTagName("id");
+    for (unsigned i(0); i < ns.length(); ++i) {
+        QDomNode node = ns.at(i);
+        QString userid = node.firstChild().toText().data();
+        qDebug() << "Found" << userid;
+    }
 }

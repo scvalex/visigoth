@@ -3,9 +3,13 @@
 
 #include "algorithm.h"
 
-#include <QObject>
+#include <QSet>
+#include <QString>
 
 class GraphScene;
+
+class QNetworkAccessManager;
+class QNetworkReply;
 class QWidget;
 
 namespace QOAuth {
@@ -28,10 +32,15 @@ public:
     QWidget* controlWidget(QWidget *parent);
 
     bool login();
+    void getFollowers(QString username);
+
+protected slots:
+    void replyGot(QNetworkReply *reply);
 
 private:
     QOAuth::Interface *oauth;
     Ui::TwitterAuthDialog *authD;
+    QNetworkAccessManager *net;
     QByteArray token;
     QByteArray tokenSecret;
 };

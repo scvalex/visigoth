@@ -1,4 +1,4 @@
-QT += core gui opengl xml
+QT += core gui opengl xml network
 
 CONFIG += oauth
 
