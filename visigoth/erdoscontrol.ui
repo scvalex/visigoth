@@ -44,7 +44,7 @@
         <number>10000</number>
        </property>
        <property name="value">
-        <number>200</number>
+        <number>60</number>
        </property>
       </widget>
      </item>
@@ -64,7 +64,7 @@
         <double>0.050000000000000</double>
        </property>
        <property name="value">
-        <double>0.200000000000000</double>
+        <double>0.100000000000000</double>
        </property>
       </widget>
      </item>

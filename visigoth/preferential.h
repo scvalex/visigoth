@@ -26,7 +26,6 @@ public:
 
 protected slots:
     void onSizeChanged(int newSize);
-    void repopulate();
     void onDegreeChanged(int newDegree);
 
 protected:
