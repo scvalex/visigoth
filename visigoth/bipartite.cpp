@@ -106,6 +106,10 @@ void Bipartite::reset() {
     uVector.clear();
 }
 
+bool Bipartite::canAddVertex() {
+    return false;
+}
+
 void Bipartite::addVertex() {
     qDebug("Bipartite does not support adding new vertices");
 }

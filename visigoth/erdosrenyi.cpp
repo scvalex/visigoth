@@ -17,6 +17,10 @@ ErdosRenyi::ErdosRenyi(GraphScene *scene) :
 ErdosRenyi::~ErdosRenyi() {
 }
 
+bool ErdosRenyi::canAddVertex() {
+    return true;
+}
+
 void ErdosRenyi::addVertex() {
     Node *node = scene->newNode();
 

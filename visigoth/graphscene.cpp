@@ -10,7 +10,6 @@
 
 GraphScene::GraphScene(AbstractGraphWidget *parent) :
     //QGraphicsScene(parent),
-    canAddNewVertex(true),
     algo(0),
     stats(0),
     view(parent),
@@ -113,19 +112,15 @@ void GraphScene::repopulate() {
         switch (algoId) {
         case BIPARTITE_MODEL:
             algo = new Bipartite(this);
-            canAddNewVertex = false;
             break;
         case PREFERENTIAL_ATTACHAMENT:
             algo = new Preferential(this);
-            canAddNewVertex = true;
             break;
         case ERDOS_RENYI:
             algo = new ErdosRenyi(this);
-            canAddNewVertex = true;
             break;
         case BARABASI_ALBERT:
             algo = new BarabasiAlbert(this);
-            canAddNewVertex = true;
             break;
         }
     }

@@ -22,6 +22,10 @@ void Preferential::reset() {
     }
 }
 
+bool Preferential::canAddVertex() {
+    return true;
+}
+
 void Preferential::addVertex() {
     addVertex(true);
 }

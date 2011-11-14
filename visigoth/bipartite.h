@@ -24,6 +24,7 @@ public:
     virtual ~Bipartite();
 
     void reset();
+    bool canAddVertex();
     void addVertex();
     QWidget* controlWidget(QWidget *parent = 0);
 

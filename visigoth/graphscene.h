@@ -52,8 +52,6 @@ public:
 
     QList<QString> algorithms() const;
 
-    bool canAddNewVertex;
-
 
 public slots:
     void chooseAlgorithm(const QString &name);
