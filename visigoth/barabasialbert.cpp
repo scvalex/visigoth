@@ -1,17 +1,21 @@
-#include "graphscene.h"
 #include "barabasialbert.h"
 
 #include <QWidget>
 
-Barabasialbert::Barabasialbert(GraphScene *graph) :
-    Algorithm(graph,false),
+
+BarabasiAlbert::BarabasiAlbert(GraphScene *graph):
+    Algorithm(graph),
     graph(graph),
     size(START_NODES)
 {
     updatePreference(graph->nodes(), 2 * graph->edges().size());
 }
 
-void Barabasialbert::reset(){
+BarabasiAlbert::~BarabasiAlbert() {
+
+}
+
+void BarabasiAlbert::reset(){
 
     preferences.clear();
     cumulativePreferences.clear();
@@ -21,16 +25,15 @@ void Barabasialbert::reset(){
 
 }
 
-QWidget* Barabasialbert::controlWidget(QWidget *parent) {
-
+QWidget* BarabasiAlbert::controlWidget(QWidget *parent) {
     return 0;
 }
 
-void Barabasialbert::addVertex() {
+void BarabasiAlbert::addVertex() {
     addVertex(true);
 }
 
-void Barabasialbert::addVertex(bool saveSize) {
+void BarabasiAlbert::addVertex(bool saveSize) {
     addVertex((qrand() % 3 ) + 1, qrand() % 100);
     if (saveSize) {
         ++size;
@@ -38,7 +41,7 @@ void Barabasialbert::addVertex(bool saveSize) {
 }
 
 // Add vertex using preferential attachment without clustering.
-void Barabasialbert::addVertex(int edgesToAdd, double p) {
+void BarabasiAlbert::addVertex(int edgesToAdd, double p) {
     Node *vPref;
     int numNodes = graph->nodes().size();
     int numEdges = graph->edges().size();
@@ -74,7 +77,7 @@ void Barabasialbert::addVertex(int edgesToAdd, double p) {
 }
 
 
-void Barabasialbert::updatePreference(const QVector<Node*> &nodes, int totalDegree) {
+void BarabasiAlbert::updatePreference(const QVector<Node*> &nodes, int totalDegree) {
     int prefCumulative = 0;
 
     if (nodes.size() == 1) {
@@ -93,7 +96,7 @@ void Barabasialbert::updatePreference(const QVector<Node*> &nodes, int totalDegr
 }
 
 // Return the preferred node, using binary search.
-Node* Barabasialbert::getPreference(const QVector<Node*> &nodes, double genPref) {
+Node* BarabasiAlbert::getPreference(const QVector<Node*> &nodes, double genPref) {
     const float E = 0.0001;
     int l;
     for (l = 1; l < nodes.size(); l <<= 1)
@@ -110,12 +113,11 @@ Node* Barabasialbert::getPreference(const QVector<Node*> &nodes, double genPref)
 
 
 // Generate random double with 4 precision.
-double Barabasialbert::genRandom(){
+double BarabasiAlbert::genRandom(){
     double main = qrand() % 100;
     return main + (( qrand() % 10000 ) / 10000 );
 }
 
-void Barabasialbert::onSizeChanged(int newSize) {
+void BarabasiAlbert::onSizeChanged(int newSize) {
     size = newSize;
 }
-

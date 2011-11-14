@@ -36,8 +36,8 @@ private slots:
     void repopulate();
 
 private:
-    static const int START_USIZE = 1000;
-    static const int START_VSIZE = 30;
+    static const int START_USIZE = 40;
+    static const int START_VSIZE = 1;
     QWidget *ctlW;
 
     // Both preference funcs will only be used on vector set U

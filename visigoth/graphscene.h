@@ -23,12 +23,12 @@ public:
 
     QVector<Node*>& nodes();
     QList<Edge*>& edges();
-    int maxDegree();
+    int maxDegree() const;
     // returns the number of nodes with degree "degree"
-    int nodeCount(int degree);
+    int nodeCount(int degree) const;
     void degreeRemove(Node *n);
 
-    bool doesEdgeExist(Node *source, Node *dest);
+    bool doesEdgeExist(Node *source, Node *dest) const;
 
     Node* newNode();
     bool newEdge(Node *source, Node *dest);
@@ -42,12 +42,12 @@ public:
 
     void addVertex();
 
-    QList<Node*> getDegreeList(int degree);
+    QList<Node*> getDegreeList(int degree) const;
 
     void calculateMetrics();
 
     void calculateForces();
-    bool isRunning();
+    bool isRunning() const;
     void reset();
 
     QList<QString> algorithms() const;
@@ -68,7 +68,8 @@ private:
     enum ALGOS {
         BIPARTITE_MODEL,
         PREFERENTIAL_ATTACHAMENT,
-        ERDOS_RENYI
+        ERDOS_RENYI,
+        BARABASI_ALBERT
     };
 
     Algorithm *algo;
@@ -79,9 +80,7 @@ private:
     QList<Edge*> myEdges;
     AbstractGraphWidget *view;
     QVector<QList<Node*> > degreeCount;
-    QVector<double> metricVector;
     bool running;
-
     QMap<QString, int> myAlgorithms;
 };
 

@@ -8,20 +8,18 @@
 #include "statistics.h"
 #include "barabasialbert.h"
 
-
 GraphScene::GraphScene(AbstractGraphWidget *parent) :
     //QGraphicsScene(parent),
     algo(0),
     stats(0),
     view(parent),
     degreeCount(1),
-    metricVector(6, 0.0),
     running(false)
 {
-
     myAlgorithms["Preferential Attachament"] = PREFERENTIAL_ATTACHAMENT;
     myAlgorithms["Bipartite Model"] = BIPARTITE_MODEL;
     myAlgorithms["Erdos Renyi"] = ERDOS_RENYI;
+    myAlgorithms["Barabasi Albert"] = BARABASI_ALBERT;
 }
 
 QList<QString> GraphScene::algorithms() const {
@@ -104,13 +102,13 @@ void GraphScene::removeEdges(int cutoffTag){
     }
 }
 
-bool GraphScene::doesEdgeExist(Node *source, Node *dest) {
+bool GraphScene::doesEdgeExist(Node *source, Node *dest) const {
     int sourceTag = source->tag();
     int destTag = dest->tag();
 
     if (0 <= sourceTag && sourceTag < hasEdge.size() &&
-        0 <= destTag && destTag < hasEdge.size())
-    {
+        0 <= destTag && destTag < hasEdge.size()) {
+        // We consider an edge always to be connected to itself
         return hasEdge[sourceTag].contains(destTag) ||
                hasEdge[destTag].contains(sourceTag) ||
                source->tag() == dest->tag();
@@ -147,6 +145,9 @@ void GraphScene::repopulate() {
         case ERDOS_RENYI:
             algo = new ErdosRenyi(this);
             break;
+        case BARABASI_ALBERT:
+            algo = new BarabasiAlbert(this);
+            break;
         }
     }
     algo->reset();
@@ -174,8 +175,6 @@ void GraphScene::repopulate() {
     }
 }
 
-
-
 Algorithm* GraphScene::algorithm() const {
     return algo;
 }
@@ -187,14 +186,18 @@ void GraphScene::randomizePlacement() {
     foreach (Edge *edge, edges()) {
         edge->adjust();
     }
+
+    calculateMetrics();
 }
 
 void GraphScene::addVertex() {
     algo->addVertex();
+
+    calculateMetrics();
 }
 
 // Pre: degree is valid
-QList<Node *> GraphScene::getDegreeList(int degree) {
+QList<Node *> GraphScene::getDegreeList(int degree) const {
     return degreeCount[degree - 1];
 }
 
@@ -209,20 +212,13 @@ void GraphScene::updateDegreeCount(Node *node) {
 
     if(degree > 1)
          degreeRemove(node);
-
 }
 
 void GraphScene::calculateMetrics() {
     if(!stats)
         stats = new Statistics(this);
 
-    metricVector[0] = stats->averageDegree();
-    //metricVector[1] = stats->averageLength();
-    metricVector[2] = stats->clusteringAvg();
-    metricVector[3] = stats->clusteringCoeff(myNodes[qrand() % myNodes.count()]);
-    //metricVector[4] = stats->clusteringDegree(6);
-    metricVector[5] = stats->powerLawExponent();
-
+    // Do something with the metrics
 }
 
 void GraphScene::calculateForces() {
@@ -261,17 +257,16 @@ void GraphScene::calculateForces() {
     }
 }
 
-bool GraphScene::isRunning() {
+bool GraphScene::isRunning() const {
     return true;
 }
 
-int GraphScene::maxDegree(){
+int GraphScene::maxDegree() const {
 
     return degreeCount.count();
 }
 
-int GraphScene::nodeCount(int degree){
-
+int GraphScene::nodeCount(int degree) const {
     /*
     actually degree is one less than the degree we are looking for
     But since this is only used by statistics.cpp it does not matter
@@ -279,8 +274,7 @@ int GraphScene::nodeCount(int degree){
     return degreeCount[degree].size();
 }
 
-void GraphScene::degreeRemove(Node *n){
-
+void GraphScene::degreeRemove(Node *n) {
     int degree = n->edges().size();
 
     QList<Node*> list = degreeCount[degree-2];
@@ -293,10 +287,7 @@ void GraphScene::degreeRemove(Node *n){
         }
 
         ++counter;
-
     }
-
-
 }
 
 void GraphScene::setAllNodes(int i){

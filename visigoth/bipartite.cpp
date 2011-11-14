@@ -150,7 +150,7 @@ double Bipartite::degreeDist(int x) {
         return 1;
     }
 
-    return qPow(static_cast<double>(x), .2);
+    return qPow(static_cast<double>(x), .125);
 }
 
 

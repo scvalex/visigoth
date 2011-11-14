@@ -77,7 +77,6 @@ private:
     QList<Edge*> edgeList;
     GraphScene *graph;
     bool hovering;
-    bool used;
     int myTag;
     QPointF newPos;
 

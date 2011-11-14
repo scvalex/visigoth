@@ -10,15 +10,15 @@
 #include <QVector>
 
 class GraphScene;
-class Barabasialbert;
 class QWidget;
 
-class Barabasialbert : public Algorithm {
+class BarabasiAlbert : public Algorithm {
 
     Q_OBJECT
 
 public:
-    Barabasialbert(GraphScene *graph);
+    BarabasiAlbert(GraphScene *graph);
+    ~BarabasiAlbert();
 
     void reset();
     void addVertex();
@@ -36,7 +36,7 @@ protected:
     void updatePreference(const QVector<Node*> &nodes, int numEdges);
 
 private:
-    static const int START_NODES = 5;
+    static const int START_NODES = 300;
     GraphScene *graph;
 
     // used for selecting a node by preferential seleciton

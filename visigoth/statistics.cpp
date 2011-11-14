@@ -1,15 +1,18 @@
 #include "statistics.h"
 #include "graphscene.h"
-#include "point.h"
 
-Statistics::Statistics(GraphScene *scene): graph(scene)
-{ }
+#include <QPointF>
 
-double Statistics::averageDegree() {
+Statistics::Statistics(GraphScene *scene):
+    graph(scene)
+{
+}
+
+double Statistics::degreeAvg() {
     return (2 * graph->edges().count()) / graph->nodes().count();
 }
 
-double Statistics::averageLength() {
+double Statistics::lengthAvg() {
     double allLengths = 0;
 
     foreach (Node *n, graph->nodes()) {
@@ -20,8 +23,8 @@ double Statistics::averageLength() {
         }
     }
 
-    double debug =  allLengths / (double)(graph->nodes().size()*(graph->nodes().size() - 1));
-    return debug;
+    double res =  allLengths / (double) (graph->nodes().size()*(graph->nodes().size() - 1));
+    return res;
 }
 
 double Statistics::clusteringAvg() {
@@ -31,9 +34,8 @@ double Statistics::clusteringAvg() {
         clusterCumulative += clusteringCoeff(n);
     }
 
-    double debug = clusterCumulative / (double)graph->nodes().size();
-    return debug;
-
+    double res = clusterCumulative / (double)graph->nodes().size();
+    return res;
 }
 
 double Statistics::clusteringCoeff(Node *node) {
@@ -58,7 +60,6 @@ double Statistics::clusteringCoeff(Node *node) {
     }
 
     return k > 1 ? (2*intersection)/(double) (k*(k-1)) : 0 ;
-
 }
 
 double Statistics::clusteringDegree(int degree) {
@@ -71,9 +72,7 @@ double Statistics::clusteringDegree(int degree) {
     }
 
     return clusterCumulative / degreeCount;
-
 }
-
 
 // private:
 
@@ -145,8 +144,8 @@ int Statistics::intersectionCount(QVector<Node*> vec1, QVector<Node*> vec2) {
         longerVec = &vec1;
     } else {
         length = vec2.size();
-       shorterVec = &vec1;
-       longerVec = &vec2;
+        shorterVec = &vec1;
+        longerVec = &vec2;
     }
 
     for (int i(0); i < length; ++i) {
@@ -160,20 +159,15 @@ int Statistics::intersectionCount(QVector<Node*> vec1, QVector<Node*> vec2) {
 }
 
 
-double Statistics::powerLawExponent(){
-
-
+double Statistics::powerLawExponent() {
     //Made a list here incase we want to plot the data in a widget.
-    QList<Point> plot;
+    QList<QPointF> plot;
 
 
     int maxDegree = graph->maxDegree();
     for(double i(0); i < maxDegree ; ++i){
 
-        //x = (i+1)*qPow(10,logCounter);
-        //if(x >=maxDegree){
-         //   break;
-        //}
+
         double count = graph->nodeCount(i);
         double y =  count/(double) graph->nodes().size();
 
@@ -181,14 +175,9 @@ double Statistics::powerLawExponent(){
         if( y != 0 )
         {
             // incase we want to plot
-            Point p(qLn(i+1),qLn(y));
+            QPointF p(qLn(i+1), qLn(y));
             plot << p;
         }
-
-        //if(i == 9){
-         //  ++logCounter;
-          //  i=0;
-        //}
 
     }
 
@@ -198,30 +187,25 @@ double Statistics::powerLawExponent(){
     int c = 0;
 
 
-
-    foreach(Point p, plot){
-
+    foreach(QPointF p, plot) {
         // init calculation
         if(c == 0){
            //yPrev = p.getY();
-           yPref = p.getY();
-           deltaX = p.getX();
+            yPref = p.ry();
+           deltaX = p.rx();
            ++c;
 
         }
 
         else{
-            deltaY += p.getY() - yPref;
-            yPref = p.getY();
-            deltaX = p.getX() - deltaX;
+            deltaY += p.ry() - yPref;
+            yPref = p.ry();
+            deltaX = p.rx() - deltaX;
             ++c;
         }
 
+
     }
 
-    double debug = deltaY/deltaX;
-
     return -1*(deltaY/deltaX);
-
-
 }
