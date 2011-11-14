@@ -25,13 +25,14 @@ public:
     double clusteringCoeff(Node *node);
     double clusteringDegree(int degree);
     double powerLawExponent();
+    double shortestPath(Node *s,Node *d);
     //double smallWorldIndex();
 
 private:
     GraphScene* graph;
 
     //QVector<int> shortestDistance();
-    double lengthSum(Node *s);
+    double lengthSum(Node *s,Node * d);
     QVector<Node*> buildNeighbourVector(Node *n);
     int intersectionCount(QVector<Node*> vec1, QVector<Node*> vec2);
 

@@ -7,7 +7,8 @@
 #include <QMessageBox>
 
 Bipartite::Bipartite(GraphScene *scene) :
-    Algorithm(scene),
+    // true will be set when it actually works
+    Algorithm(scene,true),
     ctlW(0),
     uSize(START_USIZE),
     vSize(START_VSIZE),
@@ -46,7 +47,7 @@ void Bipartite::reset() {
         while ((n < degree) && usedNodes.size() < uSize && cutoff < 1000) {
 
             // may have to implement check for infinite looping
-            double rand = fmod(qrand(), cumulativePreferences.value(uSize-1));
+            double rand = fmod(qrand(), cumulativePreferences.value(uSize-1)) + (fmod(qrand(),1000)/1000);
             Node *u = uVector[getPreference(rand)];
 
             if (!scene->doesEdgeExist(u,v)) {
@@ -95,10 +96,19 @@ void Bipartite::reset() {
 
     }
 
+    scene->removeEdges(uSize);
+
+    for(int i(vSize-1); i >= 0 ; --i){
+        scene->removeNode(vVector[i]);
+    }
+
+
     // reset visited flag for stats
     for(int j(0); j < uSize; ++j){
         uVector[j]->setVisited(false);
     }
+
+
 
     vVector.clear();
     uVector.clear();
@@ -140,12 +150,13 @@ double Bipartite::degreeDist(int x) {
         return 1;
     }
 
-    return qCeil(qPow(static_cast<double>(x), (qLn(3)/qLn(2)) - 1));
+    return qPow(static_cast<double>(x), .2);
 }
+
 
 // Return the preferred node, using binary search.
 int Bipartite::getPreference(double genPref) {
-    const float E = 0.01;
+    const float E = 0.0001;
     int l;
     for (l = 1; l < uVector.size(); l <<= 1)
         ;

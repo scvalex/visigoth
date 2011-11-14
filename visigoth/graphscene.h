@@ -51,6 +51,9 @@ public:
     void reset();
 
     QList<QString> algorithms() const;
+    void removeNode(Node * n);
+    void setAllNodes(int i);
+    void removeEdges(int cutoffTag);
 
 public slots:
     void chooseAlgorithm(const QString &name);

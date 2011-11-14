@@ -4,6 +4,7 @@
 #include <QWidget>
 
 Barabasialbert::Barabasialbert(GraphScene *graph) :
+    Algorithm(graph,false),
     graph(graph),
     size(START_NODES)
 {

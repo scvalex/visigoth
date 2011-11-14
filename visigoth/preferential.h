@@ -44,7 +44,7 @@ protected:
 
 private:
 
-    static const int START_NODES = 600;
+    static const int START_NODES = 900;
     static const int START_DEGREE = 3;
 
     GraphScene *graph;

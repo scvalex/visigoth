@@ -13,7 +13,7 @@ double Statistics::averageLength() {
     double allLengths = 0;
 
     foreach (Node *n, graph->nodes()) {
-        allLengths += lengthSum(n);
+        allLengths += shortestPath(n,NULL);
         foreach (Node *m, graph->nodes()) {
             m->setDistance(0);
             m->setVisited(false);
@@ -94,7 +94,8 @@ QVector<Node*> Statistics::buildNeighbourVector(Node *n) {
     return retVec;
 }
 
-double Statistics::lengthSum(Node *s) {
+// d = -1 for shortestPath between all nodes in the network
+double Statistics::shortestPath(Node *s, Node *d) {
     QList<Node*> queue;
     queue.append(s);
     double retLength = 0;
@@ -118,6 +119,10 @@ double Statistics::lengthSum(Node *s) {
                 n->setVisited(true);
                 n->setDistance(parent->getDistance() + 1);
                 queue.append(n);
+            }
+
+            if(n->tag() == d->tag()){
+                return d->getDistance();
             }
         }
 
@@ -161,39 +166,36 @@ double Statistics::powerLawExponent(){
     //Made a list here incase we want to plot the data in a widget.
     QList<Point> plot;
 
-    int logCounter = 0;
-    double x(0);
 
     int maxDegree = graph->maxDegree();
-    for(double i(0); x < maxDegree ; ++i){
+    for(double i(0); i < maxDegree ; ++i){
 
-        x = (i+1)*qPow(10,logCounter);
-        if(x >=maxDegree){
-            break;
-        }
-        double count = graph->nodeCount(x);
+        //x = (i+1)*qPow(10,logCounter);
+        //if(x >=maxDegree){
+         //   break;
+        //}
+        double count = graph->nodeCount(i);
         double y =  count/(double) graph->nodes().size();
 
 
-        if( y != 0 && x!= 1 )
+        if( y != 0 )
         {
             // incase we want to plot
-            Point p(qLn(x),qLn(y));
+            Point p(qLn(i+1),qLn(y));
             plot << p;
         }
 
-        if(i == 9){
-           ++logCounter;
-            i=0;
-        }
+        //if(i == 9){
+         //  ++logCounter;
+          //  i=0;
+        //}
 
     }
 
     double deltaY = 0.0;
     double deltaX = 0.0;
+    double yPref;
     int c = 0;
-    double debug1 = 0;
-    double debug2 = 0;
 
 
 
@@ -202,21 +204,19 @@ double Statistics::powerLawExponent(){
         // init calculation
         if(c == 0){
            //yPrev = p.getY();
-           deltaY = p.getY();
+           yPref = p.getY();
            deltaX = p.getX();
-           debug1 = deltaY;
            ++c;
 
         }
 
-        else if (c == plot.size() -1){
-            deltaY = p.getY() - deltaY;
+        else{
+            deltaY += p.getY() - yPref;
+            yPref = p.getY();
             deltaX = p.getX() - deltaX;
-            debug2 = p.getY();
             ++c;
         }
 
-        else{ ++c; }
     }
 
     double debug = deltaY/deltaX;

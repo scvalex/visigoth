@@ -57,6 +57,8 @@ public:
 
     QBrush& brush();
     void setBrush(const QBrush &b);
+    static void setAllNodes(int i);
+    static int getAllNodes();
 
     static void reset();
 
