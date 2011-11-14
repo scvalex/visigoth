@@ -47,11 +47,6 @@ QWidget* Preferential::controlWidget(QWidget *parent) {
     return ctlW;
 }
 
-void Preferential::repopulate() {
-    graph->repopulate();
-    graph->randomizePlacement();
-}
-
 // Add vertex using preferential attachment with clustering.
 void Preferential::addVertex(int edgesToAdd, double p) {
     Node *vPref;
@@ -181,10 +176,10 @@ double Preferential::genRandom(){
 
 void Preferential::onSizeChanged(int newSize) {
     size = newSize;
-    repopulate();
+    graph->repopulate();
 }
 
 void Preferential::onDegreeChanged(int newDegree) {
     nodeDegree = newDegree;
-    repopulate();
+    graph->repopulate();
 }

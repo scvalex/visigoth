@@ -10,12 +10,12 @@
 
 GraphScene::GraphScene(AbstractGraphWidget *parent) :
     //QGraphicsScene(parent),
+    canAddNewVertex(true),
     algo(0),
     stats(0),
     view(parent),
     degreeCount(1),
-    running(false),
-    canAddNewVertex(true)
+    running(false)
 {
     myAlgorithms["Preferential Attachament"] = PREFERENTIAL_ATTACHAMENT;
     myAlgorithms["Bipartite Model"] = BIPARTITE_MODEL;
@@ -130,6 +130,7 @@ void GraphScene::repopulate() {
         }
     }
     algo->reset();
+    randomizePlacement();
 }
 
 Algorithm* GraphScene::algorithm() const {

@@ -59,17 +59,12 @@ QWidget* ErdosRenyi::controlWidget(QWidget *parent) {
     return ctlW;
 }
 
-void ErdosRenyi::repopulate() {
-    scene->repopulate();
-    scene->randomizePlacement();
-}
-
 void ErdosRenyi::onNodesChanged(int newValue) {
     size = newValue;
-    repopulate();
+    scene->repopulate();
 }
 
 void ErdosRenyi::onProbabilityChanged(double newValue) {
     probability = newValue;
-    repopulate();
+    scene->repopulate();
 }

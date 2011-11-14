@@ -33,7 +33,6 @@ public:
 private slots:
     void onUSizeChanged(int newSize);
     void onVSizeChanged(int newSize);
-    void repopulate();
 
 private:
     static const int START_USIZE = 40;

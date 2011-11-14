@@ -123,11 +123,6 @@ QWidget* Bipartite::controlWidget(QWidget *parent) {
     return ctlW;
 }
 
-void Bipartite::repopulate() {
-    scene->repopulate();
-    scene->randomizePlacement();
-}
-
 double Bipartite::fitnessDist(int x) {
     if (x == 0) {
         return 0;
@@ -178,10 +173,10 @@ void Bipartite::updatePreference() {
 
 void Bipartite::onUSizeChanged(int newSize) {
     uSize = newSize;
-    repopulate();
+    scene->repopulate();
 }
 
 void Bipartite::onVSizeChanged(int newSize) {
     vSize = newSize;
-    repopulate();
+    scene->repopulate();
 }
