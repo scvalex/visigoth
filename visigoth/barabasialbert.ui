@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>ErdosControl</class>
- <widget class="QWidget" name="ErdosControl">
+ <class>BarabasiControl</class>
+ <widget class="QWidget" name="BarabasiControl">
   <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>170</width>
-    <height>157</height>
+    <width>185</width>
+    <height>159</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -15,14 +15,14 @@
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
-    <widget class="QLabel" name="label">
+    <widget class="QLabel" name="algo">
      <property name="font">
       <font>
-       <pointsize>11</pointsize>
+       <pointsize>12</pointsize>
       </font>
      </property>
      <property name="text">
-      <string>Erdos-Renyi Control</string>
+      <string>Barabasi Albert Control</string>
      </property>
      <property name="alignment">
       <set>Qt::AlignCenter</set>
@@ -32,42 +32,42 @@
    <item>
     <layout class="QFormLayout" name="formLayout">
      <item row="0" column="0">
-      <widget class="QLabel" name="Nodes">
+      <widget class="QLabel" name="label_2">
        <property name="text">
-        <string>Nodes</string>
+        <string>Size</string>
        </property>
       </widget>
      </item>
      <item row="0" column="1">
-      <widget class="QSpinBox" name="nodesSpin">
-       <property name="minimum">
-        <number>1</number>
-       </property>
+      <widget class="QSpinBox" name="sizeEdit">
        <property name="maximum">
         <number>10000</number>
        </property>
+       <property name="singleStep">
+        <number>10</number>
+       </property>
        <property name="value">
-        <number>60</number>
+        <number>600</number>
        </property>
       </widget>
      </item>
      <item row="1" column="0">
-      <widget class="QLabel" name="Probability">
+      <widget class="QLabel" name="label">
        <property name="text">
-        <string>Probability</string>
+        <string>Node Degree</string>
        </property>
       </widget>
      </item>
      <item row="1" column="1">
-      <widget class="QDoubleSpinBox" name="probabilitySpin">
+      <widget class="QSpinBox" name="degreeEdit">
        <property name="maximum">
-        <double>1.000000000000000</double>
+        <number>10000</number>
        </property>
        <property name="singleStep">
-        <double>0.050000000000000</double>
+        <number>1</number>
        </property>
        <property name="value">
-        <double>0.100000000000000</double>
+        <number>3</number>
        </property>
       </widget>
      </item>
@@ -84,7 +84,7 @@
      <property name="sizeHint" stdset="0">
       <size>
        <width>20</width>
-       <height>40</height>
+       <height>37</height>
       </size>
      </property>
     </spacer>

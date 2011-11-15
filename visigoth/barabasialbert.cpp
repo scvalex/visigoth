@@ -1,11 +1,14 @@
 #include "barabasialbert.h"
+#include "ui_barabasialbert.h"
 
 #include <QWidget>
 
 BarabasiAlbert::BarabasiAlbert(GraphScene *graph) :
     Algorithm(graph),
     graph(graph),
-    size(START_NODES)
+    ctlW(0),
+    size(START_NODES),
+    nodeDegree(START_DEGREE)
 {
     updatePreference(graph->nodes(), 2 * graph->edges().size());
 }
@@ -25,7 +28,14 @@ void BarabasiAlbert::reset(){
 }
 
 QWidget* BarabasiAlbert::controlWidget(QWidget *parent) {
-    return 0;
+    if (!ctlW) {
+        ctlW = new QWidget(parent);
+        Ui::BarabasiControl *barabasiCtl = new Ui::BarabasiControl();
+        barabasiCtl->setupUi(ctlW);
+        connect(barabasiCtl->sizeEdit, SIGNAL(valueChanged(int)), this, SLOT(onSizeChanged(int)));
+        connect(barabasiCtl->degreeEdit, SIGNAL(valueChanged(int)), this, SLOT(onDegreeChanged(int)));
+    }
+    return ctlW;
 }
 
 bool BarabasiAlbert::canAddVertex() {
@@ -37,7 +47,7 @@ void BarabasiAlbert::addVertex() {
 }
 
 void BarabasiAlbert::addVertex(bool saveSize) {
-    addVertex((qrand() % 3 ) + 1, qrand() % 100);
+    addVertex(nodeDegree, qrand() % 100);
     if (saveSize) {
         ++size;
     }
@@ -123,4 +133,10 @@ double BarabasiAlbert::genRandom(){
 
 void BarabasiAlbert::onSizeChanged(int newSize) {
     size = newSize;
+    graph->repopulate();
+}
+
+void BarabasiAlbert::onDegreeChanged(int newDegree) {
+    nodeDegree = newDegree;
+    graph->repopulate();
 }
