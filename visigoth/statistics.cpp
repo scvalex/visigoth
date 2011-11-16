@@ -35,6 +35,8 @@ double Statistics::clusteringAvg() {
     }
 
     double res = clusterCumulative / (double)graph->nodes().size();
+
+
     return res;
 }
 
@@ -58,6 +60,8 @@ double Statistics::clusteringCoeff(Node *node) {
             intersection += intersectionCount(nNeigh, dNeigh);
         }
     }
+
+    double debug = k > 1 ? (2*intersection)/(double) (k*(k-1)) : 0 ;
 
     return k > 1 ? (2*intersection)/(double) (k*(k-1)) : 0 ;
 }

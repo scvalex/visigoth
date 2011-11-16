@@ -193,7 +193,7 @@ void GraphScene::randomizePlacement() {
 void GraphScene::addVertex() {
     algo->addVertex();
 
-    calculateMetrics();
+    //calculateMetrics();
 }
 
 // Pre: degree is valid
@@ -218,7 +218,7 @@ void GraphScene::calculateMetrics() {
     if(!stats)
         stats = new Statistics(this);
 
-    // Do something with the metrics
+    stats->clusteringAvg();
 }
 
 void GraphScene::calculateForces() {
