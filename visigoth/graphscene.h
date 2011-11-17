@@ -52,6 +52,7 @@ public:
 
     QList<QString> algorithms() const;
 
+
 public slots:
     void chooseAlgorithm(const QString &name);
 
@@ -69,7 +70,6 @@ private:
         BARABASI_ALBERT,
         TWITTER
     };
-
     Algorithm *algo;
     Statistics *stats;
     int algoId;

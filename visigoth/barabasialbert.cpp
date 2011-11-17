@@ -28,6 +28,10 @@ QWidget* BarabasiAlbert::controlWidget(QWidget *parent) {
     return 0;
 }
 
+bool BarabasiAlbert::canAddVertex() {
+    return true;
+}
+
 void BarabasiAlbert::addVertex() {
     addVertex(true);
 }

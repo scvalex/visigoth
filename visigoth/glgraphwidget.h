@@ -15,6 +15,8 @@ class GLGraphWidget : public QGLWidget, public AbstractGraphWidget
 public:
     explicit GLGraphWidget(QWidget *parent = 0);
 
+    GraphScene *myScene;
+
     void itemMoved();
 
     enum MOUSE_MODES {
@@ -60,7 +62,6 @@ private:
     void initProjection();
     Node *selectGL(int x, int y);
 
-    GraphScene *myScene;
 
     GLfloat cameramat[16];
     GLfloat zoom;
