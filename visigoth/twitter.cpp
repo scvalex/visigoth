@@ -30,9 +30,7 @@ Twitter::Twitter(GraphScene *scene) :
     oauth->setConsumerSecret("8yf2EkBuH9vNr1D3XlM1RKZ9GkoXKAfpNLLBfwzwg");
     oauth->setRequestTimeout(10000);
     connect(net, SIGNAL(finished(QNetworkReply*)), this, SLOT(replyGot(QNetworkReply*)));
-    if (!login()) {
-        qDebug("Login failed");
-    }
+    reset();
 }
 
 Twitter::~Twitter() {
@@ -74,7 +72,6 @@ bool Twitter::login() {
     QSettings settings;
     token = settings.value("token").toByteArray();
     tokenSecret = settings.value("tokenSecret").toByteArray();
-    qDebug() << "Recovered token" << token;
     if (token.size() > 0)
         return true;
     QOAuth::ParamMap reply = oauth->requestToken("https://api.twitter.com/oauth/request_token",
