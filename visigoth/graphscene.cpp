@@ -183,7 +183,14 @@ void GraphScene::calculateForces() {
         quadTree.addNode(*node);
     }
 
+    // Don't move the first node
+    bool first = true;
     foreach (Node* node, nodes()) {
+        if (first) {
+            first = false;
+            continue;
+        }
+
         QPointF pos = node->calculatePosition(quadTree.root());
 
         if (pos.x() < topLeft.x())
