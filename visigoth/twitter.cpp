@@ -17,6 +17,7 @@
 
 Twitter::Twitter(GraphScene *scene) :
     Algorithm(scene),
+    graph(scene),
     oauth(new QOAuth::Interface(this)),
     authD(0),
     net(new QNetworkAccessManager(this))
@@ -26,7 +27,7 @@ Twitter::Twitter(GraphScene *scene) :
     oauth->setRequestTimeout(10000);
     connect(net, SIGNAL(finished(QNetworkReply*)), this, SLOT(replyGot(QNetworkReply*)));
     if (login()) {
-        getFollowers("rchatley");
+        qDebug("Login failed");
     }
 }
 
@@ -34,6 +35,9 @@ Twitter::~Twitter() {
 }
 
 void Twitter::reset() {
+    lastUserQueried = "";
+    nodes.clear();
+    getFollowers("rchatley");
 }
 
 void Twitter::addVertex() {
@@ -44,8 +48,11 @@ QWidget* Twitter::controlWidget(QWidget *parent) {
 }
 
 bool Twitter::login() {
-    token = QByteArray("");
-    tokenSecret = QByteArray("");
+    QSettings settings;
+    token = settings.value("token").toByteArray();
+    tokenSecret = settings.value("tokenSecret").toByteArray();
+    if (token.size() > 0)
+        return true;
     QOAuth::ParamMap reply = oauth->requestToken("https://api.twitter.com/oauth/request_token",
                                                  QOAuth::GET, QOAuth::HMAC_SHA1);
     if (oauth->error() == QOAuth::NoError) {
@@ -88,11 +95,15 @@ bool Twitter::login() {
         qDebug("(access token)Got error: %d", oauth->error());
         return false;
     }
+
+    settings.setValue("token", token);
+    settings.setValue("tokenSecret", tokenSecret);
     return true;
 }
 
 void Twitter::getFollowers(QString username) {
-    qDebug() << "Getting followers for" << username;
+    lastUserQueried = username;
+    qDebug() << "Getting followers for" << lastUserQueried;
 
     QString requestUrl("http://api.twitter.com/1/followers/ids.xml");
 
@@ -102,6 +113,7 @@ void Twitter::getFollowers(QString username) {
 
     QUrl url(requestUrl);
     url.addQueryItem("screen_name", username.toAscii());
+    nodes[username.toAscii()] = graph->newNode();
 
     QNetworkRequest request;
     request.setUrl(url);
@@ -115,6 +127,12 @@ void Twitter::replyGot(QNetworkReply *reply) {
         return;
     }
 
+    qDebug() << "Last user is " << lastUserQueried;
+    if (lastUserQueried.size() == 0) {
+        // whoosh
+        return;
+    }
+
     QDomDocument doc;
     if (!doc.setContent(reply)) {
         qDebug("Error parsing reply");
@@ -125,6 +143,9 @@ void Twitter::replyGot(QNetworkReply *reply) {
     for (unsigned i(0); i < ns.length(); ++i) {
         QDomNode node = ns.at(i);
         QString userid = node.firstChild().toText().data();
+        nodes.insert(userid, graph->newNode());
+        graph->newEdge(nodes[lastUserQueried], nodes[userid]);
         qDebug() << "Found" << userid;
     }
+    qDebug("Done");
 }

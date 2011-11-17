@@ -3,10 +3,12 @@
 
 #include "algorithm.h"
 
+#include <QMap>
 #include <QSet>
 #include <QString>
 
 class GraphScene;
+class Node;
 
 class QNetworkAccessManager;
 class QNetworkReply;
@@ -38,11 +40,15 @@ protected slots:
     void replyGot(QNetworkReply *reply);
 
 private:
+    GraphScene *graph;
     QOAuth::Interface *oauth;
     Ui::TwitterAuthDialog *authD;
     QNetworkAccessManager *net;
     QByteArray token;
     QByteArray tokenSecret;
+
+    QString lastUserQueried;
+    QMap<QString, Node*> nodes;
 };
 
 #endif // TWITTER_H
