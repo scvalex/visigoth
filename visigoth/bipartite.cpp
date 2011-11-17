@@ -1,6 +1,8 @@
 #include "graphscene.h"
 #include "bipartite.h"
 #include "ui_bipartitecontrol.h"
+#include "ui_mainwindow.h"
+#include "mainwindow.h"
 
 #include <QDebug>
 #include <QWidget>
@@ -104,6 +106,10 @@ void Bipartite::reset() {
     uVector.clear();
 }
 
+bool Bipartite::canAddVertex() {
+    return false;
+}
+
 void Bipartite::addVertex() {
     qDebug("Bipartite does not support adding new vertices");
 }
@@ -114,16 +120,9 @@ QWidget* Bipartite::controlWidget(QWidget *parent) {
         Ui::BipartiteControl *bipCtl = new Ui::BipartiteControl();
         bipCtl->setupUi(ctlW);
         connect(bipCtl->uSizeEdit, SIGNAL(valueChanged(int)), this, SLOT(onUSizeChanged(int)));
-        connect(bipCtl->uSizeEdit, SIGNAL(editingFinished()), this, SLOT(repopulate()));
         connect(bipCtl->vSizeEdit, SIGNAL(valueChanged(int)), this, SLOT(onVSizeChanged(int)));
-        connect(bipCtl->vSizeEdit, SIGNAL(editingFinished()), this, SLOT(repopulate()));
     }
     return ctlW;
-}
-
-void Bipartite::repopulate() {
-    scene->repopulate();
-    scene->randomizePlacement();
 }
 
 double Bipartite::fitnessDist(int x) {
@@ -176,8 +175,10 @@ void Bipartite::updatePreference() {
 
 void Bipartite::onUSizeChanged(int newSize) {
     uSize = newSize;
+    scene->repopulate();
 }
 
 void Bipartite::onVSizeChanged(int newSize) {
     vSize = newSize;
+    scene->repopulate();
 }

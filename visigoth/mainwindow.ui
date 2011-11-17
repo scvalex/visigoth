@@ -95,6 +95,9 @@
    </property>
   </action>
   <action name="newNodeAct">
+   <property name="enabled">
+    <bool>true</bool>
+   </property>
    <property name="text">
     <string>New Node</string>
    </property>
