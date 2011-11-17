@@ -42,3 +42,6 @@ FORMS += mainwindow.ui \
          preferentialcontrol.ui \
          erdoscontrol.ui \
          twitauthdialog.ui
+
+unix: CONFIG += link_pkgconfig
+unix: PKGCONFIG += qoauth
