@@ -66,6 +66,8 @@ bool GraphScene::newEdge(Node *source, Node *dest) {
     updateDegreeCount(source);
     updateDegreeCount(dest);
 
+    qDebug("Added edge between %d and %d", source->tag(), dest->tag());
+
     return true;
 }
 
@@ -74,6 +76,7 @@ Node* GraphScene::newNode() {
     Node *node = new Node(this);
     addItem(node);
     myNodes << node;
+    node->setPos(10 + qrand() % 1000, 10 + qrand() % 600);
 
     return node;
 }
@@ -130,7 +133,6 @@ void GraphScene::repopulate() {
         }
     }
     algo->reset();
-    randomizePlacement();
 }
 
 Algorithm* GraphScene::algorithm() const {

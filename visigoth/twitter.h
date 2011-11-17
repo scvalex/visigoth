@@ -31,10 +31,11 @@ public:
 
     void reset();
     void addVertex();
+    bool canAddVertex();
     QWidget* controlWidget(QWidget *parent);
 
     bool login();
-    void getFollowers(QString username);
+    void getFollowers(QString username, bool numeric = false);
 
 protected slots:
     void replyGot(QNetworkReply *reply);
@@ -49,6 +50,7 @@ private:
 
     QString lastUserQueried;
     QMap<QString, Node*> nodes;
+    QSet<QString> unexpanded;
 };
 
 #endif // TWITTER_H

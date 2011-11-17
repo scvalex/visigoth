@@ -35,12 +35,23 @@ Twitter::~Twitter() {
 }
 
 void Twitter::reset() {
+    qDebug("Resetting Twitter");
     lastUserQueried = "";
     nodes.clear();
-    getFollowers("rchatley");
+    unexpanded.clear();
+    getFollowers("scvalex");
 }
 
 void Twitter::addVertex() {
+    if (unexpanded.empty())
+        return;
+    QString next = *unexpanded.begin();
+    unexpanded.remove(next);
+    getFollowers(next, true);
+}
+
+bool Twitter::canAddVertex() {
+    return true;
 }
 
 QWidget* Twitter::controlWidget(QWidget *parent) {
@@ -101,7 +112,7 @@ bool Twitter::login() {
     return true;
 }
 
-void Twitter::getFollowers(QString username) {
+void Twitter::getFollowers(QString username, bool numeric) {
     lastUserQueried = username;
     qDebug() << "Getting followers for" << lastUserQueried;
 
@@ -112,8 +123,7 @@ void Twitter::getFollowers(QString username) {
                                                      QOAuth::ParseForHeaderArguments);
 
     QUrl url(requestUrl);
-    url.addQueryItem("screen_name", username.toAscii());
-    nodes[username.toAscii()] = graph->newNode();
+    url.addQueryItem(numeric ? "user_id" : "screen_name", username.toAscii());
 
     QNetworkRequest request;
     request.setUrl(url);
@@ -132,6 +142,9 @@ void Twitter::replyGot(QNetworkReply *reply) {
         // whoosh
         return;
     }
+    if (!nodes.contains(lastUserQueried)) {
+        nodes[lastUserQueried] = graph->newNode();
+    }
 
     QDomDocument doc;
     if (!doc.setContent(reply)) {
@@ -143,9 +156,10 @@ void Twitter::replyGot(QNetworkReply *reply) {
     for (unsigned i(0); i < ns.length(); ++i) {
         QDomNode node = ns.at(i);
         QString userid = node.firstChild().toText().data();
-        nodes.insert(userid, graph->newNode());
+        nodes[userid] = graph->newNode();
+        unexpanded.insert(userid);
         graph->newEdge(nodes[lastUserQueried], nodes[userid]);
-        qDebug() << "Found" << userid;
+        //qDebug() << "Found" << userid;
     }
     qDebug("Done");
 }
