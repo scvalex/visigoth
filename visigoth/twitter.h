@@ -39,6 +39,8 @@ public:
 
 protected slots:
     void replyGot(QNetworkReply *reply);
+    void clearPrivateData();
+    void setRootUser(const QString &newUser);
 
 private:
     GraphScene *graph;
@@ -47,10 +49,12 @@ private:
     QNetworkAccessManager *net;
     QByteArray token;
     QByteArray tokenSecret;
+    QWidget *ctlW;
 
     QString lastUserQueried;
     QMap<QString, Node*> nodes;
     QSet<QString> unexpanded;
+    QString rootUser;
 };
 
 #endif // TWITTER_H

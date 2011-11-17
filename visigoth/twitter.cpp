@@ -1,7 +1,9 @@
 #include "graphscene.h"
 #include "twitter.h"
 #include "ui_twitauthdialog.h"
+#include "ui_twittercontrol.h"
 
+#include <QtCore/qmath.h>
 #include <QDebug>
 #include <QDesktopServices>
 #include <QDomDocument>
@@ -20,13 +22,15 @@ Twitter::Twitter(GraphScene *scene) :
     graph(scene),
     oauth(new QOAuth::Interface(this)),
     authD(0),
-    net(new QNetworkAccessManager(this))
+    net(new QNetworkAccessManager(this)),
+    ctlW(0),
+    rootUser("scvalex")
 {
     oauth->setConsumerKey("zaeBj6kxsz2P0N7O1LwUWg");
     oauth->setConsumerSecret("8yf2EkBuH9vNr1D3XlM1RKZ9GkoXKAfpNLLBfwzwg");
     oauth->setRequestTimeout(10000);
     connect(net, SIGNAL(finished(QNetworkReply*)), this, SLOT(replyGot(QNetworkReply*)));
-    if (login()) {
+    if (!login()) {
         qDebug("Login failed");
     }
 }
@@ -35,11 +39,13 @@ Twitter::~Twitter() {
 }
 
 void Twitter::reset() {
-    qDebug("Resetting Twitter");
     lastUserQueried = "";
     nodes.clear();
     unexpanded.clear();
-    getFollowers("scvalex");
+    if (!login()) {
+        qDebug("Login failed");
+    }
+    getFollowers(rootUser);
 }
 
 void Twitter::addVertex() {
@@ -55,13 +61,22 @@ bool Twitter::canAddVertex() {
 }
 
 QWidget* Twitter::controlWidget(QWidget *parent) {
-    return 0;
+    if (!ctlW) {
+        ctlW = new QWidget(parent);
+        Ui::TwitterControl *twitCtl = new Ui::TwitterControl();
+        twitCtl->setupUi(ctlW);
+        twitCtl->userEdit->setText(rootUser);
+        connect(twitCtl->clearButton, SIGNAL(clicked()), this, SLOT(clearPrivateData()));
+        connect(twitCtl->userEdit, SIGNAL(textChanged(const QString&)), this, SLOT(setRootUser(const QString&)));
+    }
+    return ctlW;
 }
 
 bool Twitter::login() {
     QSettings settings;
     token = settings.value("token").toByteArray();
     tokenSecret = settings.value("tokenSecret").toByteArray();
+    qDebug() << "Recovered token" << token;
     if (token.size() > 0)
         return true;
     QOAuth::ParamMap reply = oauth->requestToken("https://api.twitter.com/oauth/request_token",
@@ -114,7 +129,6 @@ bool Twitter::login() {
 
 void Twitter::getFollowers(QString username, bool numeric) {
     lastUserQueried = username;
-    qDebug() << "Getting followers for" << lastUserQueried;
 
     QString requestUrl("http://api.twitter.com/1/followers/ids.xml");
 
@@ -134,10 +148,10 @@ void Twitter::getFollowers(QString username, bool numeric) {
 void Twitter::replyGot(QNetworkReply *reply) {
     if (reply->error() != QNetworkReply::NoError) {
         qDebug("Network error: %d.  Huh.", reply->error());
+        qDebug() << reply->readAll();
         return;
     }
 
-    qDebug() << "Last user is " << lastUserQueried;
     if (lastUserQueried.size() == 0) {
         // whoosh
         return;
@@ -153,13 +167,26 @@ void Twitter::replyGot(QNetworkReply *reply) {
     }
 
     QDomNodeList ns = doc.elementsByTagName("id");
-    for (unsigned i(0); i < ns.length(); ++i) {
+    int count = ns.length();
+    if (count > 2)
+        count = qSqrt(count);
+    for (int i(0); i < count; ++i) {
         QDomNode node = ns.at(i);
         QString userid = node.firstChild().toText().data();
         nodes[userid] = graph->newNode();
         unexpanded.insert(userid);
         graph->newEdge(nodes[lastUserQueried], nodes[userid]);
-        //qDebug() << "Found" << userid;
     }
-    qDebug("Done");
+}
+
+void Twitter::clearPrivateData() {
+    QSettings settings;
+    settings.setValue("token", "");
+    settings.setValue("tokenSecret", "");
+    settings.sync();
+    graph->reset();
+}
+
+void Twitter::setRootUser(const QString &newUser) {
+    rootUser = newUser;
 }

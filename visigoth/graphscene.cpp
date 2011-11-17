@@ -66,8 +66,6 @@ bool GraphScene::newEdge(Node *source, Node *dest) {
     updateDegreeCount(source);
     updateDegreeCount(dest);
 
-    qDebug("Added edge between %d and %d", source->tag(), dest->tag());
-
     return true;
 }
 
