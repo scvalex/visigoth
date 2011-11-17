@@ -51,9 +51,7 @@ void Twitter::reset() {
 void Twitter::addVertex() {
     if (unexpanded.empty())
         return;
-    QString next = *unexpanded.begin();
-    unexpanded.remove(next);
-    getFollowers(next, true);
+    getFollowers(unexpanded.dequeue(), true);
 }
 
 bool Twitter::canAddVertex() {
@@ -174,7 +172,7 @@ void Twitter::replyGot(QNetworkReply *reply) {
         QDomNode node = ns.at(i);
         QString userid = node.firstChild().toText().data();
         nodes[userid] = graph->newNode();
-        unexpanded.insert(userid);
+        unexpanded.enqueue(userid);
         graph->newEdge(nodes[lastUserQueried], nodes[userid]);
     }
 }

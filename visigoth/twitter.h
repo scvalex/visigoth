@@ -3,8 +3,9 @@
 
 #include "algorithm.h"
 
+#include <QList>
 #include <QMap>
-#include <QSet>
+#include <QQueue>
 #include <QString>
 
 class GraphScene;
@@ -53,7 +54,7 @@ private:
 
     QString lastUserQueried;
     QMap<QString, Node*> nodes;
-    QSet<QString> unexpanded;
+    QQueue<QString> unexpanded;
     QString rootUser;
 };
 
