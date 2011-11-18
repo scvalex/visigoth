@@ -24,6 +24,7 @@ public:
     virtual ~Bipartite();
 
     void reset();
+    bool canAddVertex();
     void addVertex();
     QWidget* controlWidget(QWidget *parent = 0);
 
@@ -33,7 +34,6 @@ public:
 private slots:
     void onUSizeChanged(int newSize);
     void onVSizeChanged(int newSize);
-    void repopulate();
 
 private:
     static const int START_USIZE = 40;

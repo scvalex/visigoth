@@ -21,12 +21,12 @@ public:
     Preferential(GraphScene *graph);
 
     void reset();
+    bool canAddVertex();
     void addVertex();
     QWidget* controlWidget(QWidget *parent = 0);
 
 protected slots:
     void onSizeChanged(int newSize);
-    void repopulate();
     void onDegreeChanged(int newDegree);
 
 protected:

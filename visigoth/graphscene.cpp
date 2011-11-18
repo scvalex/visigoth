@@ -125,6 +125,7 @@ void GraphScene::repopulate() {
         }
     }
     algo->reset();
+    randomizePlacement();
 }
 
 Algorithm* GraphScene::algorithm() const {
@@ -185,7 +186,15 @@ void GraphScene::calculateForces() {
     }
 
     // FIXME: The scene now has 3 dimensions, implement calculations.
+
+    // Don't move the first node
+    bool first = true;
     foreach (Node* node, nodes()) {
+        if (first) {
+            first = false;
+            continue;
+        }
+
         QPointF pos = node->calculatePosition(quadTree.root());
 
         if (pos.x() < topLeft.x())
