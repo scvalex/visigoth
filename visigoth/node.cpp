@@ -17,7 +17,8 @@ Node::Node(GraphScene *graph, QGraphicsItem *parent) :
     graph(graph),
     hovering(false),
     visited(false),
-    distance(0)
+    distance(0),
+    z(0.0)
 {
     myTag = ALL_NODES++;
     setFlag(ItemIsMovable);
@@ -36,6 +37,8 @@ void Node::addEdge(Edge *edge) {
 }
 
 QPointF Node::calculatePosition(TreeNode &treeNode) {
+    // FIXME: 3rd dimension.
+
     if (!scene() || scene()->mouseGrabberItem() == this) {
         newPos = pos();
         return newPos;
@@ -71,6 +74,8 @@ QPointF Node::calculatePosition(TreeNode &treeNode) {
 }
 
 QPointF Node::calculateNonEdgeForces(QuadTree::TreeNode* treeNode) {
+    // FIXME: 3rd dimension.
+
     if (treeNode->size() < 1) {
         return QPointF(0, 0);
     }
@@ -108,7 +113,11 @@ QPointF Node::calculateNonEdgeForces(QuadTree::TreeNode* treeNode) {
 bool Node::advance() {
     if (newPos == pos())
         return false;
+
+    // FIXME: Enable when newZ is actually being calculated.
+    //z = newZ;
     setPos(newPos);
+
     return true;
 }
 
@@ -205,6 +214,7 @@ bool Node::getVisited(){
 void Node::setVisited(bool v){
     visited = v ;
 }
+
 int Node::getDistance(){
     return distance;
 }
@@ -219,4 +229,17 @@ QBrush& Node::brush() {
 
 void Node::setBrush(const QBrush &b) {
     myBrush = b;
+}
+
+void Node::setZ(float z) {
+    this->z = z;
+}
+
+float Node::getZ() {
+    return this->z;
+}
+
+void Node::setPos3(float x, float y, float z) {
+    setZ(z);
+    setPos(x, y);
 }

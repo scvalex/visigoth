@@ -133,7 +133,9 @@ Algorithm* GraphScene::algorithm() const {
 
 void GraphScene::randomizePlacement() {
     foreach (Node *node, nodes()) {
-        node->setPos(10 + qrand() % 1000, 10 + qrand() % 600);
+        node->setPos3(10 + qrand() % 1000,
+                    10 + qrand() % 600,
+                    qrand() % 600 - 300);
     }
     foreach (Edge *edge, edges()) {
         edge->adjust();
@@ -182,6 +184,7 @@ void GraphScene::calculateForces() {
         quadTree.addNode(*node);
     }
 
+    // FIXME: The scene now has 3 dimensions, implement calculations.
     foreach (Node* node, nodes()) {
         QPointF pos = node->calculatePosition(quadTree.root());
 

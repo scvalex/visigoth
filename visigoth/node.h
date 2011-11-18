@@ -60,6 +60,11 @@ public:
 
     static void reset();
 
+    // 3rd dimension.
+    void setZ(float z);
+    float getZ();
+    void setPos3(float x, float y, float z);
+
 protected:
     explicit Node(GraphScene *graph, QGraphicsItem *parent = 0);
 
@@ -81,6 +86,10 @@ private:
     // vars for average length
     bool visited;
     int distance;
+
+    // 3rd dimension.
+    float z;
+    float newZ;
 
     QPointF mapPoint(QPointF source, QPointF dest);
     QPointF calculateNonEdgeForces(TreeNode* treeNode);

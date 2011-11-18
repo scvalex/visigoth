@@ -308,6 +308,7 @@ inline void GLGraphWidget::drawNode(Node* node) {
     float radius = (log(node->edges().size()) / log(2)) + 1.0;
     QPointF p = node->pos();
 
+    // FIXME: Draw spheres instead of flat circles.
     glBegin(GL_TRIANGLE_FAN);
     // glBegin(GL_LINE_LOOP);
         // int step = 180 / (radius > 50 ? 50 : (int) radius);
@@ -316,13 +317,14 @@ inline void GLGraphWidget::drawNode(Node* node) {
             GLfloat rangle = (GLfloat) angle * (3.1415926 / 180.0);
             glVertex3f((GLfloat)p.x() + sin(rangle) * radius,
                        (GLfloat)p.y() + cos(rangle) * radius,
-                       0.0);
+                       (GLfloat)node->getZ() + cos(rangle) * radius);
         }
     glEnd();
 }
 
 void GLGraphWidget::drawGraphGL() {
     // If there is a dragged node, draw it where the mouse is.
+    // FIXME: This needs to be moved into the mouse handler.
     if (mouseMode == MOUSE_DRAGGING) {
         GLdouble model[16], proj[16];
         GLint view[4];
@@ -345,9 +347,9 @@ void GLGraphWidget::drawGraphGL() {
         //glColor4f(0.0, 0.0, 1.0, 0.5);
         glBegin(GL_LINE_STRIP);
             QPointF p = edge->sourceNode()->pos();
-            glVertex3f((GLfloat)p.x(), (GLfloat)p.y(), 0.0);
+            glVertex3f((GLfloat)p.x(), (GLfloat)p.y(), (GLfloat)edge->sourceNode()->getZ());
             p = edge->destNode()->pos();
-            glVertex3f((GLfloat)p.x(), (GLfloat)p.y(), 0.0);
+            glVertex3f((GLfloat)p.x(), (GLfloat)p.y(), (GLfloat)edge->destNode()->getZ());
         glEnd();
     }
 
