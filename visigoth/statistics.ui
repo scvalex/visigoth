@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>131</width>
-    <height>141</height>
+    <width>146</width>
+    <height>193</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -58,6 +58,20 @@
        </property>
       </widget>
      </item>
+     <item row="3" column="0">
+      <widget class="QLabel" name="label">
+       <property name="text">
+        <string>Clustering Coeff</string>
+       </property>
+      </widget>
+     </item>
+     <item row="3" column="1">
+      <widget class="QLabel" name="coeffLabel">
+       <property name="text">
+        <string>0</string>
+       </property>
+      </widget>
+     </item>
     </layout>
    </item>
    <item>
@@ -68,7 +82,7 @@
      <property name="sizeHint" stdset="0">
       <size>
        <width>20</width>
-       <height>61</height>
+       <height>94</height>
       </size>
      </property>
     </spacer>

@@ -8,6 +8,7 @@
 #include "graphscene.h"
 
 class Algorithm;
+class Node;
 
 class GLGraphWidget : public QGLWidget, public AbstractGraphWidget
 {
@@ -28,6 +29,7 @@ public:
 
 signals:
     void algorithmChanged(Algorithm *newAlgo);
+    void hoveringOnNode(Node *node);
 
 protected:
     void setAnimationRunning();

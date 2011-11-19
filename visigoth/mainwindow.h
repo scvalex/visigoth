@@ -9,6 +9,7 @@
 
 class Algorithm;
 class GraphScene;
+class Node;
 class QDockWidget;
 
 namespace Ui {
@@ -30,6 +31,7 @@ public slots:
 private slots:
     void onAlgorithmChanged(Algorithm *newAlgo);
     void onGenerate();
+    void onFocusedNodeChanged(Node *node);
 
 private:
     Ui::MainWindow *ui;
@@ -37,6 +39,7 @@ private:
     GLGraphWidget *view;
     GraphScene *scene;
     QDockWidget *algoCtl;
+    Node *focusedNode;
 };
 
 #endif // MAINWINDOW_H

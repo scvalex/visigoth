@@ -30,6 +30,7 @@ GLGraphWidget::GLGraphWidget(QWidget *parent) :
     timerId(0)
 {
     setFocusPolicy(Qt::StrongFocus);
+    setMouseTracking(true);
 }
 
 void GLGraphWidget::setScene(GraphScene *newScene) {
@@ -139,8 +140,13 @@ void GLGraphWidget::mouseReleaseEvent(QMouseEvent *event) {
 void GLGraphWidget::mouseMoveEvent(QMouseEvent *event) {
     int dx, dy;
 
-    if (mouseMode == MOUSE_IDLE)
+    if (mouseMode == MOUSE_IDLE) {
+        Node *node = selectGL(event->x(), event->y());
+        if (node != 0) {
+            emit hoveringOnNode(node);
+        }
         return;
+    }
 
     dx = event->x() - mouseX;
     dy = event->y() - mouseY;
@@ -162,7 +168,6 @@ void GLGraphWidget::mouseMoveEvent(QMouseEvent *event) {
             //glaCameraRotatef(cameramat, dy, 1.0, 0.0, 0.0);
             break;
         case MOUSE_DRAGGING:
-        case MOUSE_IDLE:
             break;
     }
 

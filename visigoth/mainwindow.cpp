@@ -24,7 +24,8 @@ MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow),
     statsUi(new Ui::Statistics),
-    algoCtl(0)
+    algoCtl(0),
+    focusedNode(0)
 {
     qsrand(23);
 
@@ -45,6 +46,7 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->generateAct, SIGNAL(triggered()), scene, SLOT(repopulate()));
     connect(scene, SIGNAL(repopulated()), this, SLOT(onGenerate()));
     connect(view, SIGNAL(algorithmChanged(Algorithm*)), this, SLOT(onAlgorithmChanged(Algorithm*)));
+    connect(view, SIGNAL(hoveringOnNode(Node*)), this, SLOT(onFocusedNodeChanged(Node*)));
 
     ui->chooserCombo->addItems(scene->algorithms());
     connect(ui->chooserCombo, SIGNAL(currentIndexChanged(const QString &)), scene, SLOT(chooseAlgorithm(const QString &)));
@@ -102,8 +104,19 @@ void MainWindow::onAlgorithmChanged(Algorithm *newAlgo) {
 }
 
 void MainWindow::onGenerate() {
+    focusedNode = 0;
     Statistics *stats = scene->getStatistics();
     statsUi->lengthLabel->setText(QString::number(stats->lengthAvg()));
     statsUi->degreeLabel->setText(QString::number(stats->degreeAvg()));
     statsUi->clusteringLabel->setText(QString::number(stats->clusteringAvg()));
+    statsUi->coeffLabel->setText("");
+}
+
+void MainWindow::onFocusedNodeChanged(Node *node) {
+    if (node == focusedNode)
+        return;
+    focusedNode = node;
+
+    Statistics *stats = scene->getStatistics();
+    statsUi->coeffLabel->setText(QString::number(stats->clusteringCoeff(focusedNode)));
 }
