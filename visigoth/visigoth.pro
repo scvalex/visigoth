@@ -38,6 +38,8 @@ FORMS += mainwindow.ui \
          preferentialcontrol.ui \
          erdoscontrol.ui \
          barabasialbert.ui \
-    helpWindow.ui
+    helpWidget.ui
+
+
 
 

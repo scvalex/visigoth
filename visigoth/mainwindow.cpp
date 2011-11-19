@@ -2,6 +2,7 @@
 #include "glgraphwidget.h"
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
+#include "ui_helpWidget.h"
 #include "preferential.h"
 #include "graphscene.h"
 #include "bipartite.h"
@@ -20,8 +21,8 @@
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
-    helpWindow(0),
     ui(new Ui::MainWindow),
+    helpWidget(0),
     algoCtl(0)
 {
     qsrand(23);
@@ -53,14 +54,23 @@ MainWindow::~MainWindow() {
 }
 
 void MainWindow::controlWindow() {
-    if (!helpWindow) {
-        helpWindow = new QMainWindow(this);
-        helpWindow->setWindowTitle("Help Manual");
-        helpWindow->setMinimumHeight(220);
-        helpWindow->setMinimumWidth(150);
-        helpWindow->show();
-        helpWindow->activateWindow();
+    if (!helpWidget) {
+        helpDock = new QDockWidget(this);
+        helpWidget = new QWidget(this);
+        Ui::helpWidget *helpWid = new Ui::helpWidget();
+        helpWid->setupUi(helpWidget);
+        helpWid->text->setText("blah");
+        helpWid->text->isReadOnly();
+        helpWid->text->setFrameShape(QFrame::NoFrame);
+        helpWid->text->viewport()->setAutoFillBackground(false);
+        helpDock->setWidget(helpWidget);
+        helpDock->setWindowTitle("Help Manual");
+        helpDock->setFixedWidth((this->width())/3);
+        addDockWidget(Qt::LeftDockWidgetArea, helpDock);
+    } else {
+        helpDock->show();
     }
+
 }
 
 void MainWindow::exportTo() {

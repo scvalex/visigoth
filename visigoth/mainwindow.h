@@ -37,7 +37,9 @@ private:
 
     GLGraphWidget *view;
     QDockWidget *algoCtl;
-    QMainWindow *helpWindow;
+    //QMainWindow *helpWindow;
+    QWidget *helpWidget;
+    QDockWidget *helpDock;
 };
 
 #endif // MAINWINDOW_H
