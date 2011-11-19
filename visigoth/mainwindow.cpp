@@ -3,6 +3,7 @@
 #include "glgraphwidget.h"
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
+#include "ui_statistics.h"
 #include "preferential.h"
 #include "graphscene.h"
 #include "bipartite.h"
@@ -21,6 +22,7 @@
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow),
+    statsUi(new Ui::Statistics),
     algoCtl(0)
 {
     qsrand(23);
@@ -32,6 +34,8 @@ MainWindow::MainWindow(QWidget *parent) :
     view = new GLGraphWidget(this);
     scene = new GraphScene(view);
     view->setScene(scene);
+
+    statsUi->setupUi(ui->statsWidget);
 
     setCentralWidget(view);
 
