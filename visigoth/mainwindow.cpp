@@ -7,6 +7,7 @@
 #include "preferential.h"
 #include "graphscene.h"
 #include "bipartite.h"
+#include "statistics.h"
 
 #include <QDesktopWidget>
 #include <QDir>
@@ -42,6 +43,7 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->newNodeAct, SIGNAL(triggered()), scene, SLOT(addVertex()));
     connect(ui->randomizeAct, SIGNAL(triggered()), scene, SLOT(randomizePlacement()));
     connect(ui->generateAct, SIGNAL(triggered()), scene, SLOT(repopulate()));
+    connect(scene, SIGNAL(repopulated()), this, SLOT(onGenerate()));
     connect(view, SIGNAL(algorithmChanged(Algorithm*)), this, SLOT(onAlgorithmChanged(Algorithm*)));
 
     ui->chooserCombo->addItems(scene->algorithms());
@@ -97,4 +99,11 @@ void MainWindow::onAlgorithmChanged(Algorithm *newAlgo) {
     }
 
     ui->newNodeAct->setEnabled(newAlgo->canAddVertex());
+}
+
+void MainWindow::onGenerate() {
+    Statistics *stats = scene->getStatistics();
+    statsUi->lengthLabel->setText(QString::number(stats->lengthAvg()));
+    statsUi->degreeLabel->setText(QString::number(stats->degreeAvg()));
+    statsUi->clusteringLabel->setText(QString::number(stats->clusteringAvg()));
 }

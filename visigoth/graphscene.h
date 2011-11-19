@@ -45,7 +45,7 @@ public:
     void reset();
 
     QList<QString> algorithms() const;
-
+    Statistics* getStatistics();
 
 public slots:
     void addVertex();
@@ -55,6 +55,7 @@ public slots:
 
 signals:
     void algorithmChanged(Algorithm *newAlgo);
+    void repopulated();
 
 protected:
     void updateDegreeCount(Node *node);

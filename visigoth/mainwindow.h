@@ -29,6 +29,7 @@ public slots:
 
 private slots:
     void onAlgorithmChanged(Algorithm *newAlgo);
+    void onGenerate();
 
 private:
     Ui::MainWindow *ui;

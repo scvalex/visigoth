@@ -30,6 +30,10 @@ QList<QString> GraphScene::algorithms() const {
     return myAlgorithms.keys();
 }
 
+Statistics* GraphScene::getStatistics() {
+    return stats;
+}
+
 void GraphScene::reset() {
     clear();
     hasEdge.clear();
@@ -130,6 +134,7 @@ void GraphScene::repopulate() {
     }
     algo->reset();
     randomizePlacement();
+    emit repopulated();
 }
 
 Algorithm* GraphScene::algorithm() const {
