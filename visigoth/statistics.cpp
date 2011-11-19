@@ -1,6 +1,7 @@
 #include "statistics.h"
 #include "graphscene.h"
 
+#include <QQueue>
 #include <QPointF>
 
 Statistics::Statistics(GraphScene *scene):
@@ -23,8 +24,7 @@ double Statistics::lengthAvg() {
         }
     }
 
-    double res =  allLengths / (double) (graph->nodes().size()*(graph->nodes().size() - 1));
-    return res;
+    return allLengths / (double) (graph->nodes().size()*(graph->nodes().size() - 1));
 }
 
 double Statistics::clusteringAvg() {
@@ -94,14 +94,14 @@ QVector<Node*> Statistics::buildNeighbourVector(Node *n) {
 }
 
 double Statistics::lengthSum(Node *s) {
-    QList<Node*> queue;
+    QQueue<Node*> queue;
     queue.append(s);
     double retLength = 0;
     s->setVisited(true);
 
     // Find the distances to all other nodes using breadth first search
     while(!queue.empty()) {
-        Node *parent = queue.first();
+        Node *parent = queue.dequeue();
         QList<Edge*> edges = parent->edges();
 
         foreach(Edge *e, edges) {
@@ -116,11 +116,10 @@ double Statistics::lengthSum(Node *s) {
             if(!n->getVisited()) {
                 n->setVisited(true);
                 n->setDistance(parent->getDistance() + 1);
-                queue.append(n);
+                queue.enqueue(n);
             }
         }
 
-        queue.removeFirst();
         retLength += parent->getDistance();
     }
 
