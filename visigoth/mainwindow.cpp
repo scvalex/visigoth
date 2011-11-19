@@ -20,6 +20,7 @@
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
+    helpWindow(0),
     ui(new Ui::MainWindow),
     algoCtl(0)
 {
@@ -28,6 +29,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->setupUi(this);
 
     connect(ui->exportToAct, SIGNAL(triggered()), this, SLOT(exportTo()));
+    connect(ui->helpAct, SIGNAL(triggered()), this, SLOT(controlWindow()));
 
     view = new GLGraphWidget(this);
 
@@ -48,6 +50,17 @@ MainWindow::MainWindow(QWidget *parent) :
 
 MainWindow::~MainWindow() {
     delete ui;
+}
+
+void MainWindow::controlWindow() {
+    if (!helpWindow) {
+        helpWindow = new QMainWindow(this);
+        helpWindow->setWindowTitle("Help Manual");
+        helpWindow->setMinimumHeight(220);
+        helpWindow->setMinimumWidth(150);
+        helpWindow->show();
+        helpWindow->activateWindow();
+    }
 }
 
 void MainWindow::exportTo() {

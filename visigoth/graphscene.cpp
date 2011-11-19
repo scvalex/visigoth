@@ -145,7 +145,6 @@ void GraphScene::randomizePlacement() {
 
 void GraphScene::addVertex() {
     algo->addVertex();
-
     calculateMetrics();
 }
 
@@ -170,7 +169,6 @@ void GraphScene::updateDegreeCount(Node *node) {
 void GraphScene::calculateMetrics() {
     if(!stats)
         stats = new Statistics(this);
-
     // Do something with the metrics
 }
 

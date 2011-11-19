@@ -37,5 +37,7 @@ FORMS += mainwindow.ui \
          bipartitecontrol.ui \
          preferentialcontrol.ui \
          erdoscontrol.ui \
-         barabasialbert.ui
+         barabasialbert.ui \
+    helpWindow.ui
+
 

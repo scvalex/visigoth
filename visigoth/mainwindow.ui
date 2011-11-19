@@ -32,6 +32,7 @@
     </property>
     <addaction name="exportToAct"/>
     <addaction name="separator"/>
+    <addaction name="helpAct"/>
     <addaction name="quitAct"/>
    </widget>
    <addaction name="menu_File"/>
@@ -124,6 +125,11 @@
   <action name="quitAct">
    <property name="text">
     <string>&amp;Quit</string>
+   </property>
+  </action>
+  <action name="helpAct">
+   <property name="text">
+    <string>Help</string>
    </property>
   </action>
  </widget>

@@ -23,8 +23,12 @@ public:
     ~MainWindow();
     Ui::MainWindow *ui;
 
+   // QMainWindow* controlWindow(QMainWindow* parent = 0);
+
 public slots:
     void exportTo();
+  //  void openHelpManual();
+    void controlWindow();
 
 private slots:
     void onAlgorithmChanged(Algorithm *newAlgo);
@@ -33,6 +37,7 @@ private:
 
     GLGraphWidget *view;
     QDockWidget *algoCtl;
+    QMainWindow *helpWindow;
 };
 
 #endif // MAINWINDOW_H
