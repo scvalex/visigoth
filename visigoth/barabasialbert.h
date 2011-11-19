@@ -30,7 +30,7 @@ protected slots:
 
 protected:
     void addVertex(bool saveSize = false);
-    void addVertex(int edgesToAdd, double p);
+    void addVertex(int edgesToAdd);
 
     double genRandom();
     Node* getPreference(const QVector<Node*> &nodes, double genPref);
