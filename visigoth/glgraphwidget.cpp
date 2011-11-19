@@ -213,9 +213,6 @@ void GLGraphWidget::keyPressEvent(QKeyEvent *event) {
     case Qt::Key_Down:
         glaCameraTranslatef(cameramat, 0.0, 20.0/zoom, 0.0);
         break;
-    case Qt::Key_S:
-        myScene->calculateMetrics();
-        break;
     default:
         QGLWidget::keyPressEvent(event);
     }

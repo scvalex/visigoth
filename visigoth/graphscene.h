@@ -20,6 +20,7 @@ class GraphScene : public QGraphicsScene
     Q_OBJECT
 public:
     explicit GraphScene(AbstractGraphWidget *parent = 0);
+    ~GraphScene();
 
     QVector<Node*>& nodes();
     QList<Edge*>& edges();
@@ -38,8 +39,6 @@ public:
     void itemMoved();
 
     QList<Node*> getDegreeList(int degree) const;
-
-    void calculateMetrics();
 
     void calculateForces();
     bool isRunning() const;

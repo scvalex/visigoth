@@ -11,7 +11,6 @@
 GraphScene::GraphScene(AbstractGraphWidget *parent) :
     //QGraphicsScene(parent),
     algo(0),
-    stats(0),
     view(parent),
     degreeCount(1),
     running(false)
@@ -20,6 +19,11 @@ GraphScene::GraphScene(AbstractGraphWidget *parent) :
     myAlgorithms["Bipartite Model"] = BIPARTITE_MODEL;
     myAlgorithms["Erdos Renyi"] = ERDOS_RENYI;
     myAlgorithms["Barabasi Albert"] = BARABASI_ALBERT;
+    stats = new Statistics(this);
+}
+
+GraphScene::~GraphScene() {
+    delete stats;
 }
 
 QList<QString> GraphScene::algorithms() const {
@@ -139,14 +143,10 @@ void GraphScene::randomizePlacement() {
     foreach (Edge *edge, edges()) {
         edge->adjust();
     }
-
-    calculateMetrics();
 }
 
 void GraphScene::addVertex() {
     algo->addVertex();
-
-    calculateMetrics();
 }
 
 // Pre: degree is valid
@@ -165,13 +165,6 @@ void GraphScene::updateDegreeCount(Node *node) {
 
     if(degree > 1)
          degreeRemove(node);
-}
-
-void GraphScene::calculateMetrics() {
-    if(!stats)
-        stats = new Statistics(this);
-
-    // Do something with the metrics
 }
 
 void GraphScene::calculateForces() {
