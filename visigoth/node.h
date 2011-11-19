@@ -45,10 +45,6 @@ public:
     QPointF getCenter() const;
     QVector<TreeNode*>& getChildren();
     qreal getWidth() const;
-    bool getVisited();
-    void setVisited(bool v);
-    int getDistance();
-    void setDistance(int v);
     int size() const;
     QPointF center() const;
     bool hasChildren() const;

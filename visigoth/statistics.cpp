@@ -16,11 +16,13 @@ double Statistics::degreeAvg() {
 double Statistics::lengthAvg() {
     double allLengths = 0;
 
+    QSet<Node*> visited;
+    QMap<Node*, int> distance;
     foreach (Node *n, graph->nodes()) {
-        allLengths += lengthSum(n);
+        allLengths += lengthSum(n, visited, distance);
         foreach (Node *m, graph->nodes()) {
-            m->setDistance(0);
-            m->setVisited(false);
+            distance[m] = 0;
+            visited.remove(m);
         }
     }
 
@@ -93,11 +95,11 @@ QVector<Node*> Statistics::buildNeighbourVector(Node *n) {
     return retVec;
 }
 
-double Statistics::lengthSum(Node *s) {
+double Statistics::lengthSum(Node *s, QSet<Node*> &visited, QMap<Node*, int> &distance) {
     QQueue<Node*> queue;
     queue.append(s);
     double retLength = 0;
-    s->setVisited(true);
+    visited.insert(s);
 
     // Find the distances to all other nodes using breadth first search
     while(!queue.empty()) {
@@ -113,14 +115,14 @@ double Statistics::lengthSum(Node *s) {
                 n = e->sourceNode();
             }
 
-            if(!n->getVisited()) {
-                n->setVisited(true);
-                n->setDistance(parent->getDistance() + 1);
+            if(!visited.contains(n)) {
+                visited.insert(n);
+                distance[n] = distance.value(parent, 0) + 1;
                 queue.enqueue(n);
             }
         }
 
-        retLength += parent->getDistance();
+        retLength += distance[parent];
     }
 
     return retLength;
