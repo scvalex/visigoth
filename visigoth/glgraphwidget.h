@@ -14,8 +14,7 @@ class GLGraphWidget : public QGLWidget, public AbstractGraphWidget
     Q_OBJECT
 public:
     explicit GLGraphWidget(QWidget *parent = 0);
-
-    GraphScene *myScene;
+    void setScene(GraphScene *newScene);
 
     void itemMoved();
 
@@ -26,14 +25,6 @@ public:
         MOUSE_TRANSLATING2,
         MOUSE_DRAGGING
     };
-
-    QList<QString> algorithms() const;
-
-public slots:
-    void populate();
-    void randomizePlacement();
-    void addVertex();
-    void chooseAlgorithm(const QString &name);
 
 signals:
     void algorithmChanged(Algorithm *newAlgo);
@@ -62,7 +53,7 @@ private:
     void initProjection();
     Node *selectGL(int x, int y);
 
-
+    GraphScene *myScene;
     GLfloat cameramat[16];
     GLfloat zoom;
     int mouseX, mouseY;

@@ -1,11 +1,11 @@
 #include "algorithm.h"
+#include "graphscene.h"
 #include "glgraphwidget.h"
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include "preferential.h"
 #include "graphscene.h"
 #include "bipartite.h"
-
 
 #include <QDesktopWidget>
 #include <QDir>
@@ -30,20 +30,22 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->exportToAct, SIGNAL(triggered()), this, SLOT(exportTo()));
 
     view = new GLGraphWidget(this);
+    scene = new GraphScene(view);
+    view->setScene(scene);
 
     setCentralWidget(view);
 
-    connect(ui->newNodeAct, SIGNAL(triggered()), view, SLOT(addVertex()));
-    connect(ui->randomizeAct, SIGNAL(triggered()), view, SLOT(randomizePlacement()));
-    connect(ui->generateAct, SIGNAL(triggered()), view, SLOT(populate()));
+    connect(ui->newNodeAct, SIGNAL(triggered()), scene, SLOT(addVertex()));
+    connect(ui->randomizeAct, SIGNAL(triggered()), scene, SLOT(randomizePlacement()));
+    connect(ui->generateAct, SIGNAL(triggered()), scene, SLOT(repopulate()));
     connect(view, SIGNAL(algorithmChanged(Algorithm*)), this, SLOT(onAlgorithmChanged(Algorithm*)));
 
-    ui->chooserCombo->addItems(view->algorithms());
-    connect(ui->chooserCombo, SIGNAL(currentIndexChanged(const QString &)), view, SLOT(chooseAlgorithm(const QString &)));
+    ui->chooserCombo->addItems(scene->algorithms());
+    connect(ui->chooserCombo, SIGNAL(currentIndexChanged(const QString &)), scene, SLOT(chooseAlgorithm(const QString &)));
 
-    view->chooseAlgorithm(ui->chooserCombo->currentText());
+    scene->chooseAlgorithm(ui->chooserCombo->currentText());
 
-    view->populate();
+    scene->repopulate();
 }
 
 MainWindow::~MainWindow() {

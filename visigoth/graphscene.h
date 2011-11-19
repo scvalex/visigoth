@@ -33,14 +33,9 @@ public:
     Node* newNode();
     bool newEdge(Node *source, Node *dest);
 
-    void repopulate();
     Algorithm* algorithm() const;
 
     void itemMoved();
-
-    void randomizePlacement();
-
-    void addVertex();
 
     QList<Node*> getDegreeList(int degree) const;
 
@@ -54,6 +49,9 @@ public:
 
 
 public slots:
+    void addVertex();
+    void randomizePlacement();
+    void repopulate();
     void chooseAlgorithm(const QString &name);
 
 signals:

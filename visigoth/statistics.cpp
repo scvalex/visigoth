@@ -182,7 +182,6 @@ double Statistics::powerLawExponent() {
             ++logCounter;
             i = 0;
         }
-
     }
 
     double deltaY = 0.0;

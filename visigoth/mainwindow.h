@@ -3,11 +3,12 @@
 
 #include "glgraphwidget.h"
 
-#include <QMainWindow>
-#include <QGraphicsView>
 #include <QComboBox>
+#include <QGraphicsView>
+#include <QMainWindow>
 
 class Algorithm;
+class GraphScene;
 class QDockWidget;
 
 namespace Ui {
@@ -30,8 +31,8 @@ private slots:
     void onAlgorithmChanged(Algorithm *newAlgo);
 
 private:
-
     GLGraphWidget *view;
+    GraphScene *scene;
     QDockWidget *algoCtl;
 };
 
