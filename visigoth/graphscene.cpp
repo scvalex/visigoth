@@ -1,6 +1,6 @@
 #include "edge.h"
 #include "graphscene.h"
-#include "abstractgraphwidget.h"
+#include "glgraphwidget.h"
 #include "node.h"
 #include "preferential.h"
 #include "bipartite.h"
@@ -8,7 +8,7 @@
 #include "statistics.h"
 #include "barabasialbert.h"
 
-GraphScene::GraphScene(AbstractGraphWidget *parent) :
+GraphScene::GraphScene(GLGraphWidget *parent) :
     //QGraphicsScene(parent),
     algo(0),
     stats(0),

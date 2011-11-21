@@ -27,7 +27,6 @@ HEADERS += mainwindow.h \
            glancillary.h \
            bipartite.h \
            algorithm.h \
-           abstractgraphwidget.h \
            statistics.h \
            barabasialbert.h \
            quadtree.h \

@@ -7,10 +7,9 @@
 #include <QSet>
 #include <QVector>
 
-#include "abstractgraphwidget.h"
+class GLGraphWidget;
 
 class Edge;
-class GraphWidget;
 class Node;
 class Algorithm;
 class Statistics;
@@ -19,7 +18,7 @@ class GraphScene : public QGraphicsScene
 {
     Q_OBJECT
 public:
-    explicit GraphScene(AbstractGraphWidget *parent = 0);
+    explicit GraphScene(GLGraphWidget *parent = 0);
 
     QVector<Node*>& nodes();
     QList<Edge*>& edges();
@@ -75,7 +74,7 @@ private:
     QVector<QSet<int> > hasEdge;
     QVector<Node*> myNodes;
     QList<Edge*> myEdges;
-    AbstractGraphWidget *view;
+    GLGraphWidget *view;
     QVector<QList<Node*> > degreeCount;
     bool running;
     QMap<QString, int> myAlgorithms;

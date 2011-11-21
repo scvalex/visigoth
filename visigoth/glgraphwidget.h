@@ -4,12 +4,12 @@
 #include <QGLWidget>
 #include <QList>
 
-#include "abstractgraphwidget.h"
-#include "graphscene.h"
-
+class GraphScene;
+class Node;
 class Algorithm;
 
-class GLGraphWidget : public QGLWidget, public AbstractGraphWidget
+
+class GLGraphWidget : public QGLWidget
 {
     Q_OBJECT
 public:
