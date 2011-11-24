@@ -14,8 +14,7 @@ inline int pow2(int exp) {
 // ---------------------------------------------------------------------------
 // QuadTree
 
-QuadTree::QuadTree(QRectF boundaries)
-{
+QuadTree::QuadTree(QRectF boundaries) {
     int width = calculateWidth(boundaries);
 
     // First node, level 0, coords 0,0, width equals to the width of the entire space
@@ -81,8 +80,8 @@ QuadTree::Quadrant::Quadrant(int level, QPointF center, int width) :
 }
 
 QuadTree::Quadrant::~Quadrant() {
-    foreach (TreeNode* node, _children) {
-        QuadTree::Quadrant* quadrant = dynamic_cast<QuadTree::Quadrant*>(node);
+    foreach (TreeNode *node, _children) {
+        QuadTree::Quadrant *quadrant = dynamic_cast<QuadTree::Quadrant*>(node);
 
         if (quadrant) {
             delete quadrant;
@@ -110,7 +109,7 @@ qreal QuadTree::Quadrant::width() const {
     return (qreal) _width;
 }
 
-void QuadTree::Quadrant::castAndAddChild(QuadTree::TreeNode* node, QuadTree::TreeNode& child) const {
+void QuadTree::Quadrant::castAndAddChild(QuadTree::TreeNode *node, QuadTree::TreeNode &child) const {
     QuadTree::Quadrant* q = dynamic_cast<QuadTree::Quadrant*>(node);
 
     if (q == NULL) {
@@ -124,7 +123,7 @@ bool QuadTree::Quadrant::isTerminal() {
     return width() <= BASE_QUADRANT_SIZE;
 }
 
-inline QPointF QuadTree::Quadrant::weightedMiddle(QuadTree::TreeNode& node1, QuadTree::TreeNode& node2) const {
+inline QPointF QuadTree::Quadrant::weightedMiddle(QuadTree::TreeNode &node1, QuadTree::TreeNode &node2) const {
     // If node1 and node2 are two vectors w and v with respective weights a and b, we want
     // (a*w + b*v) / (a + b)
 
