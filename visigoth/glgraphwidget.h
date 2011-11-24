@@ -15,6 +15,8 @@ class GLGraphWidget : public QGLWidget, public AbstractGraphWidget
 public:
     explicit GLGraphWidget(QWidget *parent = 0);
 
+    virtual ~GLGraphWidget();
+
     GraphScene *myScene;
 
     void itemMoved();
