@@ -232,17 +232,14 @@ int GraphScene::nodeCount(int degree) const {
     return degreeCount[degree].size();
 }
 
-void GraphScene::degreeRemove(Node *n) {
-    int degree = n->edges().size();
+void GraphScene::degreeRemove(Node *node) {
+    int degree = node->edges().size();
 
-    QList<Node*> list = degreeCount[degree - 2];
-    int counter = 0;
-    foreach (Node *n2, list) {
-        if (n2->tag() == n->tag()){
-            degreeCount[degree - 2].removeAt(counter);
+    QList<Node *> nodes = degreeCount[degree - 2];
+    for (int i(0); i < nodes.size(); ++i) {
+        if (nodes[i]->tag() == node->tag()) {
+            degreeCount[degree - 2].removeAt(i);
             break;
         }
-
-        ++counter;
     }
 }
