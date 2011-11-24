@@ -13,6 +13,7 @@ public:
     virtual ~Algorithm();
 
     virtual void reset() = 0;
+    virtual bool canAddVertex() = 0;
     virtual void addVertex() = 0;
     virtual QWidget* controlWidget(QWidget *parent = 0) = 0;
     bool getSWNFlag();

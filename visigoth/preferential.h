@@ -21,12 +21,12 @@ public:
     Preferential(GraphScene *graph);
 
     void reset();
+    bool canAddVertex();
     void addVertex();
     QWidget* controlWidget(QWidget *parent = 0);
 
 protected slots:
     void onSizeChanged(int newSize);
-    void repopulate();
     void onDegreeChanged(int newDegree);
 
 protected:
@@ -44,7 +44,7 @@ protected:
 
 private:
 
-    static const int START_NODES = 900;
+    static const int START_NODES = 10;
     static const int START_DEGREE = 3;
 
     GraphScene *graph;

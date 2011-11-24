@@ -22,6 +22,10 @@ void Preferential::reset() {
     }
 }
 
+bool Preferential::canAddVertex() {
+    return true;
+}
+
 void Preferential::addVertex() {
     addVertex(true);
 }
@@ -40,16 +44,9 @@ QWidget* Preferential::controlWidget(QWidget *parent) {
         Ui::PreferentialControl *prefCtl = new Ui::PreferentialControl();
         prefCtl->setupUi(ctlW);
         connect(prefCtl->sizeEdit, SIGNAL(valueChanged(int)), this, SLOT(onSizeChanged(int)));
-        connect(prefCtl->sizeEdit, SIGNAL(editingFinished()), this, SLOT(repopulate()));
         connect(prefCtl->degreeEdit, SIGNAL(valueChanged(int)), this, SLOT(onDegreeChanged(int)));
-        connect(prefCtl->degreeEdit, SIGNAL(editingFinished()), this, SLOT(repopulate()));
     }
     return ctlW;
-}
-
-void Preferential::repopulate() {
-    graph->repopulate();
-    graph->randomizePlacement();
 }
 
 // Add vertex using preferential attachment with clustering.
@@ -151,21 +148,45 @@ QVector<Node*> Preferential::getIntersection(QVector<Node*> vec1, QVector<Node*>
     QVector<Node*> retVec;
     QVector<Node*> *shorterVec;
     QVector<Node*> *longerVec;
+
+    // tags are unqiue, so no counter is needed
+    QMap<int,bool> mapShort;
+    QMap<int,bool> mapLong;
+
+
     int length;
+    int shortLength;
     if (vec1.size() > vec2.size()) {
         length = vec1.size();
+        shortLength = vec2.size();
         shorterVec = &vec2;
         longerVec = &vec1;
     } else {
        length = vec2.size();
+       shortLength = vec1.size();
        shorterVec = &vec1;
        longerVec = &vec2;
     }
 
     for (int i(0); i < length; ++i) {
-        Node* tempPointer = longerVec->at(i);
-        if (shorterVec->contains(tempPointer)) {
-            retVec << tempPointer;
+
+        Node* longPointer;
+        Node* shortPointer;
+
+        if( i < shortLength ){
+
+            shortPointer = shorterVec->at(i);
+            mapShort.insert(shortPointer->tag(),true);
+
+        }
+
+        longPointer= longerVec->at(i);
+
+        mapLong.insert(longPointer->tag(),true);
+
+        if (mapShort.contains(longPointer->tag())) {
+            retVec << longPointer;
+            //don'thave to clear maps because tags are unique
         }
 
     }
@@ -181,8 +202,10 @@ double Preferential::genRandom(){
 
 void Preferential::onSizeChanged(int newSize) {
     size = newSize;
+    graph->repopulate();
 }
 
 void Preferential::onDegreeChanged(int newDegree) {
     nodeDegree = newDegree;
+    graph->repopulate();
 }

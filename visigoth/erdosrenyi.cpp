@@ -17,6 +17,10 @@ ErdosRenyi::ErdosRenyi(GraphScene *scene) :
 ErdosRenyi::~ErdosRenyi() {
 }
 
+bool ErdosRenyi::canAddVertex() {
+    return true;
+}
+
 void ErdosRenyi::addVertex() {
     Node *node = scene->newNode();
 
@@ -59,8 +63,10 @@ QWidget* ErdosRenyi::controlWidget(QWidget *parent) {
 
 void ErdosRenyi::onNodesChanged(int newValue) {
     size = newValue;
+    scene->repopulate();
 }
 
 void ErdosRenyi::onProbabilityChanged(double newValue) {
     probability = newValue;
+    scene->repopulate();
 }

@@ -41,7 +41,6 @@ QList<QString> GLGraphWidget::algorithms() const {
 
 void GLGraphWidget::populate() {
     myScene->repopulate();
-    randomizePlacement();
 }
 
 void GLGraphWidget::itemMoved() {
@@ -58,7 +57,6 @@ void GLGraphWidget::addVertex() {
 
 void GLGraphWidget::chooseAlgorithm(const QString &name) {
     myScene->chooseAlgorithm(name);
-    randomizePlacement();
 }
 
 /****************************

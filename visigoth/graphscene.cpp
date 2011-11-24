@@ -173,6 +173,8 @@ void GraphScene::repopulate() {
         // or smthing like that
 
     }
+    randomizePlacement();
+
 }
 
 Algorithm* GraphScene::algorithm() const {

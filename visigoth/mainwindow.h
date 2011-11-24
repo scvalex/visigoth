@@ -21,6 +21,7 @@ class MainWindow : public QMainWindow
 public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
+    Ui::MainWindow *ui;
 
 public slots:
     void exportTo();
@@ -29,7 +30,7 @@ private slots:
     void onAlgorithmChanged(Algorithm *newAlgo);
 
 private:
-    Ui::MainWindow *ui;
+
     GLGraphWidget *view;
     QDockWidget *algoCtl;
 };
