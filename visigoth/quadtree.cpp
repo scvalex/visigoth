@@ -55,7 +55,7 @@ QuadTree::TreeNode& QuadTree::root() const {
     return *_root;
 }
 
-void QuadTree::addNode(QuadTree::TreeNode& node) {
+void QuadTree::addNode(QuadTree::TreeNode *node) {
     _root->addChild(node);
 }
 
@@ -109,8 +109,8 @@ qreal QuadTree::Quadrant::width() const {
     return (qreal) _width;
 }
 
-void QuadTree::Quadrant::castAndAddChild(QuadTree::TreeNode *node, QuadTree::TreeNode &child) const {
-    QuadTree::Quadrant* q = dynamic_cast<QuadTree::Quadrant*>(node);
+void QuadTree::Quadrant::castAndAddChild(QuadTree::TreeNode *node, QuadTree::TreeNode *child) const {
+    QuadTree::Quadrant *q = dynamic_cast<QuadTree::Quadrant*>(node);
 
     if (q == NULL) {
         throw std::runtime_error("QuadTree::Quadrant::castAndAddChild: trying to cast a non-Quadrant.");
@@ -123,15 +123,15 @@ bool QuadTree::Quadrant::isTerminal() {
     return width() <= BASE_QUADRANT_SIZE;
 }
 
-inline QPointF QuadTree::Quadrant::weightedMiddle(QuadTree::TreeNode &node1, QuadTree::TreeNode &node2) const {
+inline QPointF QuadTree::Quadrant::weightedMiddle(QuadTree::TreeNode *node1, QuadTree::TreeNode *node2) const {
     // If node1 and node2 are two vectors w and v with respective weights a and b, we want
     // (a*w + b*v) / (a + b)
 
-    QPointF node1Center = node1.center();
-    int node1Size = node1.size();
+    QPointF node1Center = node1->center();
+    int node1Size = node1->size();
 
-    QPointF node2Center = node2.center();
-    int node2Size = node2.size();
+    QPointF node2Center = node2->center();
+    int node2Size = node2->size();
 
     qreal sizeSum = (qreal) (node1Size + node2Size);
     return QPointF((node1Size * node1Center.x() + node2Size * node2Center.x()) / sizeSum,
@@ -184,15 +184,15 @@ void QuadTree::Quadrant::allocateChildren() {
     }
 }
 
-void QuadTree::Quadrant::addChildToChildren(QuadTree::TreeNode& node) {
+void QuadTree::Quadrant::addChildToChildren(QuadTree::TreeNode *node) {
     // Add the node recursively, inspecting which child it belongs to.
-   if (node.center().x() < quadrantCenter.x() && node.center().y() >= quadrantCenter.y()) {
+   if (node->center().x() < quadrantCenter.x() && node->center().y() >= quadrantCenter.y()) {
        // Top left
        castAndAddChild(_children[0], node);
-   } else if (node.center().x() >= quadrantCenter.x() && node.center().y() >= quadrantCenter.y()) {
+   } else if (node->center().x() >= quadrantCenter.x() && node->center().y() >= quadrantCenter.y()) {
        // Top right
        castAndAddChild(_children[1], node);
-   } else if (node.center().x() < quadrantCenter.x() && node.center().y() < quadrantCenter.y()) {
+   } else if (node->center().x() < quadrantCenter.x() && node->center().y() < quadrantCenter.y()) {
        // Bottom left
        castAndAddChild(_children[2], node);
    } else {
@@ -201,9 +201,9 @@ void QuadTree::Quadrant::addChildToChildren(QuadTree::TreeNode& node) {
    }
 }
 
-void QuadTree::Quadrant::addChild(QuadTree::TreeNode& node) {
+void QuadTree::Quadrant::addChild(QuadTree::TreeNode *node) {
     // Weigh the center with the new node
-    _center = weightedMiddle(*this, node);
+    _center = weightedMiddle(this, node);
 
     // If it's not a terminal node, recurse down
     if (!isTerminal()) {
@@ -215,7 +215,7 @@ void QuadTree::Quadrant::addChild(QuadTree::TreeNode& node) {
         addChildToChildren(node);
     } else {
         // If it's a terminal node, just add the node to the list of children
-        _children.append(&node);
+        _children.append(node);
     }
 
     // Increase the size
@@ -226,11 +226,11 @@ void QuadTree::Quadrant::addChild(QuadTree::TreeNode& node) {
 // Debug functions
 
 // Prints the tree in a nice way.
-void QuadTree::printTree(QuadTree::TreeNode* node) const {
-    QuadTree::Quadrant* q = dynamic_cast<QuadTree::Quadrant*>(node);
+void QuadTree::printTree(QuadTree::TreeNode *node) const {
+    QuadTree::Quadrant *q = dynamic_cast<QuadTree::Quadrant*>(node);
 
     if (q != NULL) {
-        foreach (QuadTree::TreeNode* child, node->children()) {
+        foreach (QuadTree::TreeNode *child, node->children()) {
             for (int i = 0; i < q->getLevel(); i++) {
                 std::cout << "\t";
             }
@@ -239,7 +239,7 @@ void QuadTree::printTree(QuadTree::TreeNode* node) const {
                       << ", size: " << child->size() << ", center: " << child->center().x()
                       << "," << child->center().y();
 
-            QuadTree::Quadrant* qchild = dynamic_cast<QuadTree::Quadrant*>(child);
+            QuadTree::Quadrant *qchild = dynamic_cast<QuadTree::Quadrant*>(child);
             if (qchild) {
                 std::cout << ", quadcenter: " << qchild->getQuadrantCenter().x()
                           << "," << qchild->getQuadrantCenter().y();

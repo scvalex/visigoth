@@ -179,7 +179,7 @@ void GraphScene::calculateForces() {
 
     QuadTree quadTree(sceneRect());
     foreach (Node *node, nodes()) {
-        quadTree.addNode(*node);
+        quadTree.addNode(node);
     }
 
     // Don't move the first node
