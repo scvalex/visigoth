@@ -36,6 +36,12 @@ HEADERS += mainwindow.h \
 FORMS += mainwindow.ui \
          bipartitecontrol.ui \
          preferentialcontrol.ui \
-    erdoscontrol.ui \
-    statistics.ui
+         erdoscontrol.ui \
+         statistics.ui
 
+test {
+    TARGET = test
+    QT += testlib
+    SOURCES -= main.cpp
+    SOURCES += testsimple.cpp
+}
