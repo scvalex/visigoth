@@ -47,6 +47,7 @@ FORMS += mainwindow.ui \
          statistics.ui
 
 test {
+    CONFIG -= release
     TARGET = test
     QT += testlib
     SOURCES -= main.cpp

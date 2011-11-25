@@ -3,10 +3,13 @@
 #include <QString>
 #include <QtTest/QtTest>
 
+#include <math.h>
+
 #include "graphscene.h"
+#include "statistics.h"
 
 class TestSimple : public QObject {
-    Q_OBJECT
+Q_OBJECT
 public:
     TestSimple(QObject *parent = 0) :
         QObject(parent)
@@ -53,6 +56,18 @@ private slots:
         addNodeToAlgo("Preferential Attachament");
     }
 
+    void statsSimpleBarabasiAlbert() {
+        statsSimple("Barabasi Albert");
+    }
+
+    void statsSimpleErdosRenyi() {
+        statsSimple("Erdos Renyi");
+    }
+
+    void statsSimplePreferential() {
+        statsSimple("Preferential Attachament");
+    }
+
     void cleanup() {
         delete scene;
     }
@@ -66,6 +81,18 @@ private:
         scene->addVertex();
         QVERIFY(count + 1 == scene->nodes().size());
     }
+
+    void statsSimple(QString name) {
+        scene->chooseAlgorithm(name);
+        scene->addVertex();
+        double val = scene->getStatistics()->degreeAvg();
+        QVERIFY(fpclassify(val) == FP_NORMAL && val > 0);
+        val = scene->getStatistics()->lengthAvg();
+        QVERIFY(fpclassify(val) == FP_NORMAL && val > 0);
+        val = scene->getStatistics()->clusteringAvg();
+        QVERIFY(fpclassify(val) == FP_NORMAL && val > 0);
+    }
+
 };
 
 QTEST_MAIN(TestSimple)
