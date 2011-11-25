@@ -12,10 +12,11 @@ int Node::ALL_NODES(0);
 
 Node::Node(GraphScene *graph, QGraphicsItem *parent) :
     QGraphicsItem(parent),
-    //myBrush(QColor::fromRgb(qrand() % 256, qrand() % 256, qrand() % 256, 180)),
     myBrush(QColor::fromRgbF(0.0, 1.0, 0.3, 0.7)),
     graph(graph),
-    hovering(false)
+    hovering(false),
+    visited(false),
+    distance(0)
 {
     myTag = ALL_NODES++;
     setFlag(ItemIsMovable);
@@ -68,7 +69,7 @@ QPointF Node::calculatePosition(TreeNode &treeNode) {
     return newPos;
 }
 
-QPointF Node::calculateNonEdgeForces(QuadTree::TreeNode* treeNode) {
+QPointF Node::calculateNonEdgeForces(QuadTree::TreeNode *treeNode) {
     if (treeNode->size() < 1) {
         return QPointF(0, 0);
     }
@@ -122,13 +123,7 @@ QPainterPath Node::shape() const {
 
 void Node::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *) {
     painter->setPen(Qt::NoPen);
-    if (!hovering) {
-        painter->setBrush(myBrush);
-    } else {
-        QColor lighter = myBrush.color();
-        lighter.setAlpha(255);
-        painter->setBrush(QBrush(lighter));
-    }
+    painter->setBrush(myBrush);
     painter->drawEllipse(-10, -10, 20, 20);
 }
 
@@ -145,16 +140,6 @@ QVariant Node::itemChange(GraphicsItemChange change, const QVariant &value) {
     }
 
     return QGraphicsItem::itemChange(change, value);
-}
-
-void Node::hoverEnterEvent(QGraphicsSceneHoverEvent *event) {
-    hovering = true;
-    QGraphicsItem::hoverEnterEvent(event);
-}
-
-void Node::hoverLeaveEvent(QGraphicsSceneHoverEvent *event) {
-    hovering = false;
-    QGraphicsItem::hoverLeaveEvent(event);
 }
 
 QList<Edge*>& Node::edges() {

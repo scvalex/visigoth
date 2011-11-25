@@ -61,9 +61,6 @@ protected:
 
     QVariant itemChange(GraphicsItemChange change, const QVariant &value);
 
-    void hoverEnterEvent(QGraphicsSceneHoverEvent *event);
-    void hoverLeaveEvent(QGraphicsSceneHoverEvent *event);
-
 private:
     static int ALL_NODES;
 

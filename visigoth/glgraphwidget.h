@@ -15,9 +15,11 @@ class GLGraphWidget : public QGLWidget, public AbstractGraphWidget
     Q_OBJECT
 public:
     explicit GLGraphWidget(QWidget *parent = 0);
-    void setScene(GraphScene *newScene);
+
+    virtual ~GLGraphWidget();
 
     void itemMoved();
+    void setScene(GraphScene *newScene);
 
     enum MOUSE_MODES {
         MOUSE_IDLE,

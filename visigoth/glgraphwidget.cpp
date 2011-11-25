@@ -42,6 +42,10 @@ void GLGraphWidget::setScene(GraphScene *newScene) {
     connect(myScene, SIGNAL(algorithmChanged(Algorithm*)), this, SIGNAL(algorithmChanged(Algorithm*)));
 }
 
+GLGraphWidget::~GLGraphWidget() {
+    delete myScene;
+}
+
 void GLGraphWidget::itemMoved() {
     setAnimationRunning();
 }

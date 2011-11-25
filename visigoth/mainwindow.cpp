@@ -57,6 +57,7 @@ MainWindow::MainWindow(QWidget *parent) :
 }
 
 MainWindow::~MainWindow() {
+    delete view;
     delete ui;
 }
 
