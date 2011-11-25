@@ -44,6 +44,8 @@ FORMS += mainwindow.ui \
          bipartitecontrol.ui \
          preferentialcontrol.ui \
          erdoscontrol.ui \
+         barabasialbert.ui \
+         helpWidget.ui \
          statistics.ui
 
 oauth {

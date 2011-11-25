@@ -27,6 +27,7 @@ public:
 
 public slots:
     void exportTo();
+    void toggleHelp(bool enabled);
 
 private slots:
     void onAlgorithmChanged(Algorithm *newAlgo);
@@ -39,6 +40,8 @@ private:
     GLGraphWidget *view;
     GraphScene *scene;
     QDockWidget *algoCtl;
+    QWidget *helpWidget;
+    QDockWidget *helpDock;
     Node *focusedNode;
 };
 
