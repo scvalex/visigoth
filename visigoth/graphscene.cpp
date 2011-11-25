@@ -7,7 +7,10 @@
 #include "erdosrenyi.h"
 #include "statistics.h"
 #include "barabasialbert.h"
+
+#ifdef HAS_OAUTH
 #include "twitter.h"
+#endif
 
 GraphScene::GraphScene(AbstractGraphWidget *parent) :
     algo(0),
@@ -20,7 +23,9 @@ GraphScene::GraphScene(AbstractGraphWidget *parent) :
     myAlgorithms["Bipartite Model"] = BIPARTITE_MODEL;
     myAlgorithms["Erdos Renyi"] = ERDOS_RENYI;
     myAlgorithms["Barabasi Albert"] = BARABASI_ALBERT;
-    myAlgorithms["ATwitter"] = TWITTER;
+#ifdef HAS_OAUTH
+    myAlgorithms["Twitter"] = TWITTER;
+#endif
 }
 
 QList<QString> GraphScene::algorithms() const {
@@ -124,9 +129,11 @@ void GraphScene::repopulate() {
         case BARABASI_ALBERT:
             algo = new BarabasiAlbert(this);
             break;
+#ifdef HAS_OAUTH
         case TWITTER:
             algo = new Twitter(this);
             break;
+#endif
         }
     }
     algo->reset();
