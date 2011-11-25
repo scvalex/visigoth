@@ -35,6 +35,10 @@ GLGraphWidget::GLGraphWidget(QWidget *parent) :
     connect(myScene, SIGNAL(algorithmChanged(Algorithm*)), this, SIGNAL(algorithmChanged(Algorithm*)));
 }
 
+GLGraphWidget::~GLGraphWidget() {
+    delete myScene;
+}
+
 QList<QString> GLGraphWidget::algorithms() const {
     return myScene->algorithms();
 }
