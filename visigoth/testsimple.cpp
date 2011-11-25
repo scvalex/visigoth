@@ -1,5 +1,7 @@
-#include <QtTest/QtTest>
+#include <QList>
 #include <QObject>
+#include <QString>
+#include <QtTest/QtTest>
 
 #include "graphscene.h"
 
@@ -16,7 +18,7 @@ public:
 
 private slots:
     void initTestCase() {
-        scene = new GraphScene(0);
+        scene = new GraphScene();
     }
 
     void nopTest() {
@@ -24,6 +26,10 @@ private slots:
     }
 
     void setAlgoTest() {
+        QList<QString> algos = scene->algorithms();
+        foreach (QString algo, algos) {
+            scene->chooseAlgorithm(algo);
+        }
     }
 
     void cleanupTestCase() {
