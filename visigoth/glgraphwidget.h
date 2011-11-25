@@ -18,7 +18,6 @@ public:
 
     virtual ~GLGraphWidget();
 
-    void itemMoved();
     void setScene(GraphScene *newScene);
 
     enum MOUSE_MODES {
@@ -28,6 +27,9 @@ public:
         MOUSE_TRANSLATING2,
         MOUSE_DRAGGING
     };
+
+public slots:
+    void itemMoved();
 
 signals:
     void algorithmChanged(Algorithm *newAlgo);

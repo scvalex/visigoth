@@ -34,7 +34,8 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->exportToAct, SIGNAL(triggered()), this, SLOT(exportTo()));
 
     view = new GLGraphWidget(this);
-    scene = new GraphScene(view);
+    scene = new GraphScene();
+    connect(scene, SIGNAL(itemMovedSignal()), view, SLOT(itemMoved()));
     view->setScene(scene);
 
     statsUi->setupUi(ui->statsWidget);

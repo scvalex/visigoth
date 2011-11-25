@@ -1,6 +1,8 @@
 #include <QtTest/QtTest>
 #include <QObject>
 
+#include "graphscene.h"
+
 class TestSimple : public QObject {
     Q_OBJECT
 public:
@@ -14,14 +16,22 @@ public:
 
 private slots:
     void initTestCase() {
+        scene = new GraphScene(0);
     }
 
     void nopTest() {
         QVERIFY(1 == 1);
     }
 
-    void cleanupTestCase() {
+    void setAlgoTest() {
     }
+
+    void cleanupTestCase() {
+        delete scene;
+    }
+
+private:
+    GraphScene *scene;
 };
 
 QTEST_MAIN(TestSimple)
