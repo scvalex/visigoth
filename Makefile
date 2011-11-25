@@ -10,6 +10,12 @@ build:
 	cd build && qmake ../visigoth/visigoth.pro
 	make -C build
 
+.PHONY: debug
+debug:
+	mkdir -p build
+	cd build && qmake ../visigoth/visigoth.pro CONFIG-=release
+	make -C build
+
 .PHONY: test
 test:
 	mkdir -p test
