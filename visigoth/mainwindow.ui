@@ -32,10 +32,16 @@
     </property>
     <addaction name="exportToAct"/>
     <addaction name="separator"/>
-    <addaction name="helpAct"/>
     <addaction name="quitAct"/>
    </widget>
+   <widget class="QMenu" name="menuHelp">
+    <property name="title">
+     <string>Help</string>
+    </property>
+    <addaction name="helpAct"/>
+   </widget>
    <addaction name="menu_File"/>
+   <addaction name="menuHelp"/>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
   <widget class="QToolBar" name="quickBar">
@@ -137,8 +143,11 @@
    </property>
   </action>
   <action name="helpAct">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
    <property name="text">
-    <string>Help</string>
+    <string>Manual</string>
    </property>
   </action>
  </widget>

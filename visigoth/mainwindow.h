@@ -25,12 +25,9 @@ public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
 
-   // QMainWindow* controlWindow(QMainWindow* parent = 0);
-
 public slots:
     void exportTo();
-  //  void openHelpManual();
-    void controlWindow();
+    void toggleHelp(bool enabled);
 
 private slots:
     void onAlgorithmChanged(Algorithm *newAlgo);

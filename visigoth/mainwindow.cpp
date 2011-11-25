@@ -37,7 +37,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->setupUi(this);
 
     connect(ui->exportToAct, SIGNAL(triggered()), this, SLOT(exportTo()));
-    connect(ui->helpAct, SIGNAL(triggered()), this, SLOT(controlWindow()));
+    connect(ui->helpAct, SIGNAL(toggled(bool)), this, SLOT(toggleHelp(bool)));
 
     view = new GLGraphWidget(this);
     scene = new GraphScene(view);
@@ -67,7 +67,7 @@ MainWindow::~MainWindow() {
     delete ui;
 }
 
-void MainWindow::controlWindow() {
+void MainWindow::toggleHelp(bool enabled) {
     if (!helpWidget) {
         helpDock = new QDockWidget(this);
         helpWidget = new QWidget(this);
@@ -80,9 +80,10 @@ void MainWindow::controlWindow() {
         helpDock->setWidget(helpWidget);
         helpDock->setWindowTitle("Help Manual");
         helpDock->setFixedWidth((this->width())/3);
+        helpDock->setFeatures(QDockWidget::NoDockWidgetFeatures);
         addDockWidget(Qt::LeftDockWidgetArea, helpDock);
     } else {
-        helpDock->show();
+        helpDock->setVisible(enabled);
     }
 
 }
