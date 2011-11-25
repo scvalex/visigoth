@@ -169,7 +169,9 @@ void Twitter::replyGot(QNetworkReply *reply) {
     for (int i(0); i < count; ++i) {
         QDomNode node = ns.at(i);
         QString userid = node.firstChild().toText().data();
-        nodes[userid] = graph->newNode();
+        if (!nodes.contains(userid)) {
+            nodes[userid] = graph->newNode();
+        }
         unexpanded.enqueue(userid);
         graph->newEdge(nodes[lastUserQueried], nodes[userid]);
     }
