@@ -25,11 +25,20 @@ private slots:
         QVERIFY(1 == 1);
     }
 
-    void setAlgoTest() {
-        QList<QString> algos = scene->algorithms();
-        foreach (QString algo, algos) {
-            scene->chooseAlgorithm(algo);
-        }
+    void setAlgoBipartiteModel() {
+        scene->chooseAlgorithm("Bipartite Model");
+    }
+
+    void setAlgoPreferentialModel() {
+        scene->chooseAlgorithm("Preferential Attachament");
+    }
+
+    void setAlgoErdosRenyi() {
+        scene->chooseAlgorithm("Erdos Renyi");
+    }
+
+    void setAlgoBarabasiAlbert() {
+        scene->chooseAlgorithm("Barabasi Albert");
     }
 
     void addNodeBarabasiAlbert() {

@@ -64,7 +64,8 @@ private:
         BIPARTITE_MODEL,
         PREFERENTIAL_ATTACHAMENT,
         ERDOS_RENYI,
-        BARABASI_ALBERT
+        BARABASI_ALBERT,
+        TWITTER
     };
     Algorithm *algo;
     Statistics *stats;

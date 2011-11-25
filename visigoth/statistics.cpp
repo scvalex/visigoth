@@ -10,7 +10,7 @@ Statistics::Statistics(GraphScene *scene):
 }
 
 double Statistics::degreeAvg() {
-    return (2 * graph->edges().count()) / graph->nodes().count();
+    return (2.0 * graph->edges().count()) / graph->nodes().count();
 }
 
 double Statistics::lengthAvg() {

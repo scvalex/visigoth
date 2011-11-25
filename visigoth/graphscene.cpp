@@ -8,6 +8,10 @@
 #include "statistics.h"
 #include "barabasialbert.h"
 
+#ifdef HAS_OAUTH
+#include "twitter.h"
+#endif
+
 GraphScene::GraphScene() :
     algo(0),
     degreeCount(1),
@@ -17,6 +21,9 @@ GraphScene::GraphScene() :
     myAlgorithms["Bipartite Model"] = BIPARTITE_MODEL;
     myAlgorithms["Erdos Renyi"] = ERDOS_RENYI;
     myAlgorithms["Barabasi Albert"] = BARABASI_ALBERT;
+#ifdef HAS_OAUTH
+    myAlgorithms["Twitter"] = TWITTER;
+#endif
     stats = new Statistics(this);
 }
 
@@ -78,6 +85,7 @@ Node* GraphScene::newNode() {
     Node *node = new Node(this);
     addItem(node);
     myNodes << node;
+    node->setPos(10 + qrand() % 1000, 10 + qrand() % 600);
 
     return node;
 }
@@ -128,6 +136,11 @@ void GraphScene::repopulate() {
         case BARABASI_ALBERT:
             algo = new BarabasiAlbert(this);
             break;
+#ifdef HAS_OAUTH
+        case TWITTER:
+            algo = new Twitter(this);
+            break;
+#endif
         }
     }
     algo->reset();
@@ -150,6 +163,7 @@ void GraphScene::randomizePlacement() {
 
 void GraphScene::addVertex() {
     algo->addVertex();
+    emit repopulated();
 }
 
 // Pre: degree is valid

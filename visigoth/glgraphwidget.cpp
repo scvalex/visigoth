@@ -171,7 +171,7 @@ void GLGraphWidget::mouseMoveEvent(QMouseEvent *event) {
             //glaCameraRotatef(cameramat, dx, 0.0, 1.0, 0.0);
             //glaCameraRotatef(cameramat, dy, 1.0, 0.0, 0.0);
             break;
-        case MOUSE_DRAGGING:
+        default:
             break;
     }
 

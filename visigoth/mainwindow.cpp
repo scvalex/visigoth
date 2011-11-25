@@ -29,6 +29,9 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     qsrand(23);
 
+    QCoreApplication::setOrganizationName("Visigoth");
+    QCoreApplication::setApplicationName("Visigoth");
+
     ui->setupUi(this);
 
     connect(ui->exportToAct, SIGNAL(triggered()), this, SLOT(exportTo()));

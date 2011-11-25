@@ -1,4 +1,11 @@
-QT += core gui opengl
+QT += core gui opengl xml network
+
+CONFIG += oauth
+oauth {
+    CONFIG += link_pkgconfig
+    PKGCONFIG += qoauth
+    DEFINES += HAS_OAUTH
+}
 
 TARGET = visigoth
 TEMPLATE = app
@@ -13,8 +20,8 @@ SOURCES += main.cpp \
            glgraphwidget.cpp \
            glancillary.c \
            algorithm.cpp \
-           statistics.cpp \
            barabasialbert.cpp \
+           statistics.cpp \
            quadtree.cpp \
            erdosrenyi.cpp
 
@@ -29,8 +36,8 @@ HEADERS += mainwindow.h \
            algorithm.h \
            abstractgraphwidget.h \
            statistics.h \
-           barabasialbert.h \
            quadtree.h \
+           barabasialbert.h \
            erdosrenyi.h
 
 FORMS += mainwindow.ui \
@@ -44,4 +51,11 @@ test {
     QT += testlib
     SOURCES -= main.cpp
     SOURCES += testsimple.cpp
+}
+
+oauth {
+    SOURCES += twitter.cpp
+    HEADERS += twitter.h
+    FORMS += twitauthdialog.ui \
+             twittercontrol.ui
 }
