@@ -47,8 +47,6 @@ public:
     QList<QString> algorithms() const;
     Statistics* getStatistics();
 
-    void calculateMetrics();
-
 public slots:
     void addVertex();
     void randomizePlacement();

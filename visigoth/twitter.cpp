@@ -21,7 +21,6 @@ Twitter::Twitter(GraphScene *scene) :
     Algorithm(scene),
     graph(scene),
     oauth(new QOAuth::Interface(this)),
-    authD(0),
     net(new QNetworkAccessManager(this)),
     ctlW(0),
     rootUser("scvalex")
@@ -34,6 +33,8 @@ Twitter::Twitter(GraphScene *scene) :
 }
 
 Twitter::~Twitter() {
+    delete oauth;
+    delete net;
 }
 
 void Twitter::reset() {
@@ -92,15 +93,15 @@ bool Twitter::login() {
 
     qDebug("Opening the Dialog of Secrets");
     QDialog d;
-    authD = new Ui::TwitterAuthDialog();
-    authD->setupUi(&d);
-    authD->urlLabel->setText("<a href=\"" + twitterAuthorizationURL.toString() + "\">Authorize</a>");
+    Ui::TwitterAuthDialog authD = Ui::TwitterAuthDialog();
+    authD.setupUi(&d);
+    authD.urlLabel->setText("<a href=\"" + twitterAuthorizationURL.toString() + "\">Authorize</a>");
     if (d.exec() == QDialog::Rejected) {
         qDebug("User is a spoil-sport");
         return false;
     }
 
-    QString secret = authD->pinEdit->text();
+    QString secret = authD.pinEdit->text();
     qDebug() << "Secret is" << secret;
 
     QOAuth::ParamMap map;

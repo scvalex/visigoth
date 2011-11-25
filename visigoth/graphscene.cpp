@@ -185,14 +185,6 @@ void GraphScene::updateDegreeCount(Node *node) {
          degreeRemove(node);
 }
 
-void GraphScene::calculateMetrics() {
-    if(!stats) {
-        stats = new Statistics(this);
-    }
-
-    // Do something with the metrics
-}
-
 void GraphScene::calculateForces() {
     QPointF topLeft;
     QPointF bottomRight;

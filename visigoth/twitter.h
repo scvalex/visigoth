@@ -19,10 +19,6 @@ namespace QOAuth {
     class Interface;
 };
 
-namespace Ui {
-    class TwitterAuthDialog;
-};
-
 class Twitter : public Algorithm
 {
     Q_OBJECT
@@ -35,18 +31,19 @@ public:
     bool canAddVertex();
     QWidget* controlWidget(QWidget *parent);
 
-    bool login();
-    void getFollowers(QString username, bool numeric = false);
-
 protected slots:
     void replyGot(QNetworkReply *reply);
     void clearPrivateData();
     void setRootUser(const QString &newUser);
 
 private:
+    static const int TIMEOUT = 10000;
+
+    bool login();
+    void getFollowers(QString username, bool numeric = false);
+
     GraphScene *graph;
     QOAuth::Interface *oauth;
-    Ui::TwitterAuthDialog *authD;
     QNetworkAccessManager *net;
     QByteArray token;
     QByteArray tokenSecret;
