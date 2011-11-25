@@ -29,7 +29,7 @@ public:
 
     QuadTree(QRectF boundaries);
     ~QuadTree();
-    void addNode(TreeNode& node);
+    void addNode(TreeNode *node);
     TreeNode& root() const;
 
     void printTree(TreeNode* node) const; // Debug
@@ -45,7 +45,7 @@ private:
         const QVector<TreeNode*>& children() const;
         qreal width() const;
 
-        void addChild(TreeNode& child);
+        void addChild(TreeNode *child);
 
         // Both this functions are needed by printTree() only, which is useful to debug.
         int getLevel() const;
@@ -62,11 +62,11 @@ private:
         QPointF _center;
 
         int childIndex(TreeNode& node) const;
-        void castAndAddChild(TreeNode* node, TreeNode& child) const;
+        void castAndAddChild(TreeNode *node, TreeNode *child) const;
         bool isTerminal();
-        QPointF weightedMiddle(TreeNode& node1, TreeNode& node2) const;
+        QPointF weightedMiddle(TreeNode *node1, TreeNode *node2) const;
         void allocateChildren();
-        void addChildToChildren(TreeNode& node);
+        void addChildToChildren(TreeNode *node);
     };
 
     Quadrant* _root;

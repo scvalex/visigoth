@@ -5,8 +5,8 @@
 #include "mainwindow.h"
 
 #include <QDebug>
+#include <QSet>
 #include <QWidget>
-#include <QMessageBox>
 
 Bipartite::Bipartite(GraphScene *scene) :
     Algorithm(scene),
@@ -36,6 +36,7 @@ void Bipartite::reset() {
     // Use class edgeList
     updatePreference();
 
+    QSet<Node*> visited;
     // have to edit this for case uSize = 1
     for (int i(0); i < vSize; ++i) {
         Node *v = vVector[i];
@@ -52,9 +53,9 @@ void Bipartite::reset() {
             Node *u = uVector[getPreference(rand)];
 
             if (!scene->doesEdgeExist(u,v)) {
-                if(!u->getVisited()){
+                if (!visited.contains(u)) {
                     usedNodes << u;
-                    u->setVisited(true);
+                    visited.insert(u);
                 }
                 scene->newEdge(u,v);
                 n += 1;
@@ -95,11 +96,6 @@ void Bipartite::reset() {
             }
         }
 
-    }
-
-    // reset visited flag for stats
-    for(int j(0); j < uSize; ++j){
-        uVector[j]->setVisited(false);
     }
 
     vVector.clear();

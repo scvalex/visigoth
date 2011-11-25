@@ -47,14 +47,14 @@ void BarabasiAlbert::addVertex() {
 }
 
 void BarabasiAlbert::addVertex(bool saveSize) {
-    addVertex(nodeDegree, qrand() % 100);
+    addVertex(nodeDegree);
     if (saveSize) {
         ++size;
     }
 }
 
 // Add vertex using preferential attachment without clustering.
-void BarabasiAlbert::addVertex(int edgesToAdd, double p) {
+void BarabasiAlbert::addVertex(int edgesToAdd) {
     Node *vPref;
     int numNodes = graph->nodes().size();
     int numEdges = graph->edges().size();

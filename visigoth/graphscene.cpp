@@ -8,10 +8,12 @@
 #include "statistics.h"
 #include "barabasialbert.h"
 
+#ifdef HAS_OAUTH
+#include "twitter.h"
+#endif
+
 GraphScene::GraphScene(AbstractGraphWidget *parent) :
-    //QGraphicsScene(parent),
     algo(0),
-    stats(0),
     view(parent),
     degreeCount(1),
     running(false)
@@ -20,10 +22,22 @@ GraphScene::GraphScene(AbstractGraphWidget *parent) :
     myAlgorithms["Bipartite Model"] = BIPARTITE_MODEL;
     myAlgorithms["Erdos Renyi"] = ERDOS_RENYI;
     myAlgorithms["Barabasi Albert"] = BARABASI_ALBERT;
+#ifdef HAS_OAUTH
+    myAlgorithms["Twitter"] = TWITTER;
+#endif
+    stats = new Statistics(this);
+}
+
+GraphScene::~GraphScene() {
+    delete stats;
 }
 
 QList<QString> GraphScene::algorithms() const {
     return myAlgorithms.keys();
+}
+
+Statistics* GraphScene::getStatistics() {
+    return stats;
 }
 
 void GraphScene::reset() {
@@ -72,6 +86,7 @@ Node* GraphScene::newNode() {
     Node *node = new Node(this);
     addItem(node);
     myNodes << node;
+    node->setPos(10 + qrand() % 1000, 10 + qrand() % 600);
 
     return node;
 }
@@ -122,10 +137,16 @@ void GraphScene::repopulate() {
         case BARABASI_ALBERT:
             algo = new BarabasiAlbert(this);
             break;
+#ifdef HAS_OAUTH
+        case TWITTER:
+            algo = new Twitter(this);
+            break;
+#endif
         }
     }
     algo->reset();
     randomizePlacement();
+    emit repopulated();
 }
 
 Algorithm* GraphScene::algorithm() const {
@@ -139,13 +160,11 @@ void GraphScene::randomizePlacement() {
     foreach (Edge *edge, edges()) {
         edge->adjust();
     }
-
-    calculateMetrics();
 }
 
 void GraphScene::addVertex() {
     algo->addVertex();
-    calculateMetrics();
+    emit repopulated();
 }
 
 // Pre: degree is valid
@@ -157,19 +176,13 @@ QList<Node *> GraphScene::getDegreeList(int degree) const {
 void GraphScene::updateDegreeCount(Node *node) {
     int degree = node->edges().size();
 
-        if(degree > degreeCount.size())
+    if (degree > degreeCount.size())
         degreeCount.resize(degree);
 
     degreeCount[degree - 1].append(node);
 
-    if(degree > 1)
+    if (degree > 1)
          degreeRemove(node);
-}
-
-void GraphScene::calculateMetrics() {
-    if(!stats)
-        stats = new Statistics(this);
-    // Do something with the metrics
 }
 
 void GraphScene::calculateForces() {
@@ -177,13 +190,13 @@ void GraphScene::calculateForces() {
     QPointF bottomRight;
 
     QuadTree quadTree(sceneRect());
-    foreach (Node* node, nodes()) {
-        quadTree.addNode(*node);
+    foreach (Node *node, nodes()) {
+        quadTree.addNode(node);
     }
 
     // Don't move the first node
     bool first = true;
-    foreach (Node* node, nodes()) {
+    foreach (Node *node, nodes()) {
         if (first) {
             first = false;
             continue;
@@ -216,11 +229,10 @@ void GraphScene::calculateForces() {
 }
 
 bool GraphScene::isRunning() const {
-    return true;
+    return running;
 }
 
 int GraphScene::maxDegree() const {
-
     return degreeCount.count();
 }
 
@@ -232,18 +244,14 @@ int GraphScene::nodeCount(int degree) const {
     return degreeCount[degree].size();
 }
 
-void GraphScene::degreeRemove(Node *n) {
-    int degree = n->edges().size();
+void GraphScene::degreeRemove(Node *node) {
+    int degree = node->edges().size();
 
-    QList<Node*> list = degreeCount[degree-2];
-    int counter = 0;
-    foreach(Node *n2, list){
-
-        if(n2->tag() == n->tag()){
-            degreeCount[degree-2].removeAt(counter);
+    QList<Node *> nodes = degreeCount[degree - 2];
+    for (int i(0); i < nodes.size(); ++i) {
+        if (nodes[i]->tag() == node->tag()) {
+            degreeCount[degree - 2].removeAt(i);
             break;
         }
-
-        ++counter;
     }
 }

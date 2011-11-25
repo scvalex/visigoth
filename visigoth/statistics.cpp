@@ -1,6 +1,7 @@
 #include "statistics.h"
 #include "graphscene.h"
 
+#include <QQueue>
 #include <QPointF>
 
 Statistics::Statistics(GraphScene *scene):
@@ -9,22 +10,23 @@ Statistics::Statistics(GraphScene *scene):
 }
 
 double Statistics::degreeAvg() {
-    return (2 * graph->edges().count()) / graph->nodes().count();
+    return (2.0 * graph->edges().count()) / graph->nodes().count();
 }
 
 double Statistics::lengthAvg() {
     double allLengths = 0;
 
+    QSet<Node*> visited;
+    QMap<Node*, int> distance;
     foreach (Node *n, graph->nodes()) {
-        allLengths += lengthSum(n);
+        allLengths += lengthSum(n, visited, distance);
         foreach (Node *m, graph->nodes()) {
-            m->setDistance(0);
-            m->setVisited(false);
+            distance[m] = 0;
+            visited.remove(m);
         }
     }
 
-    double res =  allLengths / (double) (graph->nodes().size()*(graph->nodes().size() - 1));
-    return res;
+    return allLengths / (double) (graph->nodes().size() * (graph->nodes().size() - 1));
 }
 
 double Statistics::clusteringAvg() {
@@ -34,8 +36,7 @@ double Statistics::clusteringAvg() {
         clusterCumulative += clusteringCoeff(n);
     }
 
-    double res = clusterCumulative / (double)graph->nodes().size();
-    return res;
+    return clusterCumulative / (double)graph->nodes().size();
 }
 
 double Statistics::clusteringCoeff(Node *node) {
@@ -43,7 +44,7 @@ double Statistics::clusteringCoeff(Node *node) {
     int k = edges.count();
     int intersection = 0;
 
-    while(!edges.empty()) {
+    while (!edges.empty()) {
         Edge *e = edges.takeFirst();
         Node *src = e->sourceNode();
         Node *dest = e->destNode();
@@ -59,7 +60,7 @@ double Statistics::clusteringCoeff(Node *node) {
         }
     }
 
-    return k > 1 ? (2*intersection)/(double) (k*(k-1)) : 0 ;
+    return k > 1 ? (2*intersection) / (double) (k*(k-1)) : 0 ;
 }
 
 double Statistics::clusteringDegree(int degree) {
@@ -93,15 +94,15 @@ QVector<Node*> Statistics::buildNeighbourVector(Node *n) {
     return retVec;
 }
 
-double Statistics::lengthSum(Node *s) {
-    QList<Node*> queue;
+double Statistics::lengthSum(Node *s, QSet<Node*> &visited, QMap<Node*, int> &distance) {
+    QQueue<Node*> queue;
     queue.append(s);
     double retLength = 0;
-    s->setVisited(true);
+    visited.insert(s);
 
     // Find the distances to all other nodes using breadth first search
     while(!queue.empty()) {
-        Node *parent = queue.first();
+        Node *parent = queue.dequeue();
         QList<Edge*> edges = parent->edges();
 
         foreach(Edge *e, edges) {
@@ -113,15 +114,14 @@ double Statistics::lengthSum(Node *s) {
                 n = e->sourceNode();
             }
 
-            if(!n->getVisited()) {
-                n->setVisited(true);
-                n->setDistance(parent->getDistance() + 1);
-                queue.append(n);
+            if(!visited.contains(n)) {
+                visited.insert(n);
+                distance[n] = distance.value(parent, 0) + 1;
+                queue.enqueue(n);
             }
         }
 
-        queue.removeFirst();
-        retLength += parent->getDistance();
+        retLength += distance[parent];
     }
 
     return retLength;
@@ -144,7 +144,7 @@ int Statistics::intersectionCount(QVector<Node*> vec1, QVector<Node*> vec2) {
     }
 
     for (int i(0); i < length; ++i) {
-        Node* tempPointer = longerVec->at(i);
+        Node *tempPointer = longerVec->at(i);
         if (shorterVec->contains(tempPointer)) {
             retVec << tempPointer;
         }
@@ -162,36 +162,35 @@ double Statistics::powerLawExponent() {
     double x(0);
 
     int maxDegree = graph->maxDegree();
-    for(double i(0); x < maxDegree ; ++i){
-        x = (i+1)*qPow(10,logCounter);
-        if(x >=maxDegree){
+    for (double i(0); x < maxDegree; ++i) {
+        x = (i+1) * qPow(10, logCounter);
+        if (x >= maxDegree) {
             break;
         }
 
         double count = graph->nodeCount(x);
-        double y =  count/(double) graph->nodes().size();
+        double y = count / (double)graph->nodes().size();
 
 
-        if( y != 0 && x!= 1 ) {
+        if (y != 0 && x!= 1) {
             // in case we want to plot
             QPointF p(qLn(x), qLn(y));
             plot << p;
         }
 
-        if(i == 9){
+        if (i == 9) {
             ++logCounter;
-            i=0;
+            i = 0;
         }
-
     }
 
     double deltaY = 0.0;
     double deltaX = 0.0;
     int c = 0;
 
-    foreach(QPointF p, plot) {
+    foreach (QPointF p, plot) {
         // init calculation
-        if(c == 0){
+        if (c == 0){
             //yPrev = p.getY();
             deltaY = p.y();
             deltaX = p.x();
@@ -202,5 +201,5 @@ double Statistics::powerLawExponent() {
         ++c;
     }
 
-    return -1*(deltaY/deltaX);
+    return (-1) * (deltaY / deltaX);
 }

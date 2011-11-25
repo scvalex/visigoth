@@ -45,10 +45,6 @@ public:
     QPointF getCenter() const;
     QVector<TreeNode*>& getChildren();
     qreal getWidth() const;
-    bool getVisited();
-    void setVisited(bool v);
-    int getDistance();
-    void setDistance(int v);
     int size() const;
     QPointF center() const;
     bool hasChildren() const;
@@ -64,9 +60,6 @@ protected:
     explicit Node(GraphScene *graph, QGraphicsItem *parent = 0);
 
     QVariant itemChange(GraphicsItemChange change, const QVariant &value);
-
-    void hoverEnterEvent(QGraphicsSceneHoverEvent *event);
-    void hoverLeaveEvent(QGraphicsSceneHoverEvent *event);
 
 private:
     static int ALL_NODES;
