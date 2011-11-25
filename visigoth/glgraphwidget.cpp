@@ -22,6 +22,7 @@
 
 GLGraphWidget::GLGraphWidget(QWidget *parent) :
     QGLWidget(parent),
+    myScene(0),
     zoom(1.0),
     mouseMode(MOUSE_IDLE),
     helping(true),
@@ -29,7 +30,13 @@ GLGraphWidget::GLGraphWidget(QWidget *parent) :
     timerId(0)
 {
     setFocusPolicy(Qt::StrongFocus);
-    myScene = new GraphScene(this);
+    setMouseTracking(true);
+}
+
+void GLGraphWidget::setScene(GraphScene *newScene) {
+    if (myScene != 0)
+        return;
+    myScene = newScene;
     myScene->setBackgroundBrush(Qt::black);
     myScene->setItemIndexMethod(QGraphicsScene::NoIndex);
     connect(myScene, SIGNAL(algorithmChanged(Algorithm*)), this, SIGNAL(algorithmChanged(Algorithm*)));
@@ -39,28 +46,8 @@ GLGraphWidget::~GLGraphWidget() {
     delete myScene;
 }
 
-QList<QString> GLGraphWidget::algorithms() const {
-    return myScene->algorithms();
-}
-
-void GLGraphWidget::populate() {
-    myScene->repopulate();
-}
-
 void GLGraphWidget::itemMoved() {
     setAnimationRunning();
-}
-
-void GLGraphWidget::randomizePlacement() {
-    myScene->randomizePlacement();
-}
-
-void GLGraphWidget::addVertex() {
-    myScene->addVertex();
-}
-
-void GLGraphWidget::chooseAlgorithm(const QString &name) {
-    myScene->chooseAlgorithm(name);
 }
 
 /****************************
@@ -157,8 +144,13 @@ void GLGraphWidget::mouseReleaseEvent(QMouseEvent *event) {
 void GLGraphWidget::mouseMoveEvent(QMouseEvent *event) {
     int dx, dy;
 
-    if (mouseMode == MOUSE_IDLE)
+    if (mouseMode == MOUSE_IDLE) {
+        Node *node = selectGL(event->x(), event->y());
+        if (node != 0) {
+            emit hoveringOnNode(node);
+        }
         return;
+    }
 
     dx = event->x() - mouseX;
     dy = event->y() - mouseY;
@@ -179,8 +171,7 @@ void GLGraphWidget::mouseMoveEvent(QMouseEvent *event) {
             //glaCameraRotatef(cameramat, dx, 0.0, 1.0, 0.0);
             //glaCameraRotatef(cameramat, dy, 1.0, 0.0, 0.0);
             break;
-        case MOUSE_DRAGGING:
-        case MOUSE_IDLE:
+        default:
             break;
     }
 
@@ -194,7 +185,7 @@ void GLGraphWidget::keyPressEvent(QKeyEvent *event) {
         this->repaint();
         break;
     case Qt::Key_G:
-        populate();
+        myScene->repopulate();
         break;
     case Qt::Key_Escape:
         helping = false;
@@ -208,7 +199,7 @@ void GLGraphWidget::keyPressEvent(QKeyEvent *event) {
         scaleView(1.0/1.2);
         break;
     case Qt::Key_R:
-        randomizePlacement();
+        myScene->randomizePlacement();
         break;
     case Qt::Key_Space:
         playPause();
@@ -230,9 +221,6 @@ void GLGraphWidget::keyPressEvent(QKeyEvent *event) {
         break;
     case Qt::Key_Down:
         glaCameraTranslatef(cameramat, 0.0, 20.0/zoom, 0.0);
-        break;
-    case Qt::Key_S:
-        myScene->calculateMetrics();
         break;
     default:
         QGLWidget::keyPressEvent(event);

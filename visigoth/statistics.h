@@ -6,6 +6,7 @@
 
 #include <QList>
 #include <QMap>
+#include <QSet>
 #include <QVector>
 #include <QtCore/qmath.h>
 
@@ -26,7 +27,7 @@ public:
 private:
     GraphScene* graph;
 
-    double lengthSum(Node *s);
+    double lengthSum(Node *s, QSet<Node*> &visited, QMap<Node*, int> &distance);
     QVector<Node*> buildNeighbourVector(Node *n);
     int intersectionCount(QVector<Node*> vec1, QVector<Node*> vec2);
 };

@@ -43,7 +43,8 @@ HEADERS += mainwindow.h \
 FORMS += mainwindow.ui \
          bipartitecontrol.ui \
          preferentialcontrol.ui \
-         erdoscontrol.ui
+         erdoscontrol.ui \
+         statistics.ui
 
 oauth {
     SOURCES += twitter.cpp

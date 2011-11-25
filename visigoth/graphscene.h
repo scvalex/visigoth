@@ -20,6 +20,7 @@ class GraphScene : public QGraphicsScene
     Q_OBJECT
 public:
     explicit GraphScene(AbstractGraphWidget *parent = 0);
+    ~GraphScene();
 
     QVector<Node*>& nodes();
     QList<Edge*>& edges();
@@ -33,31 +34,30 @@ public:
     Node* newNode();
     bool newEdge(Node *source, Node *dest);
 
-    void repopulate();
     Algorithm* algorithm() const;
 
     void itemMoved();
 
-    void randomizePlacement();
-
-    void addVertex();
-
     QList<Node*> getDegreeList(int degree) const;
-
-    void calculateMetrics();
 
     void calculateForces();
     bool isRunning() const;
     void reset();
 
     QList<QString> algorithms() const;
+    Statistics* getStatistics();
 
+    void calculateMetrics();
 
 public slots:
+    void addVertex();
+    void randomizePlacement();
+    void repopulate();
     void chooseAlgorithm(const QString &name);
 
 signals:
     void algorithmChanged(Algorithm *newAlgo);
+    void repopulated();
 
 protected:
     void updateDegreeCount(Node *node);

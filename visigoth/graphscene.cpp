@@ -14,7 +14,6 @@
 
 GraphScene::GraphScene(AbstractGraphWidget *parent) :
     algo(0),
-    stats(0),
     view(parent),
     degreeCount(1),
     running(false)
@@ -26,10 +25,19 @@ GraphScene::GraphScene(AbstractGraphWidget *parent) :
 #ifdef HAS_OAUTH
     myAlgorithms["Twitter"] = TWITTER;
 #endif
+    stats = new Statistics(this);
+}
+
+GraphScene::~GraphScene() {
+    delete stats;
 }
 
 QList<QString> GraphScene::algorithms() const {
     return myAlgorithms.keys();
+}
+
+Statistics* GraphScene::getStatistics() {
+    return stats;
 }
 
 void GraphScene::reset() {
@@ -137,6 +145,8 @@ void GraphScene::repopulate() {
         }
     }
     algo->reset();
+    randomizePlacement();
+    emit repopulated();
 }
 
 Algorithm* GraphScene::algorithm() const {
@@ -150,14 +160,11 @@ void GraphScene::randomizePlacement() {
     foreach (Edge *edge, edges()) {
         edge->adjust();
     }
-
-    calculateMetrics();
 }
 
 void GraphScene::addVertex() {
     algo->addVertex();
-
-    calculateMetrics();
+    emit repopulated();
 }
 
 // Pre: degree is valid
