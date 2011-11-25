@@ -24,9 +24,9 @@
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow),
-    helpWidget(0),
     statsUi(new Ui::Statistics),
     algoCtl(0),
+    helpWidget(0),
     focusedNode(0)
 {
     qsrand(23);
