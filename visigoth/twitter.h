@@ -37,8 +37,6 @@ protected slots:
     void setRootUser(const QString &newUser);
 
 private:
-    static const int TIMEOUT = 10000;
-
     bool login();
     void getFollowers(QString username, bool numeric = false);
 
