@@ -50,13 +50,13 @@ double Statistics::clusteringCoeff(Node *node) {
         Node *src = e->sourceNode();
         Node *dest = e->destNode();
 
-        QVector<Node*> nNeigh = buildNeighbourVector(node);
+        QVector<Node*> nNeigh = node->neighbours();
 
         if(src->tag() == node->tag()) {
-            QVector<Node*> dNeigh = buildNeighbourVector(dest);
+            QVector<Node*> dNeigh = dest->neighbours();
             intersection += intersectionCount(nNeigh, dNeigh);
         } else {
-            QVector<Node*> dNeigh = buildNeighbourVector(dest);
+            QVector<Node*> dNeigh = src->neighbours();
             intersection += intersectionCount(nNeigh, dNeigh);
         }
     }
@@ -78,24 +78,6 @@ double Statistics::clusteringDegree(int degree) {
     return clusterCumulative / degreeCount;
 }
 
-// private:
-
-QVector<Node*> Statistics::buildNeighbourVector(Node *n) {
-    QList<Edge*> eList = n->edges();
-    QVector<Node*> retVec(eList.size());
-
-    while(!eList.empty()) {
-        Edge *e = eList.takeFirst();
-
-        if(e->sourceNode()->tag() == n->tag()) {
-            retVec << e->destNode();
-        } else {
-            retVec << e->sourceNode();
-        }
-    }
-
-    return retVec;
-}
 
 // d = -1 for shortestPath between all nodes in the network
 double Statistics::shortestPath(Node *s, Node *d) {
@@ -158,6 +140,10 @@ int Statistics::intersectionCount(QVector<Node*> vec1, QVector<Node*> vec2) {
        shortLength = vec1.size();
        shorterVec = &vec1;
        longerVec = &vec2;
+    }
+
+    if(shortLength == 0){
+        return 0;
     }
 
     for (int i(0); i < length; ++i) {

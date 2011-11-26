@@ -168,6 +168,10 @@ QVector<Node*> Preferential::getIntersection(QVector<Node*> vec1, QVector<Node*>
        longerVec = &vec2;
     }
 
+    if(shortLength == 0){
+        return retVec;
+    }
+
     for (int i(0); i < length; ++i) {
 
         Node* longPointer;
@@ -184,6 +188,7 @@ QVector<Node*> Preferential::getIntersection(QVector<Node*> vec1, QVector<Node*>
 
         mapLong.insert(longPointer->tag(),true);
 
+        // if it contains its true
         if (mapShort.contains(longPointer->tag())) {
             retVec << longPointer;
             //don'thave to clear maps because tags are unique

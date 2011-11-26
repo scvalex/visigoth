@@ -29,7 +29,6 @@ private:
 
     //QVector<int> shortestDistance();
     double lengthSum(Node *s,Node * d);
-    QVector<Node*> buildNeighbourVector(Node *n);
     int intersectionCount(QVector<Node*> vec1, QVector<Node*> vec2);
 };
 
