@@ -33,6 +33,7 @@ GLGraphWidget::GLGraphWidget(QWidget *parent) :
     //myScene->setBackgroundBrush(Qt::black);
     //myScene->setItemIndexMethod(QGraphicsScene::NoIndex);
     connect(myScene, SIGNAL(algorithmChanged(Algorithm*)), this, SIGNAL(algorithmChanged(Algorithm*)));
+    this->setAnimationRunning();
 }
 
 QList<QString> GLGraphWidget::algorithms() const {
