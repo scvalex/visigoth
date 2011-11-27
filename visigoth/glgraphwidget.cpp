@@ -58,6 +58,8 @@ void GLGraphWidget::addVertex() {
 
 void GLGraphWidget::chooseAlgorithm(const QString &name) {
     myScene->chooseAlgorithm(name);
+
+    this->repaint();
 }
 
 /****************************
