@@ -6,10 +6,8 @@
 #define NODE_H
 
 #include <QBrush>
-#include <QGraphicsItem>
-#include <QVariant>
-#include <QToolTip>
 
+#include "vtools.h"
 #include "graphscene.h"
 #include "quadtree.h"
 
@@ -26,43 +24,34 @@ public:
 
     int tag() const;
 
-    QPointF pos() const;
-    void setPos(QPointF pos);
-    void setPos(qreal x, qreal y);
+    VPointF pos() const;
+    void setPos(VPointF pos);
 
     /* Return the new position. */
-    QPointF calculatePosition(QuadTree::TreeNode& treeNode);
+    VPointF calculatePosition(QuadTree::TreeNode& treeNode);
 
     bool advance();
 
-    QRectF boundingRect() const;
-    QPainterPath shape() const;
-
     QList<Edge*>& edges();
     QVector<Node*> neighbours() const;
-    int getSize() const;
-    QPointF getCenter() const;
-    QVector<TreeNode*>& getChildren();
-    qreal getWidth() const;
+
+    // Statistics
     bool getVisited();
     void setVisited(bool v);
     int getDistance();
     void setDistance(int v);
+
+    // QuadTree
     int size() const;
-    QPointF center() const;
+    VPointF center() const;
     bool hasChildren() const;
     const QVector<TreeNode*>& children() const;
-    qreal width() const;
+    vreal width() const;
 
     QBrush& brush();
     void setBrush(const QBrush &b);
 
     static void reset();
-
-    // 3rd dimension.
-    void setZ(float z);
-    float getZ();
-    void setPos3(float x, float y, float z);
 
 protected:
     explicit Node(GraphScene *graph);
@@ -73,22 +62,16 @@ private:
     QBrush myBrush;
     QList<Edge*> edgeList;
     GraphScene *graph;
-    bool hovering;
     int myTag;
 
-    QPointF curPos;
-    QPointF newPos;
+    VPointF curPos;
+    VPointF newPos;
 
     // vars for average length
     bool visited;
     int distance;
 
-    // 3rd dimension.
-    float z;
-    float newZ;
-
-    QPointF mapPoint(QPointF source, QPointF dest);
-    QPointF calculateNonEdgeForces(TreeNode* treeNode);
+    VPointF calculateNonEdgeForces(TreeNode* treeNode);
 };
 
 #endif // NODE_H

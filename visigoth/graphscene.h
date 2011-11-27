@@ -1,11 +1,14 @@
 #ifndef GRAPHSCENE_H
 #define GRAPHSCENE_H
 
-#include <QGraphicsScene>
+#include <QObject>
 #include <QList>
 #include <QMap>
 #include <QSet>
 #include <QVector>
+
+#include "vtools.h"
+
 
 class GLGraphWidget;
 
@@ -51,7 +54,7 @@ public:
 
     QList<QString> algorithms() const;
 
-    QRectF sceneRect();
+    VCubeF graphCube();
 
 public slots:
     void chooseAlgorithm(const QString &name);

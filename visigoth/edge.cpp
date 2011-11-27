@@ -20,16 +20,6 @@ Node* Edge::destNode() const {
     return dest;
 }
 
-QRectF Edge::boundingRect() const {
-    if (!source || !dest)
-        return QRectF();
-
-    return QRectF(source->pos(),
-                QSizeF(dest->pos().x() - source->pos().x(),
-                        dest->pos().y() - source->pos().y())
-                ).normalized();
-}
-
 QColor& Edge::colour() {
     return myColour;
 }

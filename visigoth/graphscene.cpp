@@ -1,3 +1,4 @@
+#include "vtools.h"
 #include "edge.h"
 #include "graphscene.h"
 #include "glgraphwidget.h"
@@ -133,9 +134,10 @@ Algorithm* GraphScene::algorithm() const {
 
 void GraphScene::randomizePlacement() {
     foreach (Node *node, nodes()) {
-        node->setPos3(10 + qrand() % 1000,
-                    10 + qrand() % 600,
-                    qrand() % 600 - 300);
+        node->setPos(VPointF((qrand() % 1000) - 500,
+                              (qrand() % 600) - 300,
+                              //(qrand() % 600) - 300));
+                              0.0));
     }
 
     // Why do we recalculate the metrics now? Do they depend on node positions?
@@ -174,12 +176,10 @@ void GraphScene::calculateMetrics() {
 }
 
 void GraphScene::calculateForces() {
-    QuadTree quadTree(sceneRect());
+    QuadTree quadTree(graphCube().longestEdge());
     foreach (Node* node, nodes()) {
         quadTree.addNode(*node);
     }
-
-    // FIXME: The scene now has 3 dimensions, implement calculations.
 
     // Don't move the first node
     bool first = true;
@@ -189,7 +189,7 @@ void GraphScene::calculateForces() {
             continue;
         }
 
-        QPointF pos = node->calculatePosition(quadTree.root());
+        node->calculatePosition(quadTree.root());
     }
 
     running = false;
@@ -233,22 +233,26 @@ void GraphScene::degreeRemove(Node *n) {
     }
 }
 
-QRectF GraphScene::sceneRect() {
-    qreal left = 0;
-    qreal right = 0;
-    qreal top = 0;
-    qreal bottom = 0;
+VCubeF GraphScene::graphCube() {
+    VPointF p1 = VPointF(0.0);
+    VPointF p2 = VPointF(0.0);
 
     foreach (Node *n, myNodes) {
-        if (n->pos().x() < left)
-            left = n->pos().x();
-        if (n->pos().x() > right)
-            right = n->pos().x();
-        if (n->pos().y() < top)
-            top = n->pos().y();
-        if (n->pos().y() > bottom)
-            bottom = n->pos().y();
+        if (n->pos().x < p1.x)
+            p1.x = n->pos().x;
+        if (n->pos().x > p2.x)
+            p2.x = n->pos().x;
+
+        if (n->pos().y < p1.y)
+            p1.y = n->pos().y;
+        if (n->pos().y > p2.y)
+            p2.y = n->pos().y;
+
+        if (n->pos().z < p1.z)
+            p1.z = n->pos().z;
+        if (n->pos().z > p2.z)
+            p2.z = n->pos().z;
     }
 
-    return QRectF(left, top, right - left, bottom - top);
+    return VCubeF(p1, p2);
 }

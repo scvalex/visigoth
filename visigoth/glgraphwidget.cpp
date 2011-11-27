@@ -9,6 +9,7 @@
 #include <GL/gl.h>
 #endif
 
+#include "vtools.h"
 #include "glgraphwidget.h"
 #include "glancillary.h"        // gla*()
 #include "edge.h"
@@ -86,8 +87,11 @@ void GLGraphWidget::scaleView(qreal scaleFactor) {
     zoom *= scaleFactor;
 
     // Clamped zoom to keep the graph from disappearing in 3D rendering nirvana
+    // FIXME: Reenable me for 3D
+    /*
     if (zoom < 1.0)
         zoom = 1.0;
+    */
 
     this->initProjection();
 }
@@ -166,9 +170,10 @@ void GLGraphWidget::mouseMoveEvent(QMouseEvent *event) {
 
     switch(mouseMode) {
         case MOUSE_TRANSLATING:
-            glaCameraTranslatef(cameramat, (3.0) * dx, (-3.0) * dy, 0.0);
+            //glaCameraTranslatef(cameramat, (3.0) * dx, (-3.0) * dy, 0.0);
+            // FIXME: Enable old code for 3D mode
             // Modified for 2D projection and zoom
-            //glaCameraTranslatef(cameramat, (GLfloat)dx/zoom, (GLfloat)dy/zoom, 0.0);
+            glaCameraTranslatef(cameramat, (GLfloat)dx/zoom, (GLfloat)dy/zoom, 0.0);
             break;
         case MOUSE_TRANSLATING2:
             glaCameraRotatef(cameramat, dx, 0.0, 1.0, 0.0);
@@ -301,7 +306,7 @@ inline void GLGraphWidget::drawNode(Node* node) {
     glColor4f(c.redF(), c.greenF(), c.blueF(), c.alphaF());
 
     float radius = (log(node->edges().size()) / log(2)) + 1.0;
-    QPointF p = node->pos();
+    VPointF p = node->pos();
 
     // FIXME: Draw spheres instead of flat circles.
     glBegin(GL_TRIANGLE_FAN);
@@ -310,9 +315,10 @@ inline void GLGraphWidget::drawNode(Node* node) {
         int step = 30;
         for (int angle(0); angle < 360; angle += step) {
             GLfloat rangle = (GLfloat) angle * (3.1415926 / 180.0);
-            glVertex3f((GLfloat)p.x() + sin(rangle) * radius,
-                       (GLfloat)p.y() + cos(rangle) * radius,
-                       (GLfloat)node->getZ() + cos(rangle) * radius);
+            glVertex3f((GLfloat)p.x + sin(rangle) * radius,
+                       (GLfloat)p.y + cos(rangle) * radius,
+                       //(GLfloat)p.z + cos(rangle) * radius);
+                       0.0);
         }
     glEnd();
 }
@@ -332,19 +338,19 @@ void GLGraphWidget::drawGraphGL() {
                     model, proj, view,
                     &newX, &newY, &newZ);
 
-        draggedNode->setPos(newX, newY);
+        draggedNode->setPos(VPointF(newX, newY, 0.0));
     }
 
     // Draw edges
     foreach (Edge* edge, myScene->edges()) {
         const QColor c = edge->colour();
         glColor4f(c.redF(), c.greenF(), c.blueF(), c.alphaF());
-        //glColor4f(0.0, 0.0, 1.0, 0.5);
+
         glBegin(GL_LINE_STRIP);
-            QPointF p = edge->sourceNode()->pos();
-            glVertex3f((GLfloat)p.x(), (GLfloat)p.y(), (GLfloat)edge->sourceNode()->getZ());
+            VPointF p = edge->sourceNode()->pos();
+            glVertex3f((GLfloat)p.x, (GLfloat)p.y, (GLfloat)p.z);
             p = edge->destNode()->pos();
-            glVertex3f((GLfloat)p.x(), (GLfloat)p.y(), (GLfloat)edge->destNode()->getZ());
+            glVertex3f((GLfloat)p.x, (GLfloat)p.y, (GLfloat)p.z);
         glEnd();
     }
 
@@ -363,10 +369,10 @@ void GLGraphWidget::initProjection() {
     glScalef(zoom, zoom, 1.0/zoom);
 
     // Flat projection
-    //gluOrtho2D(0.0, (GLfloat)width(), (GLfloat)height(), 0.0);
+    gluOrtho2D(0.0, (GLfloat)width(), (GLfloat)height(), 0.0);
 
     // Persective projection
-    gluPerspective(90, (GLfloat)width()/(GLfloat)height(), 0.0001, 100000.0);
+    //gluPerspective(90, (GLfloat)width()/(GLfloat)height(), 0.0001, 100000.0);
 
     // Switch to Model/view transformation for drawing objects
     glMatrixMode(GL_MODELVIEW);

@@ -1,55 +1,40 @@
-#include "quadtree.h"
-
 #include <cmath>
 #include <stdexcept>
 #include <iostream>
 
-#include <QPointF>
-#include <QRectF>
+#include "vtools.h"
+#include "quadtree.h"
 
-inline int pow2(int exp) {
+// The size of the smallest quadrants.
+static const int BASE_QUADRANT_SIZE = 30;
+
+inline static int pow2(int exp) {
     return 1 << exp;
 }
+
+inline static int calculateWidth(vreal longestEdge) {
+    // Make the width so that it will contain a number of squares of base size which is a
+    // power of 2 (so that the square will contain a number of terminal quadrants which is a
+    // power of 4).
+    vreal baseQuadrants = longestEdge / (vreal) BASE_QUADRANT_SIZE;
+    return pow2((int) ceil(log(baseQuadrants) / log(2.0))) * BASE_QUADRANT_SIZE;
+}
+
 
 // ---------------------------------------------------------------------------
 // QuadTree
 
-QuadTree::QuadTree(QRectF boundaries)
+QuadTree::QuadTree(vreal longestEdge)
 {
-    int width = calculateWidth(boundaries);
+    //std::cout << "Longest edge: " << longestEdge << "\n";
+    int width = calculateWidth(longestEdge);
 
     // First node, level 0, coords 0,0, width equals to the width of the entire space
-    _root = new QuadTree::Quadrant(0, QPointF(0, 0), width);
+    _root = new QuadTree::Quadrant(0, VPointF(0.0), width);
 }
 
 QuadTree::~QuadTree() {
     delete _root;
-}
-
-int QuadTree::calculateWidth(QRectF boundaries) const {
-    // We want to get a square starting from 0,0 that is
-    // 1) Big enough to contain the whole graph
-    // 2) It must contain a number of terminal quadrants which is a power of 4,
-    //    since we're recursively subdividing the space splitting the square in
-    //    4 squares
-
-    qreal left = boundaries.left();
-    qreal right = boundaries.right();
-    qreal top = boundaries.top();
-    qreal bottom = boundaries.bottom();
-
-    // Calculate how big the square has to be to contain the whole graph
-    qreal w = qMax(qAbs(left), qAbs(right)) * 2;
-    qreal h = qMax(qAbs(top), qAbs(bottom)) * 2;
-    qreal e = qMax(w, h);
-
-    // Make the width so that it will contain a number of squares of base size which is a
-    // power of 2 (so that the square will contain a number of terminal quadrants which is a
-    // power of 4).
-    qreal baseQuadrants = e / (qreal) BASE_QUADRANT_SIZE;
-    int width = pow2((int) ceil(log(baseQuadrants) / log(2.0))) * BASE_QUADRANT_SIZE;
-
-    return width;
 }
 
 QuadTree::TreeNode& QuadTree::root() const {
@@ -64,14 +49,14 @@ void QuadTree::addNode(QuadTree::TreeNode& node) {
 // ---------------------------------------------------------------------------
 // QuadTree::TreeNode
 
-bool QuadTree::TreeNode::isFarEnough(qreal distance) {
+bool QuadTree::TreeNode::isFarEnough(vreal distance) {
     return (width() / distance) <= tolerance;
 }
 
 // ---------------------------------------------------------------------------
 // QuadTree::Quadrant
 
-QuadTree::Quadrant::Quadrant(int level, QPointF center, int width) :
+QuadTree::Quadrant::Quadrant(int level, VPointF center, int width) :
     level(level),
     quadrantCenter(center),
     _width(width),
@@ -94,7 +79,7 @@ int QuadTree::Quadrant::size() const {
     return _size;
 }
 
-QPointF QuadTree::Quadrant::center() const {
+VPointF QuadTree::Quadrant::center() const {
     return _center;
 }
 
@@ -106,8 +91,8 @@ const QVector<QuadTree::TreeNode*>& QuadTree::Quadrant::children() const {
     return _children;
 }
 
-qreal QuadTree::Quadrant::width() const {
-    return (qreal) _width;
+vreal QuadTree::Quadrant::width() const {
+    return (vreal) _width;
 }
 
 void QuadTree::Quadrant::castAndAddChild(QuadTree::TreeNode* node, QuadTree::TreeNode& child) const {
@@ -124,20 +109,14 @@ bool QuadTree::Quadrant::isTerminal() {
     return width() <= BASE_QUADRANT_SIZE;
 }
 
-inline QPointF QuadTree::Quadrant::weightedMiddle(QuadTree::TreeNode& node1, QuadTree::TreeNode& node2) const {
+inline VPointF QuadTree::Quadrant::weightedMiddle(QuadTree::TreeNode& node1, QuadTree::TreeNode& node2) const {
     // If node1 and node2 are two vectors w and v with respective weights a and b, we want
     // (a*w + b*v) / (a + b)
 
-    QPointF node1Center = node1.center();
-    int node1Size = node1.size();
-
-    QPointF node2Center = node2.center();
-    int node2Size = node2.size();
-
-    qreal sizeSum = (qreal) (node1Size + node2Size);
-    return QPointF((node1Size * node1Center.x() + node2Size * node2Center.x()) / sizeSum,
-                   (node1Size * node1Center.y() + node2Size * node2Center.y()) / sizeSum);
-
+    return ((node1.center() * (vreal)node1.size())
+            + (node2.center() * (vreal)node2.size())
+           )
+          / (vreal)(node1.size() + node2.size());
 }
 
 void QuadTree::Quadrant::allocateChildren() {
@@ -179,21 +158,21 @@ void QuadTree::Quadrant::allocateChildren() {
             break;
         }
 
-        QPointF childCenter(quadrantCenter.x() + ((childWidth / 2) * xsign),
-                            quadrantCenter.y() + ((childWidth / 2) * ysign));
+        VPointF childCenter(quadrantCenter.x + ((childWidth / 2) * xsign),
+                            quadrantCenter.y + ((childWidth / 2) * ysign));
         _children[i] = new QuadTree::Quadrant(level + 1, childCenter, childWidth);
     }
 }
 
 void QuadTree::Quadrant::addChildToChildren(QuadTree::TreeNode& node) {
     // Add the node recursively, inspecting which child it belongs to.
-   if (node.center().x() < quadrantCenter.x() && node.center().y() >= quadrantCenter.y()) {
+   if (node.center().x < quadrantCenter.x && node.center().y >= quadrantCenter.y) {
        // Top left
        castAndAddChild(_children[0], node);
-   } else if (node.center().x() >= quadrantCenter.x() && node.center().y() >= quadrantCenter.y()) {
+   } else if (node.center().x >= quadrantCenter.x && node.center().y >= quadrantCenter.y) {
        // Top right
        castAndAddChild(_children[1], node);
-   } else if (node.center().x() < quadrantCenter.x() && node.center().y() < quadrantCenter.y()) {
+   } else if (node.center().x < quadrantCenter.x && node.center().y < quadrantCenter.y) {
        // Bottom left
        castAndAddChild(_children[2], node);
    } else {
@@ -237,13 +216,13 @@ void QuadTree::printTree(QuadTree::TreeNode* node) const {
             }
 
             std::cout << "Level: " << (q->getLevel() + 1) << ", width: " << child->width()
-                      << ", size: " << child->size() << ", center: " << child->center().x()
-                      << "," << child->center().y();
+                      << ", size: " << child->size() << ", center: " << child->center().x
+                      << "," << child->center().y;
 
             QuadTree::Quadrant* qchild = dynamic_cast<QuadTree::Quadrant*>(child);
             if (qchild) {
-                std::cout << ", quadcenter: " << qchild->getQuadrantCenter().x()
-                          << "," << qchild->getQuadrantCenter().y();
+                std::cout << ", quadcenter: " << qchild->getQuadrantCenter().x
+                          << "," << qchild->getQuadrantCenter().y;
             }
 
             std::cout << "\n";
@@ -257,6 +236,6 @@ int QuadTree::Quadrant::getLevel() const {
     return level;
 }
 
-QPointF QuadTree::Quadrant::getQuadrantCenter() const {
+VPointF QuadTree::Quadrant::getQuadrantCenter() const {
     return quadrantCenter;
 }

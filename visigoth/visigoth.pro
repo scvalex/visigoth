@@ -16,7 +16,8 @@ SOURCES += main.cpp \
            statistics.cpp \
            barabasialbert.cpp \
            quadtree.cpp \
-           erdosrenyi.cpp
+           erdosrenyi.cpp \
+           vtools.cpp
 
 HEADERS += mainwindow.h \
            node.h \
@@ -30,7 +31,8 @@ HEADERS += mainwindow.h \
            statistics.h \
            barabasialbert.h \
            quadtree.h \
-           erdosrenyi.h
+           erdosrenyi.h \
+           vtools.h
 
 FORMS += mainwindow.ui \
          bipartitecontrol.ui \

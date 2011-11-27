@@ -22,8 +22,6 @@ public:
 protected:
     explicit Edge(Node *sourceNode, Node *destNode);
 
-    QRectF boundingRect() const;
-
 private:
     Node *dest;
     Node *source;
