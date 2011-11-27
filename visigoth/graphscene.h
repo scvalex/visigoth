@@ -14,7 +14,7 @@ class Node;
 class Algorithm;
 class Statistics;
 
-class GraphScene : public QGraphicsScene
+class GraphScene : public QObject
 {
     Q_OBJECT
 public:
@@ -51,6 +51,7 @@ public:
 
     QList<QString> algorithms() const;
 
+    QRectF sceneRect();
 
 public slots:
     void chooseAlgorithm(const QString &name);

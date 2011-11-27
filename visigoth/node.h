@@ -16,7 +16,7 @@
 class Edge;
 class QGraphicsSceneHoverEvent;
 
-class Node : public QGraphicsItem, public QuadTree::TreeNode
+class Node : public QuadTree::TreeNode
 {
 public:
     /* Only GraphScene can construct Nodes. */
@@ -26,18 +26,17 @@ public:
 
     int tag() const;
 
+    QPointF pos() const;
+    void setPos(QPointF pos);
+    void setPos(qreal x, qreal y);
+
     /* Return the new position. */
     QPointF calculatePosition(QuadTree::TreeNode& treeNode);
 
     bool advance();
 
-    enum { Type = UserType + 1 };
-    int type() const { return Type; }
-
     QRectF boundingRect() const;
     QPainterPath shape() const;
-
-    void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
 
     QList<Edge*>& edges();
     QVector<Node*> neighbours() const;
@@ -66,12 +65,7 @@ public:
     void setPos3(float x, float y, float z);
 
 protected:
-    explicit Node(GraphScene *graph, QGraphicsItem *parent = 0);
-
-    QVariant itemChange(GraphicsItemChange change, const QVariant &value);
-
-    void hoverEnterEvent(QGraphicsSceneHoverEvent *event);
-    void hoverLeaveEvent(QGraphicsSceneHoverEvent *event);
+    explicit Node(GraphScene *graph);
 
 private:
     static int ALL_NODES;
@@ -81,6 +75,8 @@ private:
     GraphScene *graph;
     bool hovering;
     int myTag;
+
+    QPointF curPos;
     QPointF newPos;
 
     // vars for average length

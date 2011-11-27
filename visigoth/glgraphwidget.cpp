@@ -30,8 +30,8 @@ GLGraphWidget::GLGraphWidget(QWidget *parent) :
 {
     setFocusPolicy(Qt::StrongFocus);
     myScene = new GraphScene(this);
-    myScene->setBackgroundBrush(Qt::black);
-    myScene->setItemIndexMethod(QGraphicsScene::NoIndex);
+    //myScene->setBackgroundBrush(Qt::black);
+    //myScene->setItemIndexMethod(QGraphicsScene::NoIndex);
     connect(myScene, SIGNAL(algorithmChanged(Algorithm*)), this, SIGNAL(algorithmChanged(Algorithm*)));
 }
 
@@ -90,13 +90,7 @@ void GLGraphWidget::scaleView(qreal scaleFactor) {
 }
 
 void GLGraphWidget::fitToScreen() {
-    float aspectWidget = (float)width()/(float)height();
-    float aspectGraph = (float)myScene->width()/(float)myScene->height();
-
-    if (aspectGraph >= aspectWidget)
-        scaleView((GLfloat)width() / (GLfloat)myScene->width() / zoom);
-    else
-        scaleView((GLfloat)height() / (GLfloat)myScene->height() / zoom);
+  // FIXME: fitToScreen needs to be completely redone for 3D.
 }
 
 void GLGraphWidget::wheelEvent(QWheelEvent *event) {

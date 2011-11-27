@@ -10,8 +10,7 @@
 
 int Node::ALL_NODES(0);
 
-Node::Node(GraphScene *graph, QGraphicsItem *parent) :
-    QGraphicsItem(parent),
+Node::Node(GraphScene *graph) :
     //myBrush(QColor::fromRgb(qrand() % 256, qrand() % 256, qrand() % 256, 180)),
     myBrush(QColor::fromRgbF(0.0, 1.0, 0.3, 0.7)),
     graph(graph),
@@ -21,11 +20,6 @@ Node::Node(GraphScene *graph, QGraphicsItem *parent) :
     z(0.0)
 {
     myTag = ALL_NODES++;
-    setFlag(ItemIsMovable);
-    setFlag(ItemSendsGeometryChanges);
-    setCacheMode(DeviceCoordinateCache);
-    setZValue(100);
-    setAcceptHoverEvents(true);
 }
 
 int Node::tag() const {
@@ -36,13 +30,20 @@ void Node::addEdge(Edge *edge) {
     edgeList << edge;
 }
 
+QPointF Node::pos() const {
+    return curPos;
+}
+
+void Node::setPos(QPointF pos) {
+    curPos = pos;
+}
+
+void Node::setPos(qreal x, qreal y) {
+    setPos(QPointF(x, y));
+}
+
 QPointF Node::calculatePosition(TreeNode &treeNode) {
     // FIXME: 3rd dimension.
-
-    if (!scene() || scene()->mouseGrabberItem() == this) {
-        newPos = pos();
-        return newPos;
-    }
 
     // Calculate non-edge forces
     QPointF vel = calculateNonEdgeForces(&treeNode);
@@ -56,9 +57,9 @@ QPointF Node::calculatePosition(TreeNode &treeNode) {
     foreach (Edge *edge, edgeList) {
         QPointF vec;
         if (edge->sourceNode() == this) {
-            vec = mapToItem(edge->destNode(), 0, 0);
+            vec = pos() - edge->destNode()->pos();
         } else {
-            vec = mapToItem(edge->sourceNode(), 0, 0);
+            vec = pos() - edge->sourceNode()->pos();
         }
         xvel -= vec.x() / weight;
         yvel -= vec.y() / weight;
@@ -123,49 +124,6 @@ bool Node::advance() {
 
 QRectF Node::boundingRect() const {
     return QRectF(-10, -10, 20, 20);
-}
-
-QPainterPath Node::shape() const {
-    QPainterPath path;
-    path.addEllipse(-10, -10, 20, 20);
-    return path;
-}
-
-void Node::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *) {
-    painter->setPen(Qt::NoPen);
-    if (!hovering) {
-        painter->setBrush(myBrush);
-    } else {
-        QColor lighter = myBrush.color();
-        lighter.setAlpha(255);
-        painter->setBrush(QBrush(lighter));
-    }
-    painter->drawEllipse(-10, -10, 20, 20);
-}
-
-QVariant Node::itemChange(GraphicsItemChange change, const QVariant &value) {
-    switch (change) {
-    case ItemPositionHasChanged:
-        foreach (Edge *edge, edgeList) {
-            edge->adjust();
-        }
-        graph->itemMoved();
-        break;
-    default:
-        break;
-    }
-
-    return QGraphicsItem::itemChange(change, value);
-}
-
-void Node::hoverEnterEvent(QGraphicsSceneHoverEvent *event) {
-    hovering = true;
-    QGraphicsItem::hoverEnterEvent(event);
-}
-
-void Node::hoverLeaveEvent(QGraphicsSceneHoverEvent *event) {
-    hovering = false;
-    QGraphicsItem::hoverLeaveEvent(event);
 }
 
 QList<Edge*>& Node::edges() {

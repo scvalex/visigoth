@@ -9,7 +9,6 @@
 #include "barabasialbert.h"
 
 GraphScene::GraphScene(GLGraphWidget *parent) :
-    //QGraphicsScene(parent),
     algo(0),
     stats(0),
     view(parent),
@@ -27,7 +26,7 @@ QList<QString> GraphScene::algorithms() const {
 }
 
 void GraphScene::reset() {
-    clear();
+    //clear();
     hasEdge.clear();
     myEdges.clear();
     myNodes.clear();
@@ -59,7 +58,7 @@ bool GraphScene::newEdge(Node *source, Node *dest) {
     }
     hasEdge[source->tag()].insert(dest->tag());
     hasEdge[dest->tag()].insert(source->tag());
-    addItem(edge);
+
     myEdges << edge;
     updateDegreeCount(source);
     updateDegreeCount(dest);
@@ -70,7 +69,7 @@ bool GraphScene::newEdge(Node *source, Node *dest) {
 // used only by the algorithms
 Node* GraphScene::newNode() {
     Node *node = new Node(this);
-    addItem(node);
+
     myNodes << node;
 
     return node;
@@ -138,10 +137,8 @@ void GraphScene::randomizePlacement() {
                     10 + qrand() % 600,
                     qrand() % 600 - 300);
     }
-    foreach (Edge *edge, edges()) {
-        edge->adjust();
-    }
 
+    // Why do we recalculate the metrics now? Do they depend on node positions?
     calculateMetrics();
 }
 
@@ -177,9 +174,6 @@ void GraphScene::calculateMetrics() {
 }
 
 void GraphScene::calculateForces() {
-    QPointF topLeft;
-    QPointF bottomRight;
-
     QuadTree quadTree(sceneRect());
     foreach (Node* node, nodes()) {
         quadTree.addNode(*node);
@@ -196,22 +190,7 @@ void GraphScene::calculateForces() {
         }
 
         QPointF pos = node->calculatePosition(quadTree.root());
-
-        if (pos.x() < topLeft.x())
-            topLeft.setX(pos.x());
-        if (pos.y() < topLeft.y())
-            topLeft.setY(pos.y());
-        if (pos.x() > bottomRight.x())
-            bottomRight.setX(pos.x());
-        if (pos.y() > bottomRight.y())
-            bottomRight.setY(pos.y());
     }
-
-    // Resize the scene to fit all the nodes
-    sceneRect().setLeft(topLeft.x() - 10);
-    sceneRect().setTop(topLeft.y() - 10);
-    sceneRect().setRight(bottomRight.x() + 10);
-    sceneRect().setBottom(bottomRight.y() + 10);
 
     running = false;
     foreach (Node *node, nodes()) {
@@ -252,4 +231,24 @@ void GraphScene::degreeRemove(Node *n) {
 
         ++counter;
     }
+}
+
+QRectF GraphScene::sceneRect() {
+    qreal left = 0;
+    qreal right = 0;
+    qreal top = 0;
+    qreal bottom = 0;
+
+    foreach (Node *n, myNodes) {
+        if (n->pos().x() < left)
+            left = n->pos().x();
+        if (n->pos().x() > right)
+            right = n->pos().x();
+        if (n->pos().y() < top)
+            top = n->pos().y();
+        if (n->pos().y() > bottom)
+            bottom = n->pos().y();
+    }
+
+    return QRectF(left, top, right - left, bottom - top);
 }

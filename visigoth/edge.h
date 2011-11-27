@@ -8,7 +8,7 @@
 
 class Node;
 
-class Edge : public QGraphicsItem
+class Edge
 {
 public:
     /* Only GraphScene can construct edges */
@@ -17,23 +17,16 @@ public:
     Node* sourceNode() const;
     Node* destNode() const;
 
-    enum { Type = UserType + 2 };
-    int type() const { return Type; }
-
-    void adjust();
-
     QColor& colour();
 
 protected:
-    explicit Edge(Node *sourceNode, Node *destNode, QGraphicsItem *parent = 0);
+    explicit Edge(Node *sourceNode, Node *destNode);
+
     QRectF boundingRect() const;
-    void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
 
 private:
     Node *dest;
-    QPointF destPoint;
     Node *source;
-    QPointF sourcePoint;
 
     QColor myColour;
 };
