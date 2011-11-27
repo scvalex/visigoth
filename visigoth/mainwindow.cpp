@@ -3,6 +3,7 @@
 #include "glgraphwidget.h"
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
+#include "ui_helpWidget.h"
 #include "ui_statistics.h"
 #include "preferential.h"
 #include "graphscene.h"
@@ -25,6 +26,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow),
     statsUi(new Ui::Statistics),
     algoCtl(0),
+    helpWidget(0),
     focusedNode(0)
 {
     qsrand(23);
@@ -35,6 +37,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->setupUi(this);
 
     connect(ui->exportToAct, SIGNAL(triggered()), this, SLOT(exportTo()));
+    connect(ui->helpAct, SIGNAL(toggled(bool)), this, SLOT(toggleHelp(bool)));
 
     view = new GLGraphWidget(this);
     scene = new GraphScene();
@@ -63,6 +66,27 @@ MainWindow::MainWindow(QWidget *parent) :
 MainWindow::~MainWindow() {
     delete view;
     delete ui;
+}
+
+void MainWindow::toggleHelp(bool enabled) {
+    if (!helpWidget) {
+        helpDock = new QDockWidget(this);
+        helpWidget = new QWidget(this);
+        Ui::helpWidget *helpWid = new Ui::helpWidget();
+        helpWid->setupUi(helpWidget);
+        helpWid->text->setText("blah");
+        helpWid->text->isReadOnly();
+        helpWid->text->setFrameShape(QFrame::NoFrame);
+        helpWid->text->viewport()->setAutoFillBackground(false);
+        helpDock->setWidget(helpWidget);
+        helpDock->setWindowTitle("Help Manual");
+        helpDock->setFixedWidth((this->width())/3);
+        helpDock->setFeatures(QDockWidget::NoDockWidgetFeatures);
+        addDockWidget(Qt::LeftDockWidgetArea, helpDock);
+    } else {
+        helpDock->setVisible(enabled);
+    }
+
 }
 
 void MainWindow::exportTo() {
