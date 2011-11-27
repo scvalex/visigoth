@@ -12,9 +12,8 @@
 #include "twitter.h"
 #endif
 
-GraphScene::GraphScene(AbstractGraphWidget *parent) :
+GraphScene::GraphScene() :
     algo(0),
-    view(parent),
     degreeCount(1),
     running(false)
 {
@@ -107,7 +106,7 @@ bool GraphScene::doesEdgeExist(Node *source, Node *dest) const {
 
 void GraphScene::itemMoved() {
     running = true;
-    view->itemMoved();
+    emit itemMovedSignal();
 }
 
 void GraphScene::chooseAlgorithm(const QString &name) {

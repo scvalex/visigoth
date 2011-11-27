@@ -7,8 +7,6 @@
 #include <QSet>
 #include <QVector>
 
-#include "abstractgraphwidget.h"
-
 class Edge;
 class GraphWidget;
 class Node;
@@ -19,7 +17,7 @@ class GraphScene : public QGraphicsScene
 {
     Q_OBJECT
 public:
-    explicit GraphScene(AbstractGraphWidget *parent = 0);
+    explicit GraphScene();
     ~GraphScene();
 
     QVector<Node*>& nodes();
@@ -54,6 +52,7 @@ public slots:
     void chooseAlgorithm(const QString &name);
 
 signals:
+    void itemMovedSignal();
     void algorithmChanged(Algorithm *newAlgo);
     void repopulated();
 
@@ -74,7 +73,6 @@ private:
     QVector<QSet<int> > hasEdge;
     QVector<Node*> myNodes;
     QList<Edge*> myEdges;
-    AbstractGraphWidget *view;
     QVector<QList<Node*> > degreeCount;
     bool running;
     QMap<QString, int> myAlgorithms;

@@ -48,6 +48,14 @@ FORMS += mainwindow.ui \
          helpWidget.ui \
          statistics.ui
 
+test {
+    CONFIG -= release
+    TARGET = test
+    QT += testlib
+    SOURCES -= main.cpp
+    SOURCES += testsimple.cpp
+}
+
 oauth {
     SOURCES += twitter.cpp
     HEADERS += twitter.h
