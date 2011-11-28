@@ -47,10 +47,6 @@ GLGraphWidget::~GLGraphWidget() {
     delete myScene;
 }
 
-void GLGraphWidget::itemMoved() {
-    this->repaint();
-}
-
 
 
 bool GLGraphWidget::animationRunning() {

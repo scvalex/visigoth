@@ -29,7 +29,6 @@ public:
     };
 
 public slots:
-    void itemMoved();
 
 signals:
     void algorithmChanged(Algorithm *newAlgo);

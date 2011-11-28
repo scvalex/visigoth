@@ -92,8 +92,6 @@ Node* GraphScene::newNode() {
                           0.0));
     */
 
-    this->itemMoved();
-
     return node;
 }
 
@@ -109,10 +107,6 @@ bool GraphScene::doesEdgeExist(Node *source, Node *dest) const {
                source->tag() == dest->tag();
     }
     return false;
-}
-
-void GraphScene::itemMoved() {
-    emit itemMovedSignal();
 }
 
 void GraphScene::chooseAlgorithm(const QString &name) {

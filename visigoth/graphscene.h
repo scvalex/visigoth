@@ -36,8 +36,6 @@ public:
 
     Algorithm* algorithm() const;
 
-    void itemMoved();
-
     QList<Node*> getDegreeList(int degree) const;
 
     bool calculateForces();
@@ -55,7 +53,6 @@ public slots:
     void chooseAlgorithm(const QString &name);
 
 signals:
-    void itemMovedSignal();
     void algorithmChanged(Algorithm *newAlgo);
     void repopulated();
 
