@@ -7,6 +7,7 @@
 class GraphScene;
 class Node;
 class Algorithm;
+class Node;
 
 
 class GLGraphWidget : public QGLWidget
@@ -15,9 +16,9 @@ class GLGraphWidget : public QGLWidget
 public:
     explicit GLGraphWidget(QWidget *parent = 0);
 
-    GraphScene *myScene;
+    virtual ~GLGraphWidget();
 
-    void itemMoved();
+    void setScene(GraphScene *newScene);
 
     enum MOUSE_MODES {
         MOUSE_IDLE,
@@ -27,20 +28,17 @@ public:
         MOUSE_DRAGGING
     };
 
-    QList<QString> algorithms() const;
-
 public slots:
-    void populate();
-    void randomizePlacement();
-    void addVertex();
-    void chooseAlgorithm(const QString &name);
+    void itemMoved();
 
 signals:
     void algorithmChanged(Algorithm *newAlgo);
+    void hoveringOnNode(Node *node);
 
 protected:
-    void setAnimationRunning();
-    void playPause();
+    bool animationRunning();
+    void animationSet(bool enable);
+
     void scaleView(qreal scaleFactor);
     void fitToScreen();
 
@@ -62,17 +60,16 @@ private:
     void initProjection();
     Node *selectGL(int x, int y);
 
-
+    GraphScene *myScene;
     GLfloat cameramat[16];
     GLfloat zoom;
     int mouseX, mouseY;
     enum MOUSE_MODES mouseMode;
     Node *draggedNode;
 
+    bool running;
     bool helping;
-    bool isPlaying;
-    bool isRunning;
-    int timerId;
+    int animTimerId;
 };
 
 #endif // GLGRAPHWIDGET_H

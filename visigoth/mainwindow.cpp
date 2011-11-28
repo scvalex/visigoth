@@ -1,11 +1,14 @@
 #include "algorithm.h"
+#include "graphscene.h"
 #include "glgraphwidget.h"
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
+#include "ui_helpWidget.h"
+#include "ui_statistics.h"
 #include "preferential.h"
 #include "graphscene.h"
 #include "bipartite.h"
-
+#include "statistics.h"
 
 #include <QDesktopWidget>
 #include <QDir>
@@ -21,33 +24,69 @@
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow),
-    algoCtl(0)
+    statsUi(new Ui::Statistics),
+    algoCtl(0),
+    helpWidget(0),
+    focusedNode(0)
 {
     qsrand(23);
+
+    QCoreApplication::setOrganizationName("Visigoth");
+    QCoreApplication::setApplicationName("Visigoth");
 
     ui->setupUi(this);
 
     connect(ui->exportToAct, SIGNAL(triggered()), this, SLOT(exportTo()));
+    connect(ui->helpAct, SIGNAL(toggled(bool)), this, SLOT(toggleHelp(bool)));
 
     view = new GLGraphWidget(this);
+    scene = new GraphScene();
+    connect(scene, SIGNAL(itemMovedSignal()), view, SLOT(itemMoved()));
+    view->setScene(scene);
+
+    statsUi->setupUi(ui->statsWidget);
 
     setCentralWidget(view);
 
-    connect(ui->newNodeAct, SIGNAL(triggered()), view, SLOT(addVertex()));
-    connect(ui->randomizeAct, SIGNAL(triggered()), view, SLOT(randomizePlacement()));
-    connect(ui->generateAct, SIGNAL(triggered()), view, SLOT(populate()));
+    connect(ui->newNodeAct, SIGNAL(triggered()), scene, SLOT(addVertex()));
+    connect(ui->randomizeAct, SIGNAL(triggered()), scene, SLOT(randomizePlacement()));
+    connect(ui->generateAct, SIGNAL(triggered()), scene, SLOT(repopulate()));
+    connect(scene, SIGNAL(repopulated()), this, SLOT(onGenerate()));
     connect(view, SIGNAL(algorithmChanged(Algorithm*)), this, SLOT(onAlgorithmChanged(Algorithm*)));
+    connect(view, SIGNAL(hoveringOnNode(Node*)), this, SLOT(onFocusedNodeChanged(Node*)));
 
-    ui->chooserCombo->addItems(view->algorithms());
-    connect(ui->chooserCombo, SIGNAL(currentIndexChanged(const QString &)), view, SLOT(chooseAlgorithm(const QString &)));
+    ui->chooserCombo->addItems(scene->algorithms());
+    connect(ui->chooserCombo, SIGNAL(currentIndexChanged(const QString &)), scene, SLOT(chooseAlgorithm(const QString &)));
 
-    view->chooseAlgorithm(ui->chooserCombo->currentText());
+    scene->chooseAlgorithm(ui->chooserCombo->currentText());
 
-    view->populate();
+    scene->repopulate();
 }
 
 MainWindow::~MainWindow() {
+    delete view;
     delete ui;
+}
+
+void MainWindow::toggleHelp(bool enabled) {
+    if (!helpWidget) {
+        helpDock = new QDockWidget(this);
+        helpWidget = new QWidget(this);
+        Ui::helpWidget *helpWid = new Ui::helpWidget();
+        helpWid->setupUi(helpWidget);
+        helpWid->text->setText("blah");
+        helpWid->text->isReadOnly();
+        helpWid->text->setFrameShape(QFrame::NoFrame);
+        helpWid->text->viewport()->setAutoFillBackground(false);
+        helpDock->setWidget(helpWidget);
+        helpDock->setWindowTitle("Help Manual");
+        helpDock->setFixedWidth((this->width())/3);
+        helpDock->setFeatures(QDockWidget::NoDockWidgetFeatures);
+        addDockWidget(Qt::LeftDockWidgetArea, helpDock);
+    } else {
+        helpDock->setVisible(enabled);
+    }
+
 }
 
 void MainWindow::exportTo() {
@@ -91,4 +130,22 @@ void MainWindow::onAlgorithmChanged(Algorithm *newAlgo) {
     }
 
     ui->newNodeAct->setEnabled(newAlgo->canAddVertex());
+}
+
+void MainWindow::onGenerate() {
+    focusedNode = 0;
+    Statistics *stats = scene->getStatistics();
+    statsUi->lengthLabel->setText(QString::number(stats->lengthAvg()));
+    statsUi->degreeLabel->setText(QString::number(stats->degreeAvg()));
+    statsUi->clusteringLabel->setText(QString::number(stats->clusteringAvg()));
+    statsUi->coeffLabel->setText("");
+}
+
+void MainWindow::onFocusedNodeChanged(Node *node) {
+    if (node == focusedNode)
+        return;
+    focusedNode = node;
+
+    Statistics *stats = scene->getStatistics();
+    statsUi->coeffLabel->setText(QString::number(stats->clusteringCoeff(focusedNode)));
 }

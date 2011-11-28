@@ -27,10 +27,10 @@ public:
 
     QuadTree(vreal longestEdge);
     ~QuadTree();
-    void addNode(TreeNode& node);
+    void addNode(TreeNode *node);
     TreeNode& root() const;
 
-    void printTree(TreeNode* node) const; // Debug
+    void printTree(TreeNode *node) const; // Debug
 
 private:
     class Quadrant : public TreeNode {
@@ -43,7 +43,7 @@ private:
         const QVector<TreeNode*>& children() const;
         vreal width() const;
 
-        void addChild(TreeNode& child);
+        void addChild(TreeNode *child);
 
         // Both this functions are needed by printTree() only, which is useful to debug.
         int getLevel() const;
@@ -60,11 +60,11 @@ private:
         VPointF _center;
 
         int childIndex(TreeNode& node) const;
-        void castAndAddChild(TreeNode* node, TreeNode& child) const;
+        void castAndAddChild(TreeNode *node, TreeNode *child) const;
         bool isTerminal();
-        VPointF weightedMiddle(TreeNode& node1, TreeNode& node2) const;
+        VPointF weightedMiddle(TreeNode *node1, TreeNode *node2) const;
         void allocateChildren();
-        void addChildToChildren(TreeNode& node);
+        void addChildToChildren(TreeNode *node);
     };
 
     Quadrant* _root;

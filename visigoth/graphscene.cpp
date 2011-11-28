@@ -9,21 +9,34 @@
 #include "statistics.h"
 #include "barabasialbert.h"
 
-GraphScene::GraphScene(GLGraphWidget *parent) :
+#ifdef HAS_OAUTH
+#include "twitter.h"
+#endif
+
+GraphScene::GraphScene() :
     algo(0),
-    stats(0),
-    view(parent),
-    degreeCount(1),
-    running(false)
+    degreeCount(1)
 {
     myAlgorithms["Preferential Attachament"] = PREFERENTIAL_ATTACHAMENT;
     myAlgorithms["Bipartite Model"] = BIPARTITE_MODEL;
     myAlgorithms["Erdos Renyi"] = ERDOS_RENYI;
     myAlgorithms["Barabasi Albert"] = BARABASI_ALBERT;
+#ifdef HAS_OAUTH
+    myAlgorithms["Twitter"] = TWITTER;
+#endif
+    stats = new Statistics(this);
+}
+
+GraphScene::~GraphScene() {
+    delete stats;
 }
 
 QList<QString> GraphScene::algorithms() const {
     return myAlgorithms.keys();
+}
+
+Statistics* GraphScene::getStatistics() {
+    return stats;
 }
 
 void GraphScene::reset() {
@@ -72,6 +85,14 @@ Node* GraphScene::newNode() {
     Node *node = new Node(this);
 
     myNodes << node;
+    /*
+    node->setPos(VPointF((qrand() % 1000) - 500,
+                          (qrand() % 600) - 300,
+                          //(qrand() % 600) - 300));
+                          0.0));
+    */
+
+    this->itemMoved();
 
     return node;
 }
@@ -91,8 +112,7 @@ bool GraphScene::doesEdgeExist(Node *source, Node *dest) const {
 }
 
 void GraphScene::itemMoved() {
-    running = true;
-    view->itemMoved();
+    emit itemMovedSignal();
 }
 
 void GraphScene::chooseAlgorithm(const QString &name) {
@@ -122,10 +142,16 @@ void GraphScene::repopulate() {
         case BARABASI_ALBERT:
             algo = new BarabasiAlbert(this);
             break;
+#ifdef HAS_OAUTH
+        case TWITTER:
+            algo = new Twitter(this);
+            break;
+#endif
         }
     }
     algo->reset();
     randomizePlacement();
+    emit repopulated();
 }
 
 Algorithm* GraphScene::algorithm() const {
@@ -139,15 +165,11 @@ void GraphScene::randomizePlacement() {
                               //(qrand() % 600) - 300));
                               0.0));
     }
-
-    // Why do we recalculate the metrics now? Do they depend on node positions?
-    calculateMetrics();
 }
 
 void GraphScene::addVertex() {
     algo->addVertex();
-
-    calculateMetrics();
+    emit repopulated();
 }
 
 // Pre: degree is valid
@@ -159,31 +181,24 @@ QList<Node *> GraphScene::getDegreeList(int degree) const {
 void GraphScene::updateDegreeCount(Node *node) {
     int degree = node->edges().size();
 
-        if(degree > degreeCount.size())
+    if (degree > degreeCount.size())
         degreeCount.resize(degree);
 
     degreeCount[degree - 1].append(node);
 
-    if(degree > 1)
+    if (degree > 1)
          degreeRemove(node);
 }
 
-void GraphScene::calculateMetrics() {
-    if(!stats)
-        stats = new Statistics(this);
-
-    // Do something with the metrics
-}
-
-void GraphScene::calculateForces() {
+bool GraphScene::calculateForces() {
     QuadTree quadTree(graphCube().longestEdge());
     foreach (Node* node, nodes()) {
-        quadTree.addNode(*node);
+        quadTree.addNode(node);
     }
 
     // Don't move the first node
     bool first = true;
-    foreach (Node* node, nodes()) {
+    foreach (Node *node, nodes()) {
         if (first) {
             first = false;
             continue;
@@ -192,20 +207,17 @@ void GraphScene::calculateForces() {
         node->calculatePosition(quadTree.root());
     }
 
-    running = false;
+    bool somethingMoved = false;
     foreach (Node *node, nodes()) {
         if (node->advance()) {
-            running = true;
+            somethingMoved = true;
         }
     }
-}
 
-bool GraphScene::isRunning() const {
-    return true;
+    return somethingMoved;
 }
 
 int GraphScene::maxDegree() const {
-
     return degreeCount.count();
 }
 
@@ -217,19 +229,15 @@ int GraphScene::nodeCount(int degree) const {
     return degreeCount[degree].size();
 }
 
-void GraphScene::degreeRemove(Node *n) {
-    int degree = n->edges().size();
+void GraphScene::degreeRemove(Node *node) {
+    int degree = node->edges().size();
 
-    QList<Node*> list = degreeCount[degree-2];
-    int counter = 0;
-    foreach(Node *n2, list){
-
-        if(n2->tag() == n->tag()){
-            degreeCount[degree-2].removeAt(counter);
+    QList<Node *> nodes = degreeCount[degree - 2];
+    for (int i(0); i < nodes.size(); ++i) {
+        if (nodes[i]->tag() == node->tag()) {
+            degreeCount[degree - 2].removeAt(i);
             break;
         }
-
-        ++counter;
     }
 }
 

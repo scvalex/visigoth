@@ -3,7 +3,6 @@
 #include <QPainter>
 
 Edge::Edge(Node *sourceNode, Node *destNode) :
-    //myColour(QColor::fromRgb(0, 165, 211, 238))
     myColour(QColor::fromRgbF(0.0, 0.0, 1.0, 0.5))
 {
     dest = destNode;

@@ -23,65 +23,51 @@
 
 GLGraphWidget::GLGraphWidget(QWidget *parent) :
     QGLWidget(parent),
+    myScene(0),
     zoom(1.0),
     mouseMode(MOUSE_IDLE),
     helping(true),
-    isPlaying(true),
-    timerId(0)
+    animTimerId(0)
 {
     setFocusPolicy(Qt::StrongFocus);
-    myScene = new GraphScene(this);
+    setMouseTracking(true);
+}
+
+void GLGraphWidget::setScene(GraphScene *newScene) {
+    if (myScene != 0)
+        return;
+    myScene = newScene;
     //myScene->setBackgroundBrush(Qt::black);
     //myScene->setItemIndexMethod(QGraphicsScene::NoIndex);
     connect(myScene, SIGNAL(algorithmChanged(Algorithm*)), this, SIGNAL(algorithmChanged(Algorithm*)));
-    this->setAnimationRunning();
+    animationSet(true);
 }
 
-QList<QString> GLGraphWidget::algorithms() const {
-    return myScene->algorithms();
-}
-
-void GLGraphWidget::populate() {
-    myScene->repopulate();
+GLGraphWidget::~GLGraphWidget() {
+    delete myScene;
 }
 
 void GLGraphWidget::itemMoved() {
-    setAnimationRunning();
-}
-
-void GLGraphWidget::randomizePlacement() {
-    myScene->randomizePlacement();
-}
-
-void GLGraphWidget::addVertex() {
-    myScene->addVertex();
-}
-
-void GLGraphWidget::chooseAlgorithm(const QString &name) {
-    myScene->chooseAlgorithm(name);
-
     this->repaint();
 }
 
-/****************************
- * GraphWidget imitation code (protected)
- ***************************/
 
-void GLGraphWidget::setAnimationRunning() {
-    if (isPlaying && myScene->isRunning() && !timerId)
-        timerId = startTimer(1000 / 25);
-    else if ((!isPlaying || !myScene->isRunning()) && timerId) {
-        killTimer(timerId);
-        timerId = 0;
+
+bool GLGraphWidget::animationRunning() {
+    return (animTimerId != 0);
+}
+
+void GLGraphWidget::animationSet(bool enable) {
+    if (animTimerId) {
+        killTimer(animTimerId);
+        animTimerId = 0;
+    }
+
+    if (enable) {
+        animTimerId = startTimer(1000 / 25);
     }
 }
 
-void GLGraphWidget::playPause() {
-    isPlaying = !isPlaying;
-    setAnimationRunning();
-
-    this->repaint();
-}
 
 void GLGraphWidget::scaleView(qreal scaleFactor) {
     zoom *= scaleFactor;
@@ -99,6 +85,7 @@ void GLGraphWidget::scaleView(qreal scaleFactor) {
 void GLGraphWidget::fitToScreen() {
   // FIXME: fitToScreen needs to be completely redone for 3D.
 }
+
 
 void GLGraphWidget::wheelEvent(QWheelEvent *event) {
     scaleView(pow((double)2, event->delta() / 240.0));
@@ -160,8 +147,13 @@ void GLGraphWidget::mouseReleaseEvent(QMouseEvent *event) {
 void GLGraphWidget::mouseMoveEvent(QMouseEvent *event) {
     int dx, dy;
 
-    if (mouseMode == MOUSE_IDLE)
+    if (mouseMode == MOUSE_IDLE) {
+        Node *node = selectGL(event->x(), event->y());
+        if (node != 0) {
+            emit hoveringOnNode(node);
+        }
         return;
+    }
 
     dx = event->x() - mouseX;
     dy = event->y() - mouseY;
@@ -183,8 +175,7 @@ void GLGraphWidget::mouseMoveEvent(QMouseEvent *event) {
             glaCameraRotatef(cameramat, dx, 0.0, 1.0, 0.0);
             glaCameraRotatef(cameramat, dy, 1.0, 0.0, 0.0);
             break;
-        case MOUSE_DRAGGING:
-        case MOUSE_IDLE:
+        default:
             break;
     }
 
@@ -198,7 +189,7 @@ void GLGraphWidget::keyPressEvent(QKeyEvent *event) {
         this->repaint();
         break;
     case Qt::Key_G:
-        populate();
+        myScene->repopulate();
         break;
     case Qt::Key_Escape:
         helping = false;
@@ -212,10 +203,10 @@ void GLGraphWidget::keyPressEvent(QKeyEvent *event) {
         scaleView(1.0/1.2);
         break;
     case Qt::Key_R:
-        randomizePlacement();
+        myScene->randomizePlacement();
         break;
     case Qt::Key_Space:
-        playPause();
+        animationSet(!animationRunning());
         break;
     case Qt::Key_0:
         fitToScreen();
@@ -235,9 +226,6 @@ void GLGraphWidget::keyPressEvent(QKeyEvent *event) {
     case Qt::Key_Down:
         glaCameraTranslatef(cameramat, 0.0, 20.0/zoom, 0.0);
         break;
-    case Qt::Key_S:
-        myScene->calculateMetrics();
-        break;
     default:
         QGLWidget::keyPressEvent(event);
     }
@@ -246,9 +234,13 @@ void GLGraphWidget::keyPressEvent(QKeyEvent *event) {
 }
 
 void GLGraphWidget::timerEvent(QTimerEvent *) {
-    myScene->calculateForces();
+    bool somethingMoved = myScene->calculateForces();
 
-    setAnimationRunning();
+    if (!somethingMoved) {
+        // animationSet(true) would recreate the timer though it is
+        // already running (this is a timer event). So don't do it.
+        animationSet(false);
+    }
 
     this->repaint();
 }
@@ -301,7 +293,7 @@ void GLGraphWidget::resizeGL(int w, int h) {
  * GL graph drawing and projection setup (private)
  ***************************/
 
-inline void GLGraphWidget::drawNode(Node* node) {
+inline void GLGraphWidget::drawNode(Node *node) {
     QColor c = node->brush().color();
     glColor4f(c.redF(), c.greenF(), c.blueF(), c.alphaF());
 

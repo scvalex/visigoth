@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>ErdosControl</class>
- <widget class="QWidget" name="ErdosControl">
+ <class>TwitterControl</class>
+ <widget class="QWidget" name="TwitterControl">
   <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>170</width>
-    <height>157</height>
+    <width>216</width>
+    <height>144</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -22,7 +22,7 @@
       </font>
      </property>
      <property name="text">
-      <string>Erdos-Renyi Control</string>
+      <string>Twitter Control</string>
      </property>
      <property name="alignment">
       <set>Qt::AlignCenter</set>
@@ -32,42 +32,19 @@
    <item>
     <layout class="QFormLayout" name="formLayout">
      <item row="0" column="0">
-      <widget class="QLabel" name="Nodes">
+      <widget class="QLabel" name="label_2">
        <property name="text">
-        <string>Nodes</string>
+        <string>Root user</string>
        </property>
       </widget>
      </item>
      <item row="0" column="1">
-      <widget class="QSpinBox" name="nodesSpin">
-       <property name="minimum">
-        <number>1</number>
-       </property>
-       <property name="maximum">
-        <number>10000</number>
-       </property>
-       <property name="value">
-        <number>60</number>
-       </property>
-      </widget>
+      <widget class="QLineEdit" name="userEdit"/>
      </item>
-     <item row="1" column="0">
-      <widget class="QLabel" name="Probability">
+     <item row="1" column="0" colspan="2">
+      <widget class="QPushButton" name="clearButton">
        <property name="text">
-        <string>Probability</string>
-       </property>
-      </widget>
-     </item>
-     <item row="1" column="1">
-      <widget class="QDoubleSpinBox" name="probabilitySpin">
-       <property name="maximum">
-        <double>1.000000000000000</double>
-       </property>
-       <property name="singleStep">
-        <double>0.050000000000000</double>
-       </property>
-       <property name="value">
-        <double>0.100000000000000</double>
+        <string>Clear private data</string>
        </property>
       </widget>
      </item>
@@ -77,9 +54,6 @@
     <spacer name="verticalSpacer">
      <property name="orientation">
       <enum>Qt::Vertical</enum>
-     </property>
-     <property name="sizeType">
-      <enum>QSizePolicy::Fixed</enum>
      </property>
      <property name="sizeHint" stdset="0">
       <size>

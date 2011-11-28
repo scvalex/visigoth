@@ -35,12 +35,6 @@ public:
     QList<Edge*>& edges();
     QVector<Node*> neighbours() const;
 
-    // Statistics
-    bool getVisited();
-    void setVisited(bool v);
-    int getDistance();
-    void setDistance(int v);
-
     // QuadTree
     int size() const;
     VPointF center() const;
