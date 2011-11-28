@@ -358,7 +358,7 @@ void GLGraphWidget::initProjection() {
     glScalef(zoom, zoom, 1.0/zoom);
 
     // Flat projection
-    gluOrtho2D(0.0, (GLfloat)width(), (GLfloat)height(), 0.0);
+    gluOrtho2D((GLfloat)width() / -2, (GLfloat)width() / 2, (GLfloat)height() / 2, (GLfloat)height() / -2);
 
     // Persective projection
     //gluPerspective(90, (GLfloat)width()/(GLfloat)height(), 0.0001, 100000.0);
