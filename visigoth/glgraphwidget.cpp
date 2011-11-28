@@ -212,6 +212,7 @@ void GLGraphWidget::keyPressEvent(QKeyEvent *event) {
         fitToScreen();
         break;
     case Qt::Key_A:
+    case Qt::Key_N:
         myScene->addVertex();
         break;
     case Qt::Key_Left:
