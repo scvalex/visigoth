@@ -8,6 +8,7 @@
 #include "graphscene.h"
 
 class Algorithm;
+class Node;
 
 class GLGraphWidget : public QGLWidget, public AbstractGraphWidget
 {
@@ -15,9 +16,9 @@ class GLGraphWidget : public QGLWidget, public AbstractGraphWidget
 public:
     explicit GLGraphWidget(QWidget *parent = 0);
 
-    GraphScene *myScene;
+    virtual ~GLGraphWidget();
 
-    void itemMoved();
+    void setScene(GraphScene *newScene);
 
     enum MOUSE_MODES {
         MOUSE_IDLE,
@@ -27,16 +28,12 @@ public:
         MOUSE_DRAGGING
     };
 
-    QList<QString> algorithms() const;
-
 public slots:
-    void populate();
-    void randomizePlacement();
-    void addVertex();
-    void chooseAlgorithm(const QString &name);
+    void itemMoved();
 
 signals:
     void algorithmChanged(Algorithm *newAlgo);
+    void hoveringOnNode(Node *node);
 
 protected:
     void setAnimationRunning();
@@ -62,7 +59,7 @@ private:
     void initProjection();
     Node *selectGL(int x, int y);
 
-
+    GraphScene *myScene;
     GLfloat cameramat[16];
     GLfloat zoom;
     int mouseX, mouseY;

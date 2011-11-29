@@ -7,8 +7,6 @@
 #include <QSet>
 #include <QVector>
 
-#include "abstractgraphwidget.h"
-
 class Edge;
 class GraphWidget;
 class Node;
@@ -19,7 +17,8 @@ class GraphScene : public QGraphicsScene
 {
     Q_OBJECT
 public:
-    explicit GraphScene(AbstractGraphWidget *parent = 0);
+    explicit GraphScene();
+    ~GraphScene();
 
     QVector<Node*>& nodes();
     QList<Edge*>& edges();
@@ -33,34 +32,36 @@ public:
     Node* newNode();
     bool newEdge(Node *source, Node *dest);
 
-    void repopulate();
     Algorithm* algorithm() const;
 
     void itemMoved();
 
-    void randomizePlacement();
-
-    void addVertex();
-
     QList<Node*> getDegreeList(int degree) const;
-
-    void calculateMetrics();
 
     void calculateForces();
     bool isRunning() const;
     void reset();
 
     QList<QString> algorithms() const;
+
     void removeNode(Node * n);
     void setAllNodes(int i);
     void removeEdges(int cutoffTag);
 
 
+    Statistics* getStatistics();
+
+
 public slots:
+    void addVertex();
+    void randomizePlacement();
+    void repopulate();
     void chooseAlgorithm(const QString &name);
 
 signals:
+    void itemMovedSignal();
     void algorithmChanged(Algorithm *newAlgo);
+    void repopulated();
 
 protected:
     void updateDegreeCount(Node *node);
@@ -70,7 +71,8 @@ private:
         BIPARTITE_MODEL,
         PREFERENTIAL_ATTACHAMENT,
         ERDOS_RENYI,
-        BARABASI_ALBERT
+        BARABASI_ALBERT,
+        TWITTER
     };
     Algorithm *algo;
     Statistics *stats;
@@ -78,7 +80,6 @@ private:
     QVector<QSet<int> > hasEdge;
     QVector<Node*> myNodes;
     QList<Edge*> myEdges;
-    AbstractGraphWidget *view;
     QVector<QList<Node*> > degreeCount;
     bool running;
     QMap<QString, int> myAlgorithms;

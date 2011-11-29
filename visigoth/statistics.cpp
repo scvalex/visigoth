@@ -1,6 +1,7 @@
 #include "statistics.h"
 #include "graphscene.h"
 
+#include <QQueue>
 #include <QPointF>
 
 Statistics::Statistics(GraphScene *scene):
@@ -9,22 +10,23 @@ Statistics::Statistics(GraphScene *scene):
 }
 
 double Statistics::degreeAvg() {
-    return (2 * graph->edges().count()) / graph->nodes().count();
+    return (2.0 * graph->edges().count()) / graph->nodes().count();
 }
 
 double Statistics::lengthAvg() {
     double allLengths = 0;
 
+    QSet<Node*> visited;
+    QMap<Node*, int> distance;
     foreach (Node *n, graph->nodes()) {
-        allLengths += shortestPath(n,NULL);
+        allLengths += lengthSum(n, visited, distance);
         foreach (Node *m, graph->nodes()) {
-            m->setDistance(0);
-            m->setVisited(false);
+            distance[m] = 0;
+            visited.remove(m);
         }
     }
 
-    double res =  allLengths / (double) (graph->nodes().size()*(graph->nodes().size() - 1));
-    return res;
+    return allLengths / (double) (graph->nodes().size() * (graph->nodes().size() - 1));
 }
 
 double Statistics::clusteringAvg() {
@@ -34,10 +36,8 @@ double Statistics::clusteringAvg() {
         clusterCumulative += clusteringCoeff(n);
     }
 
-    double res = clusterCumulative / (double)graph->nodes().size();
+    return clusterCumulative / (double)graph->nodes().size();
 
-
-    return res;
 }
 
 double Statistics::clusteringCoeff(Node *node) {
@@ -45,7 +45,7 @@ double Statistics::clusteringCoeff(Node *node) {
     int k = edges.count();
     int intersection = 0;
 
-    while(!edges.empty()) {
+    while (!edges.empty()) {
         Edge *e = edges.takeFirst();
         Node *src = e->sourceNode();
         Node *dest = e->destNode();
@@ -61,9 +61,7 @@ double Statistics::clusteringCoeff(Node *node) {
         }
     }
 
-    double debug = k > 1 ? (2*intersection)/(double) (k*(k-1)) : 0 ;
-
-    return k > 1 ? (2*intersection)/(double) (k*(k-1)) : 0 ;
+    return k > 1 ? (2*intersection) / (double) (k*(k-1)) : 0 ;
 }
 
 double Statistics::clusteringDegree(int degree) {
@@ -79,16 +77,15 @@ double Statistics::clusteringDegree(int degree) {
 }
 
 
-// d = -1 for shortestPath between all nodes in the network
-double Statistics::shortestPath(Node *s, Node *d) {
-    QList<Node*> queue;
+double Statistics::lengthSum(Node *s, QSet<Node*> &visited, QMap<Node*, int> &distance) {
+    QQueue<Node*> queue;
     queue.append(s);
     double retLength = 0;
-    s->setVisited(true);
+    visited.insert(s);
 
     // Find the distances to all other nodes using breadth first search
     while(!queue.empty()) {
-        Node *parent = queue.first();
+        Node *parent = queue.dequeue();
         QList<Edge*> edges = parent->edges();
 
         foreach(Edge *e, edges) {
@@ -100,19 +97,15 @@ double Statistics::shortestPath(Node *s, Node *d) {
                 n = e->sourceNode();
             }
 
-            if(!n->getVisited()) {
-                n->setVisited(true);
-                n->setDistance(parent->getDistance() + 1);
-                queue.append(n);
+            if(!visited.contains(n)) {
+                visited.insert(n);
+                distance[n] = distance.value(parent, 0) + 1;
+                queue.enqueue(n);
             }
 
-            if( d != NULL && n->tag() == d->tag()){
-                return d->getDistance();
-            }
         }
 
-        queue.removeFirst();
-        retLength += parent->getDistance();
+        retLength += distance[parent];
     }
 
     return retLength;
@@ -180,6 +173,7 @@ double Statistics::powerLawExponent() {
 
 
     int maxDegree = graph->maxDegree();
+
     for(double i(0); i < maxDegree ; ++i){
 
 
@@ -201,7 +195,6 @@ double Statistics::powerLawExponent() {
     double yPref;
     int c = 0;
 
-
     foreach(QPointF p, plot) {
         // init calculation
         if(c == 0){
@@ -209,7 +202,6 @@ double Statistics::powerLawExponent() {
             yPref = p.ry();
            deltaX = p.rx();
            ++c;
-
         }
 
         else{
@@ -222,5 +214,5 @@ double Statistics::powerLawExponent() {
 
     }
 
-    return -1*(deltaY/deltaX);
+    return (-1) * (deltaY / deltaX);
 }

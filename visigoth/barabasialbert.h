@@ -27,10 +27,11 @@ public:
 
 protected slots:
     void onSizeChanged(int newSize);
+    void onDegreeChanged(int newDegree);
 
 protected:
     void addVertex(bool saveSize = false);
-    void addVertex(int edgesToAdd, double p);
+    void addVertex(int edgesToAdd);
 
     double genRandom();
     Node* getPreference(const QVector<Node*> &nodes, double genPref);
@@ -38,7 +39,9 @@ protected:
 
 private:
     static const int START_NODES = 300;
+    static const int START_DEGREE = 3;
     GraphScene *graph;
+    QWidget *ctlW;
 
     // used for selecting a node by preferential seleciton
     QMap<int, double> cumulativePreferences;
@@ -46,6 +49,7 @@ private:
     QMap<int, double> preferences;
 
     int size;
+    int nodeDegree;
 };
 
 #endif // BARABASIALBERT_H
