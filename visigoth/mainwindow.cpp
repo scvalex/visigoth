@@ -139,7 +139,7 @@ void MainWindow::onGenerate() {
     statsUi->lengthLabel->setText(QString::number(stats->lengthAvg()));
     statsUi->degreeLabel->setText(QString::number(stats->degreeAvg()));
     statsUi->clusteringLabel->setText(QString::number(stats->clusteringAvg()));
-    statsUi->coeffLabel->setText(QString::number(stats->powerLawExponent()));
+    statsUi->exponentLabel->setText(QString::number(stats->powerLawExponent()));
 }
 
 void MainWindow::onFocusedNodeChanged(Node *node) {
