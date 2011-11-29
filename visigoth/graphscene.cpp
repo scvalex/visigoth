@@ -97,6 +97,7 @@ Node* GraphScene::newNode() {
                          //(qrand() % 600) - 300));
                          0.0));
     connect(node, SIGNAL(nodeMoved()), this, SLOT(onNodeMoved()));
+    onNodeMoved();
 
     return node;
 }
