@@ -3,27 +3,24 @@
 #include "node.h"
 #include "quadtree.h"
 
-#include <QPainter>
-
 #include <cmath>
 #include <stdexcept>
 
 int Node::ALL_NODES(0);
 
-Node::Node(GraphScene *graph, QGraphicsItem *parent) :
-    QGraphicsItem(parent),
+Node::Node(GraphScene *graph) :
+    QObject(graph),
     myBrush(QColor::fromRgbF(0.0, 1.0, 0.3, 0.7)),
     graph(graph),
-    hovering(false),
+    curPos(0.0),
+    newPos(0.0),
     visited(false),
     distance(0)
 {
     myTag = ALL_NODES++;
-    setFlag(ItemIsMovable);
-    setFlag(ItemSendsGeometryChanges);
-    setCacheMode(DeviceCoordinateCache);
-    setZValue(100);
-    setAcceptHoverEvents(true);
+}
+
+Node::~Node() {
 }
 
 int Node::tag() const {
@@ -34,112 +31,74 @@ void Node::addEdge(Edge *edge) {
     edgeList << edge;
 }
 
-QPointF Node::calculatePosition(TreeNode &treeNode) {
-    if (!scene() || scene()->mouseGrabberItem() == this) {
-        newPos = pos();
-        return newPos;
-    }
+VPointF Node::pos() const {
+    return curPos;
+}
 
-    // Calculate non-edge forces
-    QPointF vel = calculateNonEdgeForces(&treeNode);
+void Node::setPos(VPointF pos, bool silent) {
+    curPos = pos;
+    if (!silent)
+        emit nodeMoved();
+}
 
-    qreal xvel = vel.x();
-    qreal yvel = vel.y();
+VPointF Node::calculatePosition(TreeNode &treeNode) {
+    VPointF vel = calculateNonEdgeForces(&treeNode);
 
     // Now all the forces that pulling items together
     double weight = (edgeList.size() + 1) * 10;
 
     foreach (Edge *edge, edgeList) {
-        QPointF vec;
+        VPointF vec = VPointF(0.0);
         if (edge->sourceNode() == this) {
-            vec = mapToItem(edge->destNode(), 0, 0);
+            vec = pos() - edge->destNode()->pos();
         } else {
-            vec = mapToItem(edge->sourceNode(), 0, 0);
+            vec = pos() - edge->sourceNode()->pos();
         }
-        xvel -= vec.x() / weight;
-        yvel -= vec.y() / weight;
+        vel = vel - (vec / weight);
     }
 
-    if (qAbs(xvel) < 0.1 && qAbs(yvel) < 0.1) {
-        xvel = yvel = 0;
+    if (qAbs(vel.lengthSquared()) < 0.1) {
+        vel = VPointF(0.0);
     }
 
-    newPos = pos() + QPointF(xvel, yvel);
+    newPos = pos() + vel;
 
     return newPos;
 }
 
-QPointF Node::calculateNonEdgeForces(QuadTree::TreeNode *treeNode) {
+VPointF Node::calculateNonEdgeForces(QuadTree::TreeNode* treeNode) {
     if (treeNode->size() < 1) {
-        return QPointF(0, 0);
+        return VPointF(0.0);
     }
 
-    QPointF vec(this->pos().x() - treeNode->center().x(),
-                this->pos().y() - treeNode->center().y());
-    qreal dx = vec.x();
-    qreal dy = vec.y();
-    qreal distance = sqrt(dx*dx + dy*dy);
+    VPointF vec = this->pos() - treeNode->center();
+    VPointF vel = VPointF(0.0);
 
-    QPointF vel;
-
-    if (treeNode->isFarEnough(distance) || treeNode->size() == 1) {
-        double l = 2.0 * (dx*dx + dy*dy);
+    if (treeNode->isFarEnough(vec.length()) || treeNode->size() == 1) {
+        double l = vec.lengthSquared();
 
         if (l > 0) {
-            vel = QPointF((dx * 150.0) / l, (dy * 150.0) / l);
+            vel = vec * (75.0 / l);
         } else {
-            vel = QPointF(0, 0);
+            vel = VPointF(0.0);
         }
     } else {
-        qreal xvel = 0;
-        qreal yvel = 0;
+        vel = VPointF(0.0);
         foreach (TreeNode* child, treeNode->children()) {
-            QPointF velCh = calculateNonEdgeForces(child);
-            xvel += velCh.x();
-            yvel += velCh.y();
+            vel = vel + calculateNonEdgeForces(child);
         }
-        vel = QPointF(xvel, yvel);
     }
     return vel;
 }
 
-/* Called by GraphWidget repeatedly. */
+
 bool Node::advance() {
     if (newPos == pos())
         return false;
-    setPos(newPos);
+
+    setPos(newPos, true);
+
     return true;
-}
-
-QRectF Node::boundingRect() const {
-    return QRectF(-10, -10, 20, 20);
-}
-
-QPainterPath Node::shape() const {
-    QPainterPath path;
-    path.addEllipse(-10, -10, 20, 20);
-    return path;
-}
-
-void Node::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *) {
-    painter->setPen(Qt::NoPen);
-    painter->setBrush(myBrush);
-    painter->drawEllipse(-10, -10, 20, 20);
-}
-
-QVariant Node::itemChange(GraphicsItemChange change, const QVariant &value) {
-    switch (change) {
-    case ItemPositionHasChanged:
-        foreach (Edge *edge, edgeList) {
-            edge->adjust();
-        }
-        graph->itemMoved();
-        break;
-    default:
-        break;
-    }
-
-    return QGraphicsItem::itemChange(change, value);
 }
 
 QList<Edge*>& Node::edges() {
@@ -165,7 +124,7 @@ int Node::size() const {
     return 1;
 }
 
-QPointF Node::center() const {
+VPointF Node::center() const {
     return pos();
 }
 
@@ -177,7 +136,7 @@ const QVector<QuadTree::TreeNode*>& Node::children() const {
     throw std::runtime_error("Node: calling children() on a terminal node");
 }
 
-qreal Node::width() const {
+vreal Node::width() const {
     return 0;
 }
 

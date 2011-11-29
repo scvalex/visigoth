@@ -4,13 +4,13 @@
 #include <QGLWidget>
 #include <QList>
 
-#include "abstractgraphwidget.h"
-#include "graphscene.h"
-
+class GraphScene;
+class Node;
 class Algorithm;
 class Node;
 
-class GLGraphWidget : public QGLWidget, public AbstractGraphWidget
+
+class GLGraphWidget : public QGLWidget
 {
     Q_OBJECT
 public:
@@ -28,16 +28,14 @@ public:
         MOUSE_DRAGGING
     };
 
-public slots:
-    void itemMoved();
-
 signals:
     void algorithmChanged(Algorithm *newAlgo);
     void hoveringOnNode(Node *node);
 
 protected:
-    void setAnimationRunning();
-    void playPause();
+    bool animationRunning();
+    void setAnimation(bool enable);
+
     void scaleView(qreal scaleFactor);
     void fitToScreen();
 
@@ -53,6 +51,9 @@ protected:
     void paintGL();
     void resizeGL(int w, int h);
 
+public slots:
+    void onNodeMoved();
+
 private:
     void drawGraphGL();
     void drawNode(Node *node);
@@ -66,10 +67,9 @@ private:
     enum MOUSE_MODES mouseMode;
     Node *draggedNode;
 
+    bool running;
     bool helping;
-    bool isPlaying;
-    bool isRunning;
-    int timerId;
+    int animTimerId;
 };
 
 #endif // GLGRAPHWIDGET_H
