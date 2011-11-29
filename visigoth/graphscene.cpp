@@ -39,10 +39,17 @@ Statistics* GraphScene::getStatistics() {
     return stats;
 }
 
+void GraphScene::onNodeMoved() {
+    emit nodeMoved();
+}
+
 void GraphScene::reset() {
     //clear();
     hasEdge.clear();
     myEdges.clear();
+    foreach (Node *node, myNodes) {
+        disconnect(node, 0, 0, 0);
+    }
     myNodes.clear();
     degreeCount.clear();
     Node::reset();
@@ -85,12 +92,11 @@ Node* GraphScene::newNode() {
     Node *node = new Node(this);
 
     myNodes << node;
-    /*
     node->setPos(VPointF((qrand() % 1000) - 500,
-                          (qrand() % 600) - 300,
-                          //(qrand() % 600) - 300));
-                          0.0));
-    */
+                         (qrand() % 600) - 300,
+                         //(qrand() % 600) - 300));
+                         0.0));
+    connect(node, SIGNAL(nodeMoved()), this, SLOT(onNodeMoved()));
 
     return node;
 }

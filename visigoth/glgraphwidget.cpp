@@ -37,33 +37,31 @@ void GLGraphWidget::setScene(GraphScene *newScene) {
     if (myScene != 0)
         return;
     myScene = newScene;
-    //myScene->setBackgroundBrush(Qt::black);
-    //myScene->setItemIndexMethod(QGraphicsScene::NoIndex);
     connect(myScene, SIGNAL(algorithmChanged(Algorithm*)), this, SIGNAL(algorithmChanged(Algorithm*)));
-    animationSet(true);
+    connect(myScene, SIGNAL(nodeMoved()), this, SLOT(onNodeMoved()));
+    setAnimation(true);
 }
 
 GLGraphWidget::~GLGraphWidget() {
     delete myScene;
 }
 
-
-
 bool GLGraphWidget::animationRunning() {
     return (animTimerId != 0);
 }
 
-void GLGraphWidget::animationSet(bool enable) {
-    if (animTimerId) {
+void GLGraphWidget::setAnimation(bool enable) {
+    if (enable && !animTimerId) {
+        animTimerId = startTimer(1000 / 25);
+    } else if (!enable && animTimerId) {
         killTimer(animTimerId);
         animTimerId = 0;
     }
-
-    if (enable) {
-        animTimerId = startTimer(1000 / 25);
-    }
 }
 
+void GLGraphWidget::onNodeMoved() {
+    setAnimation(true);
+}
 
 void GLGraphWidget::scaleView(qreal scaleFactor) {
     zoom *= scaleFactor;
@@ -81,7 +79,6 @@ void GLGraphWidget::scaleView(qreal scaleFactor) {
 void GLGraphWidget::fitToScreen() {
   // FIXME: fitToScreen needs to be completely redone for 3D.
 }
-
 
 void GLGraphWidget::wheelEvent(QWheelEvent *event) {
     scaleView(pow((double)2, event->delta() / 240.0));
@@ -202,7 +199,7 @@ void GLGraphWidget::keyPressEvent(QKeyEvent *event) {
         myScene->randomizePlacement();
         break;
     case Qt::Key_Space:
-        animationSet(!animationRunning());
+        setAnimation(!animationRunning());
         break;
     case Qt::Key_0:
         fitToScreen();
@@ -234,9 +231,9 @@ void GLGraphWidget::timerEvent(QTimerEvent *) {
     bool somethingMoved = myScene->calculateForces();
 
     if (!somethingMoved) {
-        // animationSet(true) would recreate the timer though it is
+        // setAnimation(true) would recreate the timer though it is
         // already running (this is a timer event). So don't do it.
-        animationSet(false);
+        setAnimation(false);
     }
 
     this->repaint();

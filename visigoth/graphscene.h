@@ -46,7 +46,11 @@ public:
     VCubeF graphCube();
     Statistics* getStatistics();
 
+signals:
+    void nodeMoved();
+
 public slots:
+    void onNodeMoved();
     void addVertex();
     void randomizePlacement();
     void repopulate();

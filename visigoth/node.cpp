@@ -9,6 +9,7 @@
 int Node::ALL_NODES(0);
 
 Node::Node(GraphScene *graph) :
+    QObject(graph),
     myBrush(QColor::fromRgbF(0.0, 1.0, 0.3, 0.7)),
     graph(graph),
     curPos(0.0),
@@ -17,6 +18,9 @@ Node::Node(GraphScene *graph) :
     distance(0)
 {
     myTag = ALL_NODES++;
+}
+
+Node::~Node() {
 }
 
 int Node::tag() const {
@@ -31,8 +35,10 @@ VPointF Node::pos() const {
     return curPos;
 }
 
-void Node::setPos(VPointF pos) {
+void Node::setPos(VPointF pos, bool silent) {
     curPos = pos;
+    if (!silent)
+        emit nodeMoved();
 }
 
 VPointF Node::calculatePosition(TreeNode &treeNode) {
@@ -90,7 +96,7 @@ bool Node::advance() {
     if (newPos == pos())
         return false;
 
-    setPos(newPos);
+    setPos(newPos, true);
 
     return true;
 }

@@ -5,6 +5,7 @@
 #ifndef NODE_H
 #define NODE_H
 
+#include <QObject>
 #include <QBrush>
 
 #include "vtools.h"
@@ -14,8 +15,9 @@
 class Edge;
 class QGraphicsSceneHoverEvent;
 
-class Node : public QuadTree::TreeNode
+class Node : public QObject, public QuadTree::TreeNode
 {
+Q_OBJECT
 public:
     /* Only GraphScene can construct Nodes. */
     friend class GraphScene;
@@ -25,7 +27,7 @@ public:
     int tag() const;
 
     VPointF pos() const;
-    void setPos(VPointF pos);
+    void setPos(VPointF pos, bool silent = false);
 
     /* Return the new position. */
     VPointF calculatePosition(QuadTree::TreeNode& treeNode);
@@ -47,8 +49,12 @@ public:
 
     static void reset();
 
+signals:
+    void nodeMoved();
+
 protected:
     explicit Node(GraphScene *graph);
+    virtual ~Node();
 
 private:
     static int ALL_NODES;

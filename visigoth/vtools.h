@@ -6,9 +6,8 @@
 typedef qreal vreal;
 
 
-class VPointF
-{
-    public:
+class VPointF {
+public:
     VPointF(vreal newX, vreal newY, vreal newZ);
     VPointF(vreal newX, vreal newY);
     VPointF(vreal newXYZ);
@@ -18,9 +17,7 @@ class VPointF
     vreal lengthSquared();
     vreal length();
 
-
-    private:
-
+private:
     friend VPointF operator + (const VPointF &p1, const VPointF &p2);
     friend VPointF operator - (const VPointF &p1, const VPointF &p2);
     friend VPointF operator * (const VPointF &p, const vreal scale);
@@ -31,9 +28,8 @@ class VPointF
 
 
 
-class VCubeF
-{
-    public:
+class VCubeF {
+public:
     VCubeF(VPointF newP1, VPointF newP2);
 
     VPointF p1, p2;

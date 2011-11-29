@@ -28,15 +28,13 @@ public:
         MOUSE_DRAGGING
     };
 
-public slots:
-
 signals:
     void algorithmChanged(Algorithm *newAlgo);
     void hoveringOnNode(Node *node);
 
 protected:
     bool animationRunning();
-    void animationSet(bool enable);
+    void setAnimation(bool enable);
 
     void scaleView(qreal scaleFactor);
     void fitToScreen();
@@ -52,6 +50,9 @@ protected:
     void initializeGL();
     void paintGL();
     void resizeGL(int w, int h);
+
+public slots:
+    void onNodeMoved();
 
 private:
     void drawGraphGL();
