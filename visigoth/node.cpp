@@ -10,7 +10,7 @@ int Node::ALL_NODES(0);
 
 Node::Node(GraphScene *graph) :
     QObject(graph),
-    myBrush(QColor::fromRgbF(0.0, 1.0, 0.3, 0.7)),
+    myColour(QColor::fromRgbF(0.0, 1.0, 0.3, 0.7)),
     graph(graph),
     curPos(0.0),
     newPos(0.0),
@@ -140,10 +140,10 @@ vreal Node::width() const {
     return 0;
 }
 
-QBrush& Node::brush() {
-    return myBrush;
+QColor& Node::colour() {
+    return myColour;
 }
 
-void Node::setBrush(const QBrush &b) {
-    myBrush = b;
+void Node::setColour(const QColor &c) {
+    myColour = c;
 }

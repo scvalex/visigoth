@@ -44,8 +44,8 @@ public:
     const QVector<TreeNode*>& children() const;
     vreal width() const;
 
-    QBrush& brush();
-    void setBrush(const QBrush &b);
+    QColor& colour();
+    void setColour(const QColor &b);
 
     static void reset();
 
@@ -59,7 +59,7 @@ protected:
 private:
     static int ALL_NODES;
 
-    QBrush myBrush;
+    QColor myColour;
     QList<Edge*> edgeList;
     GraphScene *graph;
     int myTag;

@@ -91,7 +91,7 @@ void GLGraphWidget::mouseDoubleClickEvent(QMouseEvent *event) {
         Node *hitNode = selectGL(event->x(), event->y());
 
         if (hitNode) {
-            hitNode->setBrush(QColor::fromRgbF(1.0, 0.0, 0.0, 1.0));
+            hitNode->setColour(QColor::fromRgbF(1.0, 0.0, 0.0, 1.0));
         }
     }
 
@@ -308,7 +308,7 @@ void GLGraphWidget::resizeGL(int w, int h) {
  ***************************/
 
 inline void GLGraphWidget::drawNode(Node *node) {
-    QColor c = node->brush().color();
+    QColor c = node->colour();
     glColor4f(c.redF(), c.greenF(), c.blueF(), c.alphaF());
 
     float radius = (log(node->edges().size()) / log(2)) + 1.0;
