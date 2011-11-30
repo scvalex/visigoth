@@ -69,8 +69,8 @@ private:
     enum MOUSE_MODES mouseMode;
     Node *draggedNode;
 
+    bool mode3d;
     bool running;
-    bool helping;
     int animTimerId;
 };
 

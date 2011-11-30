@@ -26,7 +26,7 @@ GLGraphWidget::GLGraphWidget(QWidget *parent) :
     myScene(0),
     zoom(1.0),
     mouseMode(MOUSE_IDLE),
-    helping(true),
+    mode3d(false),
     animTimerId(0)
 {
     setFocusPolicy(Qt::StrongFocus);
@@ -67,13 +67,8 @@ void GLGraphWidget::scaleView(qreal scaleFactor) {
     zoom *= scaleFactor;
 
     // Clamped zoom to keep the graph from disappearing in 3D rendering nirvana
-    // FIXME: Reenable me for 3D
-    /*
-    if (zoom < 1.0)
+    if (mode3d && (zoom < 1.0))
         zoom = 1.0;
-    */
-
-    this->initProjection();
 }
 
 void GLGraphWidget::fitToScreen() {
@@ -159,10 +154,10 @@ void GLGraphWidget::mouseMoveEvent(QMouseEvent *event) {
 
     switch(mouseMode) {
         case MOUSE_TRANSLATING:
-            //glaCameraTranslatef(cameramat, (3.0) * dx, (-3.0) * dy, 0.0);
-            // FIXME: Enable old code for 3D mode
-            // Modified for 2D projection and zoom
-            glaCameraTranslatef(cameramat, (GLfloat)dx/zoom, (GLfloat)dy/zoom, 0.0);
+            if (mode3d)
+                glaCameraTranslatef(cameramat, (3.0) * dx, (-3.0) * dy, 0.0);
+            else
+                glaCameraTranslatef(cameramat, (GLfloat)dx/zoom, (GLfloat)dy/zoom, 0.0);
             break;
         case MOUSE_TRANSLATING2:
             glaCameraRotatef(cameramat, dx, 0.0, 1.0, 0.0);
@@ -198,15 +193,11 @@ void GLGraphWidget::mouseMoveEvent(QMouseEvent *event) {
 
 void GLGraphWidget::keyPressEvent(QKeyEvent *event) {
     switch (event->key()) {
-    case Qt::Key_H:
-        helping = !helping;
-        this->repaint();
-        break;
     case Qt::Key_G:
         myScene->repopulate();
         break;
     case Qt::Key_Escape:
-        helping = false;
+        //helping = false;
         this->repaint();
         break;
     case Qt::Key_Equal:
@@ -283,6 +274,9 @@ void GLGraphWidget::initializeGL() {
 void GLGraphWidget::paintGL() {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+    // Reinit the projection for drawing the graph
+    this->initProjection();
+
     // Set up the camera
     glLoadMatrixf(cameramat);
 
@@ -301,8 +295,6 @@ void GLGraphWidget::resizeGL(int w, int h) {
 
     // Save the viewport, e.g. for mouse interaction
     glGetIntegerv(GL_VIEWPORT, viewmat);
-
-    this->initProjection();
 }
 
 
@@ -361,11 +353,12 @@ void GLGraphWidget::initProjection() {
     // Zooming
     glScalef(zoom, zoom, 1.0/zoom);
 
-    // Flat projection
-    gluOrtho2D((GLfloat)width() / -2, (GLfloat)width() / 2, (GLfloat)height() / 2, (GLfloat)height() / -2);
-
-    // Persective projection
-    //gluPerspective(90, (GLfloat)width()/(GLfloat)height(), 0.0001, 100000.0);
+    if (mode3d)
+        // Persective projection
+        gluPerspective(90, (GLfloat)width()/(GLfloat)height(), 0.0001, 100000.0);
+    else
+        // Flat projection
+        gluOrtho2D((GLfloat)width() / -2, (GLfloat)width() / 2, (GLfloat)height() / 2, (GLfloat)height() / -2);
 
     // Save the projection matrix for later use, e.g. mouse interaction
     glGetFloatv(GL_PROJECTION_MATRIX, projmat);
