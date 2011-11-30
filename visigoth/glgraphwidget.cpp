@@ -105,8 +105,16 @@ void GLGraphWidget::mousePressEvent(QMouseEvent *event) {
     if (event->button() == Qt::LeftButton) {
         switch (event->modifiers()) {
             case 0:  // When no modifiers are pressed
-                mouseMode = MOUSE_TRANSLATING;
+            {
+                Node *hitNode = selectGL(event->x(), event->y());
+                if (hitNode) {
+                    draggedNode = hitNode;
+                    mouseMode = MOUSE_DRAGGING;
+                } else {
+                    mouseMode = MOUSE_TRANSLATING;
+                }
                 break;
+            }
             case Qt::ShiftModifier:
                 mouseMode = MOUSE_ROTATING;
                 break;
@@ -117,13 +125,6 @@ void GLGraphWidget::mousePressEvent(QMouseEvent *event) {
             case Qt::ControlModifier:
                 mouseMode = MOUSE_TRANSLATING2;
                 break;
-        }
-    } else if (event->button() == Qt::RightButton) {
-        Node *hitNode = selectGL(event->x(), event->y());
-
-        if (hitNode) {
-            draggedNode = hitNode;
-            mouseMode = MOUSE_DRAGGING;
         }
     }
 
@@ -167,6 +168,23 @@ void GLGraphWidget::mouseMoveEvent(QMouseEvent *event) {
         case MOUSE_ROTATING:
             glaCameraRotatef(cameramat, dx, 0.0, 1.0, 0.0);
             glaCameraRotatef(cameramat, dy, 1.0, 0.0, 0.0);
+            break;
+        case MOUSE_DRAGGING:
+            GLdouble newX, newY, newZ;
+            GLdouble model[16], proj[16];
+
+            glPushMatrix();
+              glLoadMatrixf(cameramat);
+              glGetDoublev(GL_MODELVIEW_MATRIX, model);
+              glLoadMatrixf(projmat);
+              glGetDoublev(GL_PROJECTION_MATRIX, proj);
+            glPopMatrix();
+
+            gluUnProject((GLdouble)mouseX, (GLdouble)(viewmat[3] - mouseY), 0.0,
+                        model, proj, viewmat,
+                        &newX, &newY, &newZ);
+
+            draggedNode->setPos(VPointF(newX, newY, 0.0));
             break;
         default:
             break;
@@ -278,6 +296,9 @@ void GLGraphWidget::resizeGL(int w, int h) {
     // Set up the Viewport transformation
     glViewport(0, 0, (GLsizei) w, (GLsizei) h);
 
+    // Save the viewport, e.g. for mouse interaction
+    glGetIntegerv(GL_VIEWPORT, viewmat);
+
     this->initProjection();
 }
 
@@ -310,23 +331,6 @@ inline void GLGraphWidget::drawNode(Node *node) {
 }
 
 void GLGraphWidget::drawGraphGL() {
-    // If there is a dragged node, draw it where the mouse is.
-    // FIXME: This needs to be moved into the mouse handler.
-    if (mouseMode == MOUSE_DRAGGING) {
-        GLdouble model[16], proj[16];
-        GLint view[4];
-        GLdouble newX, newY, newZ;
-
-        glGetDoublev(GL_MODELVIEW_MATRIX, model);
-        glGetDoublev(GL_PROJECTION_MATRIX, proj);
-        glGetIntegerv(GL_VIEWPORT, view);
-        gluUnProject((GLdouble)mouseX, (GLdouble)(view[3] - mouseY), 0.0,
-                    model, proj, view,
-                    &newX, &newY, &newZ);
-
-        draggedNode->setPos(VPointF(newX, newY, 0.0));
-    }
-
     // Draw edges
     foreach (Edge* edge, myScene->edges()) {
         const QColor c = edge->colour();
@@ -360,6 +364,9 @@ void GLGraphWidget::initProjection() {
     // Persective projection
     //gluPerspective(90, (GLfloat)width()/(GLfloat)height(), 0.0001, 100000.0);
 
+    // Save the projection matrix for later use, e.g. mouse interaction
+    glGetFloatv(GL_PROJECTION_MATRIX, projmat);
+
     // Switch to Model/view transformation for drawing objects
     glMatrixMode(GL_MODELVIEW);
 }
@@ -370,22 +377,18 @@ Node* GLGraphWidget::selectGL(int x, int y)
 
     GLuint namebuf[64] = {0};
     GLint hits;
-    GLint view[4];
-    GLfloat projmat[16];
 
 
     // Account for inverse Y coordinate
-    glGetIntegerv(GL_VIEWPORT, view);
-    y = view[3] - y;
+    y = viewmat[3] - y;
 
     glSelectBuffer(64, namebuf);
 
     // Restrict projection matrix to selection area
-    glGetFloatv(GL_PROJECTION_MATRIX, projmat);
     glMatrixMode(GL_PROJECTION);
     glPushMatrix();
         glLoadIdentity();
-        gluPickMatrix(x, y, 1.0, 1.0, view);
+        gluPickMatrix(x, y, 1.0, 1.0, viewmat);
         glMultMatrixf(projmat);
 
         // Redraw points to fill selection buffer

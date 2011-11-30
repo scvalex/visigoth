@@ -62,6 +62,8 @@ private:
 
     GraphScene *myScene;
     GLfloat cameramat[16];
+    GLfloat projmat[16];
+    GLint viewmat[4];
     GLfloat zoom;
     int mouseX, mouseY;
     enum MOUSE_MODES mouseMode;
