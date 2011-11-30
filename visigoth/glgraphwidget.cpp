@@ -118,8 +118,7 @@ void GLGraphWidget::mousePressEvent(QMouseEvent *event) {
             case Qt::ShiftModifier:
                 mouseMode = MOUSE_ROTATING;
                 break;
-            // FIXME: Use Shift + Ctrl instead
-            case Qt::AltModifier:
+            case ((int)Qt::ShiftModifier | (int)Qt::ControlModifier):
                 mouseMode = MOUSE_TRANSLATING;
                 break;
             case Qt::ControlModifier:
