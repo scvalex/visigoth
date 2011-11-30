@@ -109,6 +109,7 @@ void GLGraphWidget::mousePressEvent(QMouseEvent *event) {
                 Node *hitNode = selectGL(event->x(), event->y());
                 if (hitNode) {
                     draggedNode = hitNode;
+                    draggedNode->setAllowAdvance(false);
                     mouseMode = MOUSE_DRAGGING;
                 } else {
                     mouseMode = MOUSE_TRANSLATING;
@@ -133,6 +134,9 @@ void GLGraphWidget::mousePressEvent(QMouseEvent *event) {
 
 void GLGraphWidget::mouseReleaseEvent(QMouseEvent *event) {
     (void) event;
+
+    if (mouseMode == MOUSE_DRAGGING && draggedNode)
+      draggedNode->setAllowAdvance(true);
 
     mouseMode = MOUSE_IDLE;
 }

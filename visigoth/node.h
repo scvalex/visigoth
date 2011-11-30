@@ -33,6 +33,7 @@ public:
     VPointF calculatePosition(QuadTree::TreeNode& treeNode);
 
     bool advance();
+    void setAllowAdvance(bool allow);
 
     QList<Edge*>& edges();
     QVector<Node*> neighbours() const;
@@ -59,13 +60,16 @@ protected:
 private:
     static int ALL_NODES;
 
-    QColor myColour;
-    QList<Edge*> edgeList;
-    GraphScene *graph;
     int myTag;
+
+    GraphScene *graph;
+    QList<Edge*> edgeList;
+
+    QColor myColour;
 
     VPointF curPos;
     VPointF newPos;
+    bool allowAdvance;
 
     // vars for average length
     bool visited;

@@ -10,10 +10,11 @@ int Node::ALL_NODES(0);
 
 Node::Node(GraphScene *graph) :
     QObject(graph),
-    myColour(QColor::fromRgbF(0.0, 1.0, 0.3, 0.7)),
     graph(graph),
+    myColour(QColor::fromRgbF(0.0, 1.0, 0.3, 0.7)),
     curPos(0.0),
     newPos(0.0),
+    allowAdvance(true),
     visited(false),
     distance(0)
 {
@@ -93,12 +94,19 @@ VPointF Node::calculateNonEdgeForces(QuadTree::TreeNode* treeNode) {
 
 
 bool Node::advance() {
+    if (!allowAdvance)
+        return false;
+
     if (newPos == pos())
         return false;
 
     setPos(newPos, true);
 
     return true;
+}
+
+void Node::setAllowAdvance(bool allow) {
+    this->allowAdvance = allow;
 }
 
 QList<Edge*>& Node::edges() {
