@@ -20,6 +20,8 @@ public:
 
     void setScene(GraphScene *newScene);
 
+    void set3DMode(bool enabled);
+
     enum MOUSE_MODES {
         MOUSE_IDLE,
         MOUSE_ROTATING,

@@ -26,7 +26,7 @@ GLGraphWidget::GLGraphWidget(QWidget *parent) :
     myScene(0),
     zoom(1.0),
     mouseMode(MOUSE_IDLE),
-    mode3d(true),
+    mode3d(false),
     animTimerId(0)
 {
     setFocusPolicy(Qt::StrongFocus);
@@ -40,6 +40,15 @@ void GLGraphWidget::setScene(GraphScene *newScene) {
     connect(myScene, SIGNAL(algorithmChanged(Algorithm*)), this, SIGNAL(algorithmChanged(Algorithm*)));
     connect(myScene, SIGNAL(nodeMoved()), this, SLOT(onNodeMoved()));
     setAnimation(true);
+    myScene->set3DMode(mode3d);
+}
+
+void GLGraphWidget::set3DMode(bool enabled) {
+    mode3d = enabled;
+
+    zoom = 1.0;
+
+    myScene->set3DMode(mode3d);
 }
 
 GLGraphWidget::~GLGraphWidget() {
@@ -310,19 +319,6 @@ inline void GLGraphWidget::drawNode(Node *node) {
     float radius = (log(node->edges().size()) / log(2)) + 1.0;
     VPointF p = node->pos();
 
-    // FIXME: Draw spheres instead of flat circles.
-    /*
-    glBegin(GL_TRIANGLE_FAN);
-        int step = 30;
-        for (int angle(0); angle < 360; angle += step) {
-            GLfloat rangle = (GLfloat) angle * (3.1415926 / 180.0);
-            glVertex3f((GLfloat)p.x + sin(rangle) * radius,
-                       (GLfloat)p.y + cos(rangle) * radius,
-                       (GLfloat)p.z + cos(rangle) * radius);
-        }
-    glEnd();
-    */
-
     glPushMatrix();
         glTranslatef(p.x, p.y, p.z);
         glaDrawSphere(radius, 10, 10);
@@ -362,7 +358,9 @@ void GLGraphWidget::initProjection() {
         gluPerspective(90, (GLfloat)width()/(GLfloat)height(), 0.0001, 100000.0);
     else
         // Flat projection
-        gluOrtho2D((GLfloat)width() / -2, (GLfloat)width() / 2, (GLfloat)height() / 2, (GLfloat)height() / -2);
+        glOrtho((GLfloat)width() / -2, (GLfloat)width() / 2,
+                (GLfloat)height() / 2, (GLfloat)height() / -2,
+                -100, 100);
 
     // Save the projection matrix for later use, e.g. mouse interaction
     glGetFloatv(GL_PROJECTION_MATRIX, projmat);
@@ -423,3 +421,4 @@ Node* GLGraphWidget::selectGL(int x, int y)
 
   return hitNode;
 }
+

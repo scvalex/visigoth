@@ -123,7 +123,7 @@ void glaDrawExample(void)
 void glaDrawSphere(GLfloat r, int lats, int longs) {
     int i, j;
 
-    for(i = 0; i <= lats; i++) {
+    for (i = 0; i <= lats; i++) {
         GLfloat lat0 = M_PI * (-0.5 + (GLfloat) (i - 1) / lats);
         GLfloat z0  = sin(lat0);
         GLfloat zr0 =  cos(lat0);
