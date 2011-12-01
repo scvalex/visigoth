@@ -23,8 +23,9 @@ public:
     enum MOUSE_MODES {
         MOUSE_IDLE,
         MOUSE_ROTATING,
-        MOUSE_TRANSLATING,
-        MOUSE_TRANSLATING2,
+        MOUSE_TRANSLATING_2D,
+        MOUSE_TRANSLATING_XY,
+        MOUSE_TRANSLATING_Z,
         MOUSE_DRAGGING
     };
 
