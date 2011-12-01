@@ -103,28 +103,18 @@ Node* GraphScene::newNode() {
 }
 
 // Pre: Will remove nodes staring from last node in list
-void GraphScene::removeNode(Node *n){
-
-    removeItem(n);
+void GraphScene::removeNode(Node *n) {
     myNodes.remove(n->tag());
-    Node::setAllNodes(Node::getAllNodes() - 1);
 }
 
 // CutoffTag is for destNodes only!
-void GraphScene::removeEdges(int cutoffTag){
-
-
-    for(int i(0); i < myEdges.size(); ++i){
-        if(myEdges[i]->destNode()->tag() >= cutoffTag){
-
-            removeItem(myEdges[i]);
+void GraphScene::removeEdges(int cutoffTag) {
+    for (int i(0); i < myEdges.size(); ++i) {
+        if (myEdges[i]->destNode()->tag() >= cutoffTag) {
             myEdges.removeAt(i);
             // just to make sure nothing is skipped
             --i;
         }
-
-
-
     }
 }
 
@@ -179,30 +169,25 @@ void GraphScene::repopulate() {
     algo->reset();
     int counter = 0;
     if(algo->getSWNFlag()){
-        if(!stats)
+        if(!stats) {
             stats = new Statistics(this);
+        }
         // Cutoff value exsists because for low max degree
         // generating a reasonable exponent is not possible
         double exponent = stats->powerLawExponent();
         while((exponent > 4.0 ||
               exponent < 2.1 ) &&
-              (counter < 200)){
+              (counter < 200))
+        {
             reset();
             algo->reset();
             exponent = stats->powerLawExponent();
             ++counter;
-
         }
-
-        // if counter = 500 issue message
-        // "failed to generate small world network exponent"
-        // or smthing like that
-
     }
     randomizePlacement();
 
     emit repopulated();
-
 }
 
 Algorithm* GraphScene::algorithm() const {
@@ -220,11 +205,7 @@ void GraphScene::randomizePlacement() {
 
 void GraphScene::addVertex() {
     algo->addVertex();
-
-    //calculateMetrics();
-
     emit repopulated();
-
 }
 
 // Pre: degree is valid
@@ -319,8 +300,3 @@ VCubeF GraphScene::graphCube() {
 
     return VCubeF(p1, p2);
 }
-
-void GraphScene::setAllNodes(int i){
-    Node::setAllNodes(i);
-}
-

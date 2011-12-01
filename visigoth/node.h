@@ -47,8 +47,6 @@ public:
 
     QColor& colour();
     void setColour(const QColor &b);
-    static void setAllNodes(int i);
-    static int getAllNodes();
 
     static void reset();
 

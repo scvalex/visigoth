@@ -128,15 +128,6 @@ void Node::reset() {
     ALL_NODES = 0;
 }
 
-// needed for bipartite since we have to delete the Vs
-void Node::setAllNodes(int i){
-    ALL_NODES = i;
-}
-
-int Node::getAllNodes(){
-    return ALL_NODES;
-}
-
 int Node::size() const {
     return 1;
 }

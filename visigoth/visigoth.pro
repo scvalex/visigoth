@@ -2,7 +2,7 @@ QT += core gui opengl xml network
 
 RESOURCES = resources.qrc \
 
-#CONFIG += oauth
+CONFIG += oauth
 oauth {
     CONFIG += link_pkgconfig
     PKGCONFIG += qoauth

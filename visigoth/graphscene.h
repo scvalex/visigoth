@@ -14,7 +14,6 @@ class Node;
 class Algorithm;
 class Statistics;
 
-
 class GraphScene : public QObject
 {
     Q_OBJECT
@@ -48,9 +47,7 @@ public:
     void setAllNodes(int i);
     void removeEdges(int cutoffTag);
 
-
     Statistics* getStatistics();
-
 
 signals:
     void nodeMoved();

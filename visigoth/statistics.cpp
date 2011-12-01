@@ -135,32 +135,29 @@ int Statistics::intersectionCount(QVector<Node*> vec1, QVector<Node*> vec2) {
        longerVec = &vec2;
     }
 
-    if(shortLength == 0){
+    if (shortLength == 0) {
         return 0;
     }
 
     for (int i(0); i < length; ++i) {
+        Node *longPointer;
+        Node *shortPointer;
 
-        Node* longPointer;
-        Node* shortPointer;
-
-        if( i < shortLength ){
-
+        if (i < shortLength) {
             shortPointer = shorterVec->at(i);
-            mapShort.insert(shortPointer->tag(),true);
+            mapShort.insert(shortPointer->tag(), true);
 
         }
 
         longPointer= longerVec->at(i);
 
-        mapLong.insert(longPointer->tag(),true);
+        mapLong.insert(longPointer->tag(), true);
 
         // if it contains its true
         if (mapShort.contains(longPointer->tag())) {
             retVec << longPointer;
             //don'thave to clear maps because tags are unique
         }
-
     }
 
     return retVec.size();
@@ -171,23 +168,17 @@ double Statistics::powerLawExponent() {
     //Made a list here incase we want to plot the data in a widget.
     QList<QPointF> plot;
 
-
     int maxDegree = graph->maxDegree();
 
-    for(double i(0); i < maxDegree ; ++i){
-
-
+    for (double i(0); i < maxDegree; ++i) {
         double count = graph->nodeCount(i);
-        double y =  count/(double) graph->nodes().size();
+        double y = count / (double)graph->nodes().size();
 
-
-        if( y != 0 )
-        {
+        if (y != 0) {
             // incase we want to plot
             QPointF p(qLn(i+1), qLn(y));
             plot << p;
         }
-
     }
 
     double deltaY = 0.0;
@@ -195,23 +186,19 @@ double Statistics::powerLawExponent() {
     double yPref;
     int c = 0;
 
-    foreach(QPointF p, plot) {
+    foreach (QPointF p, plot) {
         // init calculation
-        if(c == 0){
+        if (c == 0) {
            //yPrev = p.getY();
             yPref = p.ry();
            deltaX = p.rx();
            ++c;
-        }
-
-        else{
+        } else {
             deltaY += p.ry() - yPref;
             yPref = p.ry();
             deltaX = p.rx() - deltaX;
             ++c;
         }
-
-
     }
 
     return (-1) * (deltaY / deltaX);
