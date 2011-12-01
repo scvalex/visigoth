@@ -151,6 +151,7 @@ void MainWindow::onFocusedNodeChanged(Node *node) {
     statsUi->coeffLabel->setText(QString::number(stats->clusteringCoeff(focusedNode)));
 }
 
+// Testing //
 
 Ui::MainWindow* MainWindow::getUi(){
     return ui;

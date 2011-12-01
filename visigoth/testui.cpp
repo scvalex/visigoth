@@ -84,6 +84,7 @@ private slots:
     void testLengthLabel(){
 
         scene->repopulate();
+        scene->addVertex();
         Q_ASSERT(QString::number(scene->getStatistics()->lengthAvg()) == main->getStatsUi()->lengthLabel);
 
     }
@@ -91,6 +92,7 @@ private slots:
     void testExponentLabel(){
 
         scene->repopulate();
+        scene->addVertex();
         Q_ASSERT(QString::number(scene->getStatistics()->powerLawExponent()) == main->getStatsUi()->exponentLabel);
 
     }
@@ -98,6 +100,7 @@ private slots:
     void testClusterLabel(){
 
         scene->repopulate();
+        scene->addVertex();
         Q_ASSERT(QString::number(scene->getStatistics()->clusteringDegree()) == main->getStatsUi()->clusteringLabel);
 
 
@@ -106,7 +109,21 @@ private slots:
     void testDegreeLabel(){
 
         scene->repopulate();
+        scene->addVertex();
         Q_ASSERT(QString::number(scene->getStatistics()->degreeAvg()) == main->getStatsUi()->degreeLabel);
+
+    }
+
+    void testBarabasiSize(){
+
+        int size = 40;
+
+
+
+
+    }
+
+    void testBarabasiDegree(){
 
     }
 
