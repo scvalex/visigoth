@@ -107,18 +107,20 @@ void GLGraphWidget::mousePressEvent(QMouseEvent *event) {
                     draggedNode->setAllowAdvance(false);
                     mouseMode = MOUSE_DRAGGING;
                 } else {
-                    mouseMode = MOUSE_TRANSLATING;
+                    if (mode3d)
+                        mouseMode = MOUSE_TRANSLATING_XY;
+                    else
+                        mouseMode = MOUSE_TRANSLATING_2D;
                 }
                 break;
             }
             case Qt::ShiftModifier:
-                mouseMode = MOUSE_ROTATING;
-                break;
-            case ((int)Qt::ShiftModifier | (int)Qt::ControlModifier):
-                mouseMode = MOUSE_TRANSLATING;
+                if (mode3d)
+                    mouseMode = MOUSE_ROTATING;
                 break;
             case Qt::ControlModifier:
-                mouseMode = MOUSE_TRANSLATING2;
+                if (mode3d)
+                    mouseMode = MOUSE_TRANSLATING_Z;
                 break;
         }
     }
@@ -153,13 +155,13 @@ void GLGraphWidget::mouseMoveEvent(QMouseEvent *event) {
     mouseY = event->y();
 
     switch(mouseMode) {
-        case MOUSE_TRANSLATING:
-            if (mode3d)
-                glaCameraTranslatef(cameramat, (3.0) * dx, (-3.0) * dy, 0.0);
-            else
-                glaCameraTranslatef(cameramat, (GLfloat)dx/zoom, (GLfloat)dy/zoom, 0.0);
+        case MOUSE_TRANSLATING_2D:
+            glaCameraTranslatef(cameramat, (GLfloat)dx/zoom, (GLfloat)dy/zoom, 0.0);
             break;
-        case MOUSE_TRANSLATING2:
+        case MOUSE_TRANSLATING_XY:
+            glaCameraTranslatef(cameramat, (3.0) * dx, (-3.0) * dy, 0.0);
+            break;
+        case MOUSE_TRANSLATING_Z:
             glaCameraRotatef(cameramat, dx, 0.0, 1.0, 0.0);
             glaCameraTranslatef(cameramat, 0.0, 0.0, (-3.0) * dy);
             break;
