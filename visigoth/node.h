@@ -31,6 +31,7 @@ public:
 
     /* Return the new position. */
     VPointF calculatePosition(QuadTree::TreeNode& treeNode);
+    VPointF calculatePosition3D(QVector<Node*>& nodes);
 
     bool advance();
     void setAllowAdvance(bool allow);

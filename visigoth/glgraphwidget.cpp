@@ -26,7 +26,7 @@ GLGraphWidget::GLGraphWidget(QWidget *parent) :
     myScene(0),
     zoom(1.0),
     mouseMode(MOUSE_IDLE),
-    mode3d(false),
+    mode3d(true),
     animTimerId(0)
 {
     setFocusPolicy(Qt::StrongFocus);
@@ -319,8 +319,8 @@ inline void GLGraphWidget::drawNode(Node *node) {
             GLfloat rangle = (GLfloat) angle * (3.1415926 / 180.0);
             glVertex3f((GLfloat)p.x + sin(rangle) * radius,
                        (GLfloat)p.y + cos(rangle) * radius,
-                       //(GLfloat)p.z + cos(rangle) * radius);
-                       0.0);
+                       (GLfloat)p.z + cos(rangle) * radius);
+                       //0.0);
         }
     glEnd();
 }

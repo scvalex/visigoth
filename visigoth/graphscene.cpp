@@ -163,8 +163,8 @@ void GraphScene::randomizePlacement() {
     foreach (Node *node, nodes()) {
         node->setPos(VPointF((qrand() % 1000) - 500,
                               (qrand() % 600) - 300,
-                              //(qrand() % 600) - 300));
-                              0.0));
+                              (qrand() % 600) - 300));
+                              //0.0));
     }
 }
 
@@ -192,10 +192,12 @@ void GraphScene::updateDegreeCount(Node *node) {
 }
 
 bool GraphScene::calculateForces() {
+    /*
     QuadTree quadTree(graphCube().longestEdge());
     foreach (Node* node, nodes()) {
         quadTree.addNode(node);
     }
+    */
 
     // Don't move the first node
     bool first = true;
@@ -205,7 +207,8 @@ bool GraphScene::calculateForces() {
             continue;
         }
 
-        node->calculatePosition(quadTree.root());
+        // node->calculatePosition(quadTree.root());
+        node->calculatePosition3D(nodes());
     }
 
     bool somethingMoved = false;
