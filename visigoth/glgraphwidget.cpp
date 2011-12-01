@@ -65,10 +65,6 @@ void GLGraphWidget::onNodeMoved() {
 
 void GLGraphWidget::scaleView(qreal scaleFactor) {
     zoom *= scaleFactor;
-
-    // Clamped zoom to keep the graph from disappearing in 3D rendering nirvana
-    if (mode3d && (zoom < 1.0))
-        zoom = 1.0;
 }
 
 void GLGraphWidget::fitToScreen() {
@@ -352,8 +348,9 @@ void GLGraphWidget::initProjection() {
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
 
-    // Zooming
-    glScalef(zoom, zoom, 1.0/zoom);
+    // Zooming, only in 2D
+    if (!mode3d)
+        glScalef(zoom, zoom, 1.0/zoom);
 
     if (mode3d)
         // Persective projection
