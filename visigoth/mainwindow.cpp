@@ -40,7 +40,7 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->helpAct, SIGNAL(toggled(bool)), this, SLOT(toggleHelp(bool)));
 
     view = new GLGraphWidget(this);
-    scene = new GraphScene();
+    scene = new GraphScene(this);
     view->setScene(scene);
 
     statsUi->setupUi(ui->statsWidget);
@@ -50,6 +50,9 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->newNodeAct, SIGNAL(triggered()), scene, SLOT(addVertex()));
     connect(ui->randomizeAct, SIGNAL(triggered()), scene, SLOT(randomizePlacement()));
     connect(ui->generateAct, SIGNAL(triggered()), scene, SLOT(repopulate()));
+    connect(ui->edgeColorAct, SIGNAL(triggered()), scene, SLOT(customizeEdgesColor()));
+    connect(ui->nodeColorAct, SIGNAL(triggered()), scene, SLOT(customizeNodesColor()));
+
     connect(scene, SIGNAL(repopulated()), this, SLOT(onGenerate()));
     connect(view, SIGNAL(algorithmChanged(Algorithm*)), this, SLOT(onAlgorithmChanged(Algorithm*)));
     connect(view, SIGNAL(hoveringOnNode(Node*)), this, SLOT(onFocusedNodeChanged(Node*)));

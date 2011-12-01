@@ -18,6 +18,7 @@ public:
     Node* destNode() const;
 
     QColor& colour();
+    void setColour(const QColor &c);
 
 protected:
     explicit Edge(Node *sourceNode, Node *destNode);

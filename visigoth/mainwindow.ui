@@ -23,7 +23,7 @@
      <x>0</x>
      <y>0</y>
      <width>400</width>
-     <height>21</height>
+     <height>22</height>
     </rect>
    </property>
    <widget class="QMenu" name="menu_File">
@@ -40,8 +40,22 @@
     </property>
     <addaction name="helpAct"/>
    </widget>
+   <widget class="QMenu" name="menuView">
+    <property name="title">
+     <string>View</string>
+    </property>
+    <widget class="QMenu" name="menuCustomize_Graph">
+     <property name="title">
+      <string>Customize Graph</string>
+     </property>
+     <addaction name="nodeColorAct"/>
+     <addaction name="edgeColorAct"/>
+    </widget>
+    <addaction name="menuCustomize_Graph"/>
+   </widget>
    <addaction name="menu_File"/>
    <addaction name="menuHelp"/>
+   <addaction name="menuView"/>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
   <widget class="QToolBar" name="quickBar">
@@ -148,6 +162,16 @@
    </property>
    <property name="text">
     <string>Manual</string>
+   </property>
+  </action>
+  <action name="nodeColorAct">
+   <property name="text">
+    <string>Node Color</string>
+   </property>
+  </action>
+  <action name="edgeColorAct">
+   <property name="text">
+    <string>Edge Color</string>
    </property>
   </action>
  </widget>

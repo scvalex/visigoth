@@ -22,3 +22,7 @@ Node* Edge::destNode() const {
 QColor& Edge::colour() {
     return myColour;
 }
+
+void Edge::setColour(const QColor &c) {
+    myColour = c;
+}

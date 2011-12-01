@@ -8,14 +8,19 @@
 #include "erdosrenyi.h"
 #include "statistics.h"
 #include "barabasialbert.h"
+#include <QColorDialog>
+#include <QMainWindow>
 
 #ifdef HAS_OAUTH
 #include "twitter.h"
 #endif
 
-GraphScene::GraphScene() :
+GraphScene::GraphScene(QMainWindow *mainWindow) :
     algo(0),
-    degreeCount(1)
+    degreeCount(1),
+    mainWindow(mainWindow),
+    myEdgeColor(QColor::fromRgbF(0.0, 0.0, 1.0, 0.5)),
+    myNodeColor(QColor::fromRgbF(0.0, 1.0, 0.3, 0.7))
 {
     myAlgorithms["Preferential Attachament"] = PREFERENTIAL_ATTACHAMENT;
     myAlgorithms["Bipartite Model"] = BIPARTITE_MODEL;
@@ -71,6 +76,7 @@ bool GraphScene::newEdge(Node *source, Node *dest) {
         return false;
     }
     Edge *edge = new Edge(source, dest);
+    edge->setColour(myEdgeColor);
     if (source->tag() >= hasEdge.size()) {
         hasEdge.resize(source->tag() + 1);
     }
@@ -90,6 +96,7 @@ bool GraphScene::newEdge(Node *source, Node *dest) {
 // used only by the algorithms
 Node* GraphScene::newNode() {
     Node *node = new Node(this);
+    node->setColour(myNodeColor);
 
     myNodes << node;
     node->setPos(VPointF((qrand() % 1000) - 500,
@@ -125,6 +132,30 @@ void GraphScene::chooseAlgorithm(const QString &name) {
     repopulate();
 
     emit algorithmChanged(algo);
+}
+
+QColor GraphScene::customizeColor() {
+    const QColor& initial = QColor::fromRgbF(0.0, 0.0, 1.0, 0.5);
+    const QString& title = "Select Colour";
+    QColor c = QColorDialog::getColor(initial,mainWindow,title,0);
+
+    return c;
+}
+
+void GraphScene::customizeEdgesColor() {
+    myEdgeColor = customizeColor();
+
+    foreach(Edge* edge, myEdges) {
+        edge->setColour(myEdgeColor);
+    }
+}
+
+void GraphScene::customizeNodesColor() {
+    myNodeColor = customizeColor();
+
+    foreach(Node* node, myNodes) {
+        node->setColour(myNodeColor);
+    }
 }
 
 void GraphScene::repopulate() {

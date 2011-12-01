@@ -6,6 +6,8 @@
 #include <QMap>
 #include <QSet>
 #include <QVector>
+#include <QColor>
+#include <QMainWindow>
 
 #include "vtools.h"
 
@@ -19,7 +21,7 @@ class GraphScene : public QObject
 {
     Q_OBJECT
 public:
-    explicit GraphScene();
+    explicit GraphScene(QMainWindow *mainWindow);
     ~GraphScene();
 
     QVector<Node*>& nodes();
@@ -55,6 +57,8 @@ public slots:
     void randomizePlacement();
     void repopulate();
     void chooseAlgorithm(const QString &name);
+    void customizeEdgesColor();
+    void customizeNodesColor();
 
 signals:
     void algorithmChanged(Algorithm *newAlgo);
@@ -62,6 +66,7 @@ signals:
 
 protected:
     void updateDegreeCount(Node *node);
+    QColor customizeColor();
 
 private:
     enum ALGOS {
@@ -79,6 +84,9 @@ private:
     QList<Edge*> myEdges;
     QVector<QList<Node*> > degreeCount;
     QMap<QString, int> myAlgorithms;
+    QMainWindow *mainWindow;
+    QColor myEdgeColor;
+    QColor myNodeColor;
 };
 
 #endif // GRAPHSCENE_H
