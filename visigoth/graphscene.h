@@ -14,7 +14,6 @@ class Node;
 class Algorithm;
 class Statistics;
 
-
 class GraphScene : public QObject
 {
     Q_OBJECT
@@ -44,6 +43,10 @@ public:
     QList<QString> algorithms() const;
 
     VCubeF graphCube();
+    void removeNode(Node *n);
+    void setAllNodes(int i);
+    void removeEdges(int cutoffTag);
+
     Statistics* getStatistics();
 
 signals:

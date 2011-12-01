@@ -194,10 +194,6 @@ void GLGraphWidget::keyPressEvent(QKeyEvent *event) {
     case Qt::Key_G:
         myScene->repopulate();
         break;
-    case Qt::Key_Escape:
-        //helping = false;
-        this->repaint();
-        break;
     case Qt::Key_Equal:
     case Qt::Key_Plus:
         scaleView(1.2);
@@ -218,16 +214,16 @@ void GLGraphWidget::keyPressEvent(QKeyEvent *event) {
     case Qt::Key_N:
         myScene->addVertex();
         break;
-    case Qt::Key_Left:
+    case Qt::Key_Right:
         glaCameraTranslatef(cameramat, (-20.0)/zoom, 0.0, 0.0);
         break;
-    case Qt::Key_Up:
+    case Qt::Key_Down:
         glaCameraTranslatef(cameramat, 0.0, (-20.0)/zoom, 0.0);
         break;
-    case Qt::Key_Right:
+    case Qt::Key_Left:
         glaCameraTranslatef(cameramat, 20.0/zoom, 0.0, 0.0);
         break;
-    case Qt::Key_Down:
+    case Qt::Key_Up:
         glaCameraTranslatef(cameramat, 0.0, 20.0/zoom, 0.0);
         break;
     default:

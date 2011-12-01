@@ -5,7 +5,7 @@
 #include <QWidget>
 
 Preferential::Preferential(GraphScene *graph) :
-    Algorithm(graph),
+    Algorithm(graph,true),
     graph(graph),
     ctlW(0),
     size(START_NODES),
@@ -31,8 +31,8 @@ void Preferential::addVertex() {
 }
 
 void Preferential::addVertex(bool saveSize) {
-
-    addVertex(nodeDegree, qrand() % 100);
+    // use qrand() or else we are not building a smw
+    addVertex((qrand() %nodeDegree) +1, qrand() % 100);
     if (saveSize) {
         ++size;
     }
@@ -130,7 +130,7 @@ void Preferential::updatePreference(const QVector<Node*> &nodes, int totalDegree
 
 // Return the preferred node, using binary search.
 Node* Preferential::getPreference(const QVector<Node*> &nodes, double genPref) {
-    const float E = 0.0001;
+    const float E = 0.01;
     int l;
     for (l = 1; l < nodes.size(); l <<= 1)
         ;
@@ -148,21 +148,50 @@ QVector<Node*> Preferential::getIntersection(QVector<Node*> vec1, QVector<Node*>
     QVector<Node*> retVec;
     QVector<Node*> *shorterVec;
     QVector<Node*> *longerVec;
+
+    // tags are unqiue, so no counter is needed
+    QMap<int,bool> mapShort;
+    QMap<int,bool> mapLong;
+
+
     int length;
+    int shortLength;
     if (vec1.size() > vec2.size()) {
         length = vec1.size();
+        shortLength = vec2.size();
         shorterVec = &vec2;
         longerVec = &vec1;
     } else {
        length = vec2.size();
+       shortLength = vec1.size();
        shorterVec = &vec1;
        longerVec = &vec2;
     }
 
+    if(shortLength == 0){
+        return retVec;
+    }
+
     for (int i(0); i < length; ++i) {
-        Node* tempPointer = longerVec->at(i);
-        if (shorterVec->contains(tempPointer)) {
-            retVec << tempPointer;
+
+        Node* longPointer;
+        Node* shortPointer;
+
+        if( i < shortLength ){
+
+            shortPointer = shorterVec->at(i);
+            mapShort.insert(shortPointer->tag(),true);
+
+        }
+
+        longPointer= longerVec->at(i);
+
+        mapLong.insert(longPointer->tag(),true);
+
+        // if it contains its true
+        if (mapShort.contains(longPointer->tag())) {
+            retVec << longPointer;
+            //don'thave to clear maps because tags are unique
         }
 
     }
@@ -173,7 +202,7 @@ QVector<Node*> Preferential::getIntersection(QVector<Node*> vec1, QVector<Node*>
 // Generate random double with 4 precision.
 double Preferential::genRandom(){
     double main = qrand() % 100;
-    return main + (( qrand() % 10000 ) / 10000 );
+    return main + (( qrand() % 100 ) / 100 );
 }
 
 void Preferential::onSizeChanged(int newSize) {

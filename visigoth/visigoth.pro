@@ -1,5 +1,7 @@
 QT += core gui opengl xml network
 
+RESOURCES = resources.qrc \
+
 CONFIG += oauth
 oauth {
     CONFIG += link_pkgconfig
@@ -63,3 +65,4 @@ oauth {
     FORMS += twitauthdialog.ui \
              twittercontrol.ui
 }
+
