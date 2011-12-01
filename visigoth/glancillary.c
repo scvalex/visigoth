@@ -18,8 +18,8 @@
 void glaInit(void)
 {
     glClearColor(0.0, 0.0, 0.0, 0.0);
-    //glShadeModel(GL_FLAT);
-    glShadeModel(GL_SMOOTH);
+    glShadeModel(GL_FLAT);
+    //glShadeModel(GL_SMOOTH);
 
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -33,7 +33,7 @@ void glaInit(void)
     // Lightining
     GLfloat sun_direction[] = { 0.0, 2.0, -1.0, 1.0 };
     GLfloat sun_intensity[] = { 0.7, 0.7, 0.7, 1.0 };
-    GLfloat ambient_intensity[] = { 0.3, 0.3, 0.3, 1.0 };
+    GLfloat ambient_intensity[] = { 0.4, 0.4, 0.4, 1.0 };
 
     //glEnable(GL_DEPTH_TEST);            // Draw only closest surfaces
 
@@ -47,9 +47,6 @@ void glaInit(void)
     glEnable(GL_COLOR_MATERIAL);        // Configure glColor().
     glColorMaterial(GL_FRONT, GL_AMBIENT_AND_DIFFUSE);
 }
-
-
-
 
 /****************************
  * GL camera simulation helpers
