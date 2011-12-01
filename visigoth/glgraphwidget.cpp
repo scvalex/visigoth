@@ -311,18 +311,22 @@ inline void GLGraphWidget::drawNode(Node *node) {
     VPointF p = node->pos();
 
     // FIXME: Draw spheres instead of flat circles.
+    /*
     glBegin(GL_TRIANGLE_FAN);
-    // glBegin(GL_LINE_LOOP);
-        // int step = 180 / (radius > 50 ? 50 : (int) radius);
         int step = 30;
         for (int angle(0); angle < 360; angle += step) {
             GLfloat rangle = (GLfloat) angle * (3.1415926 / 180.0);
             glVertex3f((GLfloat)p.x + sin(rangle) * radius,
                        (GLfloat)p.y + cos(rangle) * radius,
                        (GLfloat)p.z + cos(rangle) * radius);
-                       //0.0);
         }
     glEnd();
+    */
+
+    glPushMatrix();
+        glTranslatef(p.x, p.y, p.z);
+        glaDrawSphere(radius, 10, 10);
+    glPopMatrix();
 }
 
 void GLGraphWidget::drawGraphGL() {

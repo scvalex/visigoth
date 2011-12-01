@@ -7,6 +7,7 @@
 #endif
 
 #include "glancillary.h"
+#include "math.h"
 
 
 
@@ -17,8 +18,8 @@
 void glaInit(void)
 {
     glClearColor(0.0, 0.0, 0.0, 0.0);
-    glShadeModel(GL_FLAT);
-    //glShadeModel(GL_SMOOTH);
+    //glShadeModel(GL_FLAT);
+    glShadeModel(GL_SMOOTH);
 
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -28,6 +29,23 @@ void glaInit(void)
 
     // Reset MV matrix
     glLoadIdentity();
+
+    // Lightining
+    GLfloat sun_direction[] = { 0.0, 2.0, -1.0, 1.0 };
+    GLfloat sun_intensity[] = { 0.7, 0.7, 0.7, 1.0 };
+    GLfloat ambient_intensity[] = { 0.3, 0.3, 0.3, 1.0 };
+
+    //glEnable(GL_DEPTH_TEST);            // Draw only closest surfaces
+
+    glEnable(GL_LIGHTING);              // Set up ambient light.
+    glLightModelfv(GL_LIGHT_MODEL_AMBIENT, ambient_intensity);
+
+    glEnable(GL_LIGHT0);                // Set up sunlight.
+    glLightfv(GL_LIGHT0, GL_POSITION, sun_direction);
+    glLightfv(GL_LIGHT0, GL_DIFFUSE, sun_intensity);
+
+    glEnable(GL_COLOR_MATERIAL);        // Configure glColor().
+    glColorMaterial(GL_FRONT, GL_AMBIENT_AND_DIFFUSE);
 }
 
 
@@ -99,4 +117,32 @@ void glaDrawExample(void)
         glVertex3f(-1.0, 1.0, 1.0);
         glVertex3f(-1.0, 1.0, -1.0);
     glEnd();
+}
+
+
+void glaDrawSphere(GLfloat r, int lats, int longs) {
+    int i, j;
+
+    for(i = 0; i <= lats; i++) {
+        GLfloat lat0 = M_PI * (-0.5 + (GLfloat) (i - 1) / lats);
+        GLfloat z0  = sin(lat0);
+        GLfloat zr0 =  cos(lat0);
+
+        GLfloat lat1 = M_PI * (-0.5 + (GLfloat) i / lats);
+        GLfloat z1 = sin(lat1);
+        GLfloat zr1 = cos(lat1);
+
+        glBegin(GL_QUAD_STRIP);
+            for(j = 0; j <= longs; j++) {
+                GLfloat lng = 2 * M_PI * (GLfloat) (j - 1) / longs;
+                GLfloat x = cos(lng);
+                GLfloat y = sin(lng);
+
+                glNormal3f(x * zr0, y * zr0, z0);
+                glVertex3f(x * zr0 * r, y * zr0 * r, z0 * r);
+                glNormal3f(x * zr1, y * zr1, z1);
+                glVertex3f(x * zr1 * r, y * zr1 * r, z1 * r);
+            }
+        glEnd();
+    }
 }
