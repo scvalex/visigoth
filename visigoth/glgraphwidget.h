@@ -49,6 +49,7 @@ protected:
     void timerEvent(QTimerEvent *event);
 
     void initializeGL();
+    void initializeCamera();
     void paintGL();
     void resizeGL(int w, int h);
 

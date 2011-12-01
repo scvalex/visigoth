@@ -45,8 +45,8 @@ void GLGraphWidget::setScene(GraphScene *newScene) {
 
 void GLGraphWidget::set3DMode(bool enabled) {
     mode3d = enabled;
-
     zoom = 1.0;
+    initializeCamera();
 
     myScene->set3DMode(mode3d);
 }
@@ -269,13 +269,22 @@ void GLGraphWidget::timerEvent(QTimerEvent *) {
 void GLGraphWidget::initializeGL() {
     glaInit();
 
-    // Init camera matrix
     glMatrixMode(GL_MODELVIEW);
-    // Warning: Do not set the camera far away when using small
-    //     zNear, zFar values. Darkness awaits.
-    //gluLookAt(0.0, 0.0, 5.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0);
-    glGetFloatv(GL_MODELVIEW_MATRIX, cameramat);
     glLoadIdentity();
+
+    initializeCamera();
+}
+
+void GLGraphWidget::initializeCamera() {
+    glPushMatrix();
+        glLoadIdentity();
+        if (mode3d) {
+            // Warning: Do not set the camera far away when using small
+            //     zNear, zFar values. Darkness awaits.
+            gluLookAt(0.0, 0.0, 200.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0);
+        }
+        glGetFloatv(GL_MODELVIEW_MATRIX, cameramat);
+    glPopMatrix();
 }
 
 void GLGraphWidget::paintGL() {
