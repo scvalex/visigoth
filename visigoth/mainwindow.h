@@ -25,6 +25,15 @@ public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
 
+    //functions for testing
+    Ui::MainWindow* getUi();
+    Ui::Statistics* getStatsUi();
+    QDockWidget* getAlgoCtl();
+    QWidget* getHelpWidget();
+    QDockWidget* getHelpDock();
+    GraphScene* getScene();
+    GLGraphWidget* getGlWidget();
+
 public slots:
     void exportTo();
     void toggleHelp(bool enabled);

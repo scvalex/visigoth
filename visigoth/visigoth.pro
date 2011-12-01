@@ -25,7 +25,7 @@ SOURCES += main.cpp \
            barabasialbert.cpp \
            statistics.cpp \
            quadtree.cpp \
-           erdosrenyi.cpp
+           erdosrenyi.cpp \
 
 HEADERS += mainwindow.h \
            node.h \
@@ -56,6 +56,7 @@ test {
     QT += testlib
     SOURCES -= main.cpp
     SOURCES += testsimple.cpp
+    SOURCES += testui.cpp
 }
 
 oauth {
@@ -64,4 +65,9 @@ oauth {
     FORMS += twitauthdialog.ui \
              twittercontrol.ui
 }
+
+
+
+
+
 

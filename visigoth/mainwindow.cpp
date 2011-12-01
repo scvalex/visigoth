@@ -150,3 +150,36 @@ void MainWindow::onFocusedNodeChanged(Node *node) {
     Statistics *stats = scene->getStatistics();
     statsUi->coeffLabel->setText(QString::number(stats->clusteringCoeff(focusedNode)));
 }
+
+
+Ui::MainWindow* MainWindow::getUi(){
+    return ui;
+}
+
+Ui::Statistics* MainWindow::getStatsUi(){
+    return statsUi;
+}
+
+
+QDockWidget* MainWindow::getAlgoCtl(){
+    return algoCtl;
+}
+
+QWidget* MainWindow::getHelpWidget(){
+    return helpWidget;
+
+}
+
+QDockWidget* MainWindow::getHelpDock(){
+    return helpDock;
+
+}
+
+GraphScene* MainWindow::getScene(){
+    return scene;
+}
+
+GLGraphWidget* MainWindow::getGlWidget(){
+    return view;
+}
+

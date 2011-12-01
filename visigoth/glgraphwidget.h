@@ -28,6 +28,9 @@ public:
         MOUSE_DRAGGING
     };
 
+    //testing
+    bool const getIsPlaying();
+
 public slots:
     void itemMoved();
 

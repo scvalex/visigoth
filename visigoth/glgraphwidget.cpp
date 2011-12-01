@@ -404,3 +404,9 @@ Node* GLGraphWidget::selectGL(int x, int y)
 
   return hitNode;
 }
+
+/*
+bool GLGraphWidget::getIsPlaying() const {
+    return isPlaying;
+}
+*/

@@ -291,10 +291,6 @@ void GraphScene::calculateForces() {
     }
 }
 
-bool GraphScene::isRunning() const {
-    return running;
-}
-
 int GraphScene::maxDegree() const {
     return degreeCount.count();
 }
@@ -323,3 +319,6 @@ void GraphScene::setAllNodes(int i){
     Node::setAllNodes(i);
 }
 
+bool GraphScene::isRunning() const{
+    return running;
+}
