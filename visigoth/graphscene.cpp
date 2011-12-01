@@ -1,6 +1,7 @@
+#include "vtools.h"
 #include "edge.h"
 #include "graphscene.h"
-#include "abstractgraphwidget.h"
+#include "glgraphwidget.h"
 #include "node.h"
 #include "preferential.h"
 #include "bipartite.h"
@@ -14,8 +15,7 @@
 
 GraphScene::GraphScene() :
     algo(0),
-    degreeCount(1),
-    running(false)
+    degreeCount(1)
 {
     myAlgorithms["Preferential Attachament"] = PREFERENTIAL_ATTACHAMENT;
     myAlgorithms["Bipartite Model"] = BIPARTITE_MODEL;
@@ -39,10 +39,17 @@ Statistics* GraphScene::getStatistics() {
     return stats;
 }
 
+void GraphScene::onNodeMoved() {
+    emit nodeMoved();
+}
+
 void GraphScene::reset() {
-    clear();
+    //clear();
     hasEdge.clear();
     myEdges.clear();
+    foreach (Node *node, myNodes) {
+        disconnect(node, 0, 0, 0);
+    }
     myNodes.clear();
     degreeCount.clear();
     Node::reset();
@@ -72,7 +79,7 @@ bool GraphScene::newEdge(Node *source, Node *dest) {
     }
     hasEdge[source->tag()].insert(dest->tag());
     hasEdge[dest->tag()].insert(source->tag());
-    addItem(edge);
+
     myEdges << edge;
     updateDegreeCount(source);
     updateDegreeCount(dest);
@@ -83,9 +90,14 @@ bool GraphScene::newEdge(Node *source, Node *dest) {
 // used only by the algorithms
 Node* GraphScene::newNode() {
     Node *node = new Node(this);
-    addItem(node);
+
     myNodes << node;
-    node->setPos(10 + qrand() % 1000, 10 + qrand() % 600);
+    node->setPos(VPointF((qrand() % 1000) - 500,
+                         (qrand() % 600) - 300,
+                         //(qrand() % 600) - 300));
+                         0.0));
+    connect(node, SIGNAL(nodeMoved()), this, SLOT(onNodeMoved()));
+    onNodeMoved();
 
     return node;
 }
@@ -128,11 +140,6 @@ bool GraphScene::doesEdgeExist(Node *source, Node *dest) const {
                source->tag() == dest->tag();
     }
     return false;
-}
-
-void GraphScene::itemMoved() {
-    running = true;
-    emit itemMovedSignal();
 }
 
 void GraphScene::chooseAlgorithm(const QString &name) {
@@ -204,10 +211,10 @@ Algorithm* GraphScene::algorithm() const {
 
 void GraphScene::randomizePlacement() {
     foreach (Node *node, nodes()) {
-        node->setPos(10 + qrand() % 1000, 10 + qrand() % 600);
-    }
-    foreach (Edge *edge, edges()) {
-        edge->adjust();
+        node->setPos(VPointF((qrand() % 1000) - 500,
+                              (qrand() % 600) - 300,
+                              //(qrand() % 600) - 300));
+                              0.0));
     }
 }
 
@@ -238,22 +245,9 @@ void GraphScene::updateDegreeCount(Node *node) {
          degreeRemove(node);
 }
 
-/*
-void GraphScene::calculateMetrics() {
-    if(!stats)
-        stats = new Statistics(this);
-
-    stats->clusteringAvg();
-}
-*/
-
-
-void GraphScene::calculateForces() {
-    QPointF topLeft;
-    QPointF bottomRight;
-
-    QuadTree quadTree(sceneRect());
-    foreach (Node *node, nodes()) {
+bool GraphScene::calculateForces() {
+    QuadTree quadTree(graphCube().longestEdge());
+    foreach (Node* node, nodes()) {
         quadTree.addNode(node);
     }
 
@@ -265,34 +259,17 @@ void GraphScene::calculateForces() {
             continue;
         }
 
-        QPointF pos = node->calculatePosition(quadTree.root());
-
-        if (pos.x() < topLeft.x())
-            topLeft.setX(pos.x());
-        if (pos.y() < topLeft.y())
-            topLeft.setY(pos.y());
-        if (pos.x() > bottomRight.x())
-            bottomRight.setX(pos.x());
-        if (pos.y() > bottomRight.y())
-            bottomRight.setY(pos.y());
+        node->calculatePosition(quadTree.root());
     }
 
-    // Resize the scene to fit all the nodes
-    sceneRect().setLeft(topLeft.x() - 10);
-    sceneRect().setTop(topLeft.y() - 10);
-    sceneRect().setRight(bottomRight.x() + 10);
-    sceneRect().setBottom(bottomRight.y() + 10);
-
-    running = false;
+    bool somethingMoved = false;
     foreach (Node *node, nodes()) {
         if (node->advance()) {
-            running = true;
+            somethingMoved = true;
         }
     }
-}
 
-bool GraphScene::isRunning() const {
-    return running;
+    return somethingMoved;
 }
 
 int GraphScene::maxDegree() const {
@@ -317,6 +294,30 @@ void GraphScene::degreeRemove(Node *node) {
             break;
         }
     }
+}
+
+VCubeF GraphScene::graphCube() {
+    VPointF p1 = VPointF(0.0);
+    VPointF p2 = VPointF(0.0);
+
+    foreach (Node *n, myNodes) {
+        if (n->pos().x < p1.x)
+            p1.x = n->pos().x;
+        if (n->pos().x > p2.x)
+            p2.x = n->pos().x;
+
+        if (n->pos().y < p1.y)
+            p1.y = n->pos().y;
+        if (n->pos().y > p2.y)
+            p2.y = n->pos().y;
+
+        if (n->pos().z < p1.z)
+            p1.z = n->pos().z;
+        if (n->pos().z > p2.z)
+            p2.z = n->pos().z;
+    }
+
+    return VCubeF(p1, p2);
 }
 
 void GraphScene::setAllNodes(int i){

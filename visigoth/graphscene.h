@@ -1,19 +1,21 @@
 #ifndef GRAPHSCENE_H
 #define GRAPHSCENE_H
 
-#include <QGraphicsScene>
+#include <QObject>
 #include <QList>
 #include <QMap>
 #include <QSet>
 #include <QVector>
 
+#include "vtools.h"
+
 class Edge;
-class GraphWidget;
 class Node;
 class Algorithm;
 class Statistics;
 
-class GraphScene : public QGraphicsScene
+
+class GraphScene : public QObject
 {
     Q_OBJECT
 public:
@@ -34,17 +36,15 @@ public:
 
     Algorithm* algorithm() const;
 
-    void itemMoved();
-
     QList<Node*> getDegreeList(int degree) const;
 
-    void calculateForces();
-    bool isRunning() const;
+    bool calculateForces();
     void reset();
 
     QList<QString> algorithms() const;
 
-    void removeNode(Node * n);
+    VCubeF graphCube();
+    void removeNode(Node *n);
     void setAllNodes(int i);
     void removeEdges(int cutoffTag);
 
@@ -52,14 +52,17 @@ public:
     Statistics* getStatistics();
 
 
+signals:
+    void nodeMoved();
+
 public slots:
+    void onNodeMoved();
     void addVertex();
     void randomizePlacement();
     void repopulate();
     void chooseAlgorithm(const QString &name);
 
 signals:
-    void itemMovedSignal();
     void algorithmChanged(Algorithm *newAlgo);
     void repopulated();
 
@@ -81,7 +84,6 @@ private:
     QVector<Node*> myNodes;
     QList<Edge*> myEdges;
     QVector<QList<Node*> > degreeCount;
-    bool running;
     QMap<QString, int> myAlgorithms;
 };
 

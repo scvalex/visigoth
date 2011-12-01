@@ -42,7 +42,6 @@ MainWindow::MainWindow(QWidget *parent) :
 
     view = new GLGraphWidget(this);
     scene = new GraphScene();
-    connect(scene, SIGNAL(itemMovedSignal()), view, SLOT(itemMoved()));
     view->setScene(scene);
 
     statsUi->setupUi(ui->statsWidget);
