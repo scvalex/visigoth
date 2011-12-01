@@ -23,7 +23,7 @@
      <x>0</x>
      <y>0</y>
      <width>400</width>
-     <height>21</height>
+     <height>28</height>
     </rect>
    </property>
    <widget class="QMenu" name="menu_File">
@@ -60,6 +60,7 @@
    <addaction name="newNodeAct"/>
    <addaction name="randomizeAct"/>
    <addaction name="generateAct"/>
+   <addaction name="mode3DAct"/>
   </widget>
   <widget class="QDockWidget" name="chooserDock">
    <property name="windowTitle">
@@ -148,6 +149,17 @@
    </property>
    <property name="text">
     <string>Manual</string>
+   </property>
+  </action>
+  <action name="mode3DAct">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>3D View</string>
+   </property>
+   <property name="toolTip">
+    <string>Unleash the 3D</string>
    </property>
   </action>
  </widget>
