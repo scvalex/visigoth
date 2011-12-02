@@ -114,6 +114,22 @@ Node* GraphScene::newNode() {
     return node;
 }
 
+// Pre: Will remove nodes staring from last node in list
+void GraphScene::removeNode(Node *n) {
+    myNodes.remove(n->tag());
+}
+
+// CutoffTag is for destNodes only!
+void GraphScene::removeEdges(int cutoffTag) {
+    for (int i(0); i < myEdges.size(); ++i) {
+        if (myEdges[i]->destNode()->tag() >= cutoffTag) {
+            myEdges.removeAt(i);
+            // just to make sure nothing is skipped
+            --i;
+        }
+    }
+}
+
 bool GraphScene::doesEdgeExist(Node *source, Node *dest) const {
     int sourceTag = source->tag();
     int destTag = dest->tag();
@@ -163,7 +179,26 @@ void GraphScene::repopulate() {
         }
     }
     algo->reset();
+    int counter = 0;
+    if(algo->getSWNFlag()){
+        if(!stats) {
+            stats = new Statistics(this);
+        }
+        // Cutoff value exsists because for low max degree
+        // generating a reasonable exponent is not possible
+        double exponent = stats->powerLawExponent();
+        while((exponent > 4.0 ||
+              exponent < 2.1 ) &&
+              (counter < 200))
+        {
+            reset();
+            algo->reset();
+            exponent = stats->powerLawExponent();
+            ++counter;
+        }
+    }
     randomizePlacement();
+
     emit repopulated();
 }
 
@@ -243,7 +278,7 @@ int GraphScene::maxDegree() const {
 
 int GraphScene::nodeCount(int degree) const {
     /*
-    actually it is degree is one less than the degree we are looking for
+    actually degree is one less than the degree we are looking for
     But since this is only used by statistics.cpp it does not matter
     */
     return degreeCount[degree].size();

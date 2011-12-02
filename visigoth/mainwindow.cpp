@@ -20,6 +20,7 @@
 #include <QObject>
 #include <QAction>
 #include <QMessageBox>
+#include <QUrl>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -74,7 +75,7 @@ void MainWindow::toggleHelp(bool enabled) {
         helpWidget = new QWidget(this);
         Ui::helpWidget *helpWid = new Ui::helpWidget();
         helpWid->setupUi(helpWidget);
-        helpWid->text->setText("blah");
+        helpWid->text->setSource(QUrl::fromLocalFile(":/resource/helpFile.html"));
         helpWid->text->isReadOnly();
         helpWid->text->setFrameShape(QFrame::NoFrame);
         helpWid->text->viewport()->setAutoFillBackground(false);
@@ -138,7 +139,7 @@ void MainWindow::onGenerate() {
     statsUi->lengthLabel->setText(QString::number(stats->lengthAvg()));
     statsUi->degreeLabel->setText(QString::number(stats->degreeAvg()));
     statsUi->clusteringLabel->setText(QString::number(stats->clusteringAvg()));
-    statsUi->coeffLabel->setText("");
+    statsUi->exponentLabel->setText(QString::number(stats->powerLawExponent()));
 }
 
 void MainWindow::onFocusedNodeChanged(Node *node) {
