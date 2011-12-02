@@ -28,7 +28,8 @@ public:
     bool canAddVertex();
     void addVertex();
     QWidget* controlWidget(QWidget *parent = 0);
-    Ui::BipartiteControl* getUi();
+
+    Ui::BipartiteControl* const getUi();
 
     void init(int vSize, int uSize);
     void showBipartite();

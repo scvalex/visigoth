@@ -25,7 +25,7 @@ public:
     bool canAddVertex();
     void addVertex();
     QWidget* controlWidget(QWidget *parent = 0);
-    Ui::PreferentialControl* getUi();
+    Ui::PreferentialControl* const getUi();
 
 protected slots:
     void onSizeChanged(int newSize);

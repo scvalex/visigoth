@@ -214,6 +214,6 @@ void Preferential::onDegreeChanged(int newDegree) {
     graph->repopulate();
 }
 
-Ui::PreferentialControl* Preferential::getUi(){
+Ui::PreferentialControl* const Preferential::getUi(){
     return prefCtrl;
 }

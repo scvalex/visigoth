@@ -70,6 +70,10 @@ void ErdosRenyi::onProbabilityChanged(double newValue) {
     scene->repopulate();
 }
 
-Ui::ErdosControl* ErdosRenyi::getUi(){
+Ui::ErdosControl* const ErdosRenyi::getUi() {
     return erCtrl;
+}
+
+double ErdosRenyi::getProb() {
+    return probability;
 }

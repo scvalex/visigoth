@@ -134,9 +134,34 @@ private slots:
 
     void testBarabasiDegree(){
 
+        int size = 80;
+
+        scene->chooseAlgorithm("Barabasi Albert");
+        Algorithm* algo = scene->algorithm();
+        BarabasiAlbert* ba = dynamic_cast<BarabasiAlbert*>(algo);
+        Ui::BarabasiControl* baControl = ba->getUi();
+        // fake user input here
+        baControl->sizeEdit(size);
+        Q_ASSERT(scene->nodes().size() == size);
+
     }
 
-    void testBipartiteSize(){
+
+    void testBarabasiDegree(){
+
+        int degree = 5;
+
+        scene->chooseAlgorithm("Barabasi Albert");
+        Algorithm* algo = scene->algorithm();
+        BarabasiAlbert* ba = dynamic_cast<BarabasiAlbert*>(algo);
+        Ui::BarabasiControl* baControl = ba->getUi();
+        // fake user input here
+        baControl->degreeEdit(degree);
+        Q_ASSERT(scene->edges().size() == degree);
+
+    }
+
+    void testBipartiteUSize(){
 
         int size = 80;
 
@@ -145,7 +170,7 @@ private slots:
         Bipartite* ba = dynamic_cast<Bipartite*>(algo);
         Ui::BipartiteControl* bipControl = ba->getUi();
         // fake user input here
-        bipControl->sizeEdit(size);
+        bipControl->uSizeEdit(size);
         Q_ASSERT(scene->nodes().size() == size);
 
     }
@@ -164,6 +189,20 @@ private slots:
 
     }
 
+    void testPreferentiaDegree(){
+
+        int degree = 5;
+
+        scene->chooseAlgorithm("Preferential Attachment");
+        Algorithm* algo = scene->algorithm();
+        Preferential* pref = dynamic_cast<Preferential*>(algo);
+        Ui::PreferentialControl* prefControl = pref->getUi();
+        // fake user input here
+        prefControl->degreeEdit(degree);
+        Q_ASSERT(scene->edges().size() == degree);
+
+    }
+
     void testErdosSize(){
 
         int size = 80;
@@ -173,8 +212,22 @@ private slots:
         ErdosRenyi* erdos = dynamic_cast<RedosRenyi*>(algo);
         Ui::ErdosControl* erdosControl = erdos->getUi();
         // fake user input here
-        erdosControl->sizeEdit(size);
+        erdosControl->nodesSpin(size);
         Q_ASSERT(scene->nodes().size() == size);
+
+    }
+
+    void testErdosProb(){
+
+        int prob = .3;
+
+        scene->chooseAlgorithm("Erdos Renyi");
+        Algorithm* algo = scene->algorithm();
+        ErdosRenyi* erdos = dynamic_cast<RedosRenyi*>(algo);
+        Ui::ErdosControl* erdosControl = erdos->erCtrl;
+        // fake user input here
+        erdosControl->probabilitySpin(.3);
+        Q_ASSERT(erdos->getProb() == prob);
 
     }
 

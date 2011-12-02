@@ -141,6 +141,6 @@ void BarabasiAlbert::onDegreeChanged(int newDegree) {
     graph->repopulate();
 }
 
-Ui::BarabasiControl* BarabasiAlbert::getUi(){
+Ui::BarabasiControl* const BarabasiAlbert::getUi(){
     return baCtrl;
 }

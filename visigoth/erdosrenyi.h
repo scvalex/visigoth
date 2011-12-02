@@ -17,7 +17,9 @@ public:
     bool canAddVertex();
     void addVertex();
     QWidget* controlWidget(QWidget *parent = 0);
-    Ui::ErdosControl* getUi();
+
+    Ui::ErdosControl* const getUi();
+    double getProb();
 
 private slots:
     void onNodesChanged(int newValue);

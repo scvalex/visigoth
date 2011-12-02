@@ -186,6 +186,6 @@ void Bipartite::onVSizeChanged(int newSize) {
     scene->repopulate();
 }
 
-Ui::BipartiteControl* Bipartite::getUi(){
+Ui::BipartiteControl* const Bipartite::getUi(){
     return bipCtrl;
 }
