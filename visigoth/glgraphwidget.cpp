@@ -227,13 +227,13 @@ void GLGraphWidget::keyPressEvent(QKeyEvent *event) {
         glaCameraTranslatef(cameramat, (-20.0)/zoom, 0.0, 0.0);
         break;
     case Qt::Key_Down:
-        glaCameraTranslatef(cameramat, 0.0, (-20.0)/zoom, 0.0);
+        glaCameraTranslatef(cameramat, 0.0, 20.0/zoom, 0.0);
         break;
     case Qt::Key_Left:
         glaCameraTranslatef(cameramat, 20.0/zoom, 0.0, 0.0);
         break;
     case Qt::Key_Up:
-        glaCameraTranslatef(cameramat, 0.0, 20.0/zoom, 0.0);
+        glaCameraTranslatef(cameramat, 0.0, (-20.0)/zoom, 0.0);
         break;
     default:
         QGLWidget::keyPressEvent(event);
@@ -363,7 +363,7 @@ void GLGraphWidget::initProjection() {
     else
         // Flat projection
         glOrtho((GLfloat)width() / -2, (GLfloat)width() / 2,
-                (GLfloat)height() / 2, (GLfloat)height() / -2,
+                (GLfloat)height() / -2, (GLfloat)height() / 2,
                 -100, 100);
 
     // Save the projection matrix for later use, e.g. mouse interaction
