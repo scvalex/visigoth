@@ -49,11 +49,13 @@ protected:
     void timerEvent(QTimerEvent *event);
 
     void initializeGL();
+    void initializeCamera();
     void paintGL();
     void resizeGL(int w, int h);
 
 public slots:
     void onNodeMoved();
+    void set3DMode(bool enabled);
 
 private:
     void drawGraphGL();

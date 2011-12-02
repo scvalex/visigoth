@@ -38,6 +38,7 @@ VPointF Node::pos() const {
 
 void Node::setPos(VPointF pos, bool silent) {
     curPos = pos;
+    newPos = pos;
     if (!silent)
         emit nodeMoved();
 }
@@ -90,6 +91,43 @@ VPointF Node::calculateNonEdgeForces(QuadTree::TreeNode* treeNode) {
         }
     }
     return vel;
+}
+
+VPointF Node::calculatePosition3D(QVector<Node*> &nodes) {
+
+    // Sum up all forces pushing this item away
+    VPointF vel = VPointF(0.0);
+
+    foreach (Node *node, nodes) {
+        VPointF vec = pos() - node->pos();
+        double l = vec.lengthSquared();
+        if (l > 0) {
+            vel = vel + (vec * 75 / l);
+        }
+    }
+
+    // Now subtract all forces pulling items together
+    double weight = (edgeList.size() + 1) * 10;
+
+    foreach (Edge *edge, edgeList) {
+        VPointF vec = VPointF(0.0);
+        if (edge->sourceNode() == this) {
+            vec = pos() - edge->destNode()->pos();
+        } else {
+            vec = pos() - edge->sourceNode()->pos();
+        }
+        vel = vel - (vec / weight);
+    }
+
+    if (vel.lengthSquared() < 0.1) {
+        vel = VPointF(0);
+    }
+
+    newPos = pos() + vel;
+
+    // newPos = pos();
+
+    return newPos;
 }
 
 

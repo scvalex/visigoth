@@ -40,6 +40,15 @@ void GLGraphWidget::setScene(GraphScene *newScene) {
     connect(myScene, SIGNAL(algorithmChanged(Algorithm*)), this, SIGNAL(algorithmChanged(Algorithm*)));
     connect(myScene, SIGNAL(nodeMoved()), this, SLOT(onNodeMoved()));
     setAnimation(true);
+    myScene->set3DMode(mode3d);
+}
+
+void GLGraphWidget::set3DMode(bool enabled) {
+    mode3d = enabled;
+    zoom = 1.0;
+    initializeCamera();
+
+    myScene->set3DMode(mode3d);
 }
 
 GLGraphWidget::~GLGraphWidget() {
@@ -218,13 +227,13 @@ void GLGraphWidget::keyPressEvent(QKeyEvent *event) {
         glaCameraTranslatef(cameramat, (-20.0)/zoom, 0.0, 0.0);
         break;
     case Qt::Key_Down:
-        glaCameraTranslatef(cameramat, 0.0, (-20.0)/zoom, 0.0);
+        glaCameraTranslatef(cameramat, 0.0, 20.0/zoom, 0.0);
         break;
     case Qt::Key_Left:
         glaCameraTranslatef(cameramat, 20.0/zoom, 0.0, 0.0);
         break;
     case Qt::Key_Up:
-        glaCameraTranslatef(cameramat, 0.0, 20.0/zoom, 0.0);
+        glaCameraTranslatef(cameramat, 0.0, (-20.0)/zoom, 0.0);
         break;
     default:
         QGLWidget::keyPressEvent(event);
@@ -256,13 +265,22 @@ void GLGraphWidget::timerEvent(QTimerEvent *) {
 void GLGraphWidget::initializeGL() {
     glaInit();
 
-    // Init camera matrix
     glMatrixMode(GL_MODELVIEW);
-    // Warning: Do not set the camera far away when using small
-    //     zNear, zFar values. Darkness awaits.
-    //gluLookAt(0.0, 0.0, 5.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0);
-    glGetFloatv(GL_MODELVIEW_MATRIX, cameramat);
     glLoadIdentity();
+
+    initializeCamera();
+}
+
+void GLGraphWidget::initializeCamera() {
+    glPushMatrix();
+        glLoadIdentity();
+        if (mode3d) {
+            // Warning: Do not set the camera far away when using small
+            //     zNear, zFar values. Darkness awaits.
+            gluLookAt(0.0, 0.0, 200.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0);
+        }
+        glGetFloatv(GL_MODELVIEW_MATRIX, cameramat);
+    glPopMatrix();
 }
 
 void GLGraphWidget::paintGL() {
@@ -304,19 +322,10 @@ inline void GLGraphWidget::drawNode(Node *node) {
     float radius = (log(node->edges().size()) / log(2)) + 1.0;
     VPointF p = node->pos();
 
-    // FIXME: Draw spheres instead of flat circles.
-    glBegin(GL_TRIANGLE_FAN);
-    // glBegin(GL_LINE_LOOP);
-        // int step = 180 / (radius > 50 ? 50 : (int) radius);
-        int step = 30;
-        for (int angle(0); angle < 360; angle += step) {
-            GLfloat rangle = (GLfloat) angle * (3.1415926 / 180.0);
-            glVertex3f((GLfloat)p.x + sin(rangle) * radius,
-                       (GLfloat)p.y + cos(rangle) * radius,
-                       //(GLfloat)p.z + cos(rangle) * radius);
-                       0.0);
-        }
-    glEnd();
+    glPushMatrix();
+        glTranslatef(p.x, p.y, p.z);
+        glaDrawSphere(radius, 10, 10);
+    glPopMatrix();
 }
 
 void GLGraphWidget::drawGraphGL() {
@@ -353,7 +362,9 @@ void GLGraphWidget::initProjection() {
         gluPerspective(90, (GLfloat)width()/(GLfloat)height(), 0.0001, 100000.0);
     else
         // Flat projection
-        gluOrtho2D((GLfloat)width() / -2, (GLfloat)width() / 2, (GLfloat)height() / 2, (GLfloat)height() / -2);
+        glOrtho((GLfloat)width() / -2, (GLfloat)width() / 2,
+                (GLfloat)height() / -2, (GLfloat)height() / 2,
+                -100, 100);
 
     // Save the projection matrix for later use, e.g. mouse interaction
     glGetFloatv(GL_PROJECTION_MATRIX, projmat);
@@ -414,3 +425,4 @@ Node* GLGraphWidget::selectGL(int x, int y)
 
   return hitNode;
 }
+

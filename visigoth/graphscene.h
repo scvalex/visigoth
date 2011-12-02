@@ -49,6 +49,8 @@ public:
 
     Statistics* getStatistics();
 
+    void set3DMode(bool enabled);
+
 signals:
     void nodeMoved();
 
@@ -82,6 +84,7 @@ private:
     QList<Edge*> myEdges;
     QVector<QList<Node*> > degreeCount;
     QMap<QString, int> myAlgorithms;
+    bool mode3d;
 };
 
 #endif // GRAPHSCENE_H

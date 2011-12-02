@@ -15,7 +15,8 @@
 
 GraphScene::GraphScene() :
     algo(0),
-    degreeCount(1)
+    degreeCount(1),
+    mode3d(false)
 {
     myAlgorithms["Preferential Attachament"] = PREFERENTIAL_ATTACHAMENT;
     myAlgorithms["Bipartite Model"] = BIPARTITE_MODEL;
@@ -64,6 +65,12 @@ QList<Edge*>& GraphScene::edges() {
     return myEdges;
 }
 
+void GraphScene::set3DMode(bool enabled) {
+    mode3d = enabled;
+
+    randomizePlacement();
+}
+
 bool GraphScene::newEdge(Node *source, Node *dest) {
     Q_ASSERT(source != 0);
     Q_ASSERT(dest != 0);
@@ -92,10 +99,15 @@ Node* GraphScene::newNode() {
     Node *node = new Node(this);
 
     myNodes << node;
+
+    float z = 0;
+    if (mode3d) {
+        z = (qrand() % 600) - 300;
+    }
+
     node->setPos(VPointF((qrand() % 1000) - 500,
                          (qrand() % 600) - 300,
-                         //(qrand() % 600) - 300));
-                         0.0));
+                         z));
     connect(node, SIGNAL(nodeMoved()), this, SLOT(onNodeMoved()));
     onNodeMoved();
 
@@ -195,11 +207,15 @@ Algorithm* GraphScene::algorithm() const {
 }
 
 void GraphScene::randomizePlacement() {
+    float z = 0;
+    if (mode3d) {
+        z = (qrand() % 600) - 300;
+    }
+
     foreach (Node *node, nodes()) {
         node->setPos(VPointF((qrand() % 1000) - 500,
                               (qrand() % 600) - 300,
-                              //(qrand() % 600) - 300));
-                              0.0));
+                              z));
     }
 }
 
@@ -227,10 +243,12 @@ void GraphScene::updateDegreeCount(Node *node) {
 }
 
 bool GraphScene::calculateForces() {
+    /*
     QuadTree quadTree(graphCube().longestEdge());
     foreach (Node* node, nodes()) {
         quadTree.addNode(node);
     }
+    */
 
     // Don't move the first node
     bool first = true;
@@ -240,7 +258,8 @@ bool GraphScene::calculateForces() {
             continue;
         }
 
-        node->calculatePosition(quadTree.root());
+        // node->calculatePosition(quadTree.root());
+        node->calculatePosition3D(nodes());
     }
 
     bool somethingMoved = false;
