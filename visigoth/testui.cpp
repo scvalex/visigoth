@@ -7,7 +7,11 @@
 
 #include <math.h>
 
+#include "preferential.h"
+#include "bipartite.h"
+#include "erdosrenyi.h"
 #include "statistics.h"
+#include "barabasialbert.h"
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include "ui_helpWidget.h"
@@ -116,14 +120,61 @@ private slots:
 
     void testBarabasiSize(){
 
-        int size = 40;
+        int size = 80;
 
-
-
+        scene->chooseAlgorithm("Barabasi Albert");
+        Algorithm* algo = scene->algorithm();
+        BarabasiAlbert* ba = dynamic_cast<BarabasiAlbert*>(algo);
+        Ui::BarabasiControl* baControl = ba->getUi();
+        // fake user input here
+        baControl->sizeEdit(size);
+        Q_ASSERT(scene->nodes().size() == size);
 
     }
 
     void testBarabasiDegree(){
+
+    }
+
+    void testBipartiteSize(){
+
+        int size = 80;
+
+        scene->chooseAlgorithm("Bipartite");
+        Algorithm* algo = scene->algorithm();
+        Bipartite* ba = dynamic_cast<Bipartite*>(algo);
+        Ui::BipartiteControl* bipControl = ba->getUi();
+        // fake user input here
+        bipControl->sizeEdit(size);
+        Q_ASSERT(scene->nodes().size() == size);
+
+    }
+
+    void testPreferentialSize(){
+
+        int size = 80;
+
+        scene->chooseAlgorithm("Preferential");
+        Algorithm* algo = scene->algorithm();
+        Preferential* pref = dynamic_cast<Preferential*>(algo);
+        Ui::PreferentialControl* prefControl = pref->getUi();
+        // fake user input here
+        prefControl->sizeEdit(size);
+        Q_ASSERT(scene->nodes().size() == size);
+
+    }
+
+    void testErdosSize(){
+
+        int size = 80;
+
+        scene->chooseAlgorithm("Preferential");
+        Algorithm* algo = scene->algorithm();
+        ErdosRenyi* erdos = dynamic_cast<RedosRenyi*>(algo);
+        Ui::ErdosControl* erdosControl = erdos->getUi();
+        // fake user input here
+        erdosControl->sizeEdit(size);
+        Q_ASSERT(scene->nodes().size() == size);
 
     }
 

@@ -1,5 +1,4 @@
 #include "barabasialbert.h"
-#include "ui_barabasialbert.h"
 
 #include <QWidget>
 
@@ -31,10 +30,10 @@ void BarabasiAlbert::reset(){
 QWidget* BarabasiAlbert::controlWidget(QWidget *parent) {
     if (!ctlW) {
         ctlW = new QWidget(parent);
-        Ui::BarabasiControl *barabasiCtl = new Ui::BarabasiControl();
-        barabasiCtl->setupUi(ctlW);
-        connect(barabasiCtl->sizeEdit, SIGNAL(valueChanged(int)), this, SLOT(onSizeChanged(int)));
-        connect(barabasiCtl->degreeEdit, SIGNAL(valueChanged(int)), this, SLOT(onDegreeChanged(int)));
+        baCtrl = new Ui::BarabasiControl();
+        baCtrl->setupUi(ctlW);
+        connect(baCtrl->sizeEdit, SIGNAL(valueChanged(int)), this, SLOT(onSizeChanged(int)));
+        connect(baCtrl->degreeEdit, SIGNAL(valueChanged(int)), this, SLOT(onDegreeChanged(int)));
     }
     return ctlW;
 }
@@ -140,4 +139,8 @@ void BarabasiAlbert::onSizeChanged(int newSize) {
 void BarabasiAlbert::onDegreeChanged(int newDegree) {
     nodeDegree = newDegree;
     graph->repopulate();
+}
+
+Ui::BarabasiControl* BarabasiAlbert::getUi(){
+    return baCtrl;
 }

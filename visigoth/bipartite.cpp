@@ -1,6 +1,5 @@
 #include "graphscene.h"
 #include "bipartite.h"
-#include "ui_bipartitecontrol.h"
 #include "ui_mainwindow.h"
 #include "mainwindow.h"
 
@@ -120,10 +119,10 @@ void Bipartite::addVertex() {
 QWidget* Bipartite::controlWidget(QWidget *parent) {
     if (!ctlW) {
         ctlW = new QWidget(parent);
-        Ui::BipartiteControl *bipCtl = new Ui::BipartiteControl();
-        bipCtl->setupUi(ctlW);
-        connect(bipCtl->uSizeEdit, SIGNAL(valueChanged(int)), this, SLOT(onUSizeChanged(int)));
-        connect(bipCtl->vSizeEdit, SIGNAL(valueChanged(int)), this, SLOT(onVSizeChanged(int)));
+        bipCtrl = new Ui::BipartiteControl();
+        bipCtrl->setupUi(ctlW);
+        connect(bipCtrl->uSizeEdit, SIGNAL(valueChanged(int)), this, SLOT(onUSizeChanged(int)));
+        connect(bipCtrl->vSizeEdit, SIGNAL(valueChanged(int)), this, SLOT(onVSizeChanged(int)));
     }
     return ctlW;
 }
@@ -185,4 +184,8 @@ void Bipartite::onUSizeChanged(int newSize) {
 void Bipartite::onVSizeChanged(int newSize) {
     vSize = newSize;
     scene->repopulate();
+}
+
+Ui::BipartiteControl* Bipartite::getUi(){
+    return bipCtrl;
 }

@@ -2,6 +2,7 @@
 #define PREFERENTIAL_H
 
 #include "algorithm.h"
+#include "ui_preferentialcontrol.h"
 #include "edge.h"
 #include "node.h"
 
@@ -24,6 +25,7 @@ public:
     bool canAddVertex();
     void addVertex();
     QWidget* controlWidget(QWidget *parent = 0);
+    Ui::PreferentialControl* getUi();
 
 protected slots:
     void onSizeChanged(int newSize);
@@ -49,6 +51,7 @@ private:
 
     GraphScene *graph;
     QWidget *ctlW;
+    Ui::PreferentialControl* prefCtrl;
 
     // used for selecting a node by preferential seleciton
     QMap<int, double> cumulativePreferences;

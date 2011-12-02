@@ -1,6 +1,5 @@
 #include "graphscene.h"
 #include "erdosrenyi.h"
-#include "ui_erdoscontrol.h"
 
 #include <QtCore/qmath.h>
 #include <cstdlib>
@@ -52,10 +51,10 @@ void ErdosRenyi::reset() {
 QWidget* ErdosRenyi::controlWidget(QWidget *parent) {
     if (!ctlW) {
         ctlW = new QWidget(parent);
-        Ui::ErdosControl *erCtl = new Ui::ErdosControl();
-        erCtl->setupUi(ctlW);
-        connect(erCtl->nodesSpin, SIGNAL(valueChanged(int)), this, SLOT(onNodesChanged(int)));
-        connect(erCtl->probabilitySpin, SIGNAL(valueChanged(double)), this, SLOT(onProbabilityChanged(double)));
+        erCtrl = new Ui::ErdosControl();
+        erCtrl->setupUi(ctlW);
+        connect(erCtrl->nodesSpin, SIGNAL(valueChanged(int)), this, SLOT(onNodesChanged(int)));
+        connect(erCtrl->probabilitySpin, SIGNAL(valueChanged(double)), this, SLOT(onProbabilityChanged(double)));
     }
 
     return ctlW;
@@ -69,4 +68,8 @@ void ErdosRenyi::onNodesChanged(int newValue) {
 void ErdosRenyi::onProbabilityChanged(double newValue) {
     probability = newValue;
     scene->repopulate();
+}
+
+Ui::ErdosControl* ErdosRenyi::getUi(){
+    return erCtrl;
 }

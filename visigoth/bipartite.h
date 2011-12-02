@@ -2,6 +2,7 @@
 #define BIPARTITE_H
 
 #include "algorithm.h"
+#include "ui_bipartitecontrol.h"
 #include "edge.h"
 #include "node.h"
 
@@ -27,6 +28,7 @@ public:
     bool canAddVertex();
     void addVertex();
     QWidget* controlWidget(QWidget *parent = 0);
+    Ui::BipartiteControl* getUi();
 
     void init(int vSize, int uSize);
     void showBipartite();
@@ -39,6 +41,7 @@ private:
     static const int START_USIZE = 40;
     static const int START_VSIZE = 1;
     QWidget *ctlW;
+    Ui::BipartiteControl* bipCtrl;
 
     // Both preference funcs will only be used on vector set U
     int getPreference(double genPref);

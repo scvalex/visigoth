@@ -1,6 +1,5 @@
 #include "graphscene.h"
 #include "preferential.h"
-#include "ui_preferentialcontrol.h"
 
 #include <QWidget>
 
@@ -41,10 +40,10 @@ void Preferential::addVertex(bool saveSize) {
 QWidget* Preferential::controlWidget(QWidget *parent) {
     if (!ctlW) {
         ctlW = new QWidget(parent);
-        Ui::PreferentialControl *prefCtl = new Ui::PreferentialControl();
-        prefCtl->setupUi(ctlW);
-        connect(prefCtl->sizeEdit, SIGNAL(valueChanged(int)), this, SLOT(onSizeChanged(int)));
-        connect(prefCtl->degreeEdit, SIGNAL(valueChanged(int)), this, SLOT(onDegreeChanged(int)));
+        prefCtrl = new Ui::PreferentialControl();
+        prefCtrl->setupUi(ctlW);
+        connect(prefCtrl->sizeEdit, SIGNAL(valueChanged(int)), this, SLOT(onSizeChanged(int)));
+        connect(prefCtrl->degreeEdit, SIGNAL(valueChanged(int)), this, SLOT(onDegreeChanged(int)));
     }
     return ctlW;
 }
@@ -213,4 +212,8 @@ void Preferential::onSizeChanged(int newSize) {
 void Preferential::onDegreeChanged(int newDegree) {
     nodeDegree = newDegree;
     graph->repopulate();
+}
+
+Ui::PreferentialControl* Preferential::getUi(){
+    return prefCtrl;
 }

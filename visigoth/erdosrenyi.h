@@ -2,6 +2,7 @@
 #define ERDOSRENYI_H
 
 #include "algorithm.h"
+#include "ui_erdoscontrol.h"
 
 class GraphScene;
 class QWidget;
@@ -16,6 +17,7 @@ public:
     bool canAddVertex();
     void addVertex();
     QWidget* controlWidget(QWidget *parent = 0);
+    Ui::ErdosControl* getUi();
 
 private slots:
     void onNodesChanged(int newValue);
@@ -27,6 +29,7 @@ private:
 
     GraphScene *scene;
     QWidget *ctlW;
+    Ui::ErdosControl* erCtrl;
 
     int size;
     double probability;
