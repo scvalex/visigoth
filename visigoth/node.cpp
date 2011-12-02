@@ -38,6 +38,7 @@ VPointF Node::pos() const {
 
 void Node::setPos(VPointF pos, bool silent) {
     curPos = pos;
+    newPos = pos;
     if (!silent)
         emit nodeMoved();
 }
