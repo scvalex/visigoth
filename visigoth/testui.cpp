@@ -140,7 +140,7 @@ private slots:
 
         int size = 80;
 
-        scene->chooseAlgorithm("Bipartite");
+        scene->chooseAlgorithm("Bipartite Model");
         Algorithm* algo = scene->algorithm();
         Bipartite* ba = dynamic_cast<Bipartite*>(algo);
         Ui::BipartiteControl* bipControl = ba->getUi();
@@ -154,7 +154,7 @@ private slots:
 
         int size = 80;
 
-        scene->chooseAlgorithm("Preferential");
+        scene->chooseAlgorithm("Preferential Attachment");
         Algorithm* algo = scene->algorithm();
         Preferential* pref = dynamic_cast<Preferential*>(algo);
         Ui::PreferentialControl* prefControl = pref->getUi();
@@ -168,7 +168,7 @@ private slots:
 
         int size = 80;
 
-        scene->chooseAlgorithm("Preferential");
+        scene->chooseAlgorithm("Erdos Renyi");
         Algorithm* algo = scene->algorithm();
         ErdosRenyi* erdos = dynamic_cast<RedosRenyi*>(algo);
         Ui::ErdosControl* erdosControl = erdos->getUi();
