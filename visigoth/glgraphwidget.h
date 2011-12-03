@@ -60,7 +60,8 @@ public slots:
 private:
     void drawGraphGL();
     void drawNode(Node *node);
-    void initProjection();
+    void initGraphProjection();
+    void initOverlayProjection();
     Node *selectGL(int x, int y);
 
     GraphScene *myScene;
