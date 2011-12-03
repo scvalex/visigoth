@@ -161,7 +161,7 @@ void GLGraphWidget::mouseMoveEvent(QMouseEvent *event) {
 
     switch(mouseMode) {
         case MOUSE_TRANSLATING_2D:
-            glaCameraTranslatef(cameramat, (GLfloat)dx/zoom, (GLfloat)dy/zoom, 0.0);
+            glaCameraTranslatef(cameramat, (GLfloat)dx/zoom, (-1.0)*(GLfloat)dy/zoom, 0.0);
             break;
         case MOUSE_TRANSLATING_XY:
             glaCameraTranslatef(cameramat, (3.0) * dx, (-3.0) * dy, 0.0);
