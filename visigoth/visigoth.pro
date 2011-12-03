@@ -25,7 +25,8 @@ SOURCES += main.cpp \
            barabasialbert.cpp \
            statistics.cpp \
            quadtree.cpp \
-           erdosrenyi.cpp
+           erdosrenyi.cpp \
+           wattsstrogatz.cpp
 
 HEADERS += mainwindow.h \
            node.h \
@@ -40,7 +41,8 @@ HEADERS += mainwindow.h \
            statistics.h \
            quadtree.h \
            barabasialbert.h \
-           erdosrenyi.h
+           erdosrenyi.h \
+           wattsstrogatz.h
 
 FORMS += mainwindow.ui \
          bipartitecontrol.ui \
@@ -48,7 +50,8 @@ FORMS += mainwindow.ui \
          erdoscontrol.ui \
          barabasialbert.ui \
          helpWidget.ui \
-         statistics.ui
+         statistics.ui \
+         wattscontrol.ui
 
 test {
     CONFIG -= release
@@ -64,4 +67,9 @@ oauth {
     FORMS += twitauthdialog.ui \
              twittercontrol.ui
 }
+
+
+
+
+
 

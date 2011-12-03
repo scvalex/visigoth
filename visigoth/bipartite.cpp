@@ -137,6 +137,7 @@ double Bipartite::fitnessDist(int x) {
 }
 
 // Ceil because we can not have fractional degrees
+// 0.125 is an expoent we found to give an good scale free exponent
 double Bipartite::degreeDist(int x) {
     if (x == 0) {
         return 1;

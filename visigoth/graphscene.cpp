@@ -7,6 +7,7 @@
 #include "erdosrenyi.h"
 #include "statistics.h"
 #include "barabasialbert.h"
+#include "wattsstrogatz.h"
 
 #ifdef HAS_OAUTH
 #include "twitter.h"
@@ -21,6 +22,7 @@ GraphScene::GraphScene() :
     myAlgorithms["Bipartite Model"] = BIPARTITE_MODEL;
     myAlgorithms["Erdos Renyi"] = ERDOS_RENYI;
     myAlgorithms["Barabasi Albert"] = BARABASI_ALBERT;
+    myAlgorithms["Watts Strogatz"] = WATTS_STROGATZ;
 #ifdef HAS_OAUTH
     myAlgorithms["Twitter"] = TWITTER;
 #endif
@@ -116,6 +118,23 @@ void GraphScene::removeEdges(int cutoffTag){
     }
 }
 
+// used in Watts Strogatz
+void GraphScene::removeEdge(Node * source, Node* dst){
+
+    for(int i(0); i < myEdges.size(); ++i){
+
+        if(myEdges[i]->sourceNode()->tag() == source->tag() &&
+           myEdges[i]->destNode()->tag() == dst->tag()){
+            removeItem(myEdges[i]);
+            myEdges.removeAt(i);
+            --i;
+        }
+
+    }
+
+
+}
+
 bool GraphScene::doesEdgeExist(Node *source, Node *dest) const {
     int sourceTag = source->tag();
     int destTag = dest->tag();
@@ -161,6 +180,9 @@ void GraphScene::repopulate() {
             break;
         case BARABASI_ALBERT:
             algo = new BarabasiAlbert(this);
+            break;
+        case WATTS_STROGATZ:
+            algo = new WattsStrogatz(this);
             break;
 #ifdef HAS_OAUTH
         case TWITTER:
