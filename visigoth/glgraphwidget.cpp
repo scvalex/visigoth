@@ -189,6 +189,7 @@ void GLGraphWidget::mouseMoveEvent(QMouseEvent *event) {
                         model, proj, viewmat,
                         &newX, &newY, &newZ);
 
+            // FIXME: New coordinates after moving.
             draggedNode->setPos(VPointF(newX, newY, 0.0));
             break;
         default:
@@ -286,17 +287,18 @@ void GLGraphWidget::initializeCamera() {
 void GLGraphWidget::paintGL() {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    // Reinit the projection for drawing the graph
-    this->initProjection();
+    // Draw 2D background elements
+    initOverlayProjection();
+    // ...draw stuff here
 
-    // Set up the camera
-    glLoadMatrixf(cameramat);
-
-    // Draw the old example objects
+    // Draw the graph and the central box
+    initGraphProjection();
     glaDrawExample();
-
-    // Draw the graph
     drawGraphGL();
+
+    // Draw 2D overlay elements
+    initOverlayProjection();
+    // ...draw stuff here
 
     glFlush();
 }
@@ -348,7 +350,7 @@ void GLGraphWidget::drawGraphGL() {
     }
 }
 
-void GLGraphWidget::initProjection() {
+void GLGraphWidget::initGraphProjection() {
     // Set up the Projection transformation
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
@@ -371,54 +373,65 @@ void GLGraphWidget::initProjection() {
 
     // Switch to Model/view transformation for drawing objects
     glMatrixMode(GL_MODELVIEW);
+    glLoadMatrixf(cameramat);   // Load camera for 3D graph
+
+}
+
+void GLGraphWidget::initOverlayProjection() {
+    // Set up the Projection transformation
+    glMatrixMode(GL_PROJECTION);
+    glLoadIdentity();
+
+    // Flat projection, Qt-style y axis.
+    gluOrtho2D((GLfloat)width() / -2, (GLfloat)width() / 2,
+            (GLfloat)height() / 2, (GLfloat)height() / -2);
+
+    // Switch to Model/view transformation for drawing objects
+    glMatrixMode(GL_MODELVIEW);
+    glLoadIdentity();   // Reset camera for 2D overlay
 }
 
 Node* GLGraphWidget::selectGL(int x, int y)
 {
     Node* hitNode = NULL;
-
     GLuint namebuf[64] = {0};
     GLint hits;
 
+    glSelectBuffer(64, namebuf);
 
     // Account for inverse Y coordinate
     y = viewmat[3] - y;
 
-    glSelectBuffer(64, namebuf);
+    initGraphProjection();
 
     // Restrict projection matrix to selection area
     glMatrixMode(GL_PROJECTION);
-    glPushMatrix();
-        glLoadIdentity();
-        gluPickMatrix(x, y, 1.0, 1.0, viewmat);
-        glMultMatrixf(projmat);
+    glLoadIdentity();
+    gluPickMatrix(x, y, 1.0, 1.0, viewmat);
+    glMultMatrixf(projmat);
 
-        // Redraw points to fill selection buffer
-        glMatrixMode(GL_MODELVIEW);
+    // Redraw points to fill selection buffer
+    glMatrixMode(GL_MODELVIEW);
 
-        QVector<Node*> &nodes = myScene->nodes();
-        for (int i = nodes.size() - 1; i >= 0; --i) {
-            glSelectBuffer(64, namebuf);
-            glRenderMode(GL_SELECT);
+    QVector<Node*> &nodes = myScene->nodes();
+    for (int i = nodes.size() - 1; i >= 0; --i) {
+        glSelectBuffer(64, namebuf);
+        glRenderMode(GL_SELECT);
 
-            // Reset name stack
-            glInitNames();
-            glPushName(0);
+        // Reset name stack
+        glInitNames();
+        glPushName(0);
 
-            // Draw the node
-            drawNode(nodes[i]);
+        // Draw the node
+        drawNode(nodes[i]);
 
-            hits = glRenderMode(GL_RENDER);
+        hits = glRenderMode(GL_RENDER);
 
-            if (hits) {
-                hitNode = nodes[i];
-                break;
-            }
+        if (hits) {
+            hitNode = nodes[i];
+            break;
         }
-
-  // Reset projection
-  glMatrixMode(GL_PROJECTION);
-  glPopMatrix();
+    }
 
   glMatrixMode(GL_MODELVIEW);
   this->repaint();
