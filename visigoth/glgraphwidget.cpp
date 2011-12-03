@@ -175,23 +175,33 @@ void GLGraphWidget::mouseMoveEvent(QMouseEvent *event) {
             glaCameraRotatef(cameramat, dy, 1.0, 0.0, 0.0);
             break;
         case MOUSE_DRAGGING:
+        {
             GLdouble newX, newY, newZ;
             GLdouble model[16], proj[16];
+            VPointF p = draggedNode->pos();
 
+            // Get matrices  as double instead of single precision floats
+            glMatrixMode(GL_MODELVIEW);
             glPushMatrix();
               glLoadMatrixf(cameramat);
               glGetDoublev(GL_MODELVIEW_MATRIX, model);
               glLoadMatrixf(projmat);
-              glGetDoublev(GL_PROJECTION_MATRIX, proj);
+              glGetDoublev(GL_MODELVIEW_MATRIX, proj);
             glPopMatrix();
 
-            gluUnProject((GLdouble)mouseX, (GLdouble)(viewmat[3] - mouseY), 0.0,
+            gluProject(p.x, p.y, p.z, model, proj, viewmat,
+                        &newX, &newY, &newZ);
+
+            newX = (GLdouble)mouseX;
+            newY = (GLdouble)(viewmat[3] - mouseY);
+
+            gluUnProject(newX, newY, newZ,
                         model, proj, viewmat,
                         &newX, &newY, &newZ);
 
-            // FIXME: New coordinates after moving.
-            draggedNode->setPos(VPointF(newX, newY, 0.0));
+            draggedNode->setPos(VPointF(newX, newY, newZ));
             break;
+        }
         default:
             break;
     }
@@ -433,9 +443,8 @@ Node* GLGraphWidget::selectGL(int x, int y)
         }
     }
 
-  glMatrixMode(GL_MODELVIEW);
-  this->repaint();
+    glMatrixMode(GL_MODELVIEW);
+    this->repaint();
 
-  return hitNode;
+    return hitNode;
 }
-
