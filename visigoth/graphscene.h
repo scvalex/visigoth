@@ -87,6 +87,7 @@ private:
     QMainWindow *mainWindow;
     QColor myEdgeColor;
     QColor myNodeColor;
+    bool isColorChanged;
 };
 
 #endif // GRAPHSCENE_H
