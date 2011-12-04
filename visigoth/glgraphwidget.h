@@ -60,10 +60,15 @@ public slots:
 private:
     void drawBackground();
     void drawOverlay();
+
     void drawNode(Node *node);
     void drawGraphGL();
+
     void initGraphProjection();
     void initOverlayProjection();
+
+    void setupLighting();
+
     Node *selectGL(int x, int y);
 
     GraphScene *myScene;
