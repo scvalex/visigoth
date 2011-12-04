@@ -299,7 +299,7 @@ void GLGraphWidget::paintGL() {
 
     // Draw 2D background elements
     initOverlayProjection();
-    // ...draw stuff here
+    drawBackground();
 
     // Draw the graph and the central box
     initGraphProjection();
@@ -308,7 +308,7 @@ void GLGraphWidget::paintGL() {
 
     // Draw 2D overlay elements
     initOverlayProjection();
-    // ...draw stuff here
+    drawOverlay();
 
     glFlush();
 }
@@ -326,6 +326,19 @@ void GLGraphWidget::resizeGL(int w, int h) {
 /****************************
  * GL graph drawing and projection setup (private)
  ***************************/
+
+/*** 2D overlay/background drawing ***/
+
+void GLGraphWidget::drawBackground() {
+    QColor c = myScene->colour();
+    glClearColor(c.redF(), c.greenF(), c.blueF(), 1.0);
+}
+
+void GLGraphWidget::drawOverlay() {
+}
+
+
+/*** Graph drawing ***/
 
 inline void GLGraphWidget::drawNode(Node *node) {
     QColor c = node->colour();
@@ -360,6 +373,9 @@ void GLGraphWidget::drawGraphGL() {
     }
 }
 
+
+/*** Projection setup ***/
+
 void GLGraphWidget::initGraphProjection() {
     // Set up the Projection transformation
     glMatrixMode(GL_PROJECTION);
@@ -393,13 +409,15 @@ void GLGraphWidget::initOverlayProjection() {
     glLoadIdentity();
 
     // Flat projection, Qt-style y axis.
-    gluOrtho2D((GLfloat)width() / -2, (GLfloat)width() / 2,
-            (GLfloat)height() / 2, (GLfloat)height() / -2);
+    gluOrtho2D(0, (GLfloat)width(), (GLfloat)height(), 0);
 
     // Switch to Model/view transformation for drawing objects
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();   // Reset camera for 2D overlay
 }
+
+
+/*** Selection ***/
 
 Node* GLGraphWidget::selectGL(int x, int y)
 {

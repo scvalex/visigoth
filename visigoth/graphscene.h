@@ -6,6 +6,7 @@
 #include <QMap>
 #include <QSet>
 #include <QVector>
+#include <QColor>
 
 #include "vtools.h"
 
@@ -51,6 +52,9 @@ public:
 
     void set3DMode(bool enabled);
 
+    QColor& colour();
+    void setColour(const QColor &b);
+
 signals:
     void nodeMoved();
 
@@ -85,6 +89,7 @@ private:
     QVector<QList<Node*> > degreeCount;
     QMap<QString, int> myAlgorithms;
     bool mode3d;
+    QColor myColour;
 };
 
 #endif // GRAPHSCENE_H

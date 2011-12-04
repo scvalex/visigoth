@@ -58,8 +58,10 @@ public slots:
     void set3DMode(bool enabled);
 
 private:
-    void drawGraphGL();
+    void drawBackground();
+    void drawOverlay();
     void drawNode(Node *node);
+    void drawGraphGL();
     void initGraphProjection();
     void initOverlayProjection();
     Node *selectGL(int x, int y);

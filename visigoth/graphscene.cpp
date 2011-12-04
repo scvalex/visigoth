@@ -16,7 +16,8 @@
 GraphScene::GraphScene() :
     algo(0),
     degreeCount(1),
-    mode3d(false)
+    mode3d(false),
+    myColour(QColor::fromRgbF(1.0, 1.0, 1.0))
 {
     myAlgorithms["Preferential Attachament"] = PREFERENTIAL_ATTACHAMENT;
     myAlgorithms["Bipartite Model"] = BIPARTITE_MODEL;
@@ -318,4 +319,12 @@ VCubeF GraphScene::graphCube() {
     }
 
     return VCubeF(p1, p2);
+}
+
+QColor& GraphScene::colour() {
+    return myColour;
+}
+
+void GraphScene::setColour(const QColor &c) {
+    myColour = c;
 }
