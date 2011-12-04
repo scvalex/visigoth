@@ -30,21 +30,8 @@ void glaInit(void)
     // Reset MV matrix
     glLoadIdentity();
 
-    // Lightining
-    GLfloat sun_direction[] = { 0.0, 2.0, -1.0, 1.0 };
-    GLfloat sun_intensity[] = { 0.7, 0.7, 0.7, 1.0 };
-    GLfloat ambient_intensity[] = { 0.4, 0.4, 0.4, 1.0 };
-
-    //glEnable(GL_DEPTH_TEST);            // Draw only closest surfaces
-
-    glEnable(GL_LIGHTING);              // Set up ambient light.
-    glLightModelfv(GL_LIGHT_MODEL_AMBIENT, ambient_intensity);
-
-    glEnable(GL_LIGHT0);                // Set up sunlight.
-    glLightfv(GL_LIGHT0, GL_POSITION, sun_direction);
-    glLightfv(GL_LIGHT0, GL_DIFFUSE, sun_intensity);
-
-    glEnable(GL_COLOR_MATERIAL);        // Configure glColor().
+    // Configure glColor()
+    glEnable(GL_COLOR_MATERIAL);
     glColorMaterial(GL_FRONT, GL_AMBIENT_AND_DIFFUSE);
 }
 

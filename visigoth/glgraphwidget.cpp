@@ -31,6 +31,7 @@ GLGraphWidget::GLGraphWidget(QWidget *parent) :
 {
     setFocusPolicy(Qt::StrongFocus);
     setMouseTracking(true);
+    setupLightining();
 }
 
 void GLGraphWidget::setScene(GraphScene *newScene) {
@@ -47,6 +48,7 @@ void GLGraphWidget::set3DMode(bool enabled) {
     mode3d = enabled;
     zoom = 1.0;
     initializeCamera();
+    setupLightining();
 
     myScene->set3DMode(mode3d);
 }
@@ -371,6 +373,28 @@ void GLGraphWidget::initProjection() {
 
     // Switch to Model/view transformation for drawing objects
     glMatrixMode(GL_MODELVIEW);
+}
+
+void GLGraphWidget::setupLightining() {
+    // Lightining
+    GLfloat sunDirection[] = {0.0, 2.0, -1.0, 1.0};
+    GLfloat sunIntensity[] = {0.7, 0.7, 0.7, 1.0};
+    GLfloat ambientIntensity[] = {0.3, 0.3, 0.3, 1.0};
+
+    if (!mode3d) {
+        ambientIntensity[0] = 0.8;
+        ambientIntensity[1] = 0.8;
+        ambientIntensity[2] = 0.8;
+    }
+
+    // Set up ambient light
+    glEnable(GL_LIGHTING);
+    glLightModelfv(GL_LIGHT_MODEL_AMBIENT, ambientIntensity);
+
+    // Set up sun light
+    glEnable(GL_LIGHT0);
+    glLightfv(GL_LIGHT0, GL_POSITION, sunDirection);
+    glLightfv(GL_LIGHT0, GL_DIFFUSE, sunIntensity);
 }
 
 Node* GLGraphWidget::selectGL(int x, int y)
