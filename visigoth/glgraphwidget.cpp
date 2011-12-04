@@ -24,14 +24,13 @@
 GLGraphWidget::GLGraphWidget(QWidget *parent) :
     QGLWidget(parent),
     myScene(0),
-    zoom(1.0),
     mouseMode(MOUSE_IDLE),
-    mode3d(false),
     animTimerId(0)
 {
     setFocusPolicy(Qt::StrongFocus);
     setMouseTracking(true);
-    setupLighting();
+
+    set3DMode(false);
 }
 
 void GLGraphWidget::setScene(GraphScene *newScene) {
@@ -50,7 +49,8 @@ void GLGraphWidget::set3DMode(bool enabled) {
     initializeCamera();
     setupLighting();
 
-    myScene->set3DMode(mode3d);
+    if (myScene)
+        myScene->set3DMode(mode3d);
 }
 
 GLGraphWidget::~GLGraphWidget() {
@@ -290,7 +290,7 @@ void GLGraphWidget::initializeCamera() {
         if (mode3d) {
             // Warning: Do not set the camera far away when using small
             //     zNear, zFar values. Darkness awaits.
-            gluLookAt(0.0, 0.0, 200.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0);
+            gluLookAt(0.0, 0.0, 500.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0);
         }
         glGetFloatv(GL_MODELVIEW_MATRIX, cameramat);
     glPopMatrix();
