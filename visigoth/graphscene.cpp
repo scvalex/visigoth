@@ -22,10 +22,10 @@ GraphScene::GraphScene() :
     myAlgorithms["Bipartite Model"] = BIPARTITE_MODEL;
     myAlgorithms["Erdos Renyi"] = ERDOS_RENYI;
     myAlgorithms["Barabasi Albert"] = BARABASI_ALBERT;
-    myAlgorithms["Watts Strogatz"] = WATTS_STROGATZ;
 #ifdef HAS_OAUTH
     myAlgorithms["Twitter"] = TWITTER;
 #endif
+    myAlgorithms["Watts Strogatz"] = WATTS_STROGATZ;
     stats = new Statistics(this);
 }
 

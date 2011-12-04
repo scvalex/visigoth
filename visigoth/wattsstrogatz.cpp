@@ -24,7 +24,7 @@ bool WattsStrogatz::canAddVertex(){
 }
 
 void WattsStrogatz::addVertex() {
-    qDebug("Bipartite does not support adding new vertices");
+    qDebug("Watts Strogatz does not support adding new vertices");
 }
 
 QWidget* WattsStrogatz::controlWidget(QWidget *parent){
@@ -43,7 +43,7 @@ QWidget* WattsStrogatz::controlWidget(QWidget *parent){
 
 void WattsStrogatz::reset(){
 
-    QVector<Node*> nodeVec;
+    QVector<Node*> nodeVec(size);
 
     for(int i(0); i < size; ++i){
 
@@ -115,10 +115,6 @@ void WattsStrogatz::onDegreeChanged(int newValue){
         newValue = size/2;
     }
 
-    if(newValue%2 != 0){
-
-        --newValue;
-    }
     degree = newValue;
     scene->repopulate();
 }

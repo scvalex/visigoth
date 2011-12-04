@@ -96,7 +96,6 @@ void Bipartite::reset() {
                 }
             }
         }
-
     }
 
     scene->removeEdges(uSize);
