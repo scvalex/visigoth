@@ -79,7 +79,10 @@ void GLGraphWidget::scaleView(qreal scaleFactor) {
 }
 
 void GLGraphWidget::fitToScreen() {
-  // FIXME: fitToScreen needs to be completely redone for 3D.
+    // TODO: Possibly reposition so the graph is inside the window. 3D?
+    if (!mode3d) {
+        zoom = (qreal)height() / myScene->graphCube().longestEdge();
+    }
 }
 
 void GLGraphWidget::wheelEvent(QWheelEvent *event) {
