@@ -1,6 +1,6 @@
 #include "algorithm.h"
 
-Algorithm::Algorithm(QObject *parent,bool flag) :
+Algorithm::Algorithm(QObject *parent, bool flag) :
     QObject(parent),
     swnFlag(flag)
 {

@@ -2,7 +2,7 @@ QT += core gui opengl xml network
 
 RESOURCES = resources.qrc \
 
-#CONFIG += oauth
+CONFIG += oauth
 oauth {
     CONFIG += link_pkgconfig
     PKGCONFIG += qoauth
@@ -26,7 +26,8 @@ SOURCES += main.cpp \
            statistics.cpp \
            quadtree.cpp \
            erdosrenyi.cpp \
-           wattsstrogatz.cpp
+           wattsstrogatz.cpp \
+           vtools.cpp
 
 HEADERS += mainwindow.h \
            node.h \
@@ -37,12 +38,12 @@ HEADERS += mainwindow.h \
            glancillary.h \
            bipartite.h \
            algorithm.h \
-           abstractgraphwidget.h \
            statistics.h \
            quadtree.h \
            barabasialbert.h \
            erdosrenyi.h \
-           wattsstrogatz.h
+           wattsstrogatz.h \
+           vtools.h
 
 FORMS += mainwindow.ui \
          bipartitecontrol.ui \

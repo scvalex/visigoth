@@ -4,13 +4,13 @@
 #include <QGLWidget>
 #include <QList>
 
-#include "abstractgraphwidget.h"
-#include "graphscene.h"
-
+class GraphScene;
+class Node;
 class Algorithm;
 class Node;
 
-class GLGraphWidget : public QGLWidget, public AbstractGraphWidget
+
+class GLGraphWidget : public QGLWidget
 {
     Q_OBJECT
 public:
@@ -23,21 +23,20 @@ public:
     enum MOUSE_MODES {
         MOUSE_IDLE,
         MOUSE_ROTATING,
-        MOUSE_TRANSLATING,
-        MOUSE_TRANSLATING2,
+        MOUSE_TRANSLATING_2D,
+        MOUSE_TRANSLATING_XY,
+        MOUSE_TRANSLATING_Z,
         MOUSE_DRAGGING
     };
-
-public slots:
-    void itemMoved();
 
 signals:
     void algorithmChanged(Algorithm *newAlgo);
     void hoveringOnNode(Node *node);
 
 protected:
-    void setAnimationRunning();
-    void playPause();
+    bool animationRunning();
+    void setAnimation(bool enable);
+
     void scaleView(qreal scaleFactor);
     void fitToScreen();
 
@@ -50,26 +49,40 @@ protected:
     void timerEvent(QTimerEvent *event);
 
     void initializeGL();
+    void initializeCamera();
     void paintGL();
     void resizeGL(int w, int h);
 
+public slots:
+    void onNodeMoved();
+    void set3DMode(bool enabled);
+
 private:
-    void drawGraphGL();
+    void drawBackground();
+    void drawOverlay();
+
     void drawNode(Node *node);
-    void initProjection();
+    void drawGraphGL();
+
+    void initGraphProjection();
+    void initOverlayProjection();
+
+    void setupLighting();
+
     Node *selectGL(int x, int y);
 
     GraphScene *myScene;
     GLfloat cameramat[16];
+    GLfloat projmat[16];
+    GLint viewmat[4];
     GLfloat zoom;
     int mouseX, mouseY;
     enum MOUSE_MODES mouseMode;
     Node *draggedNode;
 
-    bool helping;
-    bool isPlaying;
-    bool isRunning;
-    int timerId;
+    bool mode3d;
+    bool running;
+    int animTimerId;
 };
 
 #endif // GLGRAPHWIDGET_H

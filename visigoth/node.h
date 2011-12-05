@@ -5,19 +5,19 @@
 #ifndef NODE_H
 #define NODE_H
 
+#include <QObject>
 #include <QBrush>
-#include <QGraphicsItem>
-#include <QVariant>
-#include <QToolTip>
 
+#include "vtools.h"
 #include "graphscene.h"
 #include "quadtree.h"
 
 class Edge;
 class QGraphicsSceneHoverEvent;
 
-class Node : public QGraphicsItem, public QuadTree::TreeNode
+class Node : public QObject, public QuadTree::TreeNode
 {
+Q_OBJECT
 public:
     /* Only GraphScene can construct Nodes. */
     friend class GraphScene;
@@ -26,59 +26,57 @@ public:
 
     int tag() const;
 
+    VPointF pos() const;
+    void setPos(VPointF pos, bool silent = false);
+
     /* Return the new position. */
-    QPointF calculatePosition(QuadTree::TreeNode& treeNode);
+    VPointF calculatePosition(QuadTree::TreeNode& treeNode);
+    VPointF calculatePosition3D(QVector<Node*>& nodes);
 
     bool advance();
-
-    enum { Type = UserType + 1 };
-    int type() const { return Type; }
-
-    QRectF boundingRect() const;
-    QPainterPath shape() const;
-
-    void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
+    void setAllowAdvance(bool allow);
 
     QList<Edge*>& edges();
     QVector<Node*> neighbours() const;
-    int getSize() const;
-    QPointF getCenter() const;
-    QVector<TreeNode*>& getChildren();
-    qreal getWidth() const;
+
+    // QuadTree
     int size() const;
-    QPointF center() const;
+    VPointF center() const;
     bool hasChildren() const;
     const QVector<TreeNode*>& children() const;
-    qreal width() const;
+    vreal width() const;
 
-    QBrush& brush();
-    void setBrush(const QBrush &b);
-    static void setAllNodes(int i);
-    static int getAllNodes();
+    QColor& colour();
+    void setColour(const QColor &b);
 
     static void reset();
 
-protected:
-    explicit Node(GraphScene *graph, QGraphicsItem *parent = 0);
+signals:
+    void nodeMoved();
 
-    QVariant itemChange(GraphicsItemChange change, const QVariant &value);
+protected:
+    explicit Node(GraphScene *graph);
+    virtual ~Node();
 
 private:
     static int ALL_NODES;
 
-    QBrush myBrush;
-    QList<Edge*> edgeList;
-    GraphScene *graph;
-    bool hovering;
     int myTag;
-    QPointF newPos;
+
+    GraphScene *graph;
+    QList<Edge*> edgeList;
+
+    QColor myColour;
+
+    VPointF curPos;
+    VPointF newPos;
+    bool allowAdvance;
 
     // vars for average length
     bool visited;
     int distance;
 
-    QPointF mapPoint(QPointF source, QPointF dest);
-    QPointF calculateNonEdgeForces(TreeNode* treeNode);
+    VPointF calculateNonEdgeForces(TreeNode* treeNode);
 };
 
 #endif // NODE_H

@@ -9,6 +9,7 @@
 #include <GL/gl.h>
 #endif
 
+#include "vtools.h"
 #include "glgraphwidget.h"
 #include "glancillary.h"        // gla*()
 #include "edge.h"
@@ -23,66 +24,65 @@
 GLGraphWidget::GLGraphWidget(QWidget *parent) :
     QGLWidget(parent),
     myScene(0),
-    zoom(1.0),
     mouseMode(MOUSE_IDLE),
-    helping(true),
-    isPlaying(true),
-    timerId(0)
+    animTimerId(0)
 {
     setFocusPolicy(Qt::StrongFocus);
     setMouseTracking(true);
+
+    set3DMode(false);
 }
 
 void GLGraphWidget::setScene(GraphScene *newScene) {
     if (myScene != 0)
         return;
     myScene = newScene;
-    myScene->setBackgroundBrush(Qt::black);
-    myScene->setItemIndexMethod(QGraphicsScene::NoIndex);
     connect(myScene, SIGNAL(algorithmChanged(Algorithm*)), this, SIGNAL(algorithmChanged(Algorithm*)));
+    connect(myScene, SIGNAL(nodeMoved()), this, SLOT(onNodeMoved()));
+    setAnimation(true);
+    myScene->set3DMode(mode3d);
+}
+
+void GLGraphWidget::set3DMode(bool enabled) {
+    mode3d = enabled;
+    zoom = 1.0;
+    initializeCamera();
+    setupLighting();
+
+    if (myScene)
+        myScene->set3DMode(mode3d);
 }
 
 GLGraphWidget::~GLGraphWidget() {
     delete myScene;
 }
 
-void GLGraphWidget::itemMoved() {
-    setAnimationRunning();
+bool GLGraphWidget::animationRunning() {
+    return (animTimerId != 0);
 }
 
-/****************************
- * GraphWidget imitation code (protected)
- ***************************/
-
-void GLGraphWidget::setAnimationRunning() {
-    if (isPlaying && myScene->isRunning() && !timerId)
-        timerId = startTimer(1000 / 25);
-    else if ((!isPlaying || !myScene->isRunning()) && timerId) {
-        killTimer(timerId);
-        timerId = 0;
+void GLGraphWidget::setAnimation(bool enable) {
+    if (enable && !animTimerId) {
+        animTimerId = startTimer(1000 / 25);
+    } else if (!enable && animTimerId) {
+        killTimer(animTimerId);
+        animTimerId = 0;
     }
 }
 
-void GLGraphWidget::playPause() {
-    isPlaying = !isPlaying;
-    setAnimationRunning();
-
-    this->repaint();
+void GLGraphWidget::onNodeMoved() {
+    setAnimation(true);
 }
 
 void GLGraphWidget::scaleView(qreal scaleFactor) {
     zoom *= scaleFactor;
-    this->initProjection();
 }
 
 void GLGraphWidget::fitToScreen() {
-    float aspectWidget = (float)width()/(float)height();
-    float aspectGraph = (float)myScene->width()/(float)myScene->height();
-
-    if (aspectGraph >= aspectWidget)
-        scaleView((GLfloat)width() / (GLfloat)myScene->width() / zoom);
-    else
-        scaleView((GLfloat)height() / (GLfloat)myScene->height() / zoom);
+    // TODO: Possibly reposition so the graph is inside the window. 3D?
+    if (!mode3d) {
+        zoom = (qreal)height() / myScene->graphCube().longestEdge();
+    }
 }
 
 void GLGraphWidget::wheelEvent(QWheelEvent *event) {
@@ -96,7 +96,7 @@ void GLGraphWidget::mouseDoubleClickEvent(QMouseEvent *event) {
         Node *hitNode = selectGL(event->x(), event->y());
 
         if (hitNode) {
-            hitNode->setBrush(QColor::fromRgbF(1.0, 0.0, 0.0, 1.0));
+            hitNode->setColour(QColor::fromRgbF(1.0, 0.0, 0.0, 1.0));
         }
     }
 
@@ -108,26 +108,30 @@ void GLGraphWidget::mousePressEvent(QMouseEvent *event) {
         return;
 
     if (event->button() == Qt::LeftButton) {
-        switch (0) { // FIXME: Should get modifier key status here
+        switch (event->modifiers()) {
             case 0:  // When no modifiers are pressed
-                mouseMode = MOUSE_TRANSLATING;
+            {
+                Node *hitNode = selectGL(event->x(), event->y());
+                if (hitNode) {
+                    draggedNode = hitNode;
+                    draggedNode->setAllowAdvance(false);
+                    mouseMode = MOUSE_DRAGGING;
+                } else {
+                    if (mode3d)
+                        mouseMode = MOUSE_TRANSLATING_XY;
+                    else
+                        mouseMode = MOUSE_TRANSLATING_2D;
+                }
                 break;
-            //case GLUT_ACTIVE_SHIFT:
-                mouseMode = MOUSE_ROTATING;
+            }
+            case Qt::ShiftModifier:
+                if (mode3d)
+                    mouseMode = MOUSE_ROTATING;
                 break;
-            //case GLUT_ACTIVE_SHIFT | GLUT_ACTIVE_CTRL:
-                mouseMode = MOUSE_TRANSLATING;
+            case Qt::ControlModifier:
+                if (mode3d)
+                    mouseMode = MOUSE_TRANSLATING_Z;
                 break;
-            //case GLUT_ACTIVE_CTRL:
-                mouseMode = MOUSE_TRANSLATING2;
-                break;
-        }
-    } else if (event->button() == Qt::RightButton) {
-        Node *hitNode = selectGL(event->x(), event->y());
-
-        if (hitNode) {
-            draggedNode = hitNode;
-            mouseMode = MOUSE_DRAGGING;
         }
     }
 
@@ -137,6 +141,9 @@ void GLGraphWidget::mousePressEvent(QMouseEvent *event) {
 
 void GLGraphWidget::mouseReleaseEvent(QMouseEvent *event) {
     (void) event;
+
+    if (mouseMode == MOUSE_DRAGGING && draggedNode)
+      draggedNode->setAllowAdvance(true);
 
     mouseMode = MOUSE_IDLE;
 }
@@ -158,19 +165,48 @@ void GLGraphWidget::mouseMoveEvent(QMouseEvent *event) {
     mouseY = event->y();
 
     switch(mouseMode) {
-        case MOUSE_TRANSLATING:
-            //glaCameraTranslatef(cameramat, (0.1) * dx, (-0.1) * dy, 0.0);
-            // Modified for 2D projection and zoom
-            glaCameraTranslatef(cameramat, (GLfloat)dx/zoom, (GLfloat)dy/zoom, 0.0);
+        case MOUSE_TRANSLATING_2D:
+            glaCameraTranslatef(cameramat, (GLfloat)dx/zoom, (-1.0)*(GLfloat)dy/zoom, 0.0);
             break;
-        case MOUSE_TRANSLATING2:
-            //glaCameraRotatef(cameramat, dx, 0.0, 1.0, 0.0);
-            //glaCameraTranslatef(cameramat, 0.0, 0.0, (-0.1) * dy);
+        case MOUSE_TRANSLATING_XY:
+            glaCameraTranslatef(cameramat, (3.0) * dx, (-3.0) * dy, 0.0);
+            break;
+        case MOUSE_TRANSLATING_Z:
+            glaCameraRotatef(cameramat, dx, 0.0, 1.0, 0.0);
+            glaCameraTranslatef(cameramat, 0.0, 0.0, (-3.0) * dy);
             break;
         case MOUSE_ROTATING:
-            //glaCameraRotatef(cameramat, dx, 0.0, 1.0, 0.0);
-            //glaCameraRotatef(cameramat, dy, 1.0, 0.0, 0.0);
+            glaCameraRotatef(cameramat, dx, 0.0, 1.0, 0.0);
+            glaCameraRotatef(cameramat, dy, 1.0, 0.0, 0.0);
             break;
+        case MOUSE_DRAGGING:
+        {
+            GLdouble newX, newY, newZ;
+            GLdouble model[16], proj[16];
+            VPointF p = draggedNode->pos();
+
+            // Get matrices  as double instead of single precision floats
+            glMatrixMode(GL_MODELVIEW);
+            glPushMatrix();
+              glLoadMatrixf(cameramat);
+              glGetDoublev(GL_MODELVIEW_MATRIX, model);
+              glLoadMatrixf(projmat);
+              glGetDoublev(GL_MODELVIEW_MATRIX, proj);
+            glPopMatrix();
+
+            gluProject(p.x, p.y, p.z, model, proj, viewmat,
+                        &newX, &newY, &newZ);
+
+            newX = (GLdouble)mouseX;
+            newY = (GLdouble)(viewmat[3] - mouseY);
+
+            gluUnProject(newX, newY, newZ,
+                        model, proj, viewmat,
+                        &newX, &newY, &newZ);
+
+            draggedNode->setPos(VPointF(newX, newY, newZ));
+            break;
+        }
         default:
             break;
     }
@@ -194,25 +230,26 @@ void GLGraphWidget::keyPressEvent(QKeyEvent *event) {
         myScene->randomizePlacement();
         break;
     case Qt::Key_Space:
-        playPause();
+        setAnimation(!animationRunning());
         break;
     case Qt::Key_0:
         fitToScreen();
         break;
     case Qt::Key_A:
+    case Qt::Key_N:
         myScene->addVertex();
         break;
     case Qt::Key_Right:
         glaCameraTranslatef(cameramat, (-20.0)/zoom, 0.0, 0.0);
         break;
     case Qt::Key_Down:
-        glaCameraTranslatef(cameramat, 0.0, (-20.0)/zoom, 0.0);
+        glaCameraTranslatef(cameramat, 0.0, 20.0/zoom, 0.0);
         break;
     case Qt::Key_Left:
         glaCameraTranslatef(cameramat, 20.0/zoom, 0.0, 0.0);
         break;
     case Qt::Key_Up:
-        glaCameraTranslatef(cameramat, 0.0, 20.0/zoom, 0.0);
+        glaCameraTranslatef(cameramat, 0.0, (-20.0)/zoom, 0.0);
         break;
     default:
         QGLWidget::keyPressEvent(event);
@@ -222,9 +259,13 @@ void GLGraphWidget::keyPressEvent(QKeyEvent *event) {
 }
 
 void GLGraphWidget::timerEvent(QTimerEvent *) {
-    myScene->calculateForces();
+    bool somethingMoved = myScene->calculateForces();
 
-    setAnimationRunning();
+    if (!somethingMoved) {
+        // setAnimation(true) would recreate the timer though it is
+        // already running (this is a timer event). So don't do it.
+        setAnimation(false);
+    }
 
     this->repaint();
 }
@@ -240,26 +281,39 @@ void GLGraphWidget::timerEvent(QTimerEvent *) {
 void GLGraphWidget::initializeGL() {
     glaInit();
 
-    // Init camera matrix
     glMatrixMode(GL_MODELVIEW);
-    // Warning: Do not set the camera far away when using small
-    //     zNear, zFar values. Darkness awaits.
-    //gluLookAt(0.0, 0.0, 5.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0);
-    glGetFloatv(GL_MODELVIEW_MATRIX, cameramat);
     glLoadIdentity();
+
+    initializeCamera();
+}
+
+void GLGraphWidget::initializeCamera() {
+    glPushMatrix();
+        glLoadIdentity();
+        if (mode3d) {
+            // Warning: Do not set the camera far away when using small
+            //     zNear, zFar values. Darkness awaits.
+            gluLookAt(0.0, 0.0, 500.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0);
+        }
+        glGetFloatv(GL_MODELVIEW_MATRIX, cameramat);
+    glPopMatrix();
 }
 
 void GLGraphWidget::paintGL() {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    // Set up the camera
-    glLoadMatrixf(cameramat);
+    // Draw 2D background elements
+    initOverlayProjection();
+    drawBackground();
 
-    // Draw the old example objects
+    // Draw the graph and the central box
+    initGraphProjection();
     glaDrawExample();
-
-    // Draw the graph
     drawGraphGL();
+
+    // Draw 2D overlay elements
+    initOverlayProjection();
+    drawOverlay();
 
     glFlush();
 }
@@ -268,7 +322,8 @@ void GLGraphWidget::resizeGL(int w, int h) {
     // Set up the Viewport transformation
     glViewport(0, 0, (GLsizei) w, (GLsizei) h);
 
-    this->initProjection();
+    // Save the viewport, e.g. for mouse interaction
+    glGetIntegerv(GL_VIEWPORT, viewmat);
 }
 
 
@@ -277,53 +332,43 @@ void GLGraphWidget::resizeGL(int w, int h) {
  * GL graph drawing and projection setup (private)
  ***************************/
 
-inline void GLGraphWidget::drawNode(Node* node) {
-    QColor c = node->brush().color();
+/*** 2D overlay/background drawing ***/
+
+void GLGraphWidget::drawBackground() {
+    QColor c = myScene->colour();
+    glClearColor(c.redF(), c.greenF(), c.blueF(), 1.0);
+}
+
+void GLGraphWidget::drawOverlay() {
+}
+
+
+/*** Graph drawing ***/
+
+inline void GLGraphWidget::drawNode(Node *node) {
+    QColor c = node->colour();
     glColor4f(c.redF(), c.greenF(), c.blueF(), c.alphaF());
 
     float radius = (log(node->edges().size()) / log(2)) + 1.0;
-    QPointF p = node->pos();
+    VPointF p = node->pos();
 
-    glBegin(GL_TRIANGLE_FAN);
-    // glBegin(GL_LINE_LOOP);
-        // int step = 180 / (radius > 50 ? 50 : (int) radius);
-        int step = 30;
-        for (int angle(0); angle < 360; angle += step) {
-            GLfloat rangle = (GLfloat) angle * (3.1415926 / 180.0);
-            glVertex3f((GLfloat)p.x() + sin(rangle) * radius,
-                       (GLfloat)p.y() + cos(rangle) * radius,
-                       0.0);
-        }
-    glEnd();
+    glPushMatrix();
+        glTranslatef(p.x, p.y, p.z);
+        glaDrawSphere(radius, 10, 10);
+    glPopMatrix();
 }
 
 void GLGraphWidget::drawGraphGL() {
-    // If there is a dragged node, draw it where the mouse is.
-    if (mouseMode == MOUSE_DRAGGING) {
-        GLdouble model[16], proj[16];
-        GLint view[4];
-        GLdouble newX, newY, newZ;
-
-        glGetDoublev(GL_MODELVIEW_MATRIX, model);
-        glGetDoublev(GL_PROJECTION_MATRIX, proj);
-        glGetIntegerv(GL_VIEWPORT, view);
-        gluUnProject((GLdouble)mouseX, (GLdouble)(view[3] - mouseY), 0.0,
-                    model, proj, view,
-                    &newX, &newY, &newZ);
-
-        draggedNode->setPos(newX, newY);
-    }
-
     // Draw edges
     foreach (Edge* edge, myScene->edges()) {
         const QColor c = edge->colour();
         glColor4f(c.redF(), c.greenF(), c.blueF(), c.alphaF());
-        //glColor4f(0.0, 0.0, 1.0, 0.5);
+
         glBegin(GL_LINE_STRIP);
-            QPointF p = edge->sourceNode()->pos();
-            glVertex3f((GLfloat)p.x(), (GLfloat)p.y(), 0.0);
+            VPointF p = edge->sourceNode()->pos();
+            glVertex3f((GLfloat)p.x, (GLfloat)p.y, (GLfloat)p.z);
             p = edge->destNode()->pos();
-            glVertex3f((GLfloat)p.x(), (GLfloat)p.y(), 0.0);
+            glVertex3f((GLfloat)p.x, (GLfloat)p.y, (GLfloat)p.z);
         glEnd();
     }
 
@@ -333,74 +378,121 @@ void GLGraphWidget::drawGraphGL() {
     }
 }
 
-void GLGraphWidget::initProjection() {
+
+/*** Projection setup ***/
+
+void GLGraphWidget::initGraphProjection() {
     // Set up the Projection transformation
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
 
-    // Zooming
-    glScalef(zoom, zoom, 1.0/zoom);
+    // Zooming, only in 2D
+    if (!mode3d)
+        glScalef(zoom, zoom, 1.0/zoom);
 
-    // Flat projection
-    gluOrtho2D(0.0, (GLfloat)width(), (GLfloat)height(), 0.0);
+    if (mode3d)
+        // Persective projection
+        gluPerspective(90, (GLfloat)width()/(GLfloat)height(), 0.0001, 100000.0);
+    else
+        // Flat projection
+        glOrtho((GLfloat)width() / -2, (GLfloat)width() / 2,
+                (GLfloat)height() / -2, (GLfloat)height() / 2,
+                -100, 100);
+
+    // Save the projection matrix for later use, e.g. mouse interaction
+    glGetFloatv(GL_PROJECTION_MATRIX, projmat);
 
     // Switch to Model/view transformation for drawing objects
     glMatrixMode(GL_MODELVIEW);
+    glLoadMatrixf(cameramat);   // Load camera for 3D graph
+
 }
+
+void GLGraphWidget::initOverlayProjection() {
+    // Set up the Projection transformation
+    glMatrixMode(GL_PROJECTION);
+    glLoadIdentity();
+
+    // Flat projection, Qt-style y axis.
+    gluOrtho2D(0, (GLfloat)width(), (GLfloat)height(), 0);
+
+    // Switch to Model/view transformation for drawing objects
+    glMatrixMode(GL_MODELVIEW);
+    glLoadIdentity();   // Reset camera for 2D overlay
+}
+
+
+/* Lighting */
+
+void GLGraphWidget::setupLighting() {
+    // Lightining
+    GLfloat sunDirection[] = {0.0, 2.0, -1.0, 1.0};
+    GLfloat sunIntensity[] = {0.7, 0.7, 0.7, 1.0};
+    GLfloat ambientIntensity[] = {0.3, 0.3, 0.3, 1.0};
+
+    if (!mode3d) {
+        ambientIntensity[0] = 0.8;
+        ambientIntensity[1] = 0.8;
+        ambientIntensity[2] = 0.8;
+    }
+
+    // Set up ambient light
+    glEnable(GL_LIGHTING);
+    glLightModelfv(GL_LIGHT_MODEL_AMBIENT, ambientIntensity);
+
+    // Set up sun light
+    glEnable(GL_LIGHT0);
+    glLightfv(GL_LIGHT0, GL_POSITION, sunDirection);
+    glLightfv(GL_LIGHT0, GL_DIFFUSE, sunIntensity);
+}
+
+
+/*** Selection ***/
 
 Node* GLGraphWidget::selectGL(int x, int y)
 {
     Node* hitNode = NULL;
-
     GLuint namebuf[64] = {0};
     GLint hits;
-    GLint view[4];
-    GLfloat projmat[16];
-
-
-    // Account for inverse Y coordinate
-    glGetIntegerv(GL_VIEWPORT, view);
-    y = view[3] - y;
 
     glSelectBuffer(64, namebuf);
 
+    // Account for inverse Y coordinate
+    y = viewmat[3] - y;
+
+    initGraphProjection();
+
     // Restrict projection matrix to selection area
-    glGetFloatv(GL_PROJECTION_MATRIX, projmat);
     glMatrixMode(GL_PROJECTION);
-    glPushMatrix();
-        glLoadIdentity();
-        gluPickMatrix(x, y, 1.0, 1.0, view);
-        glMultMatrixf(projmat);
+    glLoadIdentity();
+    gluPickMatrix(x, y, 1.0, 1.0, viewmat);
+    glMultMatrixf(projmat);
 
-        // Redraw points to fill selection buffer
-        glMatrixMode(GL_MODELVIEW);
+    // Redraw points to fill selection buffer
+    glMatrixMode(GL_MODELVIEW);
 
-        QVector<Node*> &nodes = myScene->nodes();
-        for (int i = nodes.size() - 1; i >= 0; --i) {
-            glSelectBuffer(64, namebuf);
-            glRenderMode(GL_SELECT);
+    QVector<Node*> &nodes = myScene->nodes();
+    for (int i = nodes.size() - 1; i >= 0; --i) {
+        glSelectBuffer(64, namebuf);
+        glRenderMode(GL_SELECT);
 
-            // Reset name stack
-            glInitNames();
-            glPushName(0);
+        // Reset name stack
+        glInitNames();
+        glPushName(0);
 
-            // Draw the node
-            drawNode(nodes[i]);
+        // Draw the node
+        drawNode(nodes[i]);
 
-            hits = glRenderMode(GL_RENDER);
+        hits = glRenderMode(GL_RENDER);
 
-            if (hits) {
-                hitNode = nodes[i];
-                break;
-            }
+        if (hits) {
+            hitNode = nodes[i];
+            break;
         }
+    }
 
-  // Reset projection
-  glMatrixMode(GL_PROJECTION);
-  glPopMatrix();
+    glMatrixMode(GL_MODELVIEW);
+    this->repaint();
 
-  glMatrixMode(GL_MODELVIEW);
-  this->repaint();
-
-  return hitNode;
+    return hitNode;
 }

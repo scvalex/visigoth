@@ -10,7 +10,7 @@
 
 Bipartite::Bipartite(GraphScene *scene) :
     // true will be set when it actually works
-    Algorithm(scene,true),
+    Algorithm(scene, true),
     ctlW(0),
     uSize(START_USIZE),
     vSize(START_VSIZE),

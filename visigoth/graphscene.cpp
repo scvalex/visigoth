@@ -1,6 +1,7 @@
+#include "vtools.h"
 #include "edge.h"
 #include "graphscene.h"
-#include "abstractgraphwidget.h"
+#include "glgraphwidget.h"
 #include "node.h"
 #include "preferential.h"
 #include "bipartite.h"
@@ -16,7 +17,8 @@
 GraphScene::GraphScene() :
     algo(0),
     degreeCount(1),
-    running(false)
+    mode3d(false),
+    myColour(QColor::fromRgbF(0.0, 0.0, 0.0))
 {
     myAlgorithms["Preferential Attachament"] = PREFERENTIAL_ATTACHAMENT;
     myAlgorithms["Bipartite Model"] = BIPARTITE_MODEL;
@@ -41,10 +43,17 @@ Statistics* GraphScene::getStatistics() {
     return stats;
 }
 
+void GraphScene::onNodeMoved() {
+    emit nodeMoved();
+}
+
 void GraphScene::reset() {
-    clear();
+    //clear();
     hasEdge.clear();
     myEdges.clear();
+    foreach (Node *node, myNodes) {
+        disconnect(node, 0, 0, 0);
+    }
     myNodes.clear();
     degreeCount.clear();
     Node::reset();
@@ -57,6 +66,12 @@ QVector<Node*>& GraphScene::nodes() {
 
 QList<Edge*>& GraphScene::edges() {
     return myEdges;
+}
+
+void GraphScene::set3DMode(bool enabled) {
+    mode3d = enabled;
+
+    randomizePlacement();
 }
 
 bool GraphScene::newEdge(Node *source, Node *dest) {
@@ -74,7 +89,7 @@ bool GraphScene::newEdge(Node *source, Node *dest) {
     }
     hasEdge[source->tag()].insert(dest->tag());
     hasEdge[dest->tag()].insert(source->tag());
-    addItem(edge);
+
     myEdges << edge;
     updateDegreeCount(source);
     updateDegreeCount(dest);
@@ -85,54 +100,48 @@ bool GraphScene::newEdge(Node *source, Node *dest) {
 // used only by the algorithms
 Node* GraphScene::newNode() {
     Node *node = new Node(this);
-    addItem(node);
+
     myNodes << node;
-    node->setPos(10 + qrand() % 1000, 10 + qrand() % 600);
+
+    float z = 0;
+    if (mode3d) {
+        z = (qrand() % 600) - 300;
+    }
+
+    node->setPos(VPointF((qrand() % 1000) - 500,
+                         (qrand() % 600) - 300,
+                         z));
+    connect(node, SIGNAL(nodeMoved()), this, SLOT(onNodeMoved()));
+    onNodeMoved();
 
     return node;
 }
 
 // Pre: Will remove nodes staring from last node in list
-void GraphScene::removeNode(Node *n){
-
-    removeItem(n);
+void GraphScene::removeNode(Node *n) {
     myNodes.remove(n->tag());
-    Node::setAllNodes(Node::getAllNodes() - 1);
 }
 
 // CutoffTag is for destNodes only!
-void GraphScene::removeEdges(int cutoffTag){
-
-
-    for(int i(0); i < myEdges.size(); ++i){
-        if(myEdges[i]->destNode()->tag() >= cutoffTag){
-
-            removeItem(myEdges[i]);
+void GraphScene::removeEdges(int cutoffTag) {
+    for (int i(0); i < myEdges.size(); ++i) {
+        if (myEdges[i]->destNode()->tag() >= cutoffTag) {
             myEdges.removeAt(i);
             // just to make sure nothing is skipped
             --i;
         }
-
-
-
     }
 }
 
 // used in Watts Strogatz
 void GraphScene::removeEdge(Node * source, Node* dst){
-
     for(int i(0); i < myEdges.size(); ++i){
-
         if(myEdges[i]->sourceNode()->tag() == source->tag() &&
-           myEdges[i]->destNode()->tag() == dst->tag()){
-            removeItem(myEdges[i]);
+            myEdges[i]->destNode()->tag() == dst->tag()){
             myEdges.removeAt(i);
             --i;
         }
-
     }
-
-
 }
 
 bool GraphScene::doesEdgeExist(Node *source, Node *dest) const {
@@ -147,11 +156,6 @@ bool GraphScene::doesEdgeExist(Node *source, Node *dest) const {
                source->tag() == dest->tag();
     }
     return false;
-}
-
-void GraphScene::itemMoved() {
-    running = true;
-    emit itemMovedSignal();
 }
 
 void GraphScene::chooseAlgorithm(const QString &name) {
@@ -194,30 +198,25 @@ void GraphScene::repopulate() {
     algo->reset();
     int counter = 0;
     if(algo->getSWNFlag()){
-        if(!stats)
+        if(!stats) {
             stats = new Statistics(this);
+        }
         // Cutoff value exsists because for low max degree
         // generating a reasonable exponent is not possible
         double exponent = stats->powerLawExponent();
         while((exponent > 4.0 ||
               exponent < 2.1 ) &&
-              (counter < 200)){
+              (counter < 200))
+        {
             reset();
             algo->reset();
             exponent = stats->powerLawExponent();
             ++counter;
-
         }
-
-        // if counter = 500 issue message
-        // "failed to generate small world network exponent"
-        // or smthing like that
-
     }
     randomizePlacement();
 
     emit repopulated();
-
 }
 
 Algorithm* GraphScene::algorithm() const {
@@ -225,21 +224,21 @@ Algorithm* GraphScene::algorithm() const {
 }
 
 void GraphScene::randomizePlacement() {
-    foreach (Node *node, nodes()) {
-        node->setPos(10 + qrand() % 1000, 10 + qrand() % 600);
+    float z = 0;
+    if (mode3d) {
+        z = (qrand() % 600) - 300;
     }
-    foreach (Edge *edge, edges()) {
-        edge->adjust();
+
+    foreach (Node *node, nodes()) {
+        node->setPos(VPointF((qrand() % 1000) - 500,
+                              (qrand() % 600) - 300,
+                              z));
     }
 }
 
 void GraphScene::addVertex() {
     algo->addVertex();
-
-    //calculateMetrics();
-
     emit repopulated();
-
 }
 
 // Pre: degree is valid
@@ -260,24 +259,13 @@ void GraphScene::updateDegreeCount(Node *node) {
          degreeRemove(node);
 }
 
-/*
-void GraphScene::calculateMetrics() {
-    if(!stats)
-        stats = new Statistics(this);
-
-    stats->clusteringAvg();
-}
-*/
-
-
-void GraphScene::calculateForces() {
-    QPointF topLeft;
-    QPointF bottomRight;
-
-    QuadTree quadTree(sceneRect());
-    foreach (Node *node, nodes()) {
+bool GraphScene::calculateForces() {
+    /*
+    QuadTree quadTree(graphCube().longestEdge());
+    foreach (Node* node, nodes()) {
         quadTree.addNode(node);
     }
+    */
 
     // Don't move the first node
     bool first = true;
@@ -287,34 +275,18 @@ void GraphScene::calculateForces() {
             continue;
         }
 
-        QPointF pos = node->calculatePosition(quadTree.root());
-
-        if (pos.x() < topLeft.x())
-            topLeft.setX(pos.x());
-        if (pos.y() < topLeft.y())
-            topLeft.setY(pos.y());
-        if (pos.x() > bottomRight.x())
-            bottomRight.setX(pos.x());
-        if (pos.y() > bottomRight.y())
-            bottomRight.setY(pos.y());
+        // node->calculatePosition(quadTree.root());
+        node->calculatePosition3D(nodes());
     }
 
-    // Resize the scene to fit all the nodes
-    sceneRect().setLeft(topLeft.x() - 10);
-    sceneRect().setTop(topLeft.y() - 10);
-    sceneRect().setRight(bottomRight.x() + 10);
-    sceneRect().setBottom(bottomRight.y() + 10);
-
-    running = false;
+    bool somethingMoved = false;
     foreach (Node *node, nodes()) {
         if (node->advance()) {
-            running = true;
+            somethingMoved = true;
         }
     }
-}
 
-bool GraphScene::isRunning() const {
-    return running;
+    return somethingMoved;
 }
 
 int GraphScene::maxDegree() const {
@@ -341,7 +313,34 @@ void GraphScene::degreeRemove(Node *node) {
     }
 }
 
-void GraphScene::setAllNodes(int i){
-    Node::setAllNodes(i);
+VCubeF GraphScene::graphCube() {
+    VPointF p1 = VPointF(0.0);
+    VPointF p2 = VPointF(0.0);
+
+    foreach (Node *n, myNodes) {
+        if (n->pos().x < p1.x)
+            p1.x = n->pos().x;
+        if (n->pos().x > p2.x)
+            p2.x = n->pos().x;
+
+        if (n->pos().y < p1.y)
+            p1.y = n->pos().y;
+        if (n->pos().y > p2.y)
+            p2.y = n->pos().y;
+
+        if (n->pos().z < p1.z)
+            p1.z = n->pos().z;
+        if (n->pos().z > p2.z)
+            p2.z = n->pos().z;
+    }
+
+    return VCubeF(p1, p2);
 }
 
+QColor& GraphScene::colour() {
+    return myColour;
+}
+
+void GraphScene::setColour(const QColor &c) {
+    myColour = c;
+}

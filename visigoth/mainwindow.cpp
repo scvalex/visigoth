@@ -42,7 +42,6 @@ MainWindow::MainWindow(QWidget *parent) :
 
     view = new GLGraphWidget(this);
     scene = new GraphScene();
-    connect(scene, SIGNAL(itemMovedSignal()), view, SLOT(itemMoved()));
     view->setScene(scene);
 
     statsUi->setupUi(ui->statsWidget);
@@ -52,6 +51,7 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->newNodeAct, SIGNAL(triggered()), scene, SLOT(addVertex()));
     connect(ui->randomizeAct, SIGNAL(triggered()), scene, SLOT(randomizePlacement()));
     connect(ui->generateAct, SIGNAL(triggered()), scene, SLOT(repopulate()));
+    connect(ui->mode3DAct, SIGNAL(toggled(bool)), view, SLOT(set3DMode(bool)));
     connect(scene, SIGNAL(repopulated()), this, SLOT(onGenerate()));
     connect(view, SIGNAL(algorithmChanged(Algorithm*)), this, SLOT(onAlgorithmChanged(Algorithm*)));
     connect(view, SIGNAL(hoveringOnNode(Node*)), this, SLOT(onFocusedNodeChanged(Node*)));
