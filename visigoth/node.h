@@ -48,6 +48,7 @@ public:
 
     QColor& colour();
     void setColour(const QColor &b);
+    void resetColour();
 
     static void reset();
 

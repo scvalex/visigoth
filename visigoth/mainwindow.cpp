@@ -54,7 +54,7 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->mode3DAct, SIGNAL(toggled(bool)), view, SLOT(set3DMode(bool)));
     connect(scene, SIGNAL(repopulated()), this, SLOT(onGenerate()));
     connect(view, SIGNAL(algorithmChanged(Algorithm*)), this, SLOT(onAlgorithmChanged(Algorithm*)));
-    connect(view, SIGNAL(hoveringOnNode(Node*)), this, SLOT(onFocusedNodeChanged(Node*)));
+    connect(view, SIGNAL(focusingOnNode(Node*)), this, SLOT(onFocusedNodeChanged(Node*)));
 
     ui->chooserCombo->addItems(scene->algorithms());
     connect(ui->chooserCombo, SIGNAL(currentIndexChanged(const QString &)), scene, SLOT(chooseAlgorithm(const QString &)));

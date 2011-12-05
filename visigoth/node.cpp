@@ -11,7 +11,6 @@ int Node::ALL_NODES(0);
 Node::Node(GraphScene *graph) :
     QObject(graph),
     graph(graph),
-    myColour(QColor::fromRgbF(0.0, 1.0, 0.3, 0.7)),
     curPos(0.0),
     newPos(0.0),
     allowAdvance(true),
@@ -19,6 +18,7 @@ Node::Node(GraphScene *graph) :
     distance(0)
 {
     myTag = ALL_NODES++;
+    resetColour();
 }
 
 Node::~Node() {
@@ -191,4 +191,8 @@ QColor& Node::colour() {
 
 void Node::setColour(const QColor &c) {
     myColour = c;
+}
+
+void Node::resetColour() {
+    myColour = QColor::fromRgbF(0.0, 1.0, 0.3, 0.7);
 }

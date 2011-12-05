@@ -31,7 +31,7 @@ public:
 
 signals:
     void algorithmChanged(Algorithm *newAlgo);
-    void hoveringOnNode(Node *node);
+    void focusingOnNode(Node *node);
 
 protected:
     bool animationRunning();
@@ -79,6 +79,7 @@ private:
     int mouseX, mouseY;
     enum MOUSE_MODES mouseMode;
     Node *draggedNode;
+    Node *selectedNode;
 
     bool mode3d;
     bool running;

@@ -25,6 +25,8 @@ GLGraphWidget::GLGraphWidget(QWidget *parent) :
     QGLWidget(parent),
     myScene(0),
     mouseMode(MOUSE_IDLE),
+    draggedNode(0),
+    selectedNode(0),
     animTimerId(0)
 {
     setFocusPolicy(Qt::StrongFocus);
@@ -95,8 +97,21 @@ void GLGraphWidget::mouseDoubleClickEvent(QMouseEvent *event) {
     if (event->button() == Qt::LeftButton) {
         Node *hitNode = selectGL(event->x(), event->y());
 
+        if (selectedNode)
+            selectedNode->resetColour();
+
         if (hitNode) {
-            hitNode->setColour(QColor::fromRgbF(1.0, 0.0, 0.0, 1.0));
+            if (hitNode == selectedNode) {
+                selectedNode = NULL;
+                hitNode->resetColour();
+            }
+            else {
+                selectedNode = hitNode;
+                hitNode->setColour(QColor::fromRgbF(1.0, 0.0, 0.0, 1.0));
+
+                // Calculate stats 'n' stuff
+                emit focusingOnNode(hitNode);
+            }
         }
     }
 
@@ -149,18 +164,11 @@ void GLGraphWidget::mouseReleaseEvent(QMouseEvent *event) {
 }
 
 void GLGraphWidget::mouseMoveEvent(QMouseEvent *event) {
-    int dx, dy;
-
-    if (mouseMode == MOUSE_IDLE) {
-        Node *node = selectGL(event->x(), event->y());
-        if (node != 0) {
-            emit hoveringOnNode(node);
-        }
+    if (mouseMode == MOUSE_IDLE)
         return;
-    }
 
-    dx = event->x() - mouseX;
-    dy = event->y() - mouseY;
+    int dx = event->x() - mouseX;
+    int dy = event->y() - mouseY;
     mouseX = event->x();
     mouseY = event->y();
 
