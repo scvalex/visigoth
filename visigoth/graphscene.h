@@ -47,6 +47,7 @@ public:
     void removeNode(Node *n);
     void setAllNodes(int i);
     void removeEdges(int cutoffTag);
+    void removeEdge(Node * source, Node* dst);
 
     Statistics* getStatistics();
 
@@ -78,6 +79,7 @@ private:
         PREFERENTIAL_ATTACHAMENT,
         ERDOS_RENYI,
         BARABASI_ALBERT,
+        WATTS_STROGATZ,
         TWITTER
     };
     Algorithm *algo;

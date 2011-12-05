@@ -8,6 +8,7 @@
 #include "erdosrenyi.h"
 #include "statistics.h"
 #include "barabasialbert.h"
+#include "wattsstrogatz.h"
 
 #ifdef HAS_OAUTH
 #include "twitter.h"
@@ -26,6 +27,7 @@ GraphScene::GraphScene() :
 #ifdef HAS_OAUTH
     myAlgorithms["Twitter"] = TWITTER;
 #endif
+    myAlgorithms["Watts Strogatz"] = WATTS_STROGATZ;
     stats = new Statistics(this);
 }
 
@@ -131,6 +133,17 @@ void GraphScene::removeEdges(int cutoffTag) {
     }
 }
 
+// used in Watts Strogatz
+void GraphScene::removeEdge(Node * source, Node* dst){
+    for(int i(0); i < myEdges.size(); ++i){
+        if(myEdges[i]->sourceNode()->tag() == source->tag() &&
+            myEdges[i]->destNode()->tag() == dst->tag()){
+            myEdges.removeAt(i);
+            --i;
+        }
+    }
+}
+
 bool GraphScene::doesEdgeExist(Node *source, Node *dest) const {
     int sourceTag = source->tag();
     int destTag = dest->tag();
@@ -171,6 +184,9 @@ void GraphScene::repopulate() {
             break;
         case BARABASI_ALBERT:
             algo = new BarabasiAlbert(this);
+            break;
+        case WATTS_STROGATZ:
+            algo = new WattsStrogatz(this);
             break;
 #ifdef HAS_OAUTH
         case TWITTER:

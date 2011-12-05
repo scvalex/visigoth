@@ -189,8 +189,7 @@ double Statistics::powerLawExponent() {
     foreach (QPointF p, plot) {
         // init calculation
         if (c == 0) {
-           //yPrev = p.getY();
-            yPref = p.ry();
+           yPref = p.ry();
            deltaX = p.rx();
            ++c;
         } else {
