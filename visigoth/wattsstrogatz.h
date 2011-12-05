@@ -27,8 +27,6 @@ private:
     static const double START_PROBABILITY = 0.2;
     static const int START_DEGREE = 4;
 
-    void checkDegree();
-
     GraphScene *scene;
     QWidget *ctlW;
 

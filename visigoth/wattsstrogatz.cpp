@@ -85,17 +85,12 @@ void WattsStrogatz::reset(){
     }
 }
 
-// The degree has to be smaller than the size. We should communicate the change
-// to the user.
-void WattsStrogatz::checkDegree() {
-    if (degree > size / 2) {
-        degree = size / 2;
-    }
-}
-
 void WattsStrogatz::onNodesChanged(int newValue) {
+    if (newValue < degree * 2) {
+        newValue = degree * 2;
+    }
+
     size = newValue;
-    checkDegree();
     scene->repopulate();
 }
 
@@ -104,8 +99,13 @@ void WattsStrogatz::onProbabilityChanged(double newValue) {
     scene->repopulate();
 }
 
+// The degree has to be smaller than the size. We should communicate the change
+// to the user.
 void WattsStrogatz::onDegreeChanged(int newValue) {
+    if (newValue > size / 2) {
+        newValue = size / 2;
+    }
+
     degree = newValue;
-    checkDegree();
     scene->repopulate();
 }
