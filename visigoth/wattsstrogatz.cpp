@@ -15,11 +15,10 @@ WattsStrogatz::WattsStrogatz(GraphScene* scene) :
 {
 }
 
-WattsStrogatz::~WattsStrogatz()
-{
+WattsStrogatz::~WattsStrogatz() {
 }
 
-bool WattsStrogatz::canAddVertex(){
+bool WattsStrogatz::canAddVertex() {
     return false;
 }
 
@@ -27,8 +26,7 @@ void WattsStrogatz::addVertex() {
     qDebug("Watts Strogatz does not support adding new vertices");
 }
 
-QWidget* WattsStrogatz::controlWidget(QWidget *parent){
-
+QWidget* WattsStrogatz::controlWidget(QWidget *parent) {
     if (!ctlW) {
         ctlW = new QWidget(parent);
         Ui::WattsControl *watsCtrl = new Ui::WattsControl;
@@ -42,79 +40,72 @@ QWidget* WattsStrogatz::controlWidget(QWidget *parent){
 }
 
 void WattsStrogatz::reset(){
-
     QVector<Node*> nodeVec(size);
 
     for(int i(0); i < size; ++i){
-
         Node *node = scene->newNode();
         nodeVec[i] = node;
     }
 
     // construct ring lattice
-    for(int j(0); j < size; ++j){
+    for(int j(0); j < size; ++j) {
         // connecting right side
-        for(int r(1); r<= degree/2; ++r){
+        for(int r(1); r<= degree/2; ++r) {
 
-            int nodeToConnect = (j+r)%size;
-            scene->newEdge(nodeVec[j],nodeVec[nodeToConnect]);
+            int nodeToConnect = (j+r) % size;
+            scene->newEdge(nodeVec[j], nodeVec[nodeToConnect]);
 
         }
         // connecting left side
-        for(int l(1); l<= degree/2; ++l){
+        for(int l(1); l<= degree/2; ++l) {
 
             int nodeToConnect = (size+j-l)%size;
-            scene->newEdge(nodeVec[j],nodeVec[nodeToConnect]);
+            scene->newEdge(nodeVec[j], nodeVec[nodeToConnect]);
 
         }
-
-
     }
 
     // rewire
-    for(int n(0); n < size; ++n){
-
+    for(int n(0); n < size; ++n) {
         // only choose the right side, since we only select (ni,nj) with i < j
-        for(int r(1); r<= degree/2; ++r){
-
+        for(int r(1); r <= degree/2; ++r) {
             int nodeToSelect = (n+r)%size;
-            if ((double)qrand() / RAND_MAX < probability){
-                scene->removeEdge(nodeVec[n],nodeVec[nodeToSelect]);
+
+            if ((double)qrand() / RAND_MAX < probability) {
+                scene->removeEdge(nodeVec[n], nodeVec[nodeToSelect]);
                 int newNode = qrand()%size;
-                for (int cutOff(0); cutOff < 1000 && !scene->newEdge(nodeVec[n],nodeVec[newNode] ); ++cutOff){
-                    newNode = qrand()%size;
+
+                for (int cutOff(0);
+                     cutOff < 1000 && !scene->newEdge(nodeVec[n], nodeVec[newNode]);
+                     ++cutOff) {
+                    newNode = qrand() % size;
                 }
             }
-
         }
-
     }
-
-
 }
 
-// size has to be a lot bigger than degree and even
-void WattsStrogatz::onNodesChanged(int newValue) {
-    if(newValue < 2*degree ){
-        newValue = 2*degree;
+// The degree has to be smaller than the size. We should communicate the change
+// to the user.
+void WattsStrogatz::checkDegree() {
+    if (degree > size / 2) {
+        degree = size / 2;
     }
+}
+
+void WattsStrogatz::onNodesChanged(int newValue) {
     size = newValue;
+    checkDegree();
     scene->repopulate();
 }
 
 void WattsStrogatz::onProbabilityChanged(double newValue) {
-
     probability = newValue;
     scene->repopulate();
 }
 
-// newValue has to be even and a lot smaller than size
-// TODO: display the internal change ( if happens ) on the widget
-void WattsStrogatz::onDegreeChanged(int newValue){
-    if(newValue > size/2){
-        newValue = size/2;
-    }
-
+void WattsStrogatz::onDegreeChanged(int newValue) {
     degree = newValue;
+    checkDegree();
     scene->repopulate();
 }

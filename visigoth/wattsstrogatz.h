@@ -6,10 +6,9 @@
 class GraphScene;
 class QWidget;
 
-class WattsStrogatz : public Algorithm{
+class WattsStrogatz : public Algorithm {
    Q_OBJECT
 public:
-
     WattsStrogatz(GraphScene* scene = 0);
     virtual ~WattsStrogatz();
 
@@ -28,6 +27,7 @@ private:
     static const double START_PROBABILITY = 0.2;
     static const int START_DEGREE = 4;
 
+    void checkDegree();
 
     GraphScene *scene;
     QWidget *ctlW;
@@ -35,7 +35,6 @@ private:
     int size;
     double probability;
     int degree;
-
 };
 
 #endif // WATTSSTROGATZ_H
