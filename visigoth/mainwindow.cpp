@@ -20,6 +20,7 @@
 #include <QObject>
 #include <QAction>
 #include <QMessageBox>
+#include <QColorDialog>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -27,7 +28,9 @@ MainWindow::MainWindow(QWidget *parent) :
     statsUi(new Ui::Statistics),
     algoCtl(0),
     helpWidget(0),
-    focusedNode(0)
+    focusedNode(0),
+    newColor(QColor::fromRgbF(0.0, 1.0, 0.3, 0.7)),
+    isColorChanged(false)
 {
     qsrand(23);
 
@@ -50,8 +53,8 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->newNodeAct, SIGNAL(triggered()), scene, SLOT(addVertex()));
     connect(ui->randomizeAct, SIGNAL(triggered()), scene, SLOT(randomizePlacement()));
     connect(ui->generateAct, SIGNAL(triggered()), scene, SLOT(repopulate()));
-    connect(ui->edgeColorAct, SIGNAL(triggered()), scene, SLOT(customizeEdgesColor()));
-    connect(ui->nodeColorAct, SIGNAL(triggered()), scene, SLOT(customizeNodesColor()));
+
+    connect(ui->menuCustomize_Graph, SIGNAL(triggered(QAction*)), this, SLOT(customizeColor(QAction*)));
 
     connect(scene, SIGNAL(repopulated()), this, SLOT(onGenerate()));
     connect(view, SIGNAL(algorithmChanged(Algorithm*)), this, SLOT(onAlgorithmChanged(Algorithm*)));
@@ -68,6 +71,24 @@ MainWindow::MainWindow(QWidget *parent) :
 MainWindow::~MainWindow() {
     delete view;
     delete ui;
+}
+
+void MainWindow::customizeColor(QAction* uiAction) {
+    const QColor& initial = QColor::fromRgbF(0.0, 0.0, 1.0, 0.5);
+    const QString& title = "Select Colour";
+    QColor c = colorPicker.getColor(initial,this,title,0);
+
+    if (c.green() == QColor(Qt::black).green() && c.red() == QColor(Qt::black).red() && c.blue() == QColor(Qt::black).blue() && c.alpha() == QColor(Qt::black).alpha()) {
+        isColorChanged = false;
+    } else {
+        isColorChanged = true;
+        newColor = c;
+    }
+
+    if (uiAction == ui->edgeColorAct)
+        scene->customizeEdgesColor(newColor,isColorChanged);
+    else if (uiAction == ui->nodeColorAct)
+        scene->customizeNodesColor(newColor,isColorChanged);
 }
 
 void MainWindow::toggleHelp(bool enabled) {

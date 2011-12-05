@@ -57,8 +57,8 @@ public slots:
     void randomizePlacement();
     void repopulate();
     void chooseAlgorithm(const QString &name);
-    void customizeEdgesColor();
-    void customizeNodesColor();
+    void customizeEdgesColor(QColor newColor, bool isColorChanged);
+    void customizeNodesColor(QColor newColor, bool isColorChanged);
 
 signals:
     void algorithmChanged(Algorithm *newAlgo);
@@ -66,7 +66,6 @@ signals:
 
 protected:
     void updateDegreeCount(Node *node);
-    QColor customizeColor();
 
 private:
     enum ALGOS {
@@ -84,10 +83,8 @@ private:
     QList<Edge*> myEdges;
     QVector<QList<Node*> > degreeCount;
     QMap<QString, int> myAlgorithms;
-    QMainWindow *mainWindow;
     QColor myEdgeColor;
     QColor myNodeColor;
-    bool isColorChanged;
 };
 
 #endif // GRAPHSCENE_H

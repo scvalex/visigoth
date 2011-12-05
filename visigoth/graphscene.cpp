@@ -10,6 +10,7 @@
 #include "barabasialbert.h"
 #include <QColorDialog>
 #include <QMainWindow>
+#include "mainwindow.h"
 
 #ifdef HAS_OAUTH
 #include "twitter.h"
@@ -18,10 +19,8 @@
 GraphScene::GraphScene(QMainWindow *mainWindow) :
     algo(0),
     degreeCount(1),
-    mainWindow(mainWindow),
     myEdgeColor(QColor::fromRgbF(0.0, 0.0, 1.0, 0.5)),
-    myNodeColor(QColor::fromRgbF(0.0, 1.0, 0.3, 0.7)),
-    isColorChanged(false)
+    myNodeColor(QColor::fromRgbF(0.0, 1.0, 0.3, 0.7))
 {
     myAlgorithms["Preferential Attachament"] = PREFERENTIAL_ATTACHAMENT;
     myAlgorithms["Bipartite Model"] = BIPARTITE_MODEL;
@@ -135,21 +134,11 @@ void GraphScene::chooseAlgorithm(const QString &name) {
     emit algorithmChanged(algo);
 }
 
-QColor GraphScene::customizeColor() {
-    const QColor& initial = QColor::fromRgbF(0.0, 0.0, 1.0, 0.5);
-    const QString& title = "Select Colour";
-    QColor c = QColorDialog::getColor(initial,mainWindow,title,0);
+void GraphScene::customizeEdgesColor(QColor newColor, bool isColorChanged) {
 
-    if (c.green() == QColor(Qt::black).green() && c.red() == QColor(Qt::black).red() && c.blue() == QColor(Qt::black).blue() && c.alpha() == QColor(Qt::black).alpha()) {
-        isColorChanged = false;
-    } else {
-        isColorChanged = true;
-        return c;
-    }
-}
+    //MainWindow mainWindow;
 
-void GraphScene::customizeEdgesColor() {
-    QColor newColor = customizeColor();
+   // mainWindow.customizeColor();
 
     if (isColorChanged) {
         myEdgeColor = newColor;
@@ -160,8 +149,7 @@ void GraphScene::customizeEdgesColor() {
     }
 }
 
-void GraphScene::customizeNodesColor() {
-    QColor newColor = customizeColor();
+void GraphScene::customizeNodesColor(QColor newColor, bool isColorChanged) {
 
     if (isColorChanged) {
         myNodeColor = newColor;

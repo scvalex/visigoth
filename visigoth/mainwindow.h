@@ -6,6 +6,7 @@
 #include <QComboBox>
 #include <QGraphicsView>
 #include <QMainWindow>
+#include <QColorDialog>
 
 class Algorithm;
 class GraphScene;
@@ -28,6 +29,7 @@ public:
 public slots:
     void exportTo();
     void toggleHelp(bool enabled);
+    void customizeColor(QAction* newAction);
 
 private slots:
     void onAlgorithmChanged(Algorithm *newAlgo);
@@ -43,6 +45,9 @@ private:
     QWidget *helpWidget;
     QDockWidget *helpDock;
     Node *focusedNode;
+    bool isColorChanged;
+    QColor newColor;
+    QColorDialog colorPicker;
 };
 
 #endif // MAINWINDOW_H
