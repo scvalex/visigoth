@@ -58,7 +58,7 @@ private slots:
 
         int count = scene->nodes().size();
         scene->addVertex();
-        QVERIFY(count + 1 == scene->nodes().size());
+        QCOMPARE(scene->nodes().size(), count + 1);
     }
 
     void statsSimple_data() {
@@ -102,33 +102,33 @@ private slots:
         int numNodes = algo->getNumNodes();
         int nodeDegree = algo->getNodeDegree();
 
-        QCOMPARE(numNodes, nodesSpin->value());
-        QCOMPARE(nodeDegree, degreeSpin->value());
+        QCOMPARE(nodesSpin->value(), numNodes);
+        QCOMPARE(degreeSpin->value(), nodeDegree);
 
         scene->addVertex();
 
         int numNodes1 = algo->getNumNodes();
 
-        QCOMPARE(numNodes + 1, numNodes1);
-        QCOMPARE(numNodes1, nodesSpin->value());
+        QCOMPARE(numNodes1, numNodes + 1);
+        QCOMPARE(nodesSpin->value(), numNodes1);
 
         QTest::keyClick(degreeSpin, Qt::Key_A, Qt::ControlModifier);
         QTest::keyClicks(degreeSpin, "2");
         int nodeDegree1 = algo->getNodeDegree();
 
-        QCOMPARE(2, nodeDegree1);
-        QCOMPARE(numNodes1, algo->getNumNodes());
-        QCOMPARE(numNodes1, nodesSpin->value());
-        QCOMPARE(nodeDegree1, degreeSpin->value());
+        QCOMPARE(nodeDegree1, 2);
+        QCOMPARE(algo->getNumNodes(), numNodes1);
+        QCOMPARE(nodesSpin->value(), numNodes1);
+        QCOMPARE(degreeSpin->value(), nodeDegree1);
 
         QTest::keyClick(nodesSpin, Qt::Key_A, Qt::ControlModifier);
         QTest::keyClicks(nodesSpin, "20");
         int numNodes2 = algo->getNumNodes();
 
-        QCOMPARE(20, numNodes2);
-        QCOMPARE(nodeDegree1, algo->getNodeDegree());
-        QCOMPARE(nodeDegree1, degreeSpin->value());
-        QCOMPARE(numNodes2, nodesSpin->value());
+        QCOMPARE(numNodes2, 20);
+        QCOMPARE(algo->getNodeDegree(), nodeDegree1);
+        QCOMPARE(degreeSpin->value(), nodeDegree1);
+        QCOMPARE(nodesSpin->value(), numNodes2);
     }
 
     void controlWidgetBipartite() {
@@ -141,24 +141,24 @@ private slots:
         int uSize = algo->getUSize();
         int vSize = algo->getVSize();
 
-        QCOMPARE(uSize, uSizeSpin->value());
-        QCOMPARE(vSize, vSizeSpin->value());
+        QCOMPARE(uSizeSpin->value(), uSize);
+        QCOMPARE(vSizeSpin->value(), vSize);
 
         QTest::keyClick(uSizeSpin, Qt::Key_A, Qt::ControlModifier);
         QTest::keyClicks(uSizeSpin, "27");
         int uSize1 = algo->getUSize();
 
-        QCOMPARE(27, uSize1);
-        QCOMPARE(uSize1, uSizeSpin->value());
-        QCOMPARE(vSize, vSizeSpin->value());
+        QCOMPARE(uSize1, 27);
+        QCOMPARE(uSizeSpin->value(), uSize1);
+        QCOMPARE(vSizeSpin->value(), vSize);
 
         QTest::keyClick(vSizeSpin, Qt::Key_A, Qt::ControlModifier);
         QTest::keyClicks(vSizeSpin, "5");
         int vSize1 = algo->getVSize();
 
-        QCOMPARE(5, vSize1);
-        QCOMPARE(uSize1, uSizeSpin->value());
-        QCOMPARE(vSize1, vSizeSpin->value());
+        QCOMPARE(vSize1, 5);
+        QCOMPARE(uSizeSpin->value(), uSize1);
+        QCOMPARE(vSizeSpin->value(), vSize1);
     }
 
     void controlWidgetErdos() {
@@ -171,33 +171,33 @@ private slots:
         int numNodes = algo->getNumNodes();
         double probability = algo->getProbability();
 
-        QCOMPARE(numNodes, nodesSpin->value());
-        QCOMPARE(probability, probabilitySpin->value());
+        QCOMPARE(nodesSpin->value(), numNodes);
+        QCOMPARE(probabilitySpin->value(), probability);
 
         scene->addVertex();
 
         int numNodes1 = algo->getNumNodes();
 
-        QCOMPARE(numNodes + 1, numNodes1);
-        QCOMPARE(numNodes1, nodesSpin->value());
+        QCOMPARE(numNodes1, numNodes + 1);
+        QCOMPARE(nodesSpin->value(), numNodes1);
 
         QTest::keyClick(probabilitySpin, Qt::Key_A, Qt::ControlModifier);
         QTest::keyClicks(probabilitySpin, "0.27");
         double probability1 = algo->getProbability();
 
         QCOMPARE(probability1, 0.27);
-        QCOMPARE(numNodes1, algo->getNumNodes());
-        QCOMPARE(numNodes1, nodesSpin->value());
-        QCOMPARE(probability1, probabilitySpin->value());
+        QCOMPARE(algo->getNumNodes(), numNodes1);
+        QCOMPARE(nodesSpin->value(), numNodes1);
+        QCOMPARE(probabilitySpin->value(), probability1);
 
         QTest::keyClick(nodesSpin, Qt::Key_A, Qt::ControlModifier);
         QTest::keyClicks(nodesSpin, "42");
         int numNodes2 = algo->getNumNodes();
 
-        QCOMPARE(42, numNodes2);
-        QCOMPARE(probability1, algo->getProbability());
-        QCOMPARE(probability1, probabilitySpin->value());
-        QCOMPARE(numNodes2, nodesSpin->value());
+        QCOMPARE(numNodes2, 42);
+        QCOMPARE(algo->getProbability(), probability1);
+        QCOMPARE(probabilitySpin->value(), probability1);
+        QCOMPARE(nodesSpin->value(), numNodes2);
     }
 
     void cleanup() {
