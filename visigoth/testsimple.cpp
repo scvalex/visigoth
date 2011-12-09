@@ -3,6 +3,7 @@
 #include <QObject>
 #include <QString>
 #include <QtTest/QtTest>
+#include <QTest>
 
 #include <math.h>
 
@@ -16,7 +17,6 @@ public:
     TestSimple(QObject *parent = 0) :
         QObject(parent)
     {
-        normalAlgorithms << "Barabasi Albert" << "Erdos Renyi" << "Preferential Attachament" << "Watts Strogatz";
     }
 
     virtual ~TestSimple() {
@@ -31,24 +31,31 @@ private slots:
         QVERIFY(1 == 1);
     }
 
+    void setAlgo_data() {
+        setAlgoNames();
+    }
+
     void setAlgo() {
-        foreach (QString algoName, normalAlgorithms) {
-            qDebug() << "Testing" << algoName;
-            scene->chooseAlgorithm(algoName);
-        }
+        QFETCH(QString, algoName);
+        scene->chooseAlgorithm(algoName);
+    }
+
+    void addNode_data() {
+        setAlgoNames();
     }
 
     void addNode() {
-        foreach (QString algoName, normalAlgorithms) {
-            qDebug() << "Testing" << algoName;
-            addNodeToAlgo(algoName);
-        }
+        QFETCH(QString, algoName);
+        addNodeToAlgo(algoName);
+    }
+
+    void  statsSimple_data() {
+        setAlgoNames();
     }
 
     void statsSimple() {
-        foreach (QString algoName, normalAlgorithms) {
-            statsSimple(algoName);
-        }
+        QFETCH(QString, algoName);
+        statsSimple(algoName);
     }
 
     void cleanup() {
@@ -57,7 +64,15 @@ private slots:
 
 private:
     GraphScene *scene;
-    QList<QString> normalAlgorithms;
+
+    void setAlgoNames() {
+        QTest::addColumn<QString>("algoName");
+
+        QTest::newRow("Barabasi Albert") << "Barabasi Albert";
+        QTest::newRow("Erdos Renyi") << "Erdos Renyi";
+        QTest::newRow("Preferential Attachament") << "Preferential Attachament";
+        QTest::newRow("Watts Strogatz") << "Watts Strogatz";
+    }
 
     void addNodeToAlgo(QString name) {
         scene->chooseAlgorithm(name);
