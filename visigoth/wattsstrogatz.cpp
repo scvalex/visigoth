@@ -42,22 +42,22 @@ QWidget* WattsStrogatz::controlWidget(QWidget *parent) {
 void WattsStrogatz::reset(){
     QVector<Node*> nodeVec(size);
 
-    for(int i(0); i < size; ++i){
+    for (int i(0); i < size; ++i){
         Node *node = scene->newNode();
         nodeVec[i] = node;
     }
 
     // construct ring lattice
-    for(int j(0); j < size; ++j) {
+    for (int j(0); j < size; ++j) {
         // connecting right side
-        for(int r(1); r<= degree/2; ++r) {
+        for (int r(1); r<= degree/2; ++r) {
 
             int nodeToConnect = (j+r) % size;
             scene->newEdge(nodeVec[j], nodeVec[nodeToConnect]);
 
         }
         // connecting left side
-        for(int l(1); l<= degree/2; ++l) {
+        for (int l(1); l<= degree/2; ++l) {
 
             int nodeToConnect = (size+j-l)%size;
             scene->newEdge(nodeVec[j], nodeVec[nodeToConnect]);
@@ -66,9 +66,9 @@ void WattsStrogatz::reset(){
     }
 
     // rewire
-    for(int n(0); n < size; ++n) {
+    for (int n(0); n < size; ++n) {
         // only choose the right side, since we only select (ni,nj) with i < j
-        for(int r(1); r <= degree/2; ++r) {
+        for (int r(1); r <= degree/2; ++r) {
             int nodeToSelect = (n+r)%size;
 
             if ((double)qrand() / RAND_MAX < probability) {

@@ -73,9 +73,6 @@ Please login and enter your PIN here:</string>
        <property name="maxLength">
         <number>12</number>
        </property>
-       <property name="placeholderText">
-        <string comment="PIN" extracomment="PIN"/>
-       </property>
       </widget>
      </item>
      <item>
