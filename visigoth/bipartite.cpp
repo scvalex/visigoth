@@ -14,11 +14,24 @@ Bipartite::Bipartite(GraphScene *scene) :
     ctlW(0),
     uSize(START_USIZE),
     vSize(START_VSIZE),
-    scene(scene)
+    scene(scene),
+    bipartiteCtl(0)
 {
 }
 
 Bipartite::~Bipartite() {
+    if (ctlW != 0) {
+        delete ctlW;
+        delete bipartiteCtl;
+    }
+}
+
+int Bipartite::getUSize() const {
+    return uSize;
+}
+
+int Bipartite::getVSize() const {
+    return vSize;
 }
 
 void Bipartite::reset() {
@@ -117,16 +130,15 @@ void Bipartite::addVertex() {
 }
 
 QWidget* Bipartite::controlWidget(QWidget *parent) {
-    if (!ctlW) {
+    if (ctlW == 0) {
         ctlW = new QWidget(parent);
-        Ui::BipartiteControl *bipCtl = new Ui::BipartiteControl();
-        bipCtl->setupUi(ctlW);
+        bipartiteCtl = new Ui::BipartiteControl();
+        bipartiteCtl->setupUi(ctlW);
 
-        bipCtl->uSizeEdit->setValue(uSize);
-        bipCtl->vSizeEdit->setValue(vSize);
+        updateUI();
 
-        connect(bipCtl->uSizeEdit, SIGNAL(valueChanged(int)), this, SLOT(onUSizeChanged(int)));
-        connect(bipCtl->vSizeEdit, SIGNAL(valueChanged(int)), this, SLOT(onVSizeChanged(int)));
+        connect(bipartiteCtl->uSizeEdit, SIGNAL(valueChanged(int)), this, SLOT(onUSizeChanged(int)));
+        connect(bipartiteCtl->vSizeEdit, SIGNAL(valueChanged(int)), this, SLOT(onVSizeChanged(int)));
     }
     return ctlW;
 }
@@ -182,11 +194,31 @@ void Bipartite::updatePreference() {
 }
 
 void Bipartite::onUSizeChanged(int newSize) {
+    if (newSize == uSize)
+        return;
+
     uSize = newSize;
+    updateUI();
     scene->repopulate();
 }
 
 void Bipartite::onVSizeChanged(int newSize) {
+    if (newSize == vSize)
+        return;
+
     vSize = newSize;
+    updateUI();
     scene->repopulate();
+}
+
+void Bipartite::updateUI() {
+    if (!bipartiteCtl)
+        return;
+
+    if (bipartiteCtl->uSizeEdit->value() != uSize) {
+        bipartiteCtl->uSizeEdit->setValue(uSize);
+    }
+    if (bipartiteCtl->vSizeEdit->value() != vSize) {
+        bipartiteCtl->vSizeEdit->setValue(vSize);
+    }
 }

@@ -10,6 +10,7 @@
 
 #include "algorithm.h"
 #include "barabasialbert.h"
+#include "bipartite.h"
 #include "graphscene.h"
 #include "statistics.h"
 
@@ -128,6 +129,36 @@ private slots:
         QCOMPARE(numNodes2, nodesSpin->value());
     }
 
+    void controlWidgetBipartite() {
+        scene->chooseAlgorithm("Bipartite Model");
+        Bipartite *algo = (Bipartite*)scene->algorithm();
+
+        QSpinBox *uSizeSpin = algo->controlWidget()->findChild<QSpinBox*>("uSizeEdit");
+        QSpinBox *vSizeSpin = algo->controlWidget()->findChild<QSpinBox*>("vSizeEdit");
+
+        int uSize = algo->getUSize();
+        int vSize = algo->getVSize();
+
+        QCOMPARE(uSize, uSizeSpin->value());
+        QCOMPARE(vSize, vSizeSpin->value());
+
+        clearWidgetText(uSizeSpin);
+        QTest::keyClicks(uSizeSpin, "27");
+        int uSize1 = algo->getUSize();
+
+        QCOMPARE(27, uSize1);
+        QCOMPARE(uSize1, uSizeSpin->value());
+        QCOMPARE(vSize, vSizeSpin->value());
+
+        clearWidgetText(vSizeSpin);
+        QTest::keyClicks(vSizeSpin, "5");
+        int vSize1 = algo->getVSize();
+
+        QCOMPARE(5, vSize1);
+        QCOMPARE(uSize1, uSizeSpin->value());
+        QCOMPARE(vSize1, vSizeSpin->value());
+    }
+
     void cleanup() {
         delete scene;
     }
@@ -139,6 +170,7 @@ private:
         QTest::addColumn<QString>("algoName");
 
         QTest::newRow("Barabasi Albert") << "Barabasi Albert";
+        QTest::newRow("Bipartite Model") << "Bipartite Model";
         QTest::newRow("Erdos Renyi") << "Erdos Renyi";
         QTest::newRow("Preferential Attachament") << "Preferential Attachament";
         QTest::newRow("Watts Strogatz") << "Watts Strogatz";

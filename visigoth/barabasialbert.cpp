@@ -40,7 +40,7 @@ void BarabasiAlbert::reset() {
 }
 
 QWidget* BarabasiAlbert::controlWidget(QWidget *parent) {
-    if (!ctlW) {
+    if (ctlW == 0) {
         ctlW = new QWidget(parent);
         barabasiCtl = new Ui::BarabasiControl();
         barabasiCtl->setupUi(ctlW);
