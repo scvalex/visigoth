@@ -29,25 +29,25 @@ void WattsStrogatz::addVertex() {
 QWidget* WattsStrogatz::controlWidget(QWidget *parent) {
     if (!ctlW) {
         ctlW = new QWidget(parent);
-        Ui::WattsControl *watsCtrl = new Ui::WattsControl;
-        watsCtrl->setupUi(ctlW);
+        Ui::WattsControl *wattsCtl = new Ui::WattsControl;
+        wattsCtl->setupUi(ctlW);
 
-        watsCtrl->nodeSpin->setValue(size);
-        watsCtrl->probSpin->setValue(probability);
-        watsCtrl->degreeSpin->setValue(degree);
+        wattsCtl->nodeSpin->setValue(size);
+        wattsCtl->probSpin->setValue(probability);
+        wattsCtl->degreeSpin->setValue(degree);
 
-        connect(watsCtrl->nodeSpin, SIGNAL(valueChanged(int)), this, SLOT(onNodesChanged(int)));
-        connect(watsCtrl->probSpin, SIGNAL(valueChanged(double)), this, SLOT(onProbabilityChanged(double)));
-        connect(watsCtrl->degreeSpin, SIGNAL(valueChanged(int)),this,SLOT(onDegreeChanged(int)));
+        connect(wattsCtl->nodeSpin, SIGNAL(valueChanged(int)), this, SLOT(onNodesChanged(int)));
+        connect(wattsCtl->probSpin, SIGNAL(valueChanged(double)), this, SLOT(onProbabilityChanged(double)));
+        connect(wattsCtl->degreeSpin, SIGNAL(valueChanged(int)), this, SLOT(onDegreeChanged(int)));
     }
 
     return ctlW;
 }
 
-void WattsStrogatz::reset(){
+void WattsStrogatz::reset() {
     QVector<Node*> nodeVec(size);
 
-    for (int i(0); i < size; ++i){
+    for (int i(0); i < size; ++i) {
         Node *node = scene->newNode();
         nodeVec[i] = node;
     }
@@ -56,33 +56,31 @@ void WattsStrogatz::reset(){
     for (int j(0); j < size; ++j) {
         // connecting right side
         for (int r(1); r<= degree/2; ++r) {
-
             int nodeToConnect = (j+r) % size;
             scene->newEdge(nodeVec[j], nodeVec[nodeToConnect]);
-
         }
+
         // connecting left side
         for (int l(1); l<= degree/2; ++l) {
-
             int nodeToConnect = (size+j-l)%size;
             scene->newEdge(nodeVec[j], nodeVec[nodeToConnect]);
-
         }
     }
 
     // rewire
     for (int n(0); n < size; ++n) {
         // only choose the right side, since we only select (ni,nj) with i < j
-        for (int r(1); r <= degree/2; ++r) {
-            int nodeToSelect = (n+r)%size;
+        for (int r(1); r <= degree / 2; ++r) {
+            int nodeToSelect = (n+r) % size;
 
             if ((double)qrand() / RAND_MAX < probability) {
                 scene->removeEdge(nodeVec[n], nodeVec[nodeToSelect]);
-                int newNode = qrand()%size;
+                int newNode = qrand() % size;
 
                 for (int cutOff(0);
                      cutOff < 1000 && !scene->newEdge(nodeVec[n], nodeVec[newNode]);
-                     ++cutOff) {
+                     ++cutOff)
+                {
                     newNode = qrand() % size;
                 }
             }
