@@ -1,3 +1,4 @@
+#include <QDebug>
 #include <QList>
 #include <QObject>
 #include <QString>
@@ -5,6 +6,7 @@
 
 #include <math.h>
 
+#include "algorithm.h"
 #include "graphscene.h"
 #include "statistics.h"
 
@@ -14,6 +16,7 @@ public:
     TestSimple(QObject *parent = 0) :
         QObject(parent)
     {
+        normalAlgorithms << "Barabasi Albert" << "Erdos Renyi" << "Preferential Attachament" << "Watts Strogatz";
     }
 
     virtual ~TestSimple() {
@@ -28,44 +31,24 @@ private slots:
         QVERIFY(1 == 1);
     }
 
-    void setAlgoBipartiteModel() {
-        scene->chooseAlgorithm("Bipartite Model");
+    void setAlgo() {
+        foreach (QString algoName, normalAlgorithms) {
+            qDebug() << "Testing" << algoName;
+            scene->chooseAlgorithm(algoName);
+        }
     }
 
-    void setAlgoPreferentialModel() {
-        scene->chooseAlgorithm("Preferential Attachament");
+    void addNode() {
+        foreach (QString algoName, normalAlgorithms) {
+            qDebug() << "Testing" << algoName;
+            addNodeToAlgo(algoName);
+        }
     }
 
-    void setAlgoErdosRenyi() {
-        scene->chooseAlgorithm("Erdos Renyi");
-    }
-
-    void setAlgoBarabasiAlbert() {
-        scene->chooseAlgorithm("Barabasi Albert");
-    }
-
-    void addNodeBarabasiAlbert() {
-        addNodeToAlgo("Barabasi Albert");
-    }
-
-    void addNodeErdosRenyi() {
-        addNodeToAlgo("Erdos Renyi");
-    }
-
-    void addNodePreferential() {
-        addNodeToAlgo("Preferential Attachament");
-    }
-
-    void statsSimpleBarabasiAlbert() {
-        statsSimple("Barabasi Albert");
-    }
-
-    void statsSimpleErdosRenyi() {
-        statsSimple("Erdos Renyi");
-    }
-
-    void statsSimplePreferential() {
-        statsSimple("Preferential Attachament");
+    void statsSimple() {
+        foreach (QString algoName, normalAlgorithms) {
+            statsSimple(algoName);
+        }
     }
 
     void cleanup() {
@@ -74,9 +57,13 @@ private slots:
 
 private:
     GraphScene *scene;
+    QList<QString> normalAlgorithms;
 
     void addNodeToAlgo(QString name) {
         scene->chooseAlgorithm(name);
+        if (!scene->algorithm()->canAddVertex())
+            return;
+
         int count = scene->nodes().size();
         scene->addVertex();
         QVERIFY(count + 1 == scene->nodes().size());
@@ -84,6 +71,9 @@ private:
 
     void statsSimple(QString name) {
         scene->chooseAlgorithm(name);
+        if (!scene->algorithm()->canAddVertex())
+            return;
+
         scene->addVertex();
         double val = scene->getStatistics()->degreeAvg();
         QVERIFY(fpclassify(val) == FP_NORMAL && val > 0);
@@ -92,7 +82,6 @@ private:
         val = scene->getStatistics()->clusteringAvg();
         QVERIFY(fpclassify(val) == FP_NORMAL && val > 0);
     }
-
 };
 
 QTEST_MAIN(TestSimple)
