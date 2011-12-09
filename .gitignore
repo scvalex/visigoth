@@ -3,4 +3,5 @@ test/*
 profile/*
 visigoth-build-*/*
 visigoth/visigoth.pro.user*
+*.orig
 
