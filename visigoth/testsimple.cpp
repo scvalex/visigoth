@@ -1,6 +1,7 @@
 #include <QDebug>
 #include <QList>
 #include <QObject>
+#include <QSpinBox>
 #include <QString>
 #include <QtTest/QtTest>
 #include <QTest>
@@ -8,6 +9,7 @@
 #include <math.h>
 
 #include "algorithm.h"
+#include "barabasialbert.h"
 #include "graphscene.h"
 #include "statistics.h"
 
@@ -87,6 +89,45 @@ private slots:
         QVERIFY(0 != scene->algorithm()->controlWidget(0));
     }
 
+    void controlWidgetBarabasi() {
+        scene->chooseAlgorithm("Barabasi Albert");
+        BarabasiAlbert *algo = (BarabasiAlbert*)scene->algorithm();
+
+        QSpinBox *nodesSpin = algo->controlWidget()->findChild<QSpinBox*>("sizeEdit");
+        QSpinBox *degreeSpin = algo->controlWidget()->findChild<QSpinBox*>("degreeEdit");
+
+        int numNodes = algo->getNumNodes();
+        int nodeDegree = algo->getNodeDegree();
+
+        QCOMPARE(numNodes, nodesSpin->value());
+        QCOMPARE(nodeDegree, degreeSpin->value());
+
+        scene->addVertex();
+
+        int numNodes1 = algo->getNumNodes();
+
+        QCOMPARE(numNodes + 1, numNodes1);
+        QCOMPARE(numNodes1, nodesSpin->value());
+
+        clearWidgetText(degreeSpin);
+        QTest::keyClicks(degreeSpin, "2");
+        int nodeDegree1 = algo->getNodeDegree();
+
+        QCOMPARE(2, nodeDegree1);
+        QCOMPARE(numNodes1, nodesSpin->value());
+        QCOMPARE(nodeDegree1, degreeSpin->value());
+        QCOMPARE(numNodes1, nodesSpin->value());
+
+        clearWidgetText(nodesSpin);
+        QTest::keyClicks(nodesSpin, "20");
+        int numNodes2 = algo->getNumNodes();
+
+        QCOMPARE(20, numNodes2);
+        QCOMPARE(nodeDegree1, algo->getNodeDegree());
+        QCOMPARE(nodeDegree1, degreeSpin->value());
+        QCOMPARE(numNodes2, nodesSpin->value());
+    }
+
     void cleanup() {
         delete scene;
     }
@@ -101,6 +142,12 @@ private:
         QTest::newRow("Erdos Renyi") << "Erdos Renyi";
         QTest::newRow("Preferential Attachament") << "Preferential Attachament";
         QTest::newRow("Watts Strogatz") << "Watts Strogatz";
+    }
+
+    void clearWidgetText(QWidget *w) {
+        for (int i(0); i < 100; ++i) {
+            QTest::keyClick(w, Qt::Key_Delete);
+        }
     }
 };
 

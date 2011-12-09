@@ -8,6 +8,7 @@ BarabasiAlbert::BarabasiAlbert(GraphScene *graph):
     Algorithm(graph),
     graph(graph),
     ctlW(0),
+    barabasiCtl(0),
     size(START_NODES),
     nodeDegree(START_DEGREE)
 {
@@ -15,7 +16,18 @@ BarabasiAlbert::BarabasiAlbert(GraphScene *graph):
 }
 
 BarabasiAlbert::~BarabasiAlbert() {
+    if (ctlW != 0) {
+        delete ctlW;
+        delete barabasiCtl;
+    }
+}
 
+int BarabasiAlbert::getNumNodes() const {
+    return size;
+}
+
+int BarabasiAlbert::getNodeDegree() const {
+    return nodeDegree;
 }
 
 void BarabasiAlbert::reset() {
@@ -24,17 +36,16 @@ void BarabasiAlbert::reset() {
     for (int i(0); i < size; ++i) {
         addVertex(false);
     }
-
+    updateUI();
 }
 
 QWidget* BarabasiAlbert::controlWidget(QWidget *parent) {
     if (!ctlW) {
         ctlW = new QWidget(parent);
-        Ui::BarabasiControl *barabasiCtl = new Ui::BarabasiControl();
+        barabasiCtl = new Ui::BarabasiControl();
         barabasiCtl->setupUi(ctlW);
 
-        barabasiCtl->sizeEdit->setValue(size);
-        barabasiCtl->degreeEdit->setValue(nodeDegree);
+        updateUI();
 
         connect(barabasiCtl->sizeEdit, SIGNAL(valueChanged(int)), this, SLOT(onSizeChanged(int)));
         connect(barabasiCtl->degreeEdit, SIGNAL(valueChanged(int)), this, SLOT(onDegreeChanged(int)));
@@ -55,6 +66,7 @@ void BarabasiAlbert::addVertex(bool saveSize) {
     if (saveSize) {
         ++size;
     }
+    updateUI();
 }
 
 // Add vertex using preferential attachment without clustering.
@@ -128,7 +140,6 @@ Node* BarabasiAlbert::getPreference(const QVector<Node*> &nodes, double genPref)
     return nodes[i];
 }
 
-
 // Generate random double with 4 precision.
 double BarabasiAlbert::genRandom(){
     double main = qrand() % 100;
@@ -136,11 +147,31 @@ double BarabasiAlbert::genRandom(){
 }
 
 void BarabasiAlbert::onSizeChanged(int newSize) {
+    if (newSize == size)
+        return;
+
     size = newSize;
+    updateUI();
     graph->repopulate();
 }
 
 void BarabasiAlbert::onDegreeChanged(int newDegree) {
+    if (newDegree == nodeDegree)
+        return;
+
     nodeDegree = newDegree;
+    updateUI();
     graph->repopulate();
+}
+
+void BarabasiAlbert::updateUI() {
+    if (!barabasiCtl)
+        return;
+
+    if (barabasiCtl->sizeEdit->value() != size) {
+        barabasiCtl->sizeEdit->setValue(size);
+    }
+    if (barabasiCtl->degreeEdit->value() != nodeDegree) {
+        barabasiCtl->degreeEdit->setValue(nodeDegree);
+    }
 }
