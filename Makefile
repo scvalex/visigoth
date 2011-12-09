@@ -19,6 +19,7 @@ debug:
 .PHONY: test
 test:
 	mkdir -p test
+	rm -f test/*.{gcda,gcno}
 	cd test && qmake ../visigoth/visigoth.pro CONFIG+=test
 	make -C test
 	test/test

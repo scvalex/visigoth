@@ -14,6 +14,7 @@
 #include "bipartite.h"
 #include "erdosrenyi.h"
 #include "graphscene.h"
+#include "preferential.h"
 #include "statistics.h"
 
 class TestSimple : public QObject {
@@ -197,6 +198,45 @@ private slots:
         QCOMPARE(numNodes2, 42);
         QCOMPARE(algo->getProbability(), probability1);
         QCOMPARE(probabilitySpin->value(), probability1);
+        QCOMPARE(nodesSpin->value(), numNodes2);
+    }
+
+    void controlWidgetPreferential() {
+        scene->chooseAlgorithm("Preferential Attachament");
+        Preferential *algo = (Preferential*)scene->algorithm();
+
+        QSpinBox *nodesSpin = algo->controlWidget()->findChild<QSpinBox*>("sizeEdit");
+        QSpinBox *degreeSpin = algo->controlWidget()->findChild<QSpinBox*>("degreeEdit");
+
+        int numNodes = algo->getNumNodes();
+        int nodeDegree = algo->getNodeDegree();
+
+        QCOMPARE(nodesSpin->value(), numNodes);
+        QCOMPARE(degreeSpin->value(), nodeDegree);
+
+        scene->addVertex();
+
+        int numNodes1 = algo->getNumNodes();
+
+        QCOMPARE(numNodes1, numNodes + 1);
+        QCOMPARE(nodesSpin->value(), numNodes1);
+
+        QTest::keyClick(degreeSpin, Qt::Key_A, Qt::ControlModifier);
+        QTest::keyClicks(degreeSpin, "2");
+        int nodeDegree1 = algo->getNodeDegree();
+
+        QCOMPARE(nodeDegree1, 2);
+        QCOMPARE(algo->getNumNodes(), numNodes1);
+        QCOMPARE(nodesSpin->value(), numNodes1);
+        QCOMPARE(degreeSpin->value(), nodeDegree1);
+
+        QTest::keyClick(nodesSpin, Qt::Key_A, Qt::ControlModifier);
+        QTest::keyClicks(nodesSpin, "20");
+        int numNodes2 = algo->getNumNodes();
+
+        QCOMPARE(numNodes2, 20);
+        QCOMPARE(algo->getNodeDegree(), nodeDegree1);
+        QCOMPARE(degreeSpin->value(), nodeDegree1);
         QCOMPARE(nodesSpin->value(), numNodes2);
     }
 

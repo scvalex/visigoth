@@ -14,11 +14,19 @@ class GraphScene;
 class Preferential;
 class QWidget;
 
+namespace Ui {
+    class PreferentialControl;
+};
+
 class Preferential : public Algorithm {
     Q_OBJECT
 
 public:
     Preferential(GraphScene *graph);
+    virtual ~Preferential();
+
+    int getNumNodes() const;
+    int getNodeDegree() const;
 
     void reset();
     bool canAddVertex();
@@ -42,13 +50,15 @@ protected:
     Node* getPreference(const QVector<Node*> &nodes, double genPref);
     void updatePreference(const QVector<Node*> &nodes, int numEdges);
 
-private:
+    void updateUI();
 
+private:
     static const int START_NODES = 300;
     static const int START_DEGREE = 3;
 
     GraphScene *graph;
     QWidget *ctlW;
+    Ui::PreferentialControl *preferentialCtl;
 
     // used for selecting a node by preferential seleciton
     QMap<int, double> cumulativePreferences;

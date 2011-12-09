@@ -8,10 +8,26 @@ Preferential::Preferential(GraphScene *graph) :
     Algorithm(graph,true),
     graph(graph),
     ctlW(0),
+    preferentialCtl(0),
     size(START_NODES),
     nodeDegree(START_DEGREE)
 {
     updatePreference(graph->nodes(), 2 * graph->edges().size());
+}
+
+Preferential::~Preferential() {
+    if (ctlW != 0) {
+        delete ctlW;
+        delete preferentialCtl;
+    }
+}
+
+int Preferential::getNumNodes() const {
+    return size;
+}
+
+int Preferential::getNodeDegree() const {
+    return nodeDegree;
 }
 
 void Preferential::reset() {
@@ -36,19 +52,19 @@ void Preferential::addVertex(bool saveSize) {
     if (saveSize) {
         ++size;
     }
+    updateUI();
 }
 
 QWidget* Preferential::controlWidget(QWidget *parent) {
     if (!ctlW) {
         ctlW = new QWidget(parent);
-        Ui::PreferentialControl *prefCtl = new Ui::PreferentialControl();
-        prefCtl->setupUi(ctlW);
+        preferentialCtl = new Ui::PreferentialControl();
+        preferentialCtl->setupUi(ctlW);
 
-        prefCtl->sizeEdit->setValue(size);
-        prefCtl->degreeEdit->setValue(nodeDegree);
+        updateUI();
 
-        connect(prefCtl->sizeEdit, SIGNAL(valueChanged(int)), this, SLOT(onSizeChanged(int)));
-        connect(prefCtl->degreeEdit, SIGNAL(valueChanged(int)), this, SLOT(onDegreeChanged(int)));
+        connect(preferentialCtl->sizeEdit, SIGNAL(valueChanged(int)), this, SLOT(onSizeChanged(int)));
+        connect(preferentialCtl->degreeEdit, SIGNAL(valueChanged(int)), this, SLOT(onDegreeChanged(int)));
     }
     return ctlW;
 }
@@ -204,17 +220,37 @@ QVector<Node*> Preferential::getIntersection(QVector<Node*> vec1, QVector<Node*>
 }
 
 // Generate random double with 4 precision.
-double Preferential::genRandom(){
+double Preferential::genRandom() {
     double main = qrand() % 100;
     return main + (( qrand() % 100 ) / 100 );
 }
 
 void Preferential::onSizeChanged(int newSize) {
+    if (newSize == size)
+        return;
+
     size = newSize;
+    updateUI();
     graph->repopulate();
 }
 
 void Preferential::onDegreeChanged(int newDegree) {
+    if (newDegree == nodeDegree)
+        return;
+
     nodeDegree = newDegree;
+    updateUI();
     graph->repopulate();
+}
+
+void Preferential::updateUI() {
+    if (!preferentialCtl)
+        return;
+
+    if (preferentialCtl->sizeEdit->value() != size) {
+        preferentialCtl->sizeEdit->setValue(size);
+    }
+    if (preferentialCtl->degreeEdit->value() != nodeDegree) {
+        preferentialCtl->degreeEdit->setValue(nodeDegree);
+    }
 }
