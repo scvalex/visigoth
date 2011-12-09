@@ -1,4 +1,5 @@
 #include <QDebug>
+#include <QDoubleSpinBox>
 #include <QList>
 #include <QObject>
 #include <QSpinBox>
@@ -11,6 +12,7 @@
 #include "algorithm.h"
 #include "barabasialbert.h"
 #include "bipartite.h"
+#include "erdosrenyi.h"
 #include "graphscene.h"
 #include "statistics.h"
 
@@ -110,16 +112,16 @@ private slots:
         QCOMPARE(numNodes + 1, numNodes1);
         QCOMPARE(numNodes1, nodesSpin->value());
 
-        clearWidgetText(degreeSpin);
+        QTest::keyClick(degreeSpin, Qt::Key_A, Qt::ControlModifier);
         QTest::keyClicks(degreeSpin, "2");
         int nodeDegree1 = algo->getNodeDegree();
 
         QCOMPARE(2, nodeDegree1);
+        QCOMPARE(numNodes1, algo->getNumNodes());
         QCOMPARE(numNodes1, nodesSpin->value());
         QCOMPARE(nodeDegree1, degreeSpin->value());
-        QCOMPARE(numNodes1, nodesSpin->value());
 
-        clearWidgetText(nodesSpin);
+        QTest::keyClick(nodesSpin, Qt::Key_A, Qt::ControlModifier);
         QTest::keyClicks(nodesSpin, "20");
         int numNodes2 = algo->getNumNodes();
 
@@ -142,7 +144,7 @@ private slots:
         QCOMPARE(uSize, uSizeSpin->value());
         QCOMPARE(vSize, vSizeSpin->value());
 
-        clearWidgetText(uSizeSpin);
+        QTest::keyClick(uSizeSpin, Qt::Key_A, Qt::ControlModifier);
         QTest::keyClicks(uSizeSpin, "27");
         int uSize1 = algo->getUSize();
 
@@ -150,13 +152,52 @@ private slots:
         QCOMPARE(uSize1, uSizeSpin->value());
         QCOMPARE(vSize, vSizeSpin->value());
 
-        clearWidgetText(vSizeSpin);
+        QTest::keyClick(vSizeSpin, Qt::Key_A, Qt::ControlModifier);
         QTest::keyClicks(vSizeSpin, "5");
         int vSize1 = algo->getVSize();
 
         QCOMPARE(5, vSize1);
         QCOMPARE(uSize1, uSizeSpin->value());
         QCOMPARE(vSize1, vSizeSpin->value());
+    }
+
+    void controlWidgetErdos() {
+        scene->chooseAlgorithm("Erdos Renyi");
+        ErdosRenyi *algo = (ErdosRenyi*)scene->algorithm();
+
+        QSpinBox *nodesSpin = algo->controlWidget()->findChild<QSpinBox*>("nodesSpin");
+        QDoubleSpinBox *probabilitySpin = algo->controlWidget()->findChild<QDoubleSpinBox*>("probabilitySpin");
+
+        int numNodes = algo->getNumNodes();
+        double probability = algo->getProbability();
+
+        QCOMPARE(numNodes, nodesSpin->value());
+        QCOMPARE(probability, probabilitySpin->value());
+
+        scene->addVertex();
+
+        int numNodes1 = algo->getNumNodes();
+
+        QCOMPARE(numNodes + 1, numNodes1);
+        QCOMPARE(numNodes1, nodesSpin->value());
+
+        QTest::keyClick(probabilitySpin, Qt::Key_A, Qt::ControlModifier);
+        QTest::keyClicks(probabilitySpin, "0.27");
+        double probability1 = algo->getProbability();
+
+        QCOMPARE(probability1, 0.27);
+        QCOMPARE(numNodes1, algo->getNumNodes());
+        QCOMPARE(numNodes1, nodesSpin->value());
+        QCOMPARE(probability1, probabilitySpin->value());
+
+        QTest::keyClick(nodesSpin, Qt::Key_A, Qt::ControlModifier);
+        QTest::keyClicks(nodesSpin, "42");
+        int numNodes2 = algo->getNumNodes();
+
+        QCOMPARE(42, numNodes2);
+        QCOMPARE(probability1, algo->getProbability());
+        QCOMPARE(probability1, probabilitySpin->value());
+        QCOMPARE(numNodes2, nodesSpin->value());
     }
 
     void cleanup() {
@@ -174,12 +215,6 @@ private:
         QTest::newRow("Erdos Renyi") << "Erdos Renyi";
         QTest::newRow("Preferential Attachament") << "Preferential Attachament";
         QTest::newRow("Watts Strogatz") << "Watts Strogatz";
-    }
-
-    void clearWidgetText(QWidget *w) {
-        for (int i(0); i < 100; ++i) {
-            QTest::keyClick(w, Qt::Key_Delete);
-        }
     }
 };
 

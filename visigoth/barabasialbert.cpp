@@ -3,7 +3,6 @@
 
 #include <QWidget>
 
-
 BarabasiAlbert::BarabasiAlbert(GraphScene *graph):
     Algorithm(graph),
     graph(graph),

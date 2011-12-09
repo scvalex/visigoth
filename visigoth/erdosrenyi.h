@@ -6,15 +6,23 @@
 class GraphScene;
 class QWidget;
 
+namespace Ui {
+    class ErdosControl;
+};
+
 class ErdosRenyi : public Algorithm {
     Q_OBJECT
 public:
     ErdosRenyi(GraphScene *scene = 0);
     virtual ~ErdosRenyi();
 
+    int getNumNodes() const;
+    double getProbability() const;
+
     void reset();
     bool canAddVertex();
     void addVertex();
+    void addVertex(bool saveSize);
     QWidget* controlWidget(QWidget *parent = 0);
 
 private slots:
@@ -27,9 +35,12 @@ private:
 
     GraphScene *scene;
     QWidget *ctlW;
+    Ui::ErdosControl *erCtl;
 
     int size;
     double probability;
+
+    void updateUI();
 };
 
 #endif // ERDOSRENYI_H
