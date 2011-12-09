@@ -46,7 +46,14 @@ private slots:
 
     void addNode() {
         QFETCH(QString, algoName);
-        addNodeToAlgo(algoName);
+
+        scene->chooseAlgorithm(algoName);
+        if (!scene->algorithm()->canAddVertex())
+            return;
+
+        int count = scene->nodes().size();
+        scene->addVertex();
+        QVERIFY(count + 1 == scene->nodes().size());
     }
 
     void statsSimple_data() {
@@ -55,7 +62,18 @@ private slots:
 
     void statsSimple() {
         QFETCH(QString, algoName);
-        statsSimple(algoName);
+
+        scene->chooseAlgorithm(algoName);
+        if (!scene->algorithm()->canAddVertex())
+            return;
+
+        scene->addVertex();
+        double val = scene->getStatistics()->degreeAvg();
+        QVERIFY(fpclassify(val) == FP_NORMAL && val > 0);
+        val = scene->getStatistics()->lengthAvg();
+        QVERIFY(fpclassify(val) == FP_NORMAL && val > 0);
+        val = scene->getStatistics()->clusteringAvg();
+        QVERIFY(fpclassify(val) == FP_NORMAL && val > 0);
     }
 
     void hasControlWidget_data() {
@@ -83,30 +101,6 @@ private:
         QTest::newRow("Erdos Renyi") << "Erdos Renyi";
         QTest::newRow("Preferential Attachament") << "Preferential Attachament";
         QTest::newRow("Watts Strogatz") << "Watts Strogatz";
-    }
-
-    void addNodeToAlgo(QString name) {
-        scene->chooseAlgorithm(name);
-        if (!scene->algorithm()->canAddVertex())
-            return;
-
-        int count = scene->nodes().size();
-        scene->addVertex();
-        QVERIFY(count + 1 == scene->nodes().size());
-    }
-
-    void statsSimple(QString name) {
-        scene->chooseAlgorithm(name);
-        if (!scene->algorithm()->canAddVertex())
-            return;
-
-        scene->addVertex();
-        double val = scene->getStatistics()->degreeAvg();
-        QVERIFY(fpclassify(val) == FP_NORMAL && val > 0);
-        val = scene->getStatistics()->lengthAvg();
-        QVERIFY(fpclassify(val) == FP_NORMAL && val > 0);
-        val = scene->getStatistics()->clusteringAvg();
-        QVERIFY(fpclassify(val) == FP_NORMAL && val > 0);
     }
 };
 
