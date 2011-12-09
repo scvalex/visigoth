@@ -18,8 +18,7 @@ BarabasiAlbert::~BarabasiAlbert() {
 
 }
 
-void BarabasiAlbert::reset(){
-
+void BarabasiAlbert::reset() {
     preferences.clear();
     cumulativePreferences.clear();
     for (int i(0); i < size; ++i) {
@@ -33,6 +32,10 @@ QWidget* BarabasiAlbert::controlWidget(QWidget *parent) {
         ctlW = new QWidget(parent);
         Ui::BarabasiControl *barabasiCtl = new Ui::BarabasiControl();
         barabasiCtl->setupUi(ctlW);
+
+        barabasiCtl->sizeEdit->setValue(size);
+        barabasiCtl->degreeEdit->setValue(nodeDegree);
+
         connect(barabasiCtl->sizeEdit, SIGNAL(valueChanged(int)), this, SLOT(onSizeChanged(int)));
         connect(barabasiCtl->degreeEdit, SIGNAL(valueChanged(int)), this, SLOT(onDegreeChanged(int)));
     }

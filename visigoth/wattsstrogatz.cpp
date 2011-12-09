@@ -31,6 +31,11 @@ QWidget* WattsStrogatz::controlWidget(QWidget *parent) {
         ctlW = new QWidget(parent);
         Ui::WattsControl *watsCtrl = new Ui::WattsControl;
         watsCtrl->setupUi(ctlW);
+
+        watsCtrl->nodeSpin->setValue(size);
+        watsCtrl->probSpin->setValue(probability);
+        watsCtrl->degreeSpin->setValue(degree);
+
         connect(watsCtrl->nodeSpin, SIGNAL(valueChanged(int)), this, SLOT(onNodesChanged(int)));
         connect(watsCtrl->probSpin, SIGNAL(valueChanged(double)), this, SLOT(onProbabilityChanged(double)));
         connect(watsCtrl->degreeSpin, SIGNAL(valueChanged(int)),this,SLOT(onDegreeChanged(int)));

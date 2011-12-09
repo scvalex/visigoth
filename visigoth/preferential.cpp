@@ -43,6 +43,10 @@ QWidget* Preferential::controlWidget(QWidget *parent) {
         ctlW = new QWidget(parent);
         Ui::PreferentialControl *prefCtl = new Ui::PreferentialControl();
         prefCtl->setupUi(ctlW);
+
+        prefCtl->sizeEdit->setValue(size);
+        prefCtl->degreeEdit->setValue(nodeDegree);
+
         connect(prefCtl->sizeEdit, SIGNAL(valueChanged(int)), this, SLOT(onSizeChanged(int)));
         connect(prefCtl->degreeEdit, SIGNAL(valueChanged(int)), this, SLOT(onDegreeChanged(int)));
     }

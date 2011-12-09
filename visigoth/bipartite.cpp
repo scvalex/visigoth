@@ -121,6 +121,10 @@ QWidget* Bipartite::controlWidget(QWidget *parent) {
         ctlW = new QWidget(parent);
         Ui::BipartiteControl *bipCtl = new Ui::BipartiteControl();
         bipCtl->setupUi(ctlW);
+
+        bipCtl->uSizeEdit->setValue(uSize);
+        bipCtl->vSizeEdit->setValue(vSize);
+
         connect(bipCtl->uSizeEdit, SIGNAL(valueChanged(int)), this, SLOT(onUSizeChanged(int)));
         connect(bipCtl->vSizeEdit, SIGNAL(valueChanged(int)), this, SLOT(onVSizeChanged(int)));
     }
