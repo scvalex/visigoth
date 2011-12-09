@@ -49,13 +49,24 @@ private slots:
         addNodeToAlgo(algoName);
     }
 
-    void  statsSimple_data() {
+    void statsSimple_data() {
         setAlgoNames();
     }
 
     void statsSimple() {
         QFETCH(QString, algoName);
         statsSimple(algoName);
+    }
+
+    void hasControlWidget_data() {
+        setAlgoNames();
+    }
+
+    void hasControlWidget() {
+        QFETCH(QString, algoName);
+
+        scene->chooseAlgorithm(algoName);
+        QVERIFY(0 != scene->algorithm()->controlWidget(0));
     }
 
     void cleanup() {
