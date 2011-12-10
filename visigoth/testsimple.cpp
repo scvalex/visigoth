@@ -16,6 +16,7 @@
 #include "graphscene.h"
 #include "preferential.h"
 #include "statistics.h"
+#include "wattsstrogatz.h"
 
 class TestSimple : public QObject {
 Q_OBJECT
@@ -238,6 +239,56 @@ private slots:
         QCOMPARE(algo->getNodeDegree(), nodeDegree1);
         QCOMPARE(degreeSpin->value(), nodeDegree1);
         QCOMPARE(nodesSpin->value(), numNodes2);
+    }
+
+    void controlWidgetWatts() {
+        scene->chooseAlgorithm("Watts Strogatz");
+        WattsStrogatz *algo = (WattsStrogatz*)scene->algorithm();
+
+        QSpinBox *nodesSpin = algo->controlWidget()->findChild<QSpinBox*>("nodeSpin");
+        QSpinBox *degreeSpin = algo->controlWidget()->findChild<QSpinBox*>("degreeSpin");
+        QDoubleSpinBox *probabilitySpin = algo->controlWidget()->findChild<QDoubleSpinBox*>("probSpin");
+
+        int numNodes = algo->getNumNodes();
+        int nodeDegree = algo->getNodeDegree();
+        double probability = algo->getProbability();
+
+        QCOMPARE(nodesSpin->value(), numNodes);
+        QCOMPARE(degreeSpin->value(), nodeDegree);
+        QCOMPARE(probabilitySpin->value(), probability);
+
+        QTest::keyClick(degreeSpin, Qt::Key_A, Qt::ControlModifier);
+        QTest::keyClicks(degreeSpin, "2");
+        int nodeDegree1 = algo->getNodeDegree();
+
+        QCOMPARE(nodeDegree1, 2);
+        QCOMPARE(algo->getNumNodes(), numNodes);
+        QCOMPARE(nodesSpin->value(), numNodes);
+        QCOMPARE(degreeSpin->value(), nodeDegree1);
+        QCOMPARE(algo->getProbability(), probability);
+        QCOMPARE(probabilitySpin->value(), probability);
+
+        QTest::keyClick(nodesSpin, Qt::Key_A, Qt::ControlModifier);
+        QTest::keyClicks(nodesSpin, "20");
+        int numNodes1 = algo->getNumNodes();
+
+        QCOMPARE(numNodes1, 20);
+        QCOMPARE(algo->getNodeDegree(), nodeDegree1);
+        QCOMPARE(degreeSpin->value(), nodeDegree1);
+        QCOMPARE(nodesSpin->value(), numNodes1);
+        QCOMPARE(algo->getProbability(), probability);
+        QCOMPARE(probabilitySpin->value(), probability);
+
+        QTest::keyClick(probabilitySpin, Qt::Key_A, Qt::ControlModifier);
+        QTest::keyClicks(probabilitySpin, "0.13");
+        double probability1 = algo->getProbability();
+
+        QCOMPARE(probability1, 0.13);
+        QCOMPARE(algo->getNodeDegree(), nodeDegree1);
+        QCOMPARE(degreeSpin->value(), nodeDegree1);
+        QCOMPARE(algo->getNumNodes(), numNodes1);
+        QCOMPARE(nodesSpin->value(), numNodes1);
+        QCOMPARE(probabilitySpin->value(), probability1);
     }
 
     void cleanup() {

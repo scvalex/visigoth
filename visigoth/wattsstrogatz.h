@@ -12,6 +12,10 @@ public:
     WattsStrogatz(GraphScene* scene = 0);
     virtual ~WattsStrogatz();
 
+    int getNumNodes() const;
+    int getNodeDegree() const;
+    double getProbability() const;
+
     void reset();
     bool canAddVertex();
     void addVertex();

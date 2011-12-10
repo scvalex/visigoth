@@ -18,6 +18,18 @@ WattsStrogatz::WattsStrogatz(GraphScene* scene) :
 WattsStrogatz::~WattsStrogatz() {
 }
 
+int WattsStrogatz::getNumNodes() const {
+    return size;
+}
+
+int WattsStrogatz::getNodeDegree() const {
+    return degree;
+}
+
+double WattsStrogatz::getProbability() const {
+    return probability;
+}
+
 bool WattsStrogatz::canAddVertex() {
     return false;
 }
