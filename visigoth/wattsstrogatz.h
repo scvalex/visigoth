@@ -6,16 +6,26 @@
 class GraphScene;
 class QWidget;
 
+namespace Ui {
+    class WattsControl;
+};
+
 class WattsStrogatz : public Algorithm {
    Q_OBJECT
 public:
     WattsStrogatz(GraphScene* scene = 0);
     virtual ~WattsStrogatz();
 
+    int getNumNodes() const;
+    int getNodeDegree() const;
+    double getProbability() const;
+
     void reset();
     bool canAddVertex();
     void addVertex();
     QWidget* controlWidget(QWidget *parent = 0);
+
+    void updateUI();
 
 private slots:
     void onNodesChanged(int newValue);
@@ -29,6 +39,7 @@ private:
 
     GraphScene *scene;
     QWidget *ctlW;
+    Ui::WattsControl *wattsCtl;
 
     int size;
     double probability;
