@@ -30,6 +30,10 @@ local-cover: test
 	genhtml --output-directory test test/coverage.info
 	xdg-open "$(shell pwd)/test$(shell pwd)/visigoth/index.html"
 
+.PHONY: ci-cover
+ci-cover:
+	gcovr --xml -d test > test/visigoth.xml
+
 .PHONY: clean
 clean:
 	rm -rf build profile test
