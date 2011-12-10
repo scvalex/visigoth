@@ -19,10 +19,16 @@ debug:
 .PHONY: test
 test:
 	mkdir -p test
-	rm -f test/*.{gcda,gcno}
 	cd test && qmake ../visigoth/visigoth.pro CONFIG+=test
 	make -C test
 	test/test
+
+.PHONY: local-cover
+local-cover: test
+	#lcov --directory test --zerocounters
+	lcov --directory test --capture --output-file test/coverage.info
+	genhtml --output-directory test test/coverage.info
+	xdg-open "$(shell pwd)/test$(shell pwd)/visigoth/index.html"
 
 .PHONY: clean
 clean:
