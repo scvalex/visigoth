@@ -9,6 +9,7 @@ WattsStrogatz::WattsStrogatz(GraphScene* scene) :
     Algorithm(scene),
     scene(scene),
     ctlW(0),
+    wattsCtl(0),
     size(START_SIZE),
     probability(START_PROBABILITY),
     degree(START_DEGREE)
@@ -16,6 +17,10 @@ WattsStrogatz::WattsStrogatz(GraphScene* scene) :
 }
 
 WattsStrogatz::~WattsStrogatz() {
+    if (ctlW != 0) {
+        delete ctlW;
+        delete wattsCtl;
+    }
 }
 
 int WattsStrogatz::getNumNodes() const {
@@ -41,12 +46,10 @@ void WattsStrogatz::addVertex() {
 QWidget* WattsStrogatz::controlWidget(QWidget *parent) {
     if (!ctlW) {
         ctlW = new QWidget(parent);
-        Ui::WattsControl *wattsCtl = new Ui::WattsControl;
+        wattsCtl = new Ui::WattsControl;
         wattsCtl->setupUi(ctlW);
 
-        wattsCtl->nodeSpin->setValue(size);
-        wattsCtl->probSpin->setValue(probability);
-        wattsCtl->degreeSpin->setValue(degree);
+        updateUI();
 
         connect(wattsCtl->nodeSpin, SIGNAL(valueChanged(int)), this, SLOT(onNodesChanged(int)));
         connect(wattsCtl->probSpin, SIGNAL(valueChanged(double)), this, SLOT(onProbabilityChanged(double)));
@@ -105,11 +108,19 @@ void WattsStrogatz::onNodesChanged(int newValue) {
         newValue = degree * 2;
     }
 
+    if (newValue == size) {
+        return;
+    }
+
     size = newValue;
     scene->repopulate();
 }
 
 void WattsStrogatz::onProbabilityChanged(double newValue) {
+    if (newValue == probability) {
+        return;
+    }
+
     probability = newValue;
     scene->repopulate();
 }
@@ -121,6 +132,25 @@ void WattsStrogatz::onDegreeChanged(int newValue) {
         newValue = size / 2;
     }
 
+    if (newValue == degree) {
+        return;
+    }
+
     degree = newValue;
     scene->repopulate();
+}
+
+void WattsStrogatz::updateUI() {
+    if (ctlW == 0)
+        return;
+
+    if (wattsCtl->nodeSpin->value() != size) {
+        wattsCtl->nodeSpin->setValue(size);
+    }
+    if (wattsCtl->probSpin->value() != probability) {
+        wattsCtl->probSpin->setValue(probability);
+    }
+    if (wattsCtl->degreeSpin->value() != degree) {
+        wattsCtl->degreeSpin->setValue(degree);
+    }
 }
