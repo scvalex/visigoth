@@ -60,6 +60,8 @@ test {
     QT += testlib
     SOURCES -= main.cpp
     SOURCES += testsimple.cpp
+    QMAKE_CXXFLAGS += -g -coverage -O0
+    LIBS += -lgcov
 }
 
 oauth {
