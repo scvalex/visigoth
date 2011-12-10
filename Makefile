@@ -32,7 +32,7 @@ local-cover: test
 
 .PHONY: ci-cover
 ci-cover:
-	gcovr --xml -d test > test/visigoth.xml
+	gcovr --xml -r test > test/visigoth.xml
 
 .PHONY: clean
 clean:
