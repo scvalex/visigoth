@@ -4,4 +4,9 @@ profile/*
 visigoth-build-*/*
 visigoth/visigoth.pro.user*
 *.orig
+docs/*.toc
+docs/*.aux
+docs/*.out
+docs/*.log
+docs/*.pdf
 
