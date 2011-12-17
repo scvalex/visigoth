@@ -27,7 +27,8 @@ SOURCES += main.cpp \
            quadtree.cpp \
            erdosrenyi.cpp \
            wattsstrogatz.cpp \
-           vtools.cpp
+           vtools.cpp \
+           notify.cpp
 
 HEADERS += mainwindow.h \
            node.h \
@@ -43,7 +44,8 @@ HEADERS += mainwindow.h \
            barabasialbert.h \
            erdosrenyi.h \
            wattsstrogatz.h \
-           vtools.h
+           vtools.h \
+           notify.h
 
 FORMS += mainwindow.ui \
          bipartitecontrol.ui \
@@ -70,6 +72,8 @@ oauth {
     FORMS += twitauthdialog.ui \
              twittercontrol.ui
 }
+
+
 
 
 
