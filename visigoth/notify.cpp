@@ -30,6 +30,8 @@ void Notify::normal(const QString &text) {
     ensureInstance();
     if (instance->statusBar != 0) {
         instance->statusBar->showMessage(text);
+    } else {
+        qDebug() << text;
     }
 }
 
@@ -37,6 +39,8 @@ void Notify::important(const QString &text) {
     ensureInstance();
     if (instance->statusBar != 0) {
         instance->statusBar->showMessage(text);
+    } else {
+        qDebug() << text;
     }
 }
 

@@ -1,4 +1,5 @@
 #include "graphscene.h"
+#include "notify.h"
 #include "twitter.h"
 #include "ui_twitauthdialog.h"
 #include "ui_twittercontrol.h"
@@ -42,7 +43,7 @@ void Twitter::reset() {
     nodes.clear();
     unexpanded.clear();
     if (!login()) {
-        qDebug("Login failed");
+        Notify::important("Login failed");
     }
     getFollowers(rootUser);
 }
@@ -82,7 +83,7 @@ bool Twitter::login() {
         tokenSecret = reply.value(QOAuth::tokenSecretParameterName());
         qDebug("Got unauthrized request token");
     } else {
-        qDebug("Could not get request token");
+        Notify::important("Could not get request token");
         return false;
     }
 
@@ -91,18 +92,16 @@ bool Twitter::login() {
     twitterAuthorizationURL.addQueryItem("oauth_callback_url", "oob");
     QDesktopServices::openUrl(twitterAuthorizationURL);
 
-    qDebug("Opening the Dialog of Secrets");
     QDialog d;
     Ui::TwitterAuthDialog authD = Ui::TwitterAuthDialog();
     authD.setupUi(&d);
     authD.urlLabel->setText("<a href=\"" + twitterAuthorizationURL.toString() + "\">Authorize</a>");
     if (d.exec() == QDialog::Rejected) {
-        qDebug("User is a spoil-sport");
+        Notify::normal("User is a spoil-sport");
         return false;
     }
 
     QString secret = authD.pinEdit->text();
-    qDebug() << "Secret is" << secret;
 
     QOAuth::ParamMap map;
     map.insert("oauth_verifier", secret.toAscii());
@@ -114,7 +113,7 @@ bool Twitter::login() {
         tokenSecret = reply.value(QOAuth::tokenSecretParameterName());
         qDebug("Access token received");
     } else {
-        qDebug("(access token)Got error: %d", oauth->error());
+        Notify::important(QString("(access token)Got error: %1").arg(oauth->error()));
         return false;
     }
 
@@ -143,7 +142,7 @@ void Twitter::getFollowers(QString username, bool numeric) {
 
 void Twitter::replyGot(QNetworkReply *reply) {
     if (reply->error() != QNetworkReply::NoError) {
-        qDebug("Network error: %d.  Huh.", reply->error());
+        Notify::important(QString("Network error: %1.  Huh.").arg(reply->error()));
         qDebug() << reply->readAll();
         return;
     }
@@ -158,7 +157,7 @@ void Twitter::replyGot(QNetworkReply *reply) {
 
     QDomDocument doc;
     if (!doc.setContent(reply)) {
-        qDebug("Error parsing reply");
+        Notify::important("Error parsing reply");
         return;
     }
 
