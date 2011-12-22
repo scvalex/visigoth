@@ -71,8 +71,5 @@ oauth {
              twittercontrol.ui
 }
 
-
-
-
-
-
+OTHER_FILES += \
+    helpFile.html
