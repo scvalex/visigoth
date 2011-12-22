@@ -3,10 +3,14 @@
 
 #include <QObject>
 
+class QStatusBar;
+
 class Notify : public QObject
 {
     Q_OBJECT
 public:
+    static void init(QStatusBar *bar);
+
     /* Use this when the notification is probably uninteresting. */
     static void normal(const QString &text);
     /* Use this when the user should see the notification, but his activity will not need to be interrupted. */
@@ -22,6 +26,8 @@ private:
     virtual ~Notify();
 
     static Notify *instance;
+
+    QStatusBar *statusBar;
 };
 
 #endif // NOTIFY_H

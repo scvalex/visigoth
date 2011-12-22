@@ -2,15 +2,22 @@
 
 #include <QDebug>
 #include <QMessageBox>
+#include <QStatusBar>
 
 Notify *Notify::instance(0);
 
 Notify::Notify(QObject *parent) :
-    QObject(parent)
+    QObject(parent),
+    statusBar(0)
 {
 }
 
 Notify::~Notify() {
+}
+
+void Notify::init(QStatusBar *bar) {
+    ensureInstance();
+    instance->statusBar = bar;
 }
 
 void Notify::ensureInstance() {
@@ -21,16 +28,20 @@ void Notify::ensureInstance() {
 
 void Notify::normal(const QString &text) {
     ensureInstance();
-    qDebug() << text;
+    if (instance->statusBar != 0) {
+        instance->statusBar->showMessage(text);
+    }
 }
 
 void Notify::important(const QString &text) {
     ensureInstance();
-    qDebug() << text;
+    if (instance->statusBar != 0) {
+        instance->statusBar->showMessage(text);
+    }
 }
 
 void Notify::superSpecial(const QString &text) {
-    ensureInstance();
+    instance->ensureInstance();
     QMessageBox msgBox;
     msgBox.setText(text);
     msgBox.exec();

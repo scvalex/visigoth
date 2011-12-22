@@ -5,9 +5,8 @@
 #include "ui_mainwindow.h"
 #include "ui_helpWidget.h"
 #include "ui_statistics.h"
-#include "preferential.h"
 #include "graphscene.h"
-#include "bipartite.h"
+#include "notify.h"
 #include "statistics.h"
 
 #include <QDesktopWidget>
@@ -46,6 +45,8 @@ MainWindow::MainWindow(QWidget *parent) :
 
     statsUi->setupUi(ui->statsWidget);
 
+    Notify::init(ui->statusBar);
+
     setCentralWidget(view);
 
     connect(ui->newNodeAct, SIGNAL(triggered()), scene, SLOT(addVertex()));
@@ -62,6 +63,8 @@ MainWindow::MainWindow(QWidget *parent) :
     scene->chooseAlgorithm(ui->chooserCombo->currentText());
 
     scene->repopulate();
+
+    Notify::normal("All ready");
 }
 
 MainWindow::~MainWindow() {
