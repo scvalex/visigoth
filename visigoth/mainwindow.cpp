@@ -83,7 +83,6 @@ void MainWindow::toggleHelp(bool enabled) {
         helpWid->text->viewport()->setAutoFillBackground(false);
         helpDock->setWidget(helpWidget);
         helpDock->setWindowTitle("Help Manual");
-        helpDock->setFixedWidth((this->width())/3);
         helpDock->setFeatures(QDockWidget::NoDockWidgetFeatures);
         addDockWidget(Qt::LeftDockWidgetArea, helpDock);
     } else {
