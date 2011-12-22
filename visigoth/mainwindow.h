@@ -33,6 +33,8 @@ private slots:
     void onAlgorithmChanged(Algorithm *newAlgo);
     void onGenerate();
     void onFocusedNodeChanged(Node *node);
+    void showAbout();
+    void showAboutQt();
 
 private:
     Ui::MainWindow *ui;
