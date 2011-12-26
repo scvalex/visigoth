@@ -8,14 +8,14 @@
 \usepackage{hyperref}
 \hypersetup{pdfborder=0 0 0}
 
-\usepackage[osf]{libertine}
+%% \usepackage[osf]{libertine}
 
 %% %%%%%%%%%%%%%%%%%%%% END PACKAGES %%%%%%%%%%%%%%%%%%%%
 
 
 %% %%%%%%%%%%%%%%%%%%%% BEGIN COMMANDS %%%%%%%%%%%%%%%%%%%%
 
-\newcommand{\mailto}[1]{\href{mailto://#1}{<#1>}}
+\newcommand{\mailto}[1]{\href{mailto:#1}{<#1>}}
 
 \let\stdsection\section         % because LaTeX cannot handle
                                 % recursive commands
@@ -55,7 +55,7 @@
   Andreea-Ingrid Funie\\\mailto{aif109@doc.ic.ac.uk}\and
   Alexandru Scvor\c tov\\\mailto{as10109@doc.ic.ac.uk}\and
   Francesco Mazzoli\\\mailto{fm2209@doc.ic.ac.uk}\and
-  Marc-David Haubenstock\\mailto{mh808@doc.ic.ac.uk}\and
+  Marc-David Haubenstock\\\mailto{mh808@doc.ic.ac.uk}\and
   Maximilian Staudt\\\mailto{ms9109@doc.ic.ac.uk}
 }
 \date{January 2012}
@@ -141,6 +141,66 @@ etc.
 
 \section{Engineering Visigoth}
 %% This section corresponds to C in the requirements
+
+\subsubsection{Graph drawing algorithms}
+
+Graph drawing is a tricky problem, mainly due to the fact that the prime interest when
+engineering one is to please humans' taste, instead of some logical property. A wide array
+of such algorithms have been proposed in the history of computer science, and since
+drawing graphs is a central task in Visigoth, we had to choose the one that fit best.
+
+First we experimented with the existing solutions. One of the most complete free
+graph-drawing algorithm is OpenViz\footnote{\url{http://www.graphviz.org/}}, and it
+provides various algorithm:
+
+\begin{itemize}
+\item
+  \textbf{dot}: A hierarchical layout, used for directed graphs. Our small world networks
+  are not directed and it was clear from the beginning that they did not fit this model
+  well.
+
+\item
+  \textbf{twopi}, \textbf{circo}: Radial and circular layout, respectively. Again,
+  unsuitable for the quasi-random networks that we use in Visigoth.
+
+\item
+  \textbf{neato}: A spring model layout, which seemed to work reasonably well with random
+  graphs.
+\end{itemize}
+
+The spring model seemed to be the best fit. This class of algorithm work by treating edges
+like springs: in this way clusters of highly connected nodes would be drawn together. To
+counter this force (that would lead to nodes lumping together), nodes are treated as
+charged particles of the same polarity, causing repulsion between every particle and the
+others.
+
+When generating a graph, the particles are first places at random locations in the
+space. Then, we apply the algorithm repeatedly until the forces are low enough that we can
+consider the graph to be stable.
+
+Spring model algorithms are nice for two reasons:
+
+\begin{itemize}
+\item
+  Good results: spring force algorithms produce pleasant graphs for almost all kind of
+  networks. Some algorithms might produce better results for specific kinds of graph, but
+  spring force algorithms are by far the more adaptive.
+
+\item
+  Ease of implementation: Our simple implementation of the algorithm take a little less
+  then 50 lines of C++ code, and works well up to medium-sized graphs.
+
+\end{itemize}
+
+However, even a simple description of the algorithms reveals its high cost. For each
+particle, we need to iterate through all the connected nodes to calculate the spring
+forces, and more importantly through all the particles of the graphs to calculate the
+repulsion forces. Thus, the algorithm is $O(n^2)$, where $n$ is the number of nodes.
+
+For this reason, our implementation works smoothly up to around a 1000 nodes, but then
+performance degrades quickly, and the program becomes unresponsive.
+
+
 
 \section{Looking back}
 %% This section corresponds to D in the requirements
