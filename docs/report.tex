@@ -23,9 +23,7 @@
 
 %% Pseudocode
 \usepackage{algorithmic}
-\usepackage[boxed]{algorithm}
-\floatname{algorithm}{Procedure}
-
+\usepackage{float}
 
 %% Linux Libertine
 \usepackage[T1]{fontenc}
@@ -126,7 +124,7 @@ some sort.
 
 For example, if someone were to draw every user of a social network
 (e.g. Twitter) on a canvas and then connect each pair of them if they
-are registered as “friends” on the platform, the resulting graph is a
+are registered as ``friends'' on the platform, the resulting graph is a
 Small World Network.  Over the course of time, several mathematical
 algorithms that generate random Small World Networks have been
 discovered. However, the resulting graphs have only lately begun to
@@ -389,73 +387,74 @@ gravity relative to the contained nodes.
 
 Building the tree is the difficult part of the algorithm and can be done in linear time.
 Once that is done, to calculate the non-edge forces for a given node the algorithm
-proceeds as indicated in procedure \ref{proc:FADE}.
+proceeds as indicated in figure \ref{proc:FADE}.
 
-\begin{algorithm}
-  \caption{This procedure calculates the non-edge force of a given node $n$, given the
-    QuadTree $q$. $\vec{n}$ and $\vec{q}$ indicate the vectors corresponding to the
-    respective centers of gravity. $\beta$ is an empirically determined parameter used to
-    regulate the amount of force - $75$ has worked well for us. $\theta$ is central to the
-    FADE algorithm and determines the amount of approximation. If $\geq 1$ the algorithm
-    is unstable, we used values between $0.5$ and $0.8$. See figure \ref{fig:theta} for a
-    visual explanation. The mass of a quadrant is simply the number of nodes residing in
-    it. }
-  \label{proc:FADE}
-
-  \begin{algorithmic}
-    \REQUIRE $0 < \theta < 1$
-  \end{algorithmic}
-  force$(n, q)$:
-  \begin{algorithmic}
-    \IF { $q$ is terminal \OR $\frac{\vec{n} - \vec{q}}{\textrm{width}(q)} < \theta$ }
-    \STATE $\vec{d} \gets \vec{n} - \vec{q}$
-    \STATE $\vec{v} \gets \vec{d} \cdot \frac{\beta}{|{\vec{d}}|^2}$
-    \STATE $\vec{v} \gets \vec{v} \cdot \textrm{mass}(q)$
-    \RETURN $\vec{v} \cdot \frac{\beta}{|{\vec{d}}|^2}$
-    \ELSE
-    \STATE $\vec{v} \gets 0$
-    \FOR {$q'$ in children$(q)$}
-    \STATE $\vec{v} \gets \vec{v} + \textrm{force}(n, q')$
-    \ENDFOR
-    \RETURN $\vec{v}$
-    \ENDIF
-  \end{algorithmic}
-\end{algorithm}
-
-\begin{figure}
-  \centering
-  \begin{tikzpicture}[y=0.80pt, x=0.8pt,yscale=-1, inner sep=0pt, outer sep=0pt]
-    \path[draw=black,fill=cffffff,line join=miter,line cap=butt,fill
-      opacity=0.000,even odd rule,line width=0.803pt,rounded corners=0.0000cm]
-    (140.4134,176.5621) rectangle (303.7579,339.9066);
-    \path[cm={{0.79503474,0.0,0.0,0.79503474,(-296.23722,-12.403676)}},draw=black,fill=c787aff]
-    (636.3961,281.1107)arc(0.000:180.000:11.617)arc(-180.000:0.000:11.617) --
-    cycle;
-    \path[cm={{0.79503474,0.0,0.0,0.79503474,(-333.50701,101.01225)}},draw=black,fill=cff7374]
-    (636.3961,281.1107)arc(0.000:180.000:11.617)arc(-180.000:0.000:11.617) --
-    cycle;
-    \path[cm={{0.79503474,0.0,0.0,0.79503474,(-214.57843,164.22654)}},draw=black,fill=c79ff79]
-    (636.3961,281.1107)arc(0.000:180.000:11.617)arc(-180.000:0.000:11.617) --
-    cycle;
-    \path[draw=black,line join=miter,line cap=butt,line width=0.800pt]
-    (166.4286,313.7908) -- (196.7857,221.6479);
-    \path[draw=black,line join=miter,line cap=butt,line width=0.800pt]
-    (205.3571,220.9336) -- (278.2143,377.3622);
-    \path[fill=black] (168.21428,262.36218) node[above right] (text5235) {$d_1$};
-    \path[fill=black] (239.64287,291.64789) node[above right] (text5239) {$d_2$};
-    \path[fill=black] (216.42857,172.36218) node[above right] (text5243) {$s$};
-    \path (142.5000,173.7908) -- (300.0000,173.7908);
-    \path[draw=black,line join=miter,line cap=butt,line width=0.800pt, <->]
-    (142.1429,173.4336) -- (301.4286,173.4336);
-    \path[fill=black] (210,214.1479) node[above right] (text5479) {$q$};
-    \path[fill=black] (173.21429,328.07648) node[above right] (text5483) {$n_1$};
-    \path[fill=black] (292.34625,390.3728) node[above right] (text5483-5) {$n_2$};
-  \end{tikzpicture}
-  \caption{In this case, when calculating the non-edge force between $n_1$ and the
-    quadrant $q$, the quadrant will be judged to be too close to approximate, since
-    $\frac{s}{d_1} > 1$, while $n_2$ might be judged far enough, depending on
-    $\theta$.}
-  \label{fig:theta}
+\begin{figure}[ht]
+  \begin{minipage}[b]{0.5\linewidth}
+    \begin{algorithmic}
+      \REQUIRE $0 < \theta < 1$
+    \end{algorithmic}
+    force$(n, q)$:
+    \begin{algorithmic}
+      \IF { $q$ is terminal \OR $\frac{\vec{n} - \vec{q}}{\textrm{width}(q)} < \theta$ }
+      \STATE $\vec{d} \gets \vec{n} - \vec{q}$
+      \STATE $\vec{v} \gets \vec{d} \cdot \frac{\beta}{|{\vec{d}}|^2}$
+      \STATE $\vec{v} \gets \vec{v} \cdot \textrm{mass}(q)$
+      \RETURN $\vec{v} \cdot \frac{\beta}{|{\vec{d}}|^2}$
+      \ELSE
+      \STATE $\vec{v} \gets 0$
+      \FOR {$q'$ in children$(q)$}
+      \STATE $\vec{v} \gets \vec{v} + \textrm{force}(n, q')$
+      \ENDFOR
+      \RETURN $\vec{v}$
+      \ENDIF
+    \end{algorithmic}
+    \caption{This procedure calculates the non-edge force of a given node $n$, given the
+      QuadTree $q$. $\vec{n}$ and $\vec{q}$ indicate the vectors corresponding to the
+      respective centers of gravity. $\beta$ is an empirically determined parameter used
+      to regulate the amount of force - $75$ has worked well for us. $\theta$ is central
+      to the FADE algorithm and determines the amount of approximation. If $\geq 1$ the
+      algorithm is unstable, we used values between $0.5$ and $0.8$. See figure
+      \ref{fig:theta} for a visual explanation. The mass of a quadrant is simply the
+      number of nodes residing in it. }
+    \label{proc:FADE}
+  \end{minipage}
+  \hspace{10pt}
+  \begin{minipage}[b]{0.5\linewidth}
+    \centering
+    \begin{tikzpicture}[y=0.80pt, x=0.8pt,yscale=-1, inner sep=0pt, outer sep=0pt]
+      \path[draw=black,fill=cffffff,line join=miter,line cap=butt,fill
+        opacity=0.000,even odd rule,line width=0.803pt,rounded corners=0.0000cm]
+      (140.4134,176.5621) rectangle (303.7579,339.9066);
+      \path[cm={{0.79503474,0.0,0.0,0.79503474,(-296.23722,-12.403676)}},draw=black,fill=c787aff]
+      (636.3961,281.1107)arc(0.000:180.000:11.617)arc(-180.000:0.000:11.617) --
+      cycle;
+      \path[cm={{0.79503474,0.0,0.0,0.79503474,(-333.50701,101.01225)}},draw=black,fill=cff7374]
+      (636.3961,281.1107)arc(0.000:180.000:11.617)arc(-180.000:0.000:11.617) --
+      cycle;
+      \path[cm={{0.79503474,0.0,0.0,0.79503474,(-214.57843,164.22654)}},draw=black,fill=c79ff79]
+      (636.3961,281.1107)arc(0.000:180.000:11.617)arc(-180.000:0.000:11.617) --
+      cycle;
+      \path[draw=black,line join=miter,line cap=butt,line width=0.800pt]
+      (166.4286,313.7908) -- (196.7857,221.6479);
+      \path[draw=black,line join=miter,line cap=butt,line width=0.800pt]
+      (205.3571,220.9336) -- (278.2143,377.3622);
+      \path[fill=black] (168.21428,262.36218) node[above right] (text5235) {$d_1$};
+      \path[fill=black] (239.64287,291.64789) node[above right] (text5239) {$d_2$};
+      \path[fill=black] (216.42857,172.36218) node[above right] (text5243) {$s$};
+      \path (142.5000,173.7908) -- (300.0000,173.7908);
+      \path[draw=black,line join=miter,line cap=butt,line width=0.800pt, <->]
+      (142.1429,173.4336) -- (301.4286,173.4336);
+      \path[fill=black] (210,214.1479) node[above right] (text5479) {$q$};
+      \path[fill=black] (173.21429,328.07648) node[above right] (text5483) {$n_1$};
+      \path[fill=black] (292.34625,390.3728) node[above right] (text5483-5) {$n_2$};
+    \end{tikzpicture}
+    \caption{In this case, when calculating the non-edge force between $n_1$ and the
+      quadrant $q$, the quadrant will be judged to be too close to approximate, since
+      $\frac{s}{d_1} > 1$, while $n_2$ might be judged far enough, depending on
+      $\theta$.}
+    \label{fig:theta}
+  \end{minipage}
 \end{figure}
 
 \section{Looking back}
@@ -476,7 +475,7 @@ proceeds as indicated in procedure \ref{proc:FADE}.
   2010.
 
 \bibitem{oconn11}
-  Luke M. O’Connor,
+  Luke M. O'Connor,
   \emph{Algorithms for Constructing Realistic Networks}.
   Imperial College London,
   2011.
