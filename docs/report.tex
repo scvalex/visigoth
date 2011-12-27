@@ -4,18 +4,28 @@
 
 %%\usepackage[top=1in, bottom=1in, left=1in, right=1in]{geometry}
 
+\usepackage{fullpage}
 \usepackage{url}
 \usepackage{hyperref}
 \hypersetup{pdfborder=0 0 0}
+\usepackage{graphicx}
+\usepackage{subfig}
+\usepackage{tikz}
+\usetikzlibrary{trees}
+\usepackage{amssymb}
 
-%% \usepackage[osf]{libertine}
+%% Linux Libertine
+\usepackage[T1]{fontenc}
+\usepackage{libertine}
+\renewcommand*\oldstylenums[1]{{\fontfamily{fxlj}\selectfont #1}}
+\usepackage{libertine}
 
 %% %%%%%%%%%%%%%%%%%%%% END PACKAGES %%%%%%%%%%%%%%%%%%%%
 
 
 %% %%%%%%%%%%%%%%%%%%%% BEGIN COMMANDS %%%%%%%%%%%%%%%%%%%%
 
-\newcommand{\mailto}[1]{\href{mailto:#1}{<#1>}}
+\newcommand{\mailto}[1]{\href{mailto:#1}{\texttt{#1}}}
 
 \let\stdsection\section         % because LaTeX cannot handle
                                 % recursive commands
@@ -190,6 +200,12 @@ Spring model algorithms are nice for two reasons:
   Ease of implementation: Our simple implementation of the algorithm take a little less
   then 50 lines of C++ code, and works well up to medium-sized graphs.
 
+\item
+  Real time drawing: force based algorithms can be used to show in real time the
+  untangling of the graph, which is usually an interesting effect. It also permits
+  interaction, for example in the form of node-dragging that changes the shape of the
+  graph. We employ both techniques in Visigoth.
+
 \end{itemize}
 
 However, even a simple description of the algorithms reveals its high cost. For each
@@ -198,9 +214,92 @@ forces, and more importantly through all the particles of the graphs to calculat
 repulsion forces. Thus, the algorithm is $O(n^2)$, where $n$ is the number of nodes.
 
 For this reason, our implementation works smoothly up to around a 1000 nodes, but then
-performance degrades quickly, and the program becomes unresponsive.
+performance degrades quickly, and the program becomes unresponsive. Various solutions have
+been studied, most of which rely on various approximations.
 
+We chose to implement the FADE algorithm\cite{fade}, which works by recursively
+subdividing the graph space into squares, and then treats squares as single particles when
+they are far enough. This algorithm, while improving performance, is a lot more complex
+then the naive one.
 
+\begin{figure}
+  \centering
+  \subfloat[Graph view]{
+    \includegraphics[width=0.4\textwidth]{FADE-quadtree.png}
+  }
+  \hspace{10pt}
+  \subfloat[Tree representation]{
+    \begin{tikzpicture}[grow cyclic]
+      \node {$\square$}
+        child {
+          node {$\square$}
+          child {
+            node {$\square$}
+            child {node {1}}
+          }
+          child {
+            node {$\square$}
+            child {node {2}}
+          }
+        }
+        child {
+          node {$\square$}
+          child {
+            node {$\square$}
+                child {
+                  node {$\square$}
+                  child { node{3} }
+                  child { node{4} }
+                }
+                child {
+                  node {$\square$}
+                  child {node{5}}
+                }
+          }
+        }
+        child {
+          node {$\square$}
+          child {
+            node {$\square$}
+            child {
+              node {$\square$}
+              child {node{6}}
+              child {node{7}}
+            }
+          }
+          child {
+            node {$\square$}
+            child {
+              node {$\square$}
+              child {node{8}}
+            }
+            child {
+              node {$\square$}
+              child {node{9}}
+            }
+          }
+        }
+        child {
+          node {$\square$}
+          child { node {10} }
+        }
+      ;
+    \end{tikzpicture}
+  }
+  \caption{The QuadTree for a sample graph, empty branches omitted}
+  \label{fig:quadtree}
+\end{figure}
+
+The first step is to build a data structure representing the recursive subdivision. This
+kind of data structure is called a \emph{TreeCode}, which recursively subdivides the space
+until only one node remains in the current space, or a maximum depth/minimum space size
+size is hit. The space decomposition can be irregular (e.g. \emph{Voronoi} spaces) or
+regular. In the latter case, the space is recursively subdivided in squares. We chose to
+use a regular, 4-way space decomposition, mainly due to its simplicity. This kind of
+structure is called \emph{QuadTree}. Figure \ref{fig:quadtree} shows a sample QuadTree for
+a Visigoth graph.
+
+The tree can be built in linear time, and once that is done,
 
 \section{Looking back}
 %% This section corresponds to D in the requirements
@@ -224,6 +323,12 @@ performance degrades quickly, and the program becomes unresponsive.
   \emph{Algorithms for Constructing Realistic Networks}.
   Imperial College London,
   2011.
+
+\bibitem{fade}
+  Aaron Quigley and Peter Eades,
+  \emph{FADE: Graph drawing, clustering and visual abstraction}.
+  Department of Computer Science and Software Engineering,
+  Univ. of  Newcastle, Australia, 2000.
 
 \end{thebibliography}
 
