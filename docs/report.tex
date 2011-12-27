@@ -22,8 +22,8 @@
 \usepackage{amssymb}
 
 %% Pseudocode
-\usepackage{algorithmic}
-\usepackage{float}
+\usepackage[noend]{algorithmic}
+\algsetup{indent=1.5em}
 
 %% Linux Libertine
 \usepackage[T1]{fontenc}
@@ -393,11 +393,13 @@ proceeds as indicated in figure \ref{proc:FADE}.
   \begin{minipage}[b]{0.5\linewidth}
     \begin{algorithmic}
       \REQUIRE $0 < \theta < 1$
+      \REQUIRE $\beta > 1$
+      \REQUIRE $\vec{n} \neq \vec{q}$
     \end{algorithmic}
     force$(n, q)$:
     \begin{algorithmic}
-      \IF { $q$ is terminal \OR $\frac{\vec{n} - \vec{q}}{\textrm{width}(q)} < \theta$ }
       \STATE $\vec{d} \gets \vec{n} - \vec{q}$
+      \IF { $q$ is terminal \OR $\frac{\vec{d}}{\textrm{width}(q)} < \theta$ }
       \STATE $\vec{v} \gets \vec{d} \cdot \frac{\beta}{|{\vec{d}}|^2}$
       \STATE $\vec{v} \gets \vec{v} \cdot \textrm{mass}(q)$
       \RETURN $\vec{v} \cdot \frac{\beta}{|{\vec{d}}|^2}$
@@ -449,13 +451,22 @@ proceeds as indicated in figure \ref{proc:FADE}.
       \path[fill=black] (173.21429,328.07648) node[above right] (text5483) {$n_1$};
       \path[fill=black] (292.34625,390.3728) node[above right] (text5483-5) {$n_2$};
     \end{tikzpicture}
-    \caption{In this case, when calculating the non-edge force between $n_1$ and the
-      quadrant $q$, the quadrant will be judged to be too close to approximate, since
-      $\frac{s}{d_1} > 1$, while $n_2$ might be judged far enough, depending on
-      $\theta$.}
+    \caption{In this case, $n_1$ and $n_2$ are nodes and $q$ is a quadrant with edge
+      length $s$. When calculating the non-edge force between $n_1$ and $q$, where $s$ is
+      the quadrant will be judged to be too close to approximate, since $\frac{s}{d_1} >
+      1$, while $n_2$ might be judged far enough, depending on $\theta$.}
     \label{fig:theta}
   \end{minipage}
 \end{figure}
+
+Once implemented, the FADE algorithm lead to great speedups while preserving good node
+placements. While drawing 1000 nodes is already difficult with the simple algorithm, FADE
+can easily handle 10000 nodes, after which other performance limits are hit (the graph
+generation time and the OpenGL drawing).
+
+However, once we implemented the 3D view we had to temporarily switch back to the naive
+algorithm, since the 3D positioning requires heavy modifications to FADE, which we planned
+to do in the near future.
 
 \section{Looking back}
 %% This section corresponds to D in the requirements
