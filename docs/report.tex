@@ -9,18 +9,28 @@
 \usepackage{url}
 \usepackage{hyperref}
 \hypersetup{pdfborder=0 0 0}
+
+%% Images
 \usepackage{graphicx}
+
+%% Side-by-side images
 \usepackage{subfig}
+
+%% Drawing trees and other stuff
 \usepackage{tikz}
-\usetikzlibrary{trees}
+\usetikzlibrary{trees,arrows}
 \usepackage{amssymb}
+
+%% Pseudocode
 \usepackage{algorithmic}
 \usepackage[boxed]{algorithm}
 \floatname{algorithm}{Procedure}
 
+
 %% Linux Libertine
 \usepackage[T1]{fontenc}
 \usepackage{libertine}
+\renewcommand*\oldstylenums[1]{{\fontfamily{fxlj}\selectfont #1}}
 
 %% %%%%%%%%%%%%%%%%%%%% END PACKAGES %%%%%%%%%%%%%%%%%%%%
 
@@ -34,6 +44,17 @@
 \renewcommand{\section}{\newpage\stdsection}
 
 %% %%%%%%%%%%%%%%%%%%%% END COMMANDS %%%%%%%%%%%%%%%%%%%%
+
+%% %%%%%%%%%%%%%%%%%%%% BEGIN COLORS %%%%%%%%%%%%%%%%%%%%
+
+\definecolor{cffffff}{RGB}{255,255,255}
+\definecolor{c787aff}{RGB}{120,122,255}
+\definecolor{cff7374}{RGB}{255,115,116}
+\definecolor{c79ff79}{RGB}{121,255,121}
+\definecolor{cff7374}{RGB}{255,115,116}
+\definecolor{c7372ff}{RGB}{115,114,255}
+
+%% %%%%%%%%%%%%%%%%%%%% END COLORS %%%%%%%%%%%%%%%%%%%%
 
 
 %% Final Report — due: 9th Jan 2012, at 11:00
@@ -230,7 +251,71 @@ more complex then the naive one.
 \begin{figure}
   \centering
   \subfloat[Graph view]{
-    \includegraphics[width=0.4\textwidth]{FADE-quadtree.png}
+    \begin{tikzpicture}[y=0.80pt, x=0.8pt,yscale=-0.5, xscale=0.5, inner sep=0pt, outer sep=0pt]
+      \path[draw=black,line join=miter,line cap=butt,line width=0.800pt]
+      (356.4286,94.5050) -- (356.4286,598.7908);
+      \path[draw=black,line join=miter,line cap=butt,line width=0.800pt]
+      (102.1429,348.7908) -- (605.7143,348.7908);
+      \path[draw=black,line join=miter,line cap=butt,line width=0.800pt]
+      (102.1429,220.2193) -- (607.1429,220.2193);
+      \path[draw=black,line join=miter,line cap=butt,line width=0.800pt]
+      (229.2857,93.0765) -- (229.2857,598.7908);
+      \path[draw=black,line join=miter,line cap=butt,line width=0.800pt]
+      (485.0000,93.7908) -- (485.0000,349.5050);
+      \path[draw=black,line join=miter,line cap=butt,line width=0.800pt]
+      (101.4286,477.3622) -- (356.4286,477.3622);
+      \path[draw=black,line join=miter,line cap=butt,line width=0.800pt]
+      (420.7143,220.2193) -- (420.7143,349.5050);
+      \path[draw=black,line join=miter,line cap=butt,line width=0.800pt]
+      (356.4286,285.2193) -- (485.0000,285.2193);
+      \path[draw=black,line join=miter,line cap=butt,line width=0.800pt]
+      (292.1429,348.0765) -- (292.1429,476.6479);
+      \path[draw=black,line join=miter,line cap=butt,line width=0.800pt]
+      (228.5714,413.0765) -- (357.1429,413.0765);
+      \path[draw=black,line join=miter,line cap=butt,line width=0.800pt]
+      (165.7143,477.3622) -- (165.7143,599.5050);
+      \path[draw=black,line join=miter,line cap=butt,line width=0.800pt]
+      (100.7143,540.9336) -- (229.2857,540.9336);
+      \path[cm={{0.86607143,0.0,0.0,0.86607143,(-133.53636,-75.700851)}},draw=black,fill=c7372ff]
+      (506.4286,453.4336)arc(0.000:180.000:7.500)arc(-180.000:0.000:7.500) -- cycle;
+      \path[cm={{0.86607143,0.0,0.0,0.86607143,(-280.6792,-62.843726)}},draw=black,fill=c7372ff]
+      (506.4286,453.4336)arc(0.000:180.000:7.500)arc(-180.000:0.000:7.500) -- cycle;
+      \path[cm={{0.86607143,0.0,0.0,0.86607143,(-185.6792,29.656274)}},draw=black,fill=c7372ff]
+      (506.4286,453.4336)arc(0.000:180.000:7.500)arc(-180.000:0.000:7.500) -- cycle;
+      \path[cm={{0.86607143,0.0,0.0,0.86607143,(-180.6792,75.013418)}},draw=black,fill=c7372ff]
+      (506.4286,453.4336)arc(0.000:180.000:7.500)arc(-180.000:0.000:7.500) -- cycle;
+      \path[cm={{0.86607143,0.0,0.0,0.86607143,(-291.75062,136.79913)}},draw=black,fill=c7372ff]
+      (506.4286,453.4336)arc(0.000:180.000:7.500)arc(-180.000:0.000:7.500) -- cycle;
+      \path[cm={{0.86607143,0.0,0.0,0.86607143,(-254.25063,184.65628)}},draw=black,fill=c7372ff]
+      (506.4286,453.4336)arc(0.000:180.000:7.500)arc(-180.000:0.000:7.500) -- cycle;
+      \path[cm={{0.86607143,0.0,0.0,0.86607143,(102.53509,22.87056)}},draw=black,fill=c7372ff]
+      (506.4286,453.4336)arc(0.000:180.000:7.500)arc(-180.000:0.000:7.500) -- cycle;
+      \path[cm={{0.86607143,0.0,0.0,0.86607143,(21.463659,-64.272297)}},draw=black,fill=c7372ff]
+      (506.4286,453.4336)arc(0.000:180.000:7.500)arc(-180.000:0.000:7.500) -- cycle;
+      \path[cm={{0.86607143,0.0,0.0,0.86607143,(23.249374,-116.41515)}},draw=black,fill=c7372ff]
+      (506.4286,453.4336)arc(0.000:180.000:7.500)arc(-180.000:0.000:7.500) -- cycle;
+      \path[cm={{0.86607143,0.0,0.0,0.86607143,(1.4636592,-155.70087)}},draw=black,fill=c7372ff]
+      (506.4286,453.4336)arc(0.000:180.000:7.500)arc(-180.000:0.000:7.500) -- cycle;
+      \path[fill=black] (160.31509,332.78058) node[above right] (text6462) {1     };
+      \path[fill=black] (307.43341,319.70856) node[above right] (text6462-4) {2     };
+      \path[fill=black] (441.40405,239.94313) node[above right] (text6462-9) {3     };
+      \path[fill=black] (465.61832,280.30029) node[above right] (text6462-98) {4
+      };
+      \path[fill=black] (463.73944,332.14725) node[above right] (text6462-5) {5     };
+      \path[fill=black] (255.68974,433.98373) node[above right] (text6462-0) {6     };
+      \path[fill=black] (260.68976,470.65741) node[above right] (text6462-7) {7     };
+      \path[fill=black] (143.21951,522.34161) node[above right] (text6462-3) {8     };
+      \path[fill=black] (186.40405,580.65741) node[above right] (text6462-43) {9
+      };
+      \path[fill=black] (542.83264,419.586) node[above right] (text6462-02) {10z
+      };
+      \path[draw=black,line join=miter,line cap=butt,line width=0.800pt]
+      (606.0915,92.7173) -- (606.0915,599.8138) -- (100.0051,599.8138) --
+      (100.0051,92.7173);
+      \path[draw=black,line join=miter,line cap=butt,line width=0.800pt]
+      (100.0051,93.7274) -- (605.0814,93.7274);
+
+    \end{tikzpicture}
   }
   \hspace{10pt}
   \subfloat[Tree representation]{
@@ -312,10 +397,12 @@ proceeds as indicated in procedure \ref{proc:FADE}.
 \begin{algorithm}
   \caption{This procedure calculates the non-edge force of a given node $n$, given the
     QuadTree $q$. $\vec{n}$ and $\vec{q}$ indicate the vectors corresponding to the
-    respective centers of gravity. $\beta$ is an empirically determined parameter used
-    to regulate the amount of force - $75$ has worked well for us. $\theta$ is central to
-    the FADE algorithm and determines the amount of approximation. If $> 1$ the algorithm
-    is unstable, we used values between $0.2$ and $0.5$. See figure }
+    respective centers of gravity. $\beta$ is an empirically determined parameter used to
+    regulate the amount of force - $75$ has worked well for us. $\theta$ is central to the
+    FADE algorithm and determines the amount of approximation. If $\geq 1$ the algorithm
+    is unstable, we used values between $0.5$ and $0.8$. See figure \ref{fig:theta} for a
+    visual explanation. The mass of a quadrant is simply the number of nodes residing in
+    it. }
   \label{proc:FADE}
 
   \begin{algorithmic}
@@ -338,7 +425,41 @@ proceeds as indicated in procedure \ref{proc:FADE}.
   \end{algorithmic}
 \end{algorithm}
 
-bla bla
+\begin{figure}
+  \centering
+  \begin{tikzpicture}[y=0.80pt, x=0.8pt,yscale=-1, inner sep=0pt, outer sep=0pt]
+    \path[draw=black,fill=cffffff,line join=miter,line cap=butt,fill
+      opacity=0.000,even odd rule,line width=0.803pt,rounded corners=0.0000cm]
+    (140.4134,176.5621) rectangle (303.7579,339.9066);
+    \path[cm={{0.79503474,0.0,0.0,0.79503474,(-296.23722,-12.403676)}},draw=black,fill=c787aff]
+    (636.3961,281.1107)arc(0.000:180.000:11.617)arc(-180.000:0.000:11.617) --
+    cycle;
+    \path[cm={{0.79503474,0.0,0.0,0.79503474,(-333.50701,101.01225)}},draw=black,fill=cff7374]
+    (636.3961,281.1107)arc(0.000:180.000:11.617)arc(-180.000:0.000:11.617) --
+    cycle;
+    \path[cm={{0.79503474,0.0,0.0,0.79503474,(-214.57843,164.22654)}},draw=black,fill=c79ff79]
+    (636.3961,281.1107)arc(0.000:180.000:11.617)arc(-180.000:0.000:11.617) --
+    cycle;
+    \path[draw=black,line join=miter,line cap=butt,line width=0.800pt]
+    (166.4286,313.7908) -- (196.7857,221.6479);
+    \path[draw=black,line join=miter,line cap=butt,line width=0.800pt]
+    (205.3571,220.9336) -- (278.2143,377.3622);
+    \path[fill=black] (168.21428,262.36218) node[above right] (text5235) {$d_1$};
+    \path[fill=black] (239.64287,291.64789) node[above right] (text5239) {$d_2$};
+    \path[fill=black] (216.42857,172.36218) node[above right] (text5243) {$s$};
+    \path (142.5000,173.7908) -- (300.0000,173.7908);
+    \path[draw=black,line join=miter,line cap=butt,line width=0.800pt, <->]
+    (142.1429,173.4336) -- (301.4286,173.4336);
+    \path[fill=black] (210,214.1479) node[above right] (text5479) {$q$};
+    \path[fill=black] (173.21429,328.07648) node[above right] (text5483) {$n_1$};
+    \path[fill=black] (292.34625,390.3728) node[above right] (text5483-5) {$n_2$};
+  \end{tikzpicture}
+  \caption{In this case, when calculating the non-edge force between $n_1$ and the
+    quadrant $q$, the quadrant will be judged to be too close to approximate, since
+    $\frac{s}{d_1} > 1$, while $n_2$ might be judged far enough, depending on
+    $\theta$.}
+  \label{fig:theta}
+\end{figure}
 
 \section{Looking back}
 %% This section corresponds to D in the requirements

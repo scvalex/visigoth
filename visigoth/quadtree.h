@@ -22,7 +22,7 @@ public:
         bool isFarEnough(vreal distance);
 
         // A fixed tolerance. The higher the tolerance, the more unstable the graph.
-        static const vreal tolerance = 0.2;
+        static const vreal tolerance = 0.8;
     };
 
     QuadTree(vreal longestEdge);
