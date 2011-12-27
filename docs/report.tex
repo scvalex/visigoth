@@ -1,4 +1,5 @@
 \documentclass[a4paper,11pt,titlepage]{article}
+\parskip 3pt
 
 %% %%%%%%%%%%%%%%%%%%%% BEGIN PACKAGES %%%%%%%%%%%%%%%%%%%%
 
@@ -13,11 +14,12 @@
 \usepackage{tikz}
 \usetikzlibrary{trees}
 \usepackage{amssymb}
+\usepackage{algorithmic}
+\usepackage{algorithm}
+\floatname{algorithm}{Procedure}
 
 %% Linux Libertine
 \usepackage[T1]{fontenc}
-\usepackage{libertine}
-\renewcommand*\oldstylenums[1]{{\fontfamily{fxlj}\selectfont #1}}
 \usepackage{libertine}
 
 %% %%%%%%%%%%%%%%%%%%%% END PACKAGES %%%%%%%%%%%%%%%%%%%%
@@ -152,8 +154,9 @@ etc.
 \section{Engineering Visigoth}
 %% This section corresponds to C in the requirements
 
-\subsubsection{Graph drawing algorithms}
+\subsection{Graph drawing}
 
+\subsection{Force directed algorithms}
 Graph drawing is a tricky problem, mainly due to the fact that the prime interest when
 engineering one is to please humans' taste, instead of some logical property. A wide array
 of such algorithms have been proposed in the history of computer science, and since
@@ -207,6 +210,8 @@ Spring model algorithms are nice for two reasons:
   graph. We employ both techniques in Visigoth.
 
 \end{itemize}
+
+\subsubsection{FADE}
 
 However, even a simple description of the algorithms reveals its high cost. For each
 particle, we need to iterate through all the connected nodes to calculate the spring
@@ -297,9 +302,41 @@ size is hit. The space decomposition can be irregular (e.g. \emph{Voronoi} space
 regular. In the latter case, the space is recursively subdivided in squares. We chose to
 use a regular, 4-way space decomposition, mainly due to its simplicity. This kind of
 structure is called \emph{QuadTree}. Figure \ref{fig:quadtree} shows a sample QuadTree for
-a Visigoth graph.
+a Visigoth graph. In the QuadTree, each sub-quadrant preserved the weighted centre of
+gravity relative to the contained nodes.
 
-The tree can be built in linear time, and once that is done,
+The tree can be built in linear time, and once that is done, to calculate the non-edge
+forces for a given node the algorithm proceeds this way:
+
+\begin{algorithm}
+  \caption{This procedure calculates the non-edge force of a given node $n$, given the
+    QuadTree $q$. $\vec{n}$ and $\vec{q}$ indicate the vectors corresponding to the
+    respective centers of gravity.}
+
+  \begin{algorithmic}
+    \REQUIRE $0 < \theta < 1$
+  \end{algorithmic}
+  force$(n, q)$:
+  \begin{algorithmic}
+    \IF { $q$ is terminal \OR $\frac{\vec{n} - \vec{q}}{q \textrm{{\small 's width}}} < \theta$ }
+    \STATE $d \gets \vec{n} - \vec{q}$
+    \RETURN $\vec{d} \cdot \frac{\beta}{|{\vec{d}}|^2}$
+    \ELSE
+    \STATE $\vec{v} \gets 0$
+    \FOR {$q'$ in $q$'s children}
+    \STATE $\vec{v} \gets \vec{v} + \textrm{force}(n, q')$
+    \ENDFOR
+    \RETURN $\vec{v}$
+    \ENDIF
+  \end{algorithmic}
+\end{algorithm}
+
+$\beta$ is an empirically determined parameter used to regulate the amount of force - $75$
+has worked well for us. $\theta$ is central to the FADE algorithm and determines the
+amount of approximation. If $> 1$ the algorithm is unstable, we used values between $0.2$
+and $0.5$.
+
+
 
 \section{Looking back}
 %% This section corresponds to D in the requirements
