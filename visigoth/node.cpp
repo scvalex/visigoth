@@ -79,7 +79,7 @@ VPointF Node::calculateNonEdgeForces(QuadTree::TreeNode* treeNode) {
         double l = vec.lengthSquared();
 
         if (l > 0) {
-            vel = vec * (75.0 / l);
+            vel = vec * (75.0 / l) * treeNode->size();
         } else {
             vel = VPointF(0.0);
         }

@@ -15,7 +15,7 @@
 \usetikzlibrary{trees}
 \usepackage{amssymb}
 \usepackage{algorithmic}
-\usepackage{algorithm}
+\usepackage[boxed]{algorithm}
 \floatname{algorithm}{Procedure}
 
 %% Linux Libertine
@@ -159,12 +159,12 @@ etc.
 \subsection{Force directed algorithms}
 Graph drawing is a tricky problem, mainly due to the fact that the prime interest when
 engineering one is to please humans' taste, instead of some logical property. A wide array
-of such algorithms have been proposed in the history of computer science, and since
-drawing graphs is a central task in Visigoth, we had to choose the one that fit best.
+of such algorithms have been proposed, and since drawing graphs is a central task in
+Visigoth, we had to choose the one that fit best.
 
 First we experimented with the existing solutions. One of the most complete free
 graph-drawing algorithm is OpenViz\footnote{\url{http://www.graphviz.org/}}, and it
-provides various algorithm:
+provides various algorithms:
 
 \begin{itemize}
 \item
@@ -184,10 +184,10 @@ provides various algorithm:
 The spring model seemed to be the best fit. This class of algorithm work by treating edges
 like springs: in this way clusters of highly connected nodes would be drawn together. To
 counter this force (that would lead to nodes lumping together), nodes are treated as
-charged particles of the same polarity, causing repulsion between every particle and the
+charged particles of the same polarity, causing repulsion between every node and the
 others.
 
-When generating a graph, the particles are first places at random locations in the
+When generating a graph, the nodes are first places at random locations in the
 space. Then, we apply the algorithm repeatedly until the forces are low enough that we can
 consider the graph to be stable.
 
@@ -222,10 +222,10 @@ For this reason, our implementation works smoothly up to around a 1000 nodes, bu
 performance degrades quickly, and the program becomes unresponsive. Various solutions have
 been studied, most of which rely on various approximations.
 
-We chose to implement the FADE algorithm\cite{fade}, which works by recursively
-subdividing the graph space into squares, and then treats squares as single particles when
-they are far enough. This algorithm, while improving performance, is a lot more complex
-then the naive one.
+We chose to implement the FADE algorithm \cite{fade}, which works by recursively
+subdividing the graph space into sub-spaces, and then treats sub-spaces as single
+particles when they are far enough. This algorithm, while improving performance, is a lot
+more complex then the naive one.
 
 \begin{figure}
   \centering
@@ -305,25 +305,32 @@ structure is called \emph{QuadTree}. Figure \ref{fig:quadtree} shows a sample Qu
 a Visigoth graph. In the QuadTree, each sub-quadrant preserved the weighted centre of
 gravity relative to the contained nodes.
 
-The tree can be built in linear time, and once that is done, to calculate the non-edge
-forces for a given node the algorithm proceeds this way:
+Building the tree is the difficult part of the algorithm and can be done in linear time.
+Once that is done, to calculate the non-edge forces for a given node the algorithm
+proceeds as indicated in procedure \ref{proc:FADE}.
 
 \begin{algorithm}
   \caption{This procedure calculates the non-edge force of a given node $n$, given the
     QuadTree $q$. $\vec{n}$ and $\vec{q}$ indicate the vectors corresponding to the
-    respective centers of gravity.}
+    respective centers of gravity. $\beta$ is an empirically determined parameter used
+    to regulate the amount of force - $75$ has worked well for us. $\theta$ is central to
+    the FADE algorithm and determines the amount of approximation. If $> 1$ the algorithm
+    is unstable, we used values between $0.2$ and $0.5$. See figure }
+  \label{proc:FADE}
 
   \begin{algorithmic}
     \REQUIRE $0 < \theta < 1$
   \end{algorithmic}
   force$(n, q)$:
   \begin{algorithmic}
-    \IF { $q$ is terminal \OR $\frac{\vec{n} - \vec{q}}{q \textrm{{\small 's width}}} < \theta$ }
-    \STATE $d \gets \vec{n} - \vec{q}$
-    \RETURN $\vec{d} \cdot \frac{\beta}{|{\vec{d}}|^2}$
+    \IF { $q$ is terminal \OR $\frac{\vec{n} - \vec{q}}{\textrm{width}(q)} < \theta$ }
+    \STATE $\vec{d} \gets \vec{n} - \vec{q}$
+    \STATE $\vec{v} \gets \vec{d} \cdot \frac{\beta}{|{\vec{d}}|^2}$
+    \STATE $\vec{v} \gets \vec{v} \cdot \textrm{mass}(q)$
+    \RETURN $\vec{v} \cdot \frac{\beta}{|{\vec{d}}|^2}$
     \ELSE
     \STATE $\vec{v} \gets 0$
-    \FOR {$q'$ in $q$'s children}
+    \FOR {$q'$ in children$(q)$}
     \STATE $\vec{v} \gets \vec{v} + \textrm{force}(n, q')$
     \ENDFOR
     \RETURN $\vec{v}$
@@ -331,12 +338,7 @@ forces for a given node the algorithm proceeds this way:
   \end{algorithmic}
 \end{algorithm}
 
-$\beta$ is an empirically determined parameter used to regulate the amount of force - $75$
-has worked well for us. $\theta$ is central to the FADE algorithm and determines the
-amount of approximation. If $> 1$ the algorithm is unstable, we used values between $0.2$
-and $0.5$.
-
-
+bla bla
 
 \section{Looking back}
 %% This section corresponds to D in the requirements
