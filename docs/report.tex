@@ -230,13 +230,14 @@ However, C++ has its downsides:
   This is a somewhat controversial subject in our team and in the broader
   programming community and our opinions differ on how much better a garbage
   collected language would have been, considering the loss in performance. C++
-  also has the characteristic (due to its unmanaged nature) of allowing both
-  pointers to objects and objects as values, which slows down compilation time
-  considerably (when changing an header file all code that uses that object as
-  value has to be recompiled). Moreover, C++ allows 2 kinds of references:
-  immutable references and C-style pointers, with a rather confusing syntax -
-  references are indistinguishable from values when used. All these factors
-  generate much confusion which is absent in most modern O-O languages.
+  also has the characteristic (required by its unmanaged nature) of allowing
+  objects to be used in the heap through pointers and on the stack as values,
+  which slows down compilation time considerably (when changing an header file
+  all code that uses that object as value has to be recompiled). Moreover, C++
+  allows 2 kinds of references: immutable references and C-style pointers, with
+  a rather confusing syntax - references are indistinguishable from values when
+  used. All these factors generate much confusion which is absent in most modern
+  O-O languages.
 
 \item
   \textbf{Language bloat}: C++ is a very broad languages, with a number of
@@ -249,7 +250,7 @@ However, C++ has its downsides:
   consequence ``when you're programming C++ no one can ever agree on which ten
   percent of the language is safe to use'' (Jamie Zawinski). This kind of
   ``programming language discipline'' is required when working on a C++ project
-  and we had our share; although we think we manage to keep the code clean.
+  and we had our share; although we think we managed to keep the code clean.
 
 \end{itemize}
 
