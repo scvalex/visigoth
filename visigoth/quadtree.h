@@ -30,7 +30,7 @@ public:
     void addNode(TreeNode *node);
     TreeNode& root() const;
 
-    void printTree(TreeNode *node) const; // Debug
+    // void printTree(TreeNode *node) const; // Debug
 
 private:
     class Quadrant : public TreeNode {
