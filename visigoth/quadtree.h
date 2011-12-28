@@ -5,6 +5,20 @@
 
 #include "vtools.h"
 
+enum CUBE_X {
+    LEFT = 1,
+    RIGHT
+};
+
+enum CUBE_Y {
+    TOP = 1,
+    BOTTOM
+};
+
+enum CUBE_Z {
+    FRONT = 1,
+    BACK
+};
 
 class QuadTree
 {
@@ -25,6 +39,7 @@ public:
         static const vreal tolerance = 0.8;
     };
 
+
     QuadTree(vreal longestEdge);
     ~QuadTree();
     void addNode(TreeNode *node);
@@ -43,6 +58,8 @@ private:
         const QVector<TreeNode*>& children() const;
         vreal width() const;
 
+        static const int CHILDREN = 8;
+
         void addChild(TreeNode *child);
 
         // Both this functions are needed by printTree() only, which is useful to debug.
@@ -58,6 +75,7 @@ private:
         int _width;
         int _size;
         VPointF _center;
+
 
         int childIndex(TreeNode& node) const;
         void castAndAddChild(TreeNode *node, TreeNode *child) const;

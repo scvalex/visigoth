@@ -20,6 +20,34 @@ inline static int calculateWidth(vreal longestEdge) {
     return pow2((int) ceil(log(baseQuadrants) / log(2.0))) * BASE_QUADRANT_SIZE;
 }
 
+inline static int getIndex(int x, int y, int z) {
+    // Front:     Back:
+    // .-------.  .-------.
+    // | 0 | 1 |  | 5 | 4 |
+    // |-------|  |-------|
+    // | 2 | 3 |  | 7 | 6 |
+    // `-------`  `-------`
+
+    if        ( x == LEFT   &&  y == TOP     &&  z == FRONT ) {
+        return 0;
+    } else if ( x == RIGHT  &&  y == TOP     &&  z == FRONT ) {
+        return 1;
+    } else if ( x == LEFT   &&  y == BOTTOM  &&  z == FRONT ) {
+        return 2;
+    } else if ( x == RIGHT  &&  y == BOTTOM  &&  z == FRONT ) {
+        return 3;
+    } else if ( x == LEFT   &&  y == TOP     &&  z == BACK  ) {
+        return 4;
+    } else if ( x == RIGHT  &&  y == TOP     &&  z == BACK  ) {
+        return 5;
+    } else if ( x == LEFT   &&  y == BOTTOM  &&  z == BACK  ) {
+        return 6;
+    } else if ( x == RIGHT  &&  y == BOTTOM  &&  z == BACK  ) {
+        return 7;
+    } else {
+        throw std::runtime_error("quadtree.cpp castAndAddChild: got an out of bounds direction.");
+    }
+}
 
 // ---------------------------------------------------------------------------
 // QuadTree
@@ -112,72 +140,82 @@ inline VPointF QuadTree::Quadrant::weightedMiddle(QuadTree::TreeNode *node1, Qua
     // If node1 and node2 are two vectors w and v with respective weights a and b, we want
     // (a*w + b*v) / (a + b)
 
-    return ((node1->center() * (vreal)node1->size())
-            + (node2->center() * (vreal)node2->size())
-           )
-          / (vreal)(node1->size() + node2->size());
+    return ((node1->center() * (vreal)node1->size()) +
+            (node2->center() * (vreal)node2->size())) /
+            (vreal)(node1->size() + node2->size());
 }
 
 void QuadTree::Quadrant::allocateChildren() {
-    // We'll have 4 children, since we're splitting the current quadrant in 4 squares
-    _children.resize(4);
+    _children.resize(CHILDREN);
 
-    // This will be the width of the children nodes
-    int childWidth = _width / 2;
+    int childEdge = _width / 2;
 
-    for (int i = 0; i < 4; ++i) {
+    // The various children will have quadrant centers translated by childWidth / 2 from the
+    // parent node's quadrant center, so we'll need to add/subtract childWidth / 2 to the current
+    // quadrant center, depending on the position.
 
-        // The various children will have quadrant centers translated by childWidth / 2 from the
-        // parent node's quadrant center, so we'll need to add/subtract childWidth / 2 to the current
-        // quadrant center, depending on the position.
+    for (int x = LEFT; x <= RIGHT; ++x) {
         int xsign;
-        int ysign;
-        switch (i) {
-        // Top left
-        case 0:
+        if (x == LEFT) {
             xsign = -1;
-            ysign = 1;
-            break;
-        // Top right
-        case 1:
+        } else {
             xsign = 1;
-            ysign = 1;
-            break;
-        // Bottom left
-        case 2:
-            xsign = -1;
-            ysign = -1;
-            break;
-        // Bottom right
-        case 3:
-            xsign = 1;
-            ysign = -1;
-            break;
-        default:
-            break;
         }
 
-        VPointF childCenter(quadrantCenter.x + ((childWidth / 2) * xsign),
-                            quadrantCenter.y + ((childWidth / 2) * ysign));
-        _children[i] = new QuadTree::Quadrant(level + 1, childCenter, childWidth);
+        for (int y = TOP; y <= BOTTOM; ++y) {
+            int ysign;
+            if (y == TOP) {
+                ysign = -1;
+            } else {
+                ysign = 1;
+            }
+
+            for (int z = FRONT; z <= BACK; z++) {
+                int zsign;
+                if (z == FRONT) {
+                    zsign = 1;
+                } else {
+                    zsign = -1;
+                }
+
+                int childChildEdge = childEdge / 2;
+                VPointF childCenter(
+                    quadrantCenter.x + (childChildEdge * xsign),
+                    quadrantCenter.y + (childChildEdge * ysign),
+                    quadrantCenter.z + (childChildEdge * zsign));
+                _children[getIndex(x, y, z)] =
+                    new QuadTree::Quadrant(level + 1, childCenter, childEdge);
+            }
+        }
     }
 }
 
 void QuadTree::Quadrant::addChildToChildren(QuadTree::TreeNode *node) {
     // Add the node recursively, inspecting which child it belongs to.
-   if (node->center().x < quadrantCenter.x && node->center().y >= quadrantCenter.y) {
-       // Top left
-       castAndAddChild(_children[0], node);
-   } else if (node->center().x >= quadrantCenter.x && node->center().y >= quadrantCenter.y) {
-       // Top right
-       castAndAddChild(_children[1], node);
-   } else if (node->center().x < quadrantCenter.x && node->center().y < quadrantCenter.y) {
-       // Bottom left
-       castAndAddChild(_children[2], node);
-   } else {
-       // Bottom right
-       castAndAddChild(_children[3], node);
-   }
+    int x;
+    int y;
+    int z;
+
+    if (node->center().x < quadrantCenter.x) {
+        x = LEFT;
+    } else {
+        x = RIGHT;
+    }
+
+    if (node->center().y < quadrantCenter.y) {
+        y = TOP;
+    } else {
+        y = BOTTOM;
+    }
+
+    if (node->center().z < quadrantCenter.z) {
+        z = BACK;
+    } else {
+        z = FRONT;
+    }
+
+    castAndAddChild(_children[getIndex(x, y, z)], node);
+
 }
 
 void QuadTree::Quadrant::addChild(QuadTree::TreeNode *node) {
@@ -187,7 +225,7 @@ void QuadTree::Quadrant::addChild(QuadTree::TreeNode *node) {
     // If it's not a terminal node, recurse down
     if (!isTerminal()) {
         // If the node has no children, create them
-        if (_children.size() < 4) {
+        if (_children.size() < CHILDREN) {
             allocateChildren();
         }
 

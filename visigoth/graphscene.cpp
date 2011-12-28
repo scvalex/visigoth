@@ -273,8 +273,8 @@ bool GraphScene::calculateForces() {
             continue;
         }
 
-        // node->calculatePosition(quadTree.root());
-        node->calculatePosition3D(nodes());
+        node->calculatePosition(quadTree.root());
+        // node->calculatePosition3D(nodes());
     }
 
     bool somethingMoved = false;
