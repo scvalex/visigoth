@@ -41,6 +41,13 @@
                                 % recursive commands
 \renewcommand{\section}{\newpage\stdsection}
 
+\let\tikzsquare\square
+\renewcommand{\square}{\ensuremath\tikzsquare}
+
+\newcommand{\FADE}{\texttt{FADE}\ }
+
+\newcommand{\code}[1]{\texttt{#1}}
+
 %% %%%%%%%%%%%%%%%%%%%% END COMMANDS %%%%%%%%%%%%%%%%%%%%
 
 %% %%%%%%%%%%%%%%%%%%%% BEGIN COLORS %%%%%%%%%%%%%%%%%%%%
@@ -78,7 +85,7 @@
 
 %% Bear in mind, that most of the project assessors will not have followed the project throughout and will only have a short time to listen to a presentation or see a demonstration. For this reason they will rely heavily on the report to judge the project.
 
-%% The report should be submitted to SGO in form of a hard copy, as well as electonically through CATE.
+%% The report should be submitted to SGO in form of a hard copy, as well as electronically through CATE.
 
 \begin{document}
 \title{\Huge Visigoth\\\Large Graph visualizations}
@@ -229,7 +236,7 @@ Spring model algorithms are nice for two reasons:
   both techniques in Visigoth.
 \end{itemize}
 
-\subsubsection{FADE}
+\subsubsection{\FADE}
 
 However, even a simple description of the algorithms reveals its high
 cost. For each particle, we need to iterate through all the connected
@@ -237,12 +244,12 @@ nodes to calculate the spring forces, and more importantly through all
 the particles of the graphs to calculate the repulsion forces. Thus,
 the algorithm is \(O(n^2)\), where \(n\) is the number of nodes.
 
-For this reason, our implementation works smoothly up to around a 1000
-nodes, but then performance degrades quickly, and the program becomes
-unresponsive. Various solutions have been studied, most of which rely
-on various approximations.
+For this reason, our implementation works smoothly up to around a
+\(1000\) nodes, but then performance degrades quickly, and the program
+becomes unresponsive. Various solutions have been studied, most of
+which rely on various approximations.
 
-We chose to implement the FADE algorithm \cite{fade}, which works by
+We chose to implement the \FADE algorithm \cite{fade}, which works by
 recursively subdividing the graph space into sub-spaces, and then
 treats sub-spaces as single particles when they are far enough. This
 algorithm, while improving performance, is a lot more complex then the
@@ -317,57 +324,57 @@ naive one.
   \hspace{10pt}
   \subfloat[Tree representation]{
     \begin{tikzpicture}[grow cyclic]
-      \node {$\square$}
+      \node {\square}
         child {
-          node {$\square$}
+          node {\square}
           child {
-            node {$\square$}
+            node {\square}
             child {node {1}}
           }
           child {
-            node {$\square$}
+            node {\square}
             child {node {2}}
           }
         }
         child {
-          node {$\square$}
+          node {\square}
           child {
-            node {$\square$}
+            node {\square}
                 child {
-                  node {$\square$}
+                  node {\square}
                   child { node{3} }
                   child { node{4} }
                 }
                 child {
-                  node {$\square$}
+                  node {\square}
                   child {node{5}}
                 }
           }
         }
         child {
-          node {$\square$}
+          node {\square}
           child {
-            node {$\square$}
+            node {\square}
             child {
-              node {$\square$}
+              node {\square}
               child {node{6}}
               child {node{7}}
             }
           }
           child {
-            node {$\square$}
+            node {\square}
             child {
-              node {$\square$}
+              node {\square}
               child {node{8}}
             }
             child {
-              node {$\square$}
+              node {\square}
               child {node{9}}
             }
           }
         }
         child {
-          node {$\square$}
+          node {\square}
           child { node {10} }
         }
       ;
@@ -378,14 +385,14 @@ naive one.
 \end{figure}
 
 The first step is to build a data structure representing the recursive
-subdivision. This kind of data structure is called a \emph{TreeCode},
+subdivision. This kind of data structure is called a \code{TreeCode},
 which recursively subdivides the space until only one node remains in
 the current space, or a maximum depth/minimum space size size is
 hit. The space decomposition can be irregular (e.g. \emph{Voronoi}
 spaces) or regular. In the latter case, the space is recursively
 subdivided in squares. We chose to use a regular, 4-way space
 decomposition, mainly due to its simplicity. This kind of structure is
-called \emph{QuadTree}. Figure \ref{fig:quadtree} shows a sample
+called \code{QuadTree}. Figure \ref{fig:quadtree} shows a sample
 QuadTree for a Visigoth graph. In the QuadTree, each sub-quadrant
 preserved the weighted centre of gravity relative to the contained
 nodes.
@@ -398,33 +405,36 @@ forces for a given node the algorithm proceeds as indicated in figure
 \begin{figure}[ht]
   \begin{minipage}[b]{0.5\linewidth}
     \begin{algorithmic}
-      \REQUIRE $0 < \theta < 1$
-      \REQUIRE $\beta > 1$
-      \REQUIRE $\vec{n} \neq \vec{q}$
+      \REQUIRE \(0 < \theta < 1\)
+      \REQUIRE \(\beta > 1\)
+      \REQUIRE \(\vec{n} \neq \vec{q}\)
     \end{algorithmic}
-    force$(n, q)$:
+    force\((n, q)\):
     \begin{algorithmic}
-      \STATE $\vec{d} \gets \vec{n} - \vec{q}$
-      \IF { $q$ is terminal \OR $\frac{\vec{d}}{\textrm{width}(q)} < \theta$ }
-      \STATE $\vec{v} \gets \vec{d} \cdot \frac{\beta}{|{\vec{d}}|^2}$
-      \STATE $\vec{v} \gets \vec{v} \cdot \textrm{mass}(q)$
-      \RETURN $\vec{v} \cdot \frac{\beta}{|{\vec{d}}|^2}$
+      \STATE \(\vec{d} \gets \vec{n} - \vec{q}\)
+      \IF { \(q\) is terminal \OR \(\frac{\vec{d}}{\textrm{width}(q)} < \theta\) }
+      \STATE \(\vec{v} \gets \vec{d} \cdot \frac{\beta}{|{\vec{d}}|^2}\)
+      \STATE \(\vec{v} \gets \vec{v} \cdot \textrm{mass}(q)\)
+      \RETURN \(\vec{v} \cdot \frac{\beta}{|{\vec{d}}|^2}\)
       \ELSE
-      \STATE $\vec{v} \gets 0$
-      \FOR {$q'$ in children$(q)$}
-      \STATE $\vec{v} \gets \vec{v} + \textrm{force}(n, q')$
+      \STATE \(\vec{v} \gets 0\)
+      \FOR {\(q'\) in children\((q)\)}
+      \STATE \(\vec{v} \gets \vec{v} + \textrm{force}(n, q')\)
       \ENDFOR
-      \RETURN $\vec{v}$
+      \RETURN \(\vec{v}\)
       \ENDIF
     \end{algorithmic}
-    \caption{This procedure calculates the non-edge force of a given node $n$, given the
-      QuadTree $q$. $\vec{n}$ and $\vec{q}$ indicate the vectors corresponding to the
-      respective centers of gravity. $\beta$ is an empirically determined parameter used
-      to regulate the amount of force - $75$ has worked well for us. $\theta$ is central
-      to the FADE algorithm and determines the amount of approximation. If $\geq 1$ the
-      algorithm is unstable, we used values between $0.5$ and $0.8$. See figure
-      \ref{fig:theta} for a visual explanation. The mass of a quadrant is simply the
-      number of nodes residing in it. }
+    \caption{This procedure calculates the non-edge force of a given
+      node \(n\), given the QuadTree \(q\). \(\vec{n}\) and
+      \(\vec{q}\) indicate the vectors corresponding to the respective
+      centers of gravity. \(\beta\) is an empirically determined
+      parameter used to regulate the amount of force - \(75\) has
+      worked well for us. \(\theta\) is central to the \FADE algorithm
+      and determines the amount of approximation. If \(\geq 1\) the
+      algorithm is unstable, we used values between \(0.5\) and
+      \(0.8\). See figure \ref{fig:theta} for a visual
+      explanation. The mass of a quadrant is simply the number of
+      nodes residing in it. }
     \label{proc:FADE}
   \end{minipage}
   \hspace{10pt}
@@ -447,33 +457,35 @@ forces for a given node the algorithm proceeds as indicated in figure
       (166.4286,313.7908) -- (196.7857,221.6479);
       \path[draw=black,line join=miter,line cap=butt,line width=0.800pt]
       (205.3571,220.9336) -- (278.2143,377.3622);
-      \path[fill=black] (168.21428,262.36218) node[above right] (text5235) {$d_1$};
-      \path[fill=black] (239.64287,291.64789) node[above right] (text5239) {$d_2$};
-      \path[fill=black] (216.42857,172.36218) node[above right] (text5243) {$s$};
+      \path[fill=black] (168.21428,262.36218) node[above right] (text5235) {\(d_1\)};
+      \path[fill=black] (239.64287,291.64789) node[above right] (text5239) {\(d_2\)};
+      \path[fill=black] (216.42857,172.36218) node[above right] (text5243) {\(s\)};
       \path (142.5000,173.7908) -- (300.0000,173.7908);
       \path[draw=black,line join=miter,line cap=butt,line width=0.800pt, <->]
       (142.1429,173.4336) -- (301.4286,173.4336);
-      \path[fill=black] (210,214.1479) node[above right] (text5479) {$q$};
-      \path[fill=black] (173.21429,328.07648) node[above right] (text5483) {$n_1$};
-      \path[fill=black] (292.34625,390.3728) node[above right] (text5483-5) {$n_2$};
+      \path[fill=black] (210,214.1479) node[above right] (text5479) {\(q\)};
+      \path[fill=black] (173.21429,328.07648) node[above right] (text5483) {\(n_1\)};
+      \path[fill=black] (292.34625,390.3728) node[above right] (text5483-5) {\(n_2\)};
     \end{tikzpicture}
-    \caption{In this case, $n_1$ and $n_2$ are nodes and $q$ is a quadrant with edge
-      length $s$. When calculating the non-edge force between $n_1$ and $q$, where $s$ is
-      the quadrant will be judged to be too close to approximate, since $\frac{s}{d_1} >
-      1$, while $n_2$ might be judged far enough, depending on $\theta$.}
+    \caption{In this case, \(n_1\) and \(n_2\) are nodes and \(q\) is
+      a quadrant with edge length \(s\). When calculating the non-edge
+      force between \(n_1\) and \(q\), where \(s\) is the quadrant
+      will be judged to be too close to approximate, since
+      \(\frac{s}{d_1} > 1\), while \(n_2\) might be judged far enough,
+      depending on \(\theta\).}
     \label{fig:theta}
   \end{minipage}
 \end{figure}
 
-Once implemented, the FADE algorithm lead to great speedups while
-preserving good node placements. While drawing 1000 nodes is already
-difficult with the simple algorithm, FADE can easily handle 10000
-nodes, after which other performance limits are hit (the graph
-generation time and the OpenGL drawing).
+Once implemented, the \FADE algorithm lead to great speedups while
+preserving good node placements. While drawing \(1000\) nodes is
+already difficult with the simple algorithm, \FADE can easily handle
+\(10000\) nodes, after which other performance limits are hit (the
+graph generation time and the OpenGL drawing).
 
 However, once we implemented the 3D view we had to temporarily switch
 back to the naive algorithm, since the 3D positioning requires heavy
-modifications to FADE, which we planned to do in the near future.
+modifications to \FADE, which we planned to do in the near future.
 
 \section{Looking back}
 %% This section corresponds to D in the requirements
