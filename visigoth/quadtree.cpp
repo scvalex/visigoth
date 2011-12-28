@@ -20,34 +20,6 @@ inline static int calculateWidth(vreal longestEdge) {
     return pow2((int) ceil(log(baseQuadrants) / log(2.0))) * BASE_QUADRANT_SIZE;
 }
 
-inline static int getIndex(int x, int y, int z) {
-    // Front:     Back:
-    // .-------.  .-------.
-    // | 0 | 1 |  | 5 | 4 |
-    // |-------|  |-------|
-    // | 2 | 3 |  | 7 | 6 |
-    // `-------`  `-------`
-
-    if        ( x == LEFT   &&  y == TOP     &&  z == FRONT ) {
-        return 0;
-    } else if ( x == RIGHT  &&  y == TOP     &&  z == FRONT ) {
-        return 1;
-    } else if ( x == LEFT   &&  y == BOTTOM  &&  z == FRONT ) {
-        return 2;
-    } else if ( x == RIGHT  &&  y == BOTTOM  &&  z == FRONT ) {
-        return 3;
-    } else if ( x == LEFT   &&  y == TOP     &&  z == BACK  ) {
-        return 4;
-    } else if ( x == RIGHT  &&  y == TOP     &&  z == BACK  ) {
-        return 5;
-    } else if ( x == LEFT   &&  y == BOTTOM  &&  z == BACK  ) {
-        return 6;
-    } else if ( x == RIGHT  &&  y == BOTTOM  &&  z == BACK  ) {
-        return 7;
-    } else {
-        throw std::runtime_error("quadtree.cpp castAndAddChild: got an out of bounds direction.");
-    }
-}
 
 // ---------------------------------------------------------------------------
 // QuadTree
@@ -143,6 +115,35 @@ inline VPointF QuadTree::Quadrant::weightedMiddle(QuadTree::TreeNode *node1, Qua
     return ((node1->center() * (vreal)node1->size()) +
             (node2->center() * (vreal)node2->size())) /
             (vreal)(node1->size() + node2->size());
+}
+
+inline int QuadTree::Quadrant::getIndex(int x, int y, int z) {
+    // Front:     Back:
+    // .-------.  .-------.
+    // | 0 | 1 |  | 5 | 4 |
+    // |-------|  |-------|
+    // | 2 | 3 |  | 7 | 6 |
+    // `-------`  `-------`
+
+    if        ( x == LEFT   &&  y == TOP     &&  z == FRONT ) {
+        return 0;
+    } else if ( x == RIGHT  &&  y == TOP     &&  z == FRONT ) {
+        return 1;
+    } else if ( x == LEFT   &&  y == BOTTOM  &&  z == FRONT ) {
+        return 2;
+    } else if ( x == RIGHT  &&  y == BOTTOM  &&  z == FRONT ) {
+        return 3;
+    } else if ( x == LEFT   &&  y == TOP     &&  z == BACK  ) {
+        return 4;
+    } else if ( x == RIGHT  &&  y == TOP     &&  z == BACK  ) {
+        return 5;
+    } else if ( x == LEFT   &&  y == BOTTOM  &&  z == BACK  ) {
+        return 6;
+    } else if ( x == RIGHT  &&  y == BOTTOM  &&  z == BACK  ) {
+        return 7;
+    } else {
+        throw std::runtime_error("quadtree.cpp castAndAddChild: got an out of bounds direction.");
+    }
 }
 
 void QuadTree::Quadrant::allocateChildren() {

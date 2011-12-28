@@ -5,20 +5,6 @@
 
 #include "vtools.h"
 
-enum CUBE_X {
-    LEFT = -1,
-    RIGHT = 1
-};
-
-enum CUBE_Y {
-    TOP = -1,
-    BOTTOM = 1
-};
-
-enum CUBE_Z {
-    BACK = -1,
-    FRONT = 1
-};
 
 class QuadTree
 {
@@ -69,6 +55,21 @@ private:
         VPointF getQuadrantCenter() const;
 
     private:
+        enum CUBE_X {
+            LEFT = -1,
+            RIGHT = 1
+        };
+
+        enum CUBE_Y {
+            TOP = -1,
+            BOTTOM = 1
+        };
+
+        enum CUBE_Z {
+            BACK = -1,
+            FRONT = 1
+        };
+
         QVector<TreeNode*> _children;
         int level;
         VPointF quadrantCenter;
@@ -81,6 +82,7 @@ private:
         void castAndAddChild(TreeNode *node, TreeNode *child) const;
         bool isTerminal();
         VPointF weightedMiddle(TreeNode *node1, TreeNode *node2) const;
+        int getIndex(int x, int y, int z);
         void allocateChildren();
         void addChildToChildren(TreeNode *node);
     };
