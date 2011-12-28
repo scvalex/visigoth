@@ -6,18 +6,18 @@
 #include "vtools.h"
 
 enum CUBE_X {
-    LEFT = 1,
-    RIGHT
+    LEFT = -1,
+    RIGHT = 1
 };
 
 enum CUBE_Y {
-    TOP = 1,
-    BOTTOM
+    TOP = -1,
+    BOTTOM = 1
 };
 
 enum CUBE_Z {
-    FRONT = 1,
-    BACK
+    BACK = -1,
+    FRONT = 1
 };
 
 class QuadTree

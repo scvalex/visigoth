@@ -150,40 +150,27 @@ void QuadTree::Quadrant::allocateChildren() {
 
     int childEdge = _width / 2;
 
-    // The various children will have quadrant centers translated by childWidth / 2 from the
-    // parent node's quadrant center, so we'll need to add/subtract childWidth / 2 to the current
-    // quadrant center, depending on the position.
+    /* The various children will have quadrant centers translated by
+     * childWidth / 2 from the parent node's quadrant center, so we'll
+     * need to add/subtract childWidth / 2 to the current quadrant
+     * center, depending on the position.
+     */
 
-    for (int x = LEFT; x <= RIGHT; ++x) {
-        int xsign;
-        if (x == LEFT) {
-            xsign = -1;
-        } else {
-            xsign = 1;
-        }
+    // For both left/right
+    for (int xsign = LEFT; xsign <= RIGHT; xsign += (RIGHT - LEFT)) {
 
-        for (int y = TOP; y <= BOTTOM; ++y) {
-            int ysign;
-            if (y == TOP) {
-                ysign = -1;
-            } else {
-                ysign = 1;
-            }
+        // For both top/bottom
+        for (int ysign = TOP; ysign <= BOTTOM; ysign += (BOTTOM - TOP)) {
 
-            for (int z = FRONT; z <= BACK; z++) {
-                int zsign;
-                if (z == FRONT) {
-                    zsign = 1;
-                } else {
-                    zsign = -1;
-                }
+            // For both back/front
+            for (int zsign = BACK; zsign <= FRONT; zsign += (FRONT - BACK)) {
 
                 int childChildEdge = childEdge / 2;
                 VPointF childCenter(
                     quadrantCenter.x + (childChildEdge * xsign),
                     quadrantCenter.y + (childChildEdge * ysign),
                     quadrantCenter.z + (childChildEdge * zsign));
-                _children[getIndex(x, y, z)] =
+                _children[getIndex(xsign, ysign, zsign)] =
                     new QuadTree::Quadrant(level + 1, childCenter, childEdge);
             }
         }
