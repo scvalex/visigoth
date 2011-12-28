@@ -28,8 +28,8 @@ QuadTree::QuadTree(vreal longestEdge)
 {
     int width = calculateWidth(longestEdge);
 
-    // First node, level 0, coords 0,0, width equals to the width of the entire space
-    _root = new QuadTree::Quadrant(0, VPointF(0.0), width);
+    // First node, coords 0,0, width equals to the width of the entire space
+    _root = new QuadTree::Quadrant(VPointF(0.0), width);
 }
 
 QuadTree::~QuadTree() {
@@ -55,8 +55,7 @@ bool QuadTree::TreeNode::isFarEnough(vreal distance) {
 // ---------------------------------------------------------------------------
 // QuadTree::Quadrant
 
-QuadTree::Quadrant::Quadrant(int level, VPointF center, int width) :
-    level(level),
+QuadTree::Quadrant::Quadrant(VPointF center, int width) :
     quadrantCenter(center),
     _width(width),
     _size(0),
@@ -168,7 +167,7 @@ void QuadTree::Quadrant::allocateChildren() {
                     quadrantCenter.y + (childChildEdge * ysign),
                     quadrantCenter.z + (childChildEdge * zsign));
                 _children[getIndex(xsign, ysign, zsign)] =
-                    new QuadTree::Quadrant(level + 1, childCenter, childEdge);
+                    new QuadTree::Quadrant(childCenter, childEdge);
             }
         }
     }
@@ -225,7 +224,10 @@ void QuadTree::Quadrant::addChild(QuadTree::TreeNode *node) {
 
 // ---------------------------------------------------------------------------
 // Debug functions
+// In this moment they don't work because I've removed the "level" attribute from
+// Quadrant, but I'm keeping them here in case I'll need them.
 
+/*
 // Prints the tree in a nice way.
 void QuadTree::printTree(QuadTree::TreeNode *node) const {
     QuadTree::Quadrant *q = dynamic_cast<QuadTree::Quadrant*>(node);
@@ -260,3 +262,4 @@ int QuadTree::Quadrant::getLevel() const {
 VPointF QuadTree::Quadrant::getQuadrantCenter() const {
     return quadrantCenter;
 }
+*/

@@ -35,7 +35,7 @@ public:
 private:
     class Quadrant : public TreeNode {
     public:
-        Quadrant(int level, VPointF center, int edge);
+        Quadrant(VPointF center, int edge);
         ~Quadrant();
         int size() const;
         VPointF center() const;
@@ -46,11 +46,13 @@ private:
 
         void addChild(TreeNode *child);
 
+        /*
         // Both this functions are needed by printTree() only, which is useful to debug.
         int getLevel() const;
         // While center() returns the center of gravity, based on the contained nodes,
         // this returns the center of the original quadrant.
         VPointF getQuadrantCenter() const;
+        */
 
     private:
         enum CUBE_X {
@@ -69,7 +71,6 @@ private:
         };
 
         QVector<TreeNode*> _children;
-        int level;
         VPointF quadrantCenter;
         int _width;
         int _size;
