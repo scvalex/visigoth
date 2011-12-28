@@ -1,5 +1,6 @@
 DOCBASE=report
 GRAPHICS=
+LATEX?=pdflatex
 
 all: $(GRAPHICS) $(DOCBASE).pdf pdfclean
 
@@ -22,8 +23,8 @@ all: $(GRAPHICS) $(DOCBASE).pdf pdfclean
 	dot $< -Tps2 -o $@
 
 $(DOCBASE).pdf: $(DOCBASE).tex $(GRAPHICS)
-	pdflatex $(DOCBASE).tex
-	pdflatex $(DOCBASE).tex
+	$(LATEX) $(DOCBASE).tex
+	$(LATEX) $(DOCBASE).tex
 
 #$(DOCBASE).ps: $(DOCBASE).tex $(GRAPHICS)
 #	latex $(DOCBASE).tex
