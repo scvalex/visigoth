@@ -104,7 +104,7 @@ void QuadTree::Quadrant::castAndAddChild(QuadTree::TreeNode *node, QuadTree::Tre
     q->addChild(child);
 }
 
-bool QuadTree::Quadrant::isTerminal() {
+bool QuadTree::Quadrant::isTerminal() const {
     return width() <= BASE_QUADRANT_SIZE;
 }
 
@@ -117,7 +117,7 @@ inline VPointF QuadTree::Quadrant::weightedMiddle(QuadTree::TreeNode *node1, Qua
             (vreal)(node1->size() + node2->size());
 }
 
-inline int QuadTree::Quadrant::getIndex(int x, int y, int z) {
+inline int QuadTree::Quadrant::getIndex(int x, int y, int z) const {
     // Front:     Back:
     // .-------.  .-------.
     // | 0 | 1 |  | 5 | 4 |

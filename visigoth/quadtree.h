@@ -77,12 +77,11 @@ private:
         int _size;
         VPointF _center;
 
-
         int childIndex(TreeNode& node) const;
         void castAndAddChild(TreeNode *node, TreeNode *child) const;
-        bool isTerminal();
+        bool isTerminal() const;
         VPointF weightedMiddle(TreeNode *node1, TreeNode *node2) const;
-        int getIndex(int x, int y, int z);
+        int getIndex(int x, int y, int z) const;
         void allocateChildren();
         void addChildToChildren(TreeNode *node);
     };
