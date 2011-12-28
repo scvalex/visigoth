@@ -135,10 +135,6 @@ VPointF Node::center() const {
     return pos();
 }
 
-bool Node::hasChildren() const {
-    return false;
-}
-
 const QVector<QuadTree::TreeNode*>& Node::children() const {
     throw std::runtime_error("Node: calling children() on a terminal node");
 }

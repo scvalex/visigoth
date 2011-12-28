@@ -82,10 +82,6 @@ VPointF QuadTree::Quadrant::center() const {
     return _center;
 }
 
-bool QuadTree::Quadrant::hasChildren() const {
-    return _children.size() > 0;
-}
-
 const QVector<QuadTree::TreeNode*>& QuadTree::Quadrant::children() const {
     return _children;
 }

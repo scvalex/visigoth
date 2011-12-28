@@ -13,7 +13,6 @@ public:
     public:
         virtual int size() const = 0;
         virtual VPointF center() const = 0;
-        virtual bool hasChildren() const = 0;
         virtual const QVector<TreeNode*>& children() const = 0;
         virtual vreal width() const = 0;
 
@@ -40,7 +39,6 @@ private:
         ~Quadrant();
         int size() const;
         VPointF center() const;
-        bool hasChildren() const;
         const QVector<TreeNode*>& children() const;
         vreal width() const;
 
