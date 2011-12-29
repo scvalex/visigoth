@@ -486,8 +486,7 @@ void GLGraphWidget::setupLighting() {
 
 /*** Selection ***/
 
-Node* GLGraphWidget::selectGL(int x, int y)
-{
+Node* GLGraphWidget::selectGL(int x, int y) {
     Node* hitNode = NULL;
     GLuint namebuf[64] = {0};
     GLint hits;

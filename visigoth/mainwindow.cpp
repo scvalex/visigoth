@@ -21,6 +21,7 @@
 #include <QAction>
 #include <QMessageBox>
 #include <QUrl>
+#include <QtConcurrentRun>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -134,13 +135,25 @@ void MainWindow::onAlgorithmChanged(Algorithm *newAlgo) {
     ui->newNodeAct->setEnabled(newAlgo->canAddVertex());
 }
 
-void MainWindow::onGenerate() {
-    focusedNode = 0;
+void MainWindow::calculateStats() {
     Statistics *stats = scene->getStatistics();
     statsUi->lengthLabel->setText(QString::number(stats->lengthAvg()));
     statsUi->degreeLabel->setText(QString::number(stats->degreeAvg()));
     statsUi->clusteringLabel->setText(QString::number(stats->clusteringAvg()));
     statsUi->exponentLabel->setText(QString::number(stats->powerLawExponent()));
+}
+
+void MainWindow::onGenerate() {
+    focusedNode = 0;
+
+    QString calculating = "Calculating...";
+    statsUi->lengthLabel->setText(calculating);
+    statsUi->degreeLabel->setText(calculating);
+    statsUi->clusteringLabel->setText(calculating);
+    statsUi->exponentLabel->setText(calculating);
+
+    statsWork.cancel();
+    statsWork = QtConcurrent::run(this, &MainWindow::calculateStats);
 }
 
 void MainWindow::onFocusedNodeChanged(Node *node) {

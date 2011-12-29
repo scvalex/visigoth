@@ -6,11 +6,13 @@
 #include <QComboBox>
 #include <QGraphicsView>
 #include <QMainWindow>
+#include <QFuture>
 
 class Algorithm;
 class GraphScene;
 class Node;
 class QDockWidget;
+class StatisticsWorker;
 
 namespace Ui {
     class MainWindow;
@@ -24,6 +26,7 @@ class MainWindow : public QMainWindow
 public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
+    void calculateStats();
 
 public slots:
     void exportTo();
@@ -45,6 +48,7 @@ private:
     QWidget *helpWidget;
     QDockWidget *helpDock;
     Node *focusedNode;
+    QFuture<void> statsWork;
 };
 
 #endif // MAINWINDOW_H
