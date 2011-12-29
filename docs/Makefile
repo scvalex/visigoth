@@ -1,6 +1,6 @@
 DOCBASE=report
 GRAPHICS=
-LATEX?=pdflatex
+LATEX?=xelatex
 
 all: $(GRAPHICS) $(DOCBASE).pdf pdfclean
 

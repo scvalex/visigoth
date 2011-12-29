@@ -44,8 +44,6 @@
 \let\tikzsquare\square
 \renewcommand{\square}{\ensuremath\tikzsquare}
 
-\newcommand{\FADE}{\texttt{FADE}\ }
-
 \newcommand{\code}[1]{\texttt{#1}}
 
 %% %%%%%%%%%%%%%%%%%%%% END COMMANDS %%%%%%%%%%%%%%%%%%%%
@@ -205,14 +203,14 @@ The main advantages were:
   language like Python or Ruby) probably aided performance as well.
 
 \item
-  \textbf{Abstraction}: The previous two points are shared by C++ with C++'s
-  predecessor, C. However, the possibility to structure our code in classes has
-  facilitated the structuring of a medium sized application like Visigoth,
-  especially considering that we had to coordinate 5 people working
-  together. For example, there is a common \code{Algorithm} interface that all
-  algorithms have to implement. Then algorithms can be plugged into the main
-  widget at will: this kind of operations would have been much more laborious
-  and less type-safe in C.
+  \textbf{Abstraction}: The previous two points (especially the second) are
+  partly shared by C++ with C++'s predecessor, C. However, the possibility to
+  structure our code in classes has facilitated the structuring of a medium
+  sized application like Visigoth, especially considering that we had to
+  coordinate 5 people working together. For example, there is a common
+  \code{Algorithm} interface that all algorithms have to implement. Then
+  algorithms can be plugged into the main widget at will: this kind of
+  operations would have been much more laborious and less type-safe in C.
 
 \end{itemize}
 
@@ -321,7 +319,7 @@ Spring model algorithms are nice for two reasons:
   both techniques in Visigoth.
 \end{itemize}
 
-\subsubsection{\FADE}
+\subsubsection{FADE}
 
 However, even a simple description of the algorithms reveals its high
 cost. For each particle, we need to iterate through all the connected
@@ -334,7 +332,7 @@ For this reason, our implementation works smoothly up to around a
 becomes unresponsive. Various solutions have been studied, most of
 which rely on various approximations.
 
-We chose to implement the \FADE algorithm \cite{fade}, which works by
+We chose to implement the \emph{FADE} algorithm \cite{fade}, which works by
 recursively subdividing the graph space into sub-spaces, and then
 treats sub-spaces as single particles when they are far enough. This
 algorithm, while improving performance, is a lot more complex then the
@@ -354,14 +352,14 @@ naive one.
 \end{figure}
 
 The first step is to build a data structure representing the recursive
-subdivision. This kind of data structure is called a \code{TreeCode},
+subdivision. This kind of data structure is called a \emph{TreeCode},
 which recursively subdivides the space until only one node remains in
 the current space, or a maximum depth/minimum space size size is
 hit. The space decomposition can be irregular (e.g. \emph{Voronoi}
 spaces) or regular. In the latter case, the space is recursively
 subdivided in squares. We chose to use a regular, 4-way space
 decomposition, mainly due to its simplicity. This kind of structure is
-called \code{QuadTree}. Figure \ref{fig:quadtree} shows a sample
+called \emph{QuadTree}. Figure \ref{fig:quadtree} shows a sample
 QuadTree for a Visigoth graph. In the QuadTree, each sub-quadrant
 preserved the weighted centre of gravity relative to the contained
 nodes.
@@ -379,7 +377,7 @@ forces for a given node the algorithm proceeds as indicated in figure
       \(\vec{q}\) indicate the vectors corresponding to the respective
       centers of gravity. \(\beta\) is an empirically determined
       parameter used to regulate the amount of force - \(75\) has
-      worked well for us. \(\theta\) is central to the \FADE algorithm
+      worked well for us. \(\theta\) is central to the FADE algorithm
       and determines the amount of approximation. If \(\geq 1\) the
       algorithm is unstable, we used values between \(0.5\) and
       \(0.8\). See figure \ref{fig:theta} for a visual
@@ -401,15 +399,15 @@ forces for a given node the algorithm proceeds as indicated in figure
   \end{minipage}
 \end{figure}
 
-Once implemented, the \FADE algorithm lead to great speedups while
+Once implemented, the FADE algorithm lead to great speedups while
 preserving good node placements. While drawing \(1000\) nodes is
-already difficult with the simple algorithm, \FADE can easily handle
+already difficult with the simple algorithm, FADE can easily handle
 \(10000\) nodes, after which other performance limits are hit (the
 graph generation time and the OpenGL drawing).
 
-However, once we implemented the 3D view we had to temporarily switch
-back to the naive algorithm, since the 3D positioning requires heavy
-modifications to \FADE, which we planned to do in the near future.
+After we implemented the 3D view we had to write an extension to FADE to support
+3D, which proved to be straight forward. Now we have a 3-dimensional space,
+which is recursively divided into $8$ cubes.
 
 \section{Looking back}
 %% This section corresponds to D in the requirements
