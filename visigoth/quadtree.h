@@ -30,8 +30,6 @@ public:
     void addNode(TreeNode *node);
     TreeNode& root() const;
 
-    // void printTree(TreeNode *node) const; // Debug
-
 private:
     class Quadrant : public TreeNode {
     public:
@@ -45,14 +43,6 @@ private:
         static const int CHILDREN = 8;
 
         void addChild(TreeNode *child);
-
-        /*
-        // Both this functions are needed by printTree() only, which is useful to debug.
-        int getLevel() const;
-        // While center() returns the center of gravity, based on the contained nodes,
-        // this returns the center of the original quadrant.
-        VPointF getQuadrantCenter() const;
-        */
 
     private:
         enum CUBE_X {
