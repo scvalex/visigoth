@@ -104,7 +104,7 @@ void glaDrawExample(void)
 }
 
 
-void glaDrawSphere(GLfloat r, int lats, int longs) {
+inline void glaDrawSphere(GLfloat r, int lats, int longs) {
     int i, j;
 
     for (i = 0; i <= lats; i++) {
@@ -129,4 +129,15 @@ void glaDrawSphere(GLfloat r, int lats, int longs) {
             }
         glEnd();
     }
+}
+
+inline void glaDrawCircle(GLfloat r, int longs) {
+    int i;
+
+    glBegin(GL_TRIANGLE_FAN);
+        for (i = 0; i < longs; i++) {
+            GLfloat lng = 2 * M_PI * (GLfloat) (i - 1) / longs;
+            glVertex2f(sin(lng) * r, cos(lng) * r);
+        }
+    glEnd();
 }

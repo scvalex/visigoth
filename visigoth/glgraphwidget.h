@@ -61,6 +61,8 @@ private:
     void drawBackground();
     void drawOverlay();
 
+    void drawSphere(GLfloat r, int lats, int longs);
+    void drawCircle(GLfloat r, int longs);
     void drawNode(Node *node);
     void drawGraphGL();
 
