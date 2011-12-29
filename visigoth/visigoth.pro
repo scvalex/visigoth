@@ -64,6 +64,12 @@ test {
     LIBS += -lgcov
 }
 
+profile {
+    CONFIG = release
+    TARGET = visigoth
+    QMAKE_CXXFLAGS += -lprofile
+}
+
 oauth {
     SOURCES += twitter.cpp
     HEADERS += twitter.h
