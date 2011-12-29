@@ -67,7 +67,7 @@ test {
 profile {
     CONFIG = release
     TARGET = visigoth
-    QMAKE_CXXFLAGS += -lprofile
+    LIBS += -lprofile
 }
 
 oauth {
