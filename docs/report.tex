@@ -249,19 +249,17 @@ have been developing.
 
 The main advantages were:
 
-\begin{itemize}
+\begin{description}
 
-\item
-  \textbf{Availability of tools and library}: as mentioned, Qt alone
-  was a deal sealer, but the fact that we were able to access OpenGL
+\item [Availability of tools and library] As mentioned, Qt alone was a
+  deal sealer, but the fact that we were able to access OpenGL
   natively was also a big advantage. While interfaces in other
   languages exist to both libraries, we felt we could trust more the
   native bindings and that the foreign bindings would have degraded
   performance.
 
-\item
-  \textbf{Performance}: We did not consider this factor at the
-  beginning, but a few weeks in the project we started hitting various
+\item [Performance] We did not consider this factor at the beginning,
+  but a few weeks in the project we started hitting various
   bottlenecks. We can only speculate, but the fact that we were using
   C++ allowed us to fine-tune the application (specifically on the
   memory management side) in a way that we would not be able to do
@@ -269,10 +267,9 @@ The main advantages were:
   instead of an interpreter (as it would have been using a language
   like Python or Ruby) probably aided performance as well.
 
-\item
-  \textbf{Abstraction}: The previous two points (especially the
-  second) are partly shared by C++ with C++'s predecessor, C. However,
-  the possibility to structure our code in classes has facilitated the
+\item [Abstraction] The previous two points (especially the second)
+  are partly shared by C++ with C++'s predecessor, C. However, the
+  possibility to structure our code in classes has facilitated the
   structuring of a medium sized application like Visigoth, especially
   considering that we had to coordinate 5 people working together. For
   example, there is a common \code{Algorithm} interface that all
@@ -280,14 +277,13 @@ The main advantages were:
   the main widget at will: this kind of operations would have been
   much more laborious and less type-safe in C.
 
-\end{itemize}
+\end{description}
 
 However, C++ has its downsides:
 
-\begin{itemize}
+\begin{description}
 
-\item
-  \textbf{Unmanaged memory}: This is by far C++'s most ``dangerous''
+\item [Unmanaged memory] This is by far C++'s most ``dangerous''
   feature (or better, lack of feature). While enabling greater control
   and thus greater performance, it requires a much more attentive
   analysis of the code. This is in a way a good thing, since it forces
@@ -307,14 +303,13 @@ However, C++ has its downsides:
   values when used. All these factors generate much confusion which is
   absent in most modern O-O languages.
 
-\item
-  \textbf{Language bloat}: C++ is a very broad languages, with a
-  number of esoteric language features. Notable examples are
-  templates, operator overloading, and ``friends'' attributes. Some of
-  them are very useful and never harmful , for example the
-  \code{const} keyword is a great mechanism to mark immutability at
-  the type-level. However some of them can and have been
-  misused\footnote{For an hilarious example, see
+\item [Language bloat] C++ is a very broad languages, with a number of
+  esoteric language features. Notable examples are templates, operator
+  overloading, and ``friends'' attributes. Some of them are very
+  useful and never harmful , for example the \code{const} keyword is a
+  great mechanism to mark immutability at the type-level. However some
+  of them can and have been misused\footnote{For an hilarious example,
+    see
     \url{http://weegen.home.xs4all.nl/eelis/analogliterals.xhtml}},
   and as a consequence ``when you're programming C++ no one can ever
   agree on which ten percent of the language is safe to use'' (Jamie
@@ -322,7 +317,7 @@ However, C++ has its downsides:
   required when working on a C++ project and we had our share;
   although we think we managed to keep the code clean.
 
-\end{itemize}
+\end{description}
 
 This is of course a very brief analysis of C++, but it highlights the
 points that we felt more while developing Visigoth.
