@@ -16,6 +16,7 @@ Node::Node(GraphScene *graph) :
     newPos(0.0),
     allowAdvance(true),
     visited(false),
+    isHighlighted(false),
     distance(0)
 {
     myTag = ALL_NODES++;
@@ -122,6 +123,14 @@ QVector<Node*> Node::neighbours() const {
             ns << e->sourceNode();
     }
     return ns;
+}
+
+void Node::highlight() {
+    isHighlighted =  true;
+}
+
+void Node::unHighlight() {
+    isHighlighted = false;
 }
 
 void Node::reset() {

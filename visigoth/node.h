@@ -37,16 +37,20 @@ public:
 
     QList<Edge*>& edges();
     QVector<Node*> neighbours() const;
+    QColor myColour;
 
     // QuadTree
     int size() const;
     VPointF center() const;
     bool hasChildren() const;
+    bool isHighlighted;
     const QVector<TreeNode*>& children() const;
     vreal width() const;
 
     QColor& colour();
     void setColour(const QColor &b);
+    void highlight();
+    void unHighlight();
 
     static void reset();
 
@@ -65,7 +69,7 @@ private:
     GraphScene *graph;
     QList<Edge*> edgeList;
 
-    QColor myColour;
+
 
     VPointF curPos;
     VPointF newPos;

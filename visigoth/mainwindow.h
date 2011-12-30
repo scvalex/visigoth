@@ -35,6 +35,7 @@ private slots:
     void onAlgorithmChanged(Algorithm *newAlgo);
     void onGenerate();
     void onFocusedNodeChanged(Node *node);
+    void pickColor();
 
 private:
     Ui::MainWindow *ui;

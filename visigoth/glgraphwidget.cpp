@@ -27,6 +27,7 @@ GLGraphWidget::GLGraphWidget(QWidget *parent) :
     zoom(1.0),
     mouseMode(MOUSE_IDLE),
     mode3d(false),
+    isHighlighted(false),
     animTimerId(0)
 {
     setFocusPolicy(Qt::StrongFocus);
@@ -77,12 +78,61 @@ void GLGraphWidget::wheelEvent(QWheelEvent *event) {
     this->repaint();
 }
 
+void GLGraphWidget::highlightNeighbours() {
+    isHighlighted = true;
+}
+
+void GLGraphWidget::notHighlightNeighbours() {
+    isHighlighted = false;
+    rebornGraph();
+}
+
+void GLGraphWidget::rebornGraph() {
+    foreach(Edge* edge, myScene->edges()) {
+        if (edge->myColour != myScene->myEdgeColor)
+            edge->setColour(myScene->myEdgeColor);
+    }
+    foreach(Node* node, myScene->nodes()) {
+        if (node->myColour != myScene->myNodeColor)
+            node->setColour(myScene->myNodeColor);
+        }
+    this->repaint();
+}
+
 void GLGraphWidget::mouseDoubleClickEvent(QMouseEvent *event) {
     if (event->button() == Qt::LeftButton) {
         Node *hitNode = selectGL(event->x(), event->y());
+        bool realNode;
 
-        if (hitNode) {
-            hitNode->setColour(QColor::fromRgbF(1.0, 0.0, 0.0, 1.0));
+        foreach(Node* node, myScene->nodes()) {
+            if (hitNode == node) {
+                realNode = true;
+            }
+        }
+
+        if (hitNode && !isHighlighted && realNode) {
+            hitNode->unHighlight();
+            if (hitNode->colour() != Qt::red)
+            //hitNode->setColour(QColor::fromRgbF(1.0, 0.0, 0.0, 1.0));
+                hitNode->setColour(Qt::red);
+            else
+                hitNode->setColour(Qt::blue);
+        } else if (hitNode && isHighlighted && realNode){
+            hitNode->highlight();
+            hitNode->setColour(QColor::fromRgbF(1.0,0.0,0.0,1.0));
+            QVector<Node*> neighbs = hitNode->neighbours();
+            QList<Edge*> edges = hitNode->edges();
+            foreach(Node* node, neighbs) {
+                foreach(Edge* edge, edges) {
+                    if ((edge->sourceNode() == hitNode && edge->destNode() == node) || (edge->sourceNode() == node && edge->destNode() == hitNode) ) {
+                        edge->highlight();
+                        if (edge->colour() != Qt::yellow)
+                            edge->setColour(Qt::yellow);
+                        else
+                            edge->setColour(Qt::green);
+                    }
+                }
+            }
         }
     }
 

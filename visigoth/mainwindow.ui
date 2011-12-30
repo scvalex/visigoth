@@ -50,6 +50,8 @@
      </property>
      <addaction name="nodeColorAct"/>
      <addaction name="edgeColorAct"/>
+     <addaction name="backgroundColorAct"/>
+     <addaction name="highlightNeighboursAct"/>
     </widget>
     <addaction name="menuCustomize_Graph"/>
    </widget>
@@ -172,6 +174,22 @@
   <action name="edgeColorAct">
    <property name="text">
     <string>Edge Color</string>
+   </property>
+  </action>
+  <action name="backgroundColorAct">
+   <property name="text">
+    <string>Background Color</string>
+   </property>
+  </action>
+  <action name="highlightNeighboursAct">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="checked">
+    <bool>false</bool>
+   </property>
+   <property name="text">
+    <string>Highlight Neighbours</string>
    </property>
   </action>
  </widget>

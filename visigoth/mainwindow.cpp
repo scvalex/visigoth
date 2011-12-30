@@ -73,7 +73,7 @@ MainWindow::~MainWindow() {
     delete ui;
 }
 
-void MainWindow::customizeColor(QAction* uiAction) {
+void MainWindow::pickColor() {
     const QColor& initial = QColor::fromRgbF(0.0, 0.0, 1.0, 0.5);
     const QString& title = "Select Colour";
     QColor c = colorPicker.getColor(initial,this,title,0);
@@ -84,11 +84,27 @@ void MainWindow::customizeColor(QAction* uiAction) {
         isColorChanged = true;
         newColor = c;
     }
+}
 
-    if (uiAction == ui->edgeColorAct)
+void MainWindow::customizeColor(QAction* uiAction) {
+    if (uiAction == ui->edgeColorAct) {
+        pickColor();
         scene->customizeEdgesColor(newColor,isColorChanged);
-    else if (uiAction == ui->nodeColorAct)
+    }
+    else if (uiAction == ui->nodeColorAct) {
+        pickColor();
         scene->customizeNodesColor(newColor,isColorChanged);
+    }
+    else if (uiAction == ui->backgroundColorAct) {
+        pickColor();
+        scene->customizeBackgroundColor(newColor,isColorChanged);
+    }
+    else if (uiAction == ui->highlightNeighboursAct) {
+        if (ui->highlightNeighboursAct->isChecked())
+            view->highlightNeighbours();
+        else
+            view->notHighlightNeighbours();
+    }
 }
 
 void MainWindow::toggleHelp(bool enabled) {

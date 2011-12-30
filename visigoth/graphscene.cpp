@@ -20,7 +20,8 @@ GraphScene::GraphScene(QMainWindow *mainWindow) :
     algo(0),
     degreeCount(1),
     myEdgeColor(QColor::fromRgbF(0.0, 0.0, 1.0, 0.5)),
-    myNodeColor(QColor::fromRgbF(0.0, 1.0, 0.3, 0.7))
+    myNodeColor(QColor::fromRgbF(0.0, 1.0, 0.3, 0.7)),
+    myBackgroundColor(Qt::black)
 {
     myAlgorithms["Preferential Attachament"] = PREFERENTIAL_ATTACHAMENT;
     myAlgorithms["Bipartite Model"] = BIPARTITE_MODEL;
@@ -135,28 +136,30 @@ void GraphScene::chooseAlgorithm(const QString &name) {
 }
 
 void GraphScene::customizeEdgesColor(QColor newColor, bool isColorChanged) {
-
-    //MainWindow mainWindow;
-
-   // mainWindow.customizeColor();
-
     if (isColorChanged) {
         myEdgeColor = newColor;
 
         foreach(Edge* edge, myEdges) {
-            edge->setColour(myEdgeColor);
+            if (!edge->isHighlighted)
+                edge->setColour(myEdgeColor);
         }
     }
 }
 
 void GraphScene::customizeNodesColor(QColor newColor, bool isColorChanged) {
-
     if (isColorChanged) {
         myNodeColor = newColor;
 
         foreach(Node* node, myNodes) {
-            node->setColour(myNodeColor);
+            if(!node->isHighlighted)
+                node->setColour(myNodeColor);
         }
+    }
+}
+
+void GraphScene::customizeBackgroundColor(QColor newColor, bool isColorChanged) {
+    if (isColorChanged) {
+        myBackgroundColor = newColor;
     }
 }
 

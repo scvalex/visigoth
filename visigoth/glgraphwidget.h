@@ -19,6 +19,8 @@ public:
     virtual ~GLGraphWidget();
 
     void setScene(GraphScene *newScene);
+    void highlightNeighbours();
+    void notHighlightNeighbours();
 
     enum MOUSE_MODES {
         MOUSE_IDLE,
@@ -40,6 +42,7 @@ protected:
     void scaleView(qreal scaleFactor);
     void fitToScreen();
 
+
     void wheelEvent(QWheelEvent *event);
     void mouseDoubleClickEvent(QMouseEvent *event);
     void mousePressEvent(QMouseEvent *event);
@@ -58,6 +61,7 @@ public slots:
 private:
     void drawGraphGL();
     void drawNode(Node *node);
+    void rebornGraph();
     void initProjection();
     Node *selectGL(int x, int y);
 
@@ -72,6 +76,7 @@ private:
 
     bool mode3d;
     bool running;
+    bool isHighlighted;
     int animTimerId;
 };
 

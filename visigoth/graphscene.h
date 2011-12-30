@@ -48,6 +48,9 @@ public:
     VCubeF graphCube();
     Statistics* getStatistics();
 
+    QColor myEdgeColor;
+    QColor myNodeColor;
+
 signals:
     void nodeMoved();
 
@@ -59,6 +62,7 @@ public slots:
     void chooseAlgorithm(const QString &name);
     void customizeEdgesColor(QColor newColor, bool isColorChanged);
     void customizeNodesColor(QColor newColor, bool isColorChanged);
+    void customizeBackgroundColor(QColor newColor, bool isColorChanged);
 
 signals:
     void algorithmChanged(Algorithm *newAlgo);
@@ -83,8 +87,8 @@ private:
     QList<Edge*> myEdges;
     QVector<QList<Node*> > degreeCount;
     QMap<QString, int> myAlgorithms;
-    QColor myEdgeColor;
-    QColor myNodeColor;
+
+    QColor myBackgroundColor;
 };
 
 #endif // GRAPHSCENE_H
