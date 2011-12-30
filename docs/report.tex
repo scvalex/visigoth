@@ -236,45 +236,49 @@ framework we used is Qt\footnote{FIXME: add link to the Qt Labs?
 
 \subsubsection{C++}
 
-Visigoth, ignoring the XML files describing the interface, is entirely written
-in C++. Initially, while being conscious of its disadvantages, we made this
-decision for one reason: Qt. As described in the previous paragraph, the library
-by TrollTech is so convenient that alone justifies the use of C++ instead of
-another safer language.
+Visigoth, ignoring the XML files describing the interface, is entirely
+written in C++. Initially, while being conscious of its disadvantages,
+we made this decision for one reason: Qt. As described in the previous
+paragraph, the library by TrollTech is so convenient that alone
+justifies the use of C++ instead of another safer language.
 
-All in all, we think it was the right decision. The appreciation of C++ varies
-in our team, but looking back we are confident that C++ was one of the best
-choice considering the nature of the application we have been developing.
+All in all, we think it was the right decision. The appreciation of
+C++ varies in our team, but looking back we are confident that C++ was
+one of the best choice considering the nature of the application we
+have been developing.
 
 The main advantages were:
 
 \begin{itemize}
 
 \item
-  \textbf{Availability of tools and library}: as mentioned, Qt alone was a deal
-  sealer, but the fact that we were able to access OpenGL natively was also a
-  big advantage. While interfaces in other languages exist to both libraries, we
-  felt we could trust more the native bindings and that the foreign bindings
-  would have degraded performance.
+  \textbf{Availability of tools and library}: as mentioned, Qt alone
+  was a deal sealer, but the fact that we were able to access OpenGL
+  natively was also a big advantage. While interfaces in other
+  languages exist to both libraries, we felt we could trust more the
+  native bindings and that the foreign bindings would have degraded
+  performance.
 
 \item
-  \textbf{Performance}: We did not consider this factor at the beginning, but a
-  few weeks in the project we started hitting various bottlenecks. We can only
-  speculate, but the fact that we were using C++ allowed us to fine-tune the
-  application (specifically on the memory management side) in a way that we
-  would not be able to do with managed languages. Furthermore, having an
-  optimising compiler instead of an interpreter (as it would have been using a
-  language like Python or Ruby) probably aided performance as well.
+  \textbf{Performance}: We did not consider this factor at the
+  beginning, but a few weeks in the project we started hitting various
+  bottlenecks. We can only speculate, but the fact that we were using
+  C++ allowed us to fine-tune the application (specifically on the
+  memory management side) in a way that we would not be able to do
+  with managed languages. Furthermore, having an optimising compiler
+  instead of an interpreter (as it would have been using a language
+  like Python or Ruby) probably aided performance as well.
 
 \item
-  \textbf{Abstraction}: The previous two points (especially the second) are
-  partly shared by C++ with C++'s predecessor, C. However, the possibility to
-  structure our code in classes has facilitated the structuring of a medium
-  sized application like Visigoth, especially considering that we had to
-  coordinate 5 people working together. For example, there is a common
-  \code{Algorithm} interface that all algorithms have to implement. Then
-  algorithms can be plugged into the main widget at will: this kind of
-  operations would have been much more laborious and less type-safe in C.
+  \textbf{Abstraction}: The previous two points (especially the
+  second) are partly shared by C++ with C++'s predecessor, C. However,
+  the possibility to structure our code in classes has facilitated the
+  structuring of a medium sized application like Visigoth, especially
+  considering that we had to coordinate 5 people working together. For
+  example, there is a common \code{Algorithm} interface that all
+  algorithms have to implement. Then algorithms can be plugged into
+  the main widget at will: this kind of operations would have been
+  much more laborious and less type-safe in C.
 
 \end{itemize}
 
@@ -283,46 +287,45 @@ However, C++ has its downsides:
 \begin{itemize}
 
 \item
-  \textbf{Unmanaged memory}: This is by far C++'s most ``dangerous'' feature (or
-  better, lack of feature). While enabling greater control and thus greater
-  performance, it requires a much more attentive analysis of the code. This is
-  in a way a good thing, since it forces the programmer to reason more about
-  what the code is doing; but it also paves the way to a nasty class of bugs and
-  memory leaks, that more than once took hours (in one case days) to track down.
-  This is a somewhat controversial subject in our team and in the broader
-  programming community and our opinions differ on how much better a garbage
-  collected language would have been, considering the loss in performance. C++
-  also has the characteristic (required by its unmanaged nature) of allowing
-  objects to be used in the heap through pointers and on the stack as values,
-  which slows down compilation time considerably (when changing an header file
-  all code that uses that object as value has to be recompiled). Moreover, C++
-  allows 2 kinds of references: immutable references and C-style pointers, with
-  a rather confusing syntax - references are indistinguishable from values when
-  used. All these factors generate much confusion which is absent in most modern
-  O-O languages.
+  \textbf{Unmanaged memory}: This is by far C++'s most ``dangerous''
+  feature (or better, lack of feature). While enabling greater control
+  and thus greater performance, it requires a much more attentive
+  analysis of the code. This is in a way a good thing, since it forces
+  the programmer to reason more about what the code is doing; but it
+  also paves the way to a nasty class of bugs and memory leaks, that
+  more than once took hours (in one case days) to track down.  This is
+  a somewhat controversial subject in our team and in the broader
+  programming community and our opinions differ on how much better a
+  garbage collected language would have been, considering the loss in
+  performance. C++ also has the characteristic (required by its
+  unmanaged nature) of allowing objects to be used in the heap through
+  pointers and on the stack as values, which slows down compilation
+  time considerably (when changing an header file all code that uses
+  that object as value has to be recompiled). Moreover, C++ allows 2
+  kinds of references: immutable references and C-style pointers, with
+  a rather confusing syntax - references are indistinguishable from
+  values when used. All these factors generate much confusion which is
+  absent in most modern O-O languages.
 
 \item
-  \textbf{Language bloat}: C++ is a very broad languages, with a number of
-  esoteric language features. Notable examples are templates, operator
-  overloading, and ``friends'' attributes. Some of them are very useful and
-  never harmful , for example the \code{const} keyword is a great mechanism to
-  mark immutability at the type-level. However some of them can and have been
+  \textbf{Language bloat}: C++ is a very broad languages, with a
+  number of esoteric language features. Notable examples are
+  templates, operator overloading, and ``friends'' attributes. Some of
+  them are very useful and never harmful , for example the
+  \code{const} keyword is a great mechanism to mark immutability at
+  the type-level. However some of them can and have been
   misused\footnote{For an hilarious example, see
-    \url{http://weegen.home.xs4all.nl/eelis/analogliterals.xhtml}}, and as a
-  consequence ``when you're programming C++ no one can ever agree on which ten
-  percent of the language is safe to use'' (Jamie Zawinski). This kind of
-  ``programming language discipline'' is required when working on a C++ project
-  and we had our share; although we think we managed to keep the code clean.
+    \url{http://weegen.home.xs4all.nl/eelis/analogliterals.xhtml}},
+  and as a consequence ``when you're programming C++ no one can ever
+  agree on which ten percent of the language is safe to use'' (Jamie
+  Zawinski). This kind of ``programming language discipline'' is
+  required when working on a C++ project and we had our share;
+  although we think we managed to keep the code clean.
 
 \end{itemize}
 
-This is of course a very brief analysis of C++, but it highlights the points
-that we felt more while developing Visigoth.
-
-\subsection{Visigoth graph visualizations}
-
-Cross-platform, efficient, looks-good, user-friendly, easy to develop,
-etc.
+This is of course a very brief analysis of C++, but it highlights the
+points that we felt more while developing Visigoth.
 
 
 
