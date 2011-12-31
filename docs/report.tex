@@ -88,7 +88,7 @@
 %% The report should be submitted to SGO in form of a hard copy, as well as electronically through CATE.
 
 \begin{document}
-\title{\Huge Visigoth\\\Large Graph visualizations}
+\title{\Huge Visigoth\\\Large Graph visualisations}
 \author{
   Andreea-Ingrid Funie\\\mailto{aif109@doc.ic.ac.uk}\and
   Alexandru Scvor\c tov\\\mailto{as10109@doc.ic.ac.uk}\and
@@ -291,49 +291,51 @@ analysis.
 \subsection{C++}
 
 Visigoth, ignoring the XML files describing the interface, is entirely
-written in C++. Initially, while being conscious of its disadvantages,
-we made this decision for one reason: Qt. As described in the previous
+written in \buzz{C++}. Initially, while being conscious of its disadvantages,
+we made this decision for one reason: \buzz{Qt}. As described in the previous
 paragraph, the library by TrollTech is so convenient that alone
 justifies the use of C++ instead of another safer language.
 
 All in all, we think it was the right decision. The appreciation of
 C++ varies in our team, but looking back we are confident that C++ was
-one of the best choice considering the nature of the application we
+one of the best choices considering the nature of the application we
 have been developing.
 
 The main advantages were:
 
 \begin{description}
 
-\item [Availability of tools and library] As mentioned, Qt alone was a
-  deal sealer, but the fact that we were able to access OpenGL
-  natively was also a big advantage. While interfaces in other
-  languages exist to both libraries, we felt we could trust more the
-  native bindings and that the foreign bindings would have degraded
+\item [Availability of tools and library] As mentioned, \buzz{Qt} alone
+  was a deal sealer, but the fact that we were able to access OpenGL
+  `natively' (in a Qt widget) was also a big advantage. While interfaces
+  to both libraries exist in other languages as well, we felt that
+  sticking to Qt's `native' C++ environment would be the most stable
+  solution and that the foreign language bindings would have degraded
   performance.
 
 \item [Performance] We did not consider this factor at the beginning,
-  but a few weeks in the project we started hitting various
-  bottlenecks. We can only speculate, but the fact that we were using
+  but a few weeks into the project we started hitting various
+  bottlenecks. We can only speculate about actual performance gains,
+  but the fact that we were using
   C++ allowed us to fine-tune the application (specifically on the
   memory management side) in a way that we would not be able to do
   with managed languages. Furthermore, having an optimising compiler
-  instead of an interpreter (as it would have been using a language
-  like Python or Ruby) probably aided performance as well.
+  instead of an interpreter or JIT (as it would have been the case
+  using a language like Python or Ruby) aided performance as well.
 
 \item [Abstraction] The previous two points (especially the second)
-  are partly shared by C++ with C++'s predecessor, C. However, the
-  possibility to structure our code in classes has facilitated the
-  structuring of a medium sized application like Visigoth, especially
-  considering that we had to coordinate 5 people working together. For
-  example, there is a common \code{Algorithm} interface that all
-  algorithms have to implement. Then algorithms can be plugged into
-  the main widget at will: this kind of operations would have been
-  much more laborious and less type-safe in C.
+  are partly shared by C++ with its predecessor, C. However, the
+  possibility to structure our code into classes facilitates greatly
+  structuring a medium sized application like Visigoth, especially
+  considering that we had to coordinate five people working together.
+  For example, there is a common \code{Algorithm} interface which all
+  graph generation algorithms have to implement. They can then
+  be plugged into the main widget at will: this kind of operation
+  would have been much more laborious and less type-safe in C.
 
 \end{description}
 
-However, C++ has its downsides:
+However, C++ also has its downsides:
 
 \begin{description}
 
@@ -342,39 +344,42 @@ However, C++ has its downsides:
   and thus greater performance, it requires a much more attentive
   analysis of the code. This is in a way a good thing, since it forces
   the programmer to reason more about what the code is doing; but it
-  also paves the way to a nasty class of bugs and memory leaks, that
-  more than once took hours (in one case days) to track down.  This is
-  a somewhat controversial subject in our team and in the broader
+  also paves the way to a nasty class of bugs and memory leaks that
+  more than once took hours (in one case days) to track down. This is
+  a somewhat controversial subject in our team as well as the broader
   programming community and our opinions differ on how much better a
-  garbage collected language would have been, considering the loss in
+  garbage collected language would have been when considering the loss in
   performance. C++ also has the characteristic (required by its
   unmanaged nature) of allowing objects to be used in the heap through
   pointers and on the stack as values, which slows down compilation
-  time considerably (when changing an header file all code that uses
-  that object as value has to be recompiled). Moreover, C++ allows 2
-  kinds of references: immutable references and C-style pointers, with
+  considerably - when changing a header file, all code that uses
+  that object as a value has to be recompiled. Moreover, C++ allows two
+  kinds of references: immutable references and C-style pointers, the
+  former with
   a rather confusing syntax - references are indistinguishable from
   values when used. All these factors generate much confusion which is
   absent in most modern O-O languages.
 
-\item [Language bloat] C++ is a very broad languages, with a number of
+\item [Language bloat] C++ is a very broad language with a number of
   esoteric language features. Notable examples are templates, operator
-  overloading, and ``friends'' attributes. Some of them are very
-  useful and never harmful , for example the \code{const} keyword is a
-  great mechanism to mark immutability at the type-level. However some
+  overloading and ``friend'' attributes. Some of them are very
+  useful and never harmful, e.g. the \code{const} keyword is a
+  great mechanism to mark immutability at type level. However, some
   of them can and have been misused\footnote{For an hilarious example,
     see
     \url{http://weegen.home.xs4all.nl/eelis/analogliterals.xhtml}},
   and as a consequence ``when you're programming C++ no one can ever
   agree on which ten percent of the language is safe to use'' (Jamie
   Zawinski). This kind of ``programming language discipline'' is
-  required when working on a C++ project and we had our share;
-  although we think we managed to keep the code clean.
+  required when working on a C++ project and we had our fair share
+  of arguments on which subset of the language is safe to use;
+  nevertheless we think we have managed to keep the code clean to
+  high standards in the C++ world.
 
 \end{description}
 
-This is of course a very brief analysis of C++, but it highlights the
-points that we felt more while developing Visigoth.
+This is of course only a very brief analysis of C++, but it does
+highlight the points that we felt the most while developing Visigoth.
 
 
 
@@ -549,12 +554,6 @@ graph generation time and the OpenGL drawing).
 After we implemented the 3D view we had to write an extension to FADE to support
 3D, which proved to be straight forward. Now we have a 3-dimensional space,
 which is recursively divided into $8$ cubes.
-
-
-
-
-\section{Validation}
-%% This section corresponds to 'Validation' in part D of the requirements
 
 
 
