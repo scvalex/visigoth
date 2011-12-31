@@ -42,7 +42,6 @@ public:
     // QuadTree
     int size() const;
     VPointF center() const;
-    bool hasChildren() const;
     const QVector<TreeNode*>& children() const;
     vreal width() const;
 

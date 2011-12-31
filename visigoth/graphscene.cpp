@@ -260,12 +260,10 @@ void GraphScene::updateDegreeCount(Node *node) {
 }
 
 bool GraphScene::calculateForces() {
-    /*
     QuadTree quadTree(graphCube().longestEdge());
     foreach (Node* node, nodes()) {
         quadTree.addNode(node);
     }
-    */
 
     // Don't move the first node
     bool first = true;
@@ -275,8 +273,7 @@ bool GraphScene::calculateForces() {
             continue;
         }
 
-        // node->calculatePosition(quadTree.root());
-        node->calculatePosition3D(nodes());
+        node->calculatePosition(quadTree.root());
     }
 
     bool somethingMoved = false;

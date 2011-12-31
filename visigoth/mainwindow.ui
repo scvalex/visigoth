@@ -23,7 +23,7 @@
      <x>0</x>
      <y>0</y>
      <width>400</width>
-     <height>28</height>
+     <height>21</height>
     </rect>
    </property>
    <widget class="QMenu" name="menu_File">
@@ -39,6 +39,9 @@
      <string>Help</string>
     </property>
     <addaction name="helpAct"/>
+    <addaction name="separator"/>
+    <addaction name="aboutAct"/>
+    <addaction name="aboutQtAct"/>
    </widget>
    <addaction name="menu_File"/>
    <addaction name="menuHelp"/>
@@ -160,6 +163,16 @@
    </property>
    <property name="toolTip">
     <string>Unleash the 3D</string>
+   </property>
+  </action>
+  <action name="aboutAct">
+   <property name="text">
+    <string>About</string>
+   </property>
+  </action>
+  <action name="aboutQtAct">
+   <property name="text">
+    <string>About Qt</string>
    </property>
   </action>
  </widget>

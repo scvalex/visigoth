@@ -1,0 +1,56 @@
+\begin{tikzpicture}[grow cyclic]
+  \node {\square}
+  child {
+    node {\square}
+    child {
+      node {\square}
+      child {node {1}}
+    }
+    child {
+      node {\square}
+      child {node {2}}
+    }
+  }
+  child {
+    node {\square}
+    child {
+      node {\square}
+      child {
+        node {\square}
+        child { node{3} }
+        child { node{4} }
+      }
+      child {
+        node {\square}
+        child {node{5}}
+      }
+    }
+  }
+  child {
+    node {\square}
+    child {
+      node {\square}
+      child {
+        node {\square}
+        child {node{6}}
+        child {node{7}}
+      }
+    }
+    child {
+      node {\square}
+      child {
+        node {\square}
+        child {node{8}}
+      }
+      child {
+        node {\square}
+        child {node{9}}
+      }
+    }
+  }
+  child {
+    node {\square}
+    child { node {10} }
+  }
+  ;
+\end{tikzpicture}
