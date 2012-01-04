@@ -35,7 +35,10 @@
 
 %% %%%%%%%%%%%%%%%%%%%% BEGIN COMMANDS %%%%%%%%%%%%%%%%%%%%
 
-\newcommand{\mailto}[1]{\href{mailto:#1}{\texttt{#1}}}
+\let\stdhref\href
+\renewcommand{\href}[2]{\stdhref{#1}{\texttt{#2}}}
+
+\newcommand{\mailto}[1]{\href{mailto:#1}{#1}}
 
 \let\stdsection\section         % because LaTeX cannot handle
                                 % recursive commands
@@ -134,6 +137,26 @@ display real networks.
 %% This section should contain most of the references to hamm10 and
 %% oconn11.
 
+Complex networks are ubiquitous in nature and society.
+
+The structural and dynamical properties of complex networks are
+non-trivial, and powerful computer architecture is needed for being
+able to compute the required statistical analysis. As a result, it is
+only in the last decade or so that we have been able to study the vast
+data sets that describe real networks.\cite{oconn11}
+
+The structural properties of real networks have been studied
+extensively over the years. The main interest was focused on the fact
+that many real networks share common characteristic properties. These
+networks have low average length path, high clustering coefficient and
+scale-free degree distribution. \cite{oconn11}
+
+In order to be able to further understand the behaviour of real
+networks, we simulate their dynamics on randomly generated networks.
+For an accurate modelling of their behaviour we need to generate and
+observe the results of algorithms which present the characteristic
+structural properties of this kind of networks. \cite{oconn11}
+
 \subsection{Realistic looking networks}
 %% This subsection should *not* use the term ``Small World Networks''.
 %% The point is to describe what properties we want.  The SWN
@@ -145,13 +168,34 @@ display real networks.
 %% nodes shouldn't be too far apart, the number of neighbours should
 %% fit a natural distribution).
 
+The networks we are interested in are mathematical graphs in which
+most nodes are not neighbors of one another, but they can be reached
+from every other by a small number of steps. In the context of a
+social network, this results in the \emph{``small world
+  phenomenon''} \footnote{FIXME: citation needed} of strangers being
+linked by a mutual acquaintance.
+
 \subsubsection{Uses}
 
 %% FIXME: Explain how networks with the above properties are useful.
 
+Examples of real networks in the real-world are:
+
+\emph{Social networks, neural networks, ecosystems, the World Wide
+  Web, electrical power grids and protein networks} are all complex
+networks that exhibit a range of understanding dynamic behaviour that
+currently escape our understanding. \cite{oconn11}
+
+Ideas from network science have been applied to the analysis of
+metabolic and genetic regulatory networks, the design of robust and
+scalable communication networks both wired and wireless, the
+development of vaccination strategies for the control of disease, and
+a broad range of other practical issues. \cite{complexNets}
+
 \subsubsection{The maths}
 
 %% FIXME: Give formal mathematical definitions for qualities.
+
 
 \subsection{Small World Networks}
 
@@ -251,8 +295,105 @@ networks Twitter and identi.ca.
 \subsection{Qt}
 
 The UI toolkit, standard library replacement, and application
-framework we used is Qt\footnote{FIXME: add link to the Qt Labs?
-  website}.
+framework Visigoth uses is Qt\footnote{\url{http://qt.nokia.com/}}.
+
+Visigoth relies heavily on some of Qt's features:
+\begin{description}
+\item [gui] Qt is famous for providing a cross-platform, high-level,
+  UI toolkit that automatically uses the native drawing systems on
+  each host platform. All of Visigoth's user visible interface was
+  built using this framework. A more detailed explanation is included
+  in Section \ref{gui};
+\item [meta-objects] Qt supplements the venerable C
+  pre-processor\footnote{\url{http://gcc.gnu.org/onlinedocs/cpp/}}
+  with its own \buzz{meta-object
+    compiler} \footnote{\url{http://developer.qt.nokia.com/doc/qt-4.8/moc.html}}.
+  This preprocessor augments normal C++ objects with modern features
+  such as introspection and signals. We use introspection extensively
+  in our tests; see Section \ref{tests}. We use signals to decouple
+  objects, which leads to a cleaner design and has the side-effect of
+  simplifying writing test cases (mock and stub objects are not
+  necessary anymore); for details, see Section \ref{interaction};
+\item [xml] Like most modern frameworks, Qt provides an \buzz{XML}
+  parsing
+  library\footnote{\url{http://developer.qt.nokia.com/doc/qt-4.8/qtxml.html}}.
+  In addition to a standard \buzz{SAX} parser, it exposes an extremely
+  clean \buzz{HTML DOM}-like interface for manipulating \buzz{XML}
+  documents. We use it in order to parse results from queries to
+  online sources such as \href{http://twitter.com}{Twitter} and
+  \href{http://identi.ca}{Identi.ca};
+\item [containers] Qt provides a fully-featured library of containers
+  similar to Java
+  \buzz{collections} \footnote{\url{http://docs.oracle.com/javase/1.5.0/docs/api/java/util/package-summary.html}}
+  and significantly more complete than the standard or SGI
+  \buzz{STL}\footnote{\url{http://www.sgi.com/tech/stl/}}. The
+  availability of these meant that advanced data-structures were one
+  less concern to worry about during development;
+\item [concurrency] Qt also provides high-level
+  threading\footnote{\url{http://developer.qt.nokia.com/doc/qt-4.8/threads.html}}
+  and
+  concurrency\footnote{\url{http://developer.qt.nokia.com/doc/qt-4.8/threads-qtconcurrent.html}}
+  APIs. Our experiments showed that separating the CPU-intensive
+  computations (e.g. generating new networks, calculating layout
+  positions) onto a separate thread could speed up certain operations
+  by as much as a factor of $6$. The concurrency API, which provides
+  functional programming style parallelized primitives
+  (e.g. \code{map}, \code{filter}) could further improve performance.
+  This is an area where further work could be done in Visigoth.
+\end{description}
+
+\subsubsection{Plugins}
+
+Qt has a healthy plugin ecosystems, with a myriad of libraries
+available to plug into the main framework. We make use of two of
+these, namely
+\buzz{QCA} \footnote{\url{http://delta.affinix.com/qca/}} and
+\buzz{QOAuth} \footnote{\url{https://github.com/ayoy/qoauth/wiki}}.
+
+\begin{description}
+\item [QCA] The \buzz{Qt Cryptographic Architecture} includes many
+  security providers for Qt application. We used the \buzz{OpenSSL}
+  provider when establishing TLS-secured channels to the online
+  sources (e.g. \href{http://twitter.com}{Twitter});
+\item [QOAuth] This library is an implementation of the \buzz{OAuth
+  2.0}\footnote{\url{http://oauth.net/}} secure API authorization
+  standard (\buzz{OAuth} is becoming the de-facto authorization
+  mechanism on the web); again, this was required in order to
+  authenticate with the online sources.
+\end{description}
+
+\subsubsection{Cross-platform}
+
+Thanks to Qt's cross-platform nature, in general, and to
+\buzz{qmake} \footnote{\url{http://developer.qt.nokia.com/doc/qt-4.8/qmake-manual.html}},
+in particular, Visigoth works on Windows, OSX and Linux with a minimum
+of fuss on the development side.
+
+\begin{description}
+\item [qmake] Qt's build system, \buzz{qmake}, takes a high level
+  project description and outputs platform-specific build files
+  (\buzz{Makefile}s on Linux, \buzz{XCode} projects on OSX and
+  \buzz{Visual Studio} projects on Windows). It also simplifies
+  finding external libraries (by using its own mechanism on Linux,
+  \buzz{pkg-config} on OSX and the registry on Windows).
+\end{description}
+
+The only tweaks necessary for Visigoth to build on each of the above
+platforms are a few defines to deal with the misplaced \buzz{OpenGL}
+headers on OSX and few conditionals in the project description to
+handle the library finding on Windows.
+
+The following screenshots show Visigoth working on the three
+platforms.
+%% FIXME: add screenshots
+
+\subsubsection{Rapid prototyping}
+
+One of lesser known advantages to using Qt we discovered is rapid
+prototyping. Point in case, the original prototype for Visigoth took
+two days to write. It included roughly half of the customer's
+\emph{must-have} features, was cross-platform and was visually
+impressive.
 
 \subsection{OpenGL}
 
@@ -398,6 +539,17 @@ highlight the points that we felt the most while developing Visigoth.
 
 \section{Engineering Visigoth}
 %% This section corresponds to C in the requirements
+
+\subsection{GUI}
+\label{gui}
+
+\subsection{Classes}
+%% This is an overview of the classes (including a class diagram).
+
+\subsection{Object interaction}
+\label{interaction}
+%% This is an overview of the signals sent between objects (or of the
+%% public interfaces they subscribe to).
 
 \subsection{Graph drawing}
 
@@ -577,6 +729,9 @@ which is recursively divided into $8$ cubes.
 \subsection{Validation}
 %% The client is a happy puppy
 
+\subsection{Functional testing}
+\label{tests}
+
 \subsection{Lessons learned}
 
 \addcontentsline{toc}{section}{References}
@@ -599,6 +754,9 @@ which is recursively divided into $8$ cubes.
   \emph{FADE: Graph drawing, clustering and visual abstraction}.
   Department of Computer Science and Software Engineering,
   Univ. of  Newcastle, Australia, 2000.
+
+\bibitem{complexNets}
+  \url{http://en.wikipedia.org/wiki/Complex_network}
 
 \end{thebibliography}
 
