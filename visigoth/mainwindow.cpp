@@ -144,6 +144,7 @@ void MainWindow::calculateStats() {
 }
 
 void MainWindow::onGenerate() {
+    statsWork.cancel();
     focusedNode = 0;
 
     QString calculating = "Calculating...";
@@ -152,7 +153,6 @@ void MainWindow::onGenerate() {
     statsUi->clusteringLabel->setText(calculating);
     statsUi->exponentLabel->setText(calculating);
 
-    statsWork.cancel();
     statsWork = QtConcurrent::run(this, &MainWindow::calculateStats);
 }
 

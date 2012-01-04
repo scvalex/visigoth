@@ -103,4 +103,57 @@ void glaDrawExample(void)
     glEnd();
 }
 
+void triforcePyramid(void)
+{
+    GLfloat angle = 30.0/180.0;
+    GLfloat hedge = cos(angle);
+    GLfloat height = sqrt(hedge*hedge*4 + hedge*hedge);
 
+    glBegin(GL_TRIANGLES);
+        glVertex3f(hedge, sin(angle), -height/2);
+        glNormal3f(hedge, sin(angle), -height/2);
+        glVertex3f(0, sin(angle) + height, 0);
+        glNormal3f(0, sin(angle) + height, 0);
+        glVertex3f(-hedge, sin(angle), -height/2);
+        glNormal3f(-hedge, sin(angle), -height/2);
+
+        glVertex3f(hedge, sin(angle), -height/2);
+        glNormal3f(hedge, sin(angle), -height/2);
+        glVertex3f(0, sin(angle) + height, 0);
+        glNormal3f(0, sin(angle) + height, 0);
+        glVertex3f(0, sin(angle), height/2);
+        glNormal3f(0, sin(angle), height/2);
+
+        glVertex3f(0, sin(angle), height/2);
+        glNormal3f(0, sin(angle), height/2);
+        glVertex3f(0, sin(angle)+height, 0);
+        glNormal3f(0, sin(angle)+height, 0);
+        glVertex3f(-hedge, sin(angle), -height/2);
+        glNormal3f(-hedge, sin(angle), -height/2);
+    glEnd();
+}
+
+void glaDrawTriforce(void)
+{
+    glColor3f(0.5, 1.0, 0.5);
+    GLfloat angle = 30.0/180.0;
+    GLfloat hedge = cos(angle);
+    GLfloat height = sqrt(hedge*hedge*4 + hedge*hedge);
+
+    triforcePyramid();
+
+    glPushMatrix();
+        glTranslatef(-hedge, -height, -hedge);
+        triforcePyramid();
+    glPopMatrix();
+
+    glPushMatrix();
+        glTranslatef(hedge, -height, -hedge);
+        triforcePyramid();
+    glPopMatrix();
+
+    glPushMatrix();
+        glTranslatef(0, -height, hedge);
+        triforcePyramid();
+    glPopMatrix();
+}

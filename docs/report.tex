@@ -553,13 +553,12 @@ highlight the points that we felt the most while developing Visigoth.
 
 \subsection{Graph drawing}
 
-We looked into various graphics libraries which allow for
-platform-independent drawing using primitives. Candidates were
-\buzz{Cairo}\footnote{Cairo homepage: http://cairographics.org/},
-\buzz{Qt} and \buzz{OpenGL}. The first two are the
-most common 2D drawing libraries used in modern open-source
-software; however, as they operate solely on the CPU, they proved
-too slow for the large graphs we wished to visualise.
+We looked into various graphics libraries which allow for platform-independent
+drawing using primitives. Candidates were \buzz{Cairo}\footnote{Cairo homepage:
+  \url{http://cairographics.org/}}, \buzz{Qt} and \buzz{OpenGL}. The first two
+are the most common 2D drawing libraries used in modern open-source software;
+however, as they operate solely on the CPU, they proved too slow for the large
+graphs we wished to visualise.
 
 Therefore we decided to use \buzz{OpenGL} for drawing graphs on
 the screen. Thanks to its hardware accelerated nature, we can now

@@ -308,7 +308,7 @@ void GLGraphWidget::paintGL() {
 
     // Draw the graph and the central box
     initGraphProjection();
-    glaDrawExample();
+    glaDrawTriforce();
     drawGraphGL();
 
     // Draw 2D overlay elements
