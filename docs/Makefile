@@ -1,5 +1,5 @@
 DOCBASE=report
-GRAPHICS=
+GRAPHICS=$(wildcard *.tex)
 LATEX?=pdflatex
 
 all: $(GRAPHICS) $(DOCBASE).pdf pdfclean
