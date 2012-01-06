@@ -196,8 +196,110 @@ a broad range of other practical issues. \cite{complexNets}
 
 %% FIXME: Give formal mathematical definitions for qualities.
 
+\begin{description}
+ \item [Networks] 
 
+A \(network\) is a graph, an ordered pair \emph{G(V,E)} comprising a set of
+\(vertices\), \emph{V}, and a set of \(edges\), \emph{E}. An \emph{edge} is a 
+2-element subset of \emph{V} representing a \emph{connection} between a pair of \emph{vertices}. \cite{oconn11}
 
+The \(degree\), \emph{K\lowercase{i}}, of vertex \emph{i} is the number of 
+vertices that it is connected to.
+
+The \(average\) \(degree\), \emph{k}, of a network is 
+\begin{equation}
+\ k =\frac{2m}{N} ,
+\end{equation}
+ where \(m\) is the number of edges in the network.
+
+\item [Six degress of separation] 
+
+This concept is the idea that everyone is approximately six steps away, by 
+introduction, from any other person on Earth. 
+
+A group of people can be represented by a \emph{social network}, where individuals are 
+the vertices and an edge betwen individuals represents acquaintance. 
+
+The steps from one individual to another are then the edges that must be 
+traversed to connect them. We refer to the number of steps from one 
+individual to another as the \emph{shortest path length} between them. \cite{oconn11}
+
+\item [The Small-World Effect]
+
+\emph{The ``small-world effect" denotes the result that the average distance
+linking two nodes belonging to the same network can be orders of magnitude
+ smaller than the number of nodes making up the network.} \cite{complexAdapt}
+
+Frigyes Karinthy was the first proponent of the six degrees of separation concept
+ in his short story \emph{``Chains"} (1929). 
+
+The small world experiment (done by Stanley Milgram and other researchers in the 1960s), formalised the concept. In this, letters were sent to randomly selected individuals
+ asking them to forwards the letter to a randomly selected target. If the target
+ was unknown by them, they should have sent the letter to a friend or relative
+ who was more likely to know the target. Milgram's experiment concluded that the \emph{shortest path length} between individuals is, on average, $6$.
+
+\item [Properties of Real Networks] 
+
+\begin{itemize}
+%FIXME: fix the space so that the items from the itemize sections appear from a
+%new line
+\item Low average path length.
+
+\item High clustering coefficient.
+
+\item Scale-free degree distribution.
+
+\end{itemize}
+
+\item [Path Length]
+
+We can apply Dijkstra's algorithm or A* for finding the shortest path length,
+\(d(v\lowercase{i},v\lowercase{j})\), between two vertices, \(v\lowercase{i}\), 
+\(v\lowercase{j}\), in a network.
+
+The \(average\) \(path\) \(length\), L\lowercase{G}, is the average of the 
+shortest path length over all pairs of vertices:
+
+\begin{equation}
+\ L\lowercase{G} =\frac{1}{N(N-1)} \sum_{i, j} d(v_i,v_j),
+\end{equation}
+where \(d(v\lowercase{i},v\lowercase{j})\) \(=\) $0$ when there is no path between
+ vertices \(v\lowercase{i}\), \(v\lowercase{j}\).
+
+\item [Clustering coefficient]
+
+\emph{Clustering} is about the tendency of real networks to form \emph{cliques}.  
+For example, in social networks, \(cliques\) represent circles of friends or 
+acquitances in which every member knows every other member.
+
+The \(clustering\) \(coefficient\) proposed by Watts and Strogatz is calculated 
+for each vertex, \lowercase{i}.
+
+\begin{equation}
+\ C\lowercase{i} =\frac{2E\lowercase{i}}{k\lowercase{i}(k\lowercase{i}-1)},
+\end{equation}
+where \(k\lowercase{i}\) is the number of neighbours of vertex \(\lowercase{i}\) and 
+\(E\lowercase{i}\) is the number of edges between the neighbours of vertex \(\lowercase{i}\).
+
+The \(average\) clustering coefficient over the network is:
+
+\begin{equation}
+\ C\lowercase{avg} = \frac{1}{N}\sum_{i=0}^{N} C_i
+\end{equation}
+
+\item [Scale-free distribution]
+
+Barabasi and Albert showed that real networks such as the World Wide Web are 
+scale-free.
+
+The \emph{degree distribution} of scale-free networks follows a \(power\) \(law\).
+
+\begin{equation}
+\ P(k) \sim k^{-\gamma},
+\end{equation}
+where \(P(k)\) is the probability that a node in the network will be of degree \(k\).
+
+\end{description}
 
 \subsection{Small World Networks}
 
@@ -908,11 +1010,23 @@ the used principles understanding and to improve the existent work.
 This exchange of written or verbal knowledge transfer allowed us not
 only to improve team-working but to gain new technical skills as well.
 
+%Add the Log-Book in appendix
+
 
 \subsection{Functional testing}
 \label{tests}
 
+
+
+
+\subsection{People management and contributions}
+%This is from Report 2 except the summary of contributions which is a new add
+
 \subsection{Lessons learned}
+
+
+\subsection{Ethical and Environmental Impact}
+%Check Report 2
 
 \addcontentsline{toc}{section}{References}
 \begin{thebibliography}{9}
@@ -934,6 +1048,12 @@ only to improve team-working but to gain new technical skills as well.
   \emph{FADE: Graph drawing, clustering and visual abstraction}.
   Department of Computer Science and Software Engineering,
   Univ. of  Newcastle, Australia, 2000.
+
+\bibitem{complexAdapt}
+Claudius Gros,
+\emph{Complex and Adaptive Dynamical Systems}.
+Springer,
+2008.
 
 \bibitem{complexNets}
   \url{http://en.wikipedia.org/wiki/Complex_network}
