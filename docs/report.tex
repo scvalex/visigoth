@@ -140,23 +140,22 @@ display real networks.
 
 Complex networks are ubiquitous in nature and society.
 
-The structural and dynamical properties of complex networks are
-non-trivial, and powerful computer architecture is needed for being
-able to compute the required statistical analysis. As a result, it is
-only in the last decade or so that we have been able to study the vast
-data sets that describe real networks.\cite{oconn11}
+The structural and dynamical properties of complex networks are non-trivial, and
+powerful computer architecture is needed for being able to compute the required
+statistical analysis. As a result, it is only in the last decade or so that we
+have been able to study the vast data sets that describe real networks
+\cite{oconn11}.
 
-The structural properties of real networks have been studied
-extensively over the years. The main interest was focused on the fact
-that many real networks share common characteristic properties. These
-networks have low average length path, high clustering coefficient and
-scale-free degree distribution. \cite{oconn11}
+The structural properties of real networks have been studied extensively over
+the years. The main interest was focused on the fact that many real networks
+share common characteristic properties. These networks have low average length
+path, high clustering coefficient and scale-free degree distribution.
 
-In order to be able to further understand the behaviour of real
-networks, we simulate their dynamics on randomly generated networks.
-For an accurate modelling of their behaviour we need to generate and
-observe the results of algorithms which present the characteristic
-structural properties of this kind of networks. \cite{oconn11}
+In order to be able to further understand the behaviour of real networks, we
+simulate their dynamics on randomly generated networks.  For an accurate
+modelling of their behaviour we need to generate and observe the results of
+algorithms which present the characteristic structural properties of this kind
+of networks.
 
 \subsection{Realistic looking networks}
 %% This subsection should *not* use the term ``Small World Networks''.
@@ -169,77 +168,73 @@ structural properties of this kind of networks. \cite{oconn11}
 %% nodes shouldn't be too far apart, the number of neighbours should
 %% fit a natural distribution).
 
-The networks we are interested in are mathematical graphs in which
-most nodes are not neighbors of one another, but they can be reached
-from every other by a small number of steps. In the context of a
-social network, this results in the \emph{``small world
-  phenomenon''} \footnote{FIXME: citation needed} of strangers being
-linked by a mutual acquaintance.
-
-\subsubsection{Uses}
+The networks we are interested in are mathematical graphs in which most nodes
+are not neighbors of one another, but they can be reached from every other by a
+small number of steps. In the context of a social network, this results in the
+``small world phenomenon'' \footnote{FIXME: citation needed} of strangers
+being linked by a mutual acquaintance.
 
 %% FIXME: Explain how networks with the above properties are useful.
 
 Examples of real networks in the real-world are:
 
-\emph{Social networks, neural networks, ecosystems, the World Wide
-  Web, electrical power grids and protein networks} are all complex
-networks that exhibit a range of understanding dynamic behaviour that
-currently escape our understanding. \cite{oconn11}
+Social networks, neural networks, ecosystems, the World Wide Web, electrical
+power grids and protein networks are all complex networks that exhibit a range
+of understanding dynamic behaviour that currently escape our understanding.
 
-Ideas from network science have been applied to the analysis of
-metabolic and genetic regulatory networks, the design of robust and
-scalable communication networks both wired and wireless, the
-development of vaccination strategies for the control of disease, and
-a broad range of other practical issues. \cite{complexNets}
+Ideas from network science have been applied to the analysis of metabolic and
+genetic regulatory networks, the design of robust and scalable communication
+networks both wired and wireless, the development of vaccination strategies for
+the control of disease, and a broad range of other practical
+issues \cite{complexNets}.
 
-\subsubsection{The maths}
+\subsection{The maths}
 
 %% FIXME: Give formal mathematical definitions for qualities.
 
-\begin{description}
- \item [Networks] 
+\subsubsection{Networks}
 
-A \(network\) is a graph, an ordered pair \emph{G(V,E)} comprising a set of
-\(vertices\), \emph{V}, and a set of \(edges\), \emph{E}. An \emph{edge} is a 
-2-element subset of \emph{V} representing a \emph{connection} between a pair of \emph{vertices}. \cite{oconn11}
+A \emph{network} is a graph, an ordered pair $G(V,E)$ comprising a set of
+\emph{vertices}, $V$, and a set of \emph{edges}, $E$. An \emph{edge} is a
+2-element subset of $V$ representing a \emph{connection} between a pair of
+\emph{vertices}.
 
-The \(degree\), \emph{K\lowercase{i}}, of vertex \emph{i} is the number of 
-vertices that it is connected to.
+The $degree$, $K_i$, of vertex $i$ is the number of vertices that it is
+connected to.
 
-The \(average\) \(degree\), \emph{k}, of a network is 
-\begin{equation}
-\ k =\frac{2m}{N} ,
-\end{equation}
- where \(m\) is the number of edges in the network.
+The average degree, $k$, of a network is $k =\frac{2m}{N}$ where $m$ is the
+number of edges in the network.
 
-\item [Six degress of separation] 
+\subsubsection{Six degress of separation}
 
-This concept is the idea that everyone is approximately six steps away, by 
-introduction, from any other person on Earth. 
+This concept is the idea that everyone is approximately six steps away, by
+introduction, from any other person on Earth.
 
-A group of people can be represented by a \emph{social network}, where individuals are 
-the vertices and an edge betwen individuals represents acquaintance. 
+A group of people can be represented by a \emph{social network}, where
+individuals are the vertices and an edge betwen individuals represents
+acquaintance.
 
-The steps from one individual to another are then the edges that must be 
-traversed to connect them. We refer to the number of steps from one 
-individual to another as the \emph{shortest path length} between them. \cite{oconn11}
+The steps from one individual to another are then the edges that must be
+traversed to connect them. We refer to the number of steps from one individual
+to another as the \emph{shortest path length} between them.
 
-\item [The Small-World Effect]
+\subsubsection{The Small-World Effect}
 
-\emph{The ``small-world effect" denotes the result that the average distance
-linking two nodes belonging to the same network can be orders of magnitude
- smaller than the number of nodes making up the network.} \cite{complexAdapt}
+The ``small-world effect" denotes the result that the average distance linking
+two nodes belonging to the same network can be orders of magnitude smaller than
+the number of nodes making up the network \cite{complexAdapt}.
 
-Frigyes Karinthy was the first proponent of the six degrees of separation concept
- in his short story \emph{``Chains"} (1929). 
+Frigyes Karinthy was the first proponent of the six degrees of separation
+concept in his short story ``Chains" (1929).
 
-The small world experiment (done by Stanley Milgram and other researchers in the 1960s), formalised the concept. In this, letters were sent to randomly selected individuals
- asking them to forwards the letter to a randomly selected target. If the target
- was unknown by them, they should have sent the letter to a friend or relative
- who was more likely to know the target. Milgram's experiment concluded that the \emph{shortest path length} between individuals is, on average, $6$.
+The small world experiment (done by Stanley Milgram and other researchers in the
+1960s), formalised the concept. In this, letters were sent to randomly selected
+individuals asking them to forwards the letter to a randomly selected target. If
+the target was unknown by them, they should have sent the letter to a friend or
+relative who was more likely to know the target. Milgram's experiment concluded
+that the \emph{shortest path length} between individuals is, on average, $6$.
 
-\item [Properties of Real Networks] 
+The properties of a small world network are:
 
 \begin{itemize}
 %FIXME: fix the space so that the items from the itemize sections appear from a
@@ -252,76 +247,64 @@ The small world experiment (done by Stanley Milgram and other researchers in the
 
 \end{itemize}
 
-\item [Path Length]
+\subsubsection{Path Length}
 
 We can apply Dijkstra's algorithm or A* for finding the shortest path length,
-\(d(v\lowercase{i},v\lowercase{j})\), between two vertices, \(v\lowercase{i}\), 
-\(v\lowercase{j}\), in a network.
+$d(v_i, v_j)$ between to vertices $v_i$ and $v_j$ in a network.  The average
+path length, $L_G$, is the average of the shortest path length over all pairs of
+vertices:
 
-The \(average\) \(path\) \(length\), L\lowercase{G}, is the average of the 
-shortest path length over all pairs of vertices:
+\[ L_G = \frac{1}{N(N-1)} \sum_{i, j} d(v_i, v_j) \]
 
-\begin{equation}
-\ L\lowercase{G} =\frac{1}{N(N-1)} \sum_{i, j} d(v_i,v_j),
-\end{equation}
-where \(d(v\lowercase{i},v\lowercase{j})\) \(=\) $0$ when there is no path between
- vertices \(v\lowercase{i}\), \(v\lowercase{j}\).
+where $d(v_i, v_j) = 0$ when there is no path between vertices $v_i$ and $v_j$.
 
-\item [Clustering coefficient]
+\subsubsection{Clustering coefficient}
 
-\emph{Clustering} is about the tendency of real networks to form \emph{cliques}.  
-For example, in social networks, \(cliques\) represent circles of friends or 
+\emph{Clustering} is about the tendency of real networks to form \emph{cliques}.
+For example, in social networks, cliques represent circles of friends or
 acquitances in which every member knows every other member.
 
-The \(clustering\) \(coefficient\) proposed by Watts and Strogatz is calculated 
-for each vertex, \lowercase{i}.
+The clustering coefficient proposed by Watts and Strogatz is calculated for each
+vertex, $i$.
 
-\begin{equation}
-\ C\lowercase{i} =\frac{2E\lowercase{i}}{k\lowercase{i}(k\lowercase{i}-1)},
-\end{equation}
-where \(k\lowercase{i}\) is the number of neighbours of vertex \(\lowercase{i}\) and 
-\(E\lowercase{i}\) is the number of edges between the neighbours of vertex \(\lowercase{i}\).
+\[ C_i = \frac{2E_i}{k_i(k_i-1)} \]
 
-The \(average\) clustering coefficient over the network is:
+where $k_i$ is the number of neighbours of vertex $i$q and $E_i$ is the number
+of edges between the neighbours of vertex $i$.
 
-\begin{equation}
-\ C\lowercase{avg} = \frac{1}{N}\sum_{i=0}^{N} C_i
-\end{equation}
+The average clustering coefficient over the network is:
 
-\item [Scale-free distribution]
+\[ \ C_{avg} = \frac{1}{N}\sum_{i=0}^{N} C_i \]
 
-Barabasi and Albert showed that real networks such as the World Wide Web are 
-scale-free.
+\subsubsection{Scale-free distribution}
 
-The \emph{degree distribution} of scale-free networks follows a \(power\) \(law\).
+Barabasi and Albert showed that real networks such as the World Wide Web are
+scale-free. The \emph{degree distribution} of scale-free networks follows a
+power law:
 
-\begin{equation}
-\ P(k) \sim k^{-\gamma},
-\end{equation}
-where \(P(k)\) is the probability that a node in the network will be of degree \(k\).
+\[ P(k) \sim k^{-\gamma} \]
 
-\end{description}
+where $P(k)$ is the probability that a node in the network will be of degree $k$.
 
 \subsection{Small World Networks}
 
-Small World Networks derive their denomination from the well-known
-Small World Hypothesis\footnote{FIXME: citation needed}, which states
-that any two persons are related through a chain of at most seven
-friends\footnote{FIXME: citation needed}.
+Small World Networks derive their denomination from the well-known Small World
+Hypothesis\footnote{FIXME: citation needed}, which states that any two persons
+are related through a chain of at most seven friends\footnote{FIXME: citation
+  needed}.
 
-Indeed, Small World Networks are graphs resembling the connections
-within human social networks, where nodes represent people, and edges
-between nodes represent relations of some sort\footnote{FIXME:
-  citation needed, probably one of the two main papers}.
+Indeed, Small World Networks are graphs resembling the connections within human
+social networks, where nodes represent people, and edges between nodes represent
+relations of some sort\footnote{FIXME: citation needed, probably one of the two
+  main papers}.
 
 For example, if someone were to draw every user\footnote{or at least a
-  \emph{large} number of users} of a social network (e.g. Twitter) on
-a canvas and then connect each pair of them if either is ``following''
-the other or if they are ``friends'', the resulting graph is a Small
-World Network. Over the course of time, several mathematical
-algorithms that generate random Small World Networks have been
-discovered. However, the resulting graphs have only lately begun to
-resemble those that have grown naturally in the form of social
+  \emph{large} number of users} of a social network (e.g. Twitter) on a canvas
+and then connect each pair of them if either is ``following'' the other or if
+they are ``friends'', the resulting graph is a Small World Network. Over the
+course of time, several mathematical algorithms that generate random Small World
+Networks have been discovered. However, the resulting graphs have only lately
+begun to resemble those that have grown naturally in the form of social
 networks.
 
 %% FIXME: Huh?  Are they really SWNs if they don't resemble the
@@ -333,11 +316,11 @@ networks.
 
 \subsection{Introducing Visigoth}
 
-Visigoth makes peeking into the current state-of-the-art of artificial
-Small World Networks simple and fun. By integrating existing
-generation algorithms and visualisations into a single, easy-to-use
-interface, the user can make a head start into the small world of
-Small World Networks and:
+Visigoth makes peeking into the current state-of-the-art of artificial Small
+World Networks simple and fun. By integrating existing generation algorithms and
+visualisations into a single, easy-to-use interface, the user can make a head
+start into the small world of Small World Networks and:
+
 \begin{itemize}
   \item see how these algorithms have improved on each other over time
     generating increasingly better networks,
@@ -422,7 +405,7 @@ each side.
     QVector<Node*> nodeVec(size);
     for(int i(0); i < size; ++i) {
         Node *node = scene->newNode();
-        nodeVec[i] = node;    
+        nodeVec[i] = node;
     }
 \end{lstlisting}
  \(Constructing\) \(ring\) \(lattice\):
@@ -471,13 +454,13 @@ probability proportional to their
 degree in the network.
 
 Such networks are present in natural and human
-made systems, such as the citation networks. 
+made systems, such as the citation networks.
 
 A network is deemed scale-free if the network exhibits a power law degree
-distribution. 
+distribution.
 \[
 degree(x) = ax^k
- \] 
+ \]
 In context, this means that the frequency of attachment to a node
 varies as a power of its degree. Such networks are \emph{also scale invariant} meaning
 that the network's size has no effect on its attributes i.e. degree
@@ -536,7 +519,7 @@ each set are only allowed to connect to nodes which are not a member of their
 own set.
 
 \footnote{http://en.wikipedia.org/wiki/File:Simple-bipartite-graph.svg}
-\includegraphics[scale=0.3]{bipartite.png}
+%% \includegraphics[scale=0.3]{bipartite.png}
 
 The algorithm constructs a network in three simple steps
 \begin{enumerate}
@@ -586,7 +569,7 @@ This procedure is implemented as follows:
 % FIXME
 Preferential attachment and clustering are two distinct concepts which are used in graph generation.
 
-When using preferential attachment we assign nodes in a network a preference depending on their degree. Nodes with more edges, that is, which are more connected will have a higher preference than nodes with less edges. The preference ranges from [0,1], assuming no disjoint nodes exist and, for a node N, is calculated as 
+When using preferential attachment we assign nodes in a network a preference depending on their degree. Nodes with more edges, that is, which are more connected will have a higher preference than nodes with less edges. The preference ranges from [0,1], assuming no disjoint nodes exist and, for a node N, is calculated as
 \[
 \frac{N_\mathrm{edges}}{Total_\mathrm{edges}}
 \]
@@ -632,7 +615,7 @@ using a binary search.
         }
         length = neighbours.size();
     }
-   }  
+   }
 \end{lstlisting}
    \item If more edges are to be added, repeat the procedure.
 \begin{lstlisting}
@@ -755,7 +738,7 @@ while (!edges.empty()) {
 \end{lstlisting}
 If the node's degree is greater than 1 we return the calculation.
 \begin{lstlisting}
-return k > 1 ? (2*intersection)/(double) (k*(k-1)):0 
+return k > 1 ? (2*intersection)/(double) (k*(k-1)):0
 \end{lstlisting}
 
 \subsection{Clusering Average}
