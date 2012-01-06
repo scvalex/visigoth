@@ -571,8 +571,48 @@ highlight the points that we felt the most while developing Visigoth.
 \section{Engineering Visigoth}
 %% This section corresponds to C in the requirements
 
+We encountered a number of difficulties whilst building Visigoth,
+which we overcame by dividing the application into mostly-independent
+components. The following sections provide overviews and short
+descriptions for each component.
+
 \subsection{GUI}
 \label{gui}
+
+Since Visigoth is an end-user-oriented application, the GUI is, by
+far, the most important component. Luckily, the user work-flows we
+considered contain very few steps (hence, there is little need for
+``Wizards'' or nested-design).
+
+As shown in Figure \ref{fig:gui-sketch}, the Visigoth UI is
+\emph{flat}. All relevant options and displays are presented to the
+user in a single encompassing interface. Relevancy is determined by
+context; for instance, the generation parameters (Figure
+\ref{fig:gui-sketch}.3) vary depending on the algorithm selected (in
+Figure \ref{fig:gui-sketch}.1).
+
+\begin{figure}[h]
+  \centering
+  \input{gui-sketch.tex}
+  \caption{UI wire-frame sketch: 1. Generation algorithm chooser;
+    2. Statistics; 3. Generation parameters; 4. Graph display; 5. Main
+    menu; 6. Quick actions; 7. Status bar}
+  \label{fig:gui-sketch}
+\end{figure}
+
+\noindent The most general user work-flow is as follows:
+\begin{description}
+  \setlength{\itemindent}{\parindent}
+  \item [Figure \ref{fig:gui-sketch}.1] User selects a generation
+    algorithm;
+  \item [Figure \ref{fig:gui-sketch}.2] User checks whether the graph
+    has the properties desired and
+  \item [Figure \ref{fig:gui-sketch}.3] tweaks the parameters;
+  \item [Figure \ref{fig:gui-sketch}.4] User checks the generated
+    graph and, if necessary, manually adjusts its layout;
+  \item [Figure \ref{fig:gui-sketch}.5, 6] User decides to save the
+    generated graph to a file or to an image.
+\end{description}
 
 \subsection{Classes}
 %% This is an overview of the classes (including a class diagram).
@@ -791,15 +831,16 @@ algorithms.
 
 
 \subsubsection{Other users' feedback}
-Near the end of each iteration we asked classmates and friends for their
-sincere point of view concerning our progress and project overall, to that
-specific point in time.
+Near the end of each iteration we asked classmates and friends for
+their sincere point of view concerning our progress and project
+overall, to that specific point in time.
 
-The last impression was that they were mainly happy. We followed their advice 
-when it appeared. For example, at some point, they wanted to be able to 
-customize the graph a bit more following their own taste. So, we added the 
-possibility to change the color of the nodes, edges, background; to highlight 
-selected nodes as well as their direct neighbours.
+The last impression was that they were mainly happy. We followed their
+advice when it appeared. For example, at some point, they wanted to be
+able to customize the graph a bit more following their own taste. So,
+we added the possibility to change the color of the nodes, edges,
+background; to highlight selected nodes as well as their direct
+neighbours.
 
 
 
