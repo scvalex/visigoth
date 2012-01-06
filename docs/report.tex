@@ -239,6 +239,90 @@ positive reaction to our suggestions we then added them to our
 product, creating a comprehensive base for analysing graphs that
 may be re-used for other mathematical projects in the future.
 
+\section{Collaboration and Coordination}
+
+\subsection{Requirements and Pacing}
+
+Visigoth is a highly complex and capable piece of software which has a lot of
+interesting features. Inorder to have an efficient development process we
+categorized requirements into \buzz{key} and \buzz{extensions}. A complete
+list of these requirements are:
+
+\begin{enumerate}
+
+	\item Key
+	\begin{itemize}
+		\item	Real-time 2D graph renderer
+		\item Several Random Network and Small World Network generation algorithms to
+				choose from for the visualiser.
+		\item Simple user interaction: zoom/pan the display, input basic graph
+		generation parameters, rearrange nodes, add vertices (where the algorithm allows
+		us to).
+		\item User interaction using mouse or keyboard shortcuts.
+		\item Statistics about generated networks.
+	\end{itemize}
+
+	\item Extensions
+	\begin{itemize}
+		\item Real-time 3D graph renderer.
+		\item Choice of visualisation algorithms (e.g. highlight clusters, reveal most-connected nodes)
+		\item Extended user input: more graph generation parameters, user editing of generated graphs
+		\item "Save As" PDF
+		\item Data mining existing networks (e.g. Twitter, academic citations)	
+
+	\end{itemize}
+\end{enumerate}
+
+Inorder to help us determine the pace of our project we developed a schedule during the first week
+of our project .\\
+\includegraphics[scale=0.5]{schedule}
+
+During our development process we have religously kept to this plan and we have hit every deadline
+with target functionality and features.
+
+\subsection{Development Methodologies}
+
+The Visigoth team is \buzz{agile}, and we use the following methodologies: repeated short development cycles, evolutionary design and \buzz{scrum}.  We hold short review meetings in the spirit of scrum every few days, in which each of the team members mention what they are working on, what plans they have and what difficulties they have encountered. We also hold a meeting at the beginning of each week to measure our progress to adjust future plans; we measure progress by whether deadlines for planned features were met. We aim to implement all of the core features and at least 80 $\%$ of the extras.
+
+Throughout the development process we have strived to use consistent style throughout the code and documentation. To this extent, it fell to the reviewer doing the merge to mention and fix any style issues. This has worked adequately most of the time, and in the few instances where badly styled code slipped through, subsequent \buzz{global} reviews remedied the problem in a timely fashion.
+
+We do not assign specific roles to people; instead team members are rotated through all the roles (development, review/testing, documentation). This ensures that all members are familiar with the entire project.
+
+\buzz{Git} is used for source and version control and we rely heavily on its versatile branching.  The slogan is "the master branch is always releasable"; in order to make a release, we need only build master. Changes are made on separate branches, and are only merged into master after going through code review. In addition to keeping master stable, this style of \buzz{continuous integration} allows us to work on several items at once and, via code review, ensures that at least two people are familiar with any piece of code. We plan to use \buzz{QuickCheck}-like property testing for the graph-generation algorithms and normal unit-testing for the user interface.
+
+
+\subsection{People Management}
+
+Visigoth Graph Visualisations covers a broad range of software engineering tasks, each with a different level of technical skill requirement. For instance, the kinds of problems we encountered are:
+\begin{itemize}
+	\item developing graph renderers (C/OpenGL and C/Cairo);
+	\item UI programming (C++/Qt);
+	\item implementing mathematical models (pen/paper);
+	\item profiling and optimisations (valgrind, Google profiling tools);
+	\item binding to various web services (OAuth/Twitter and REST/GitHub).
+\end{itemize}
+
+Hence, each member of the team is constantly being challenged individually. We also organise short technical talks to introduce other team members to concepts they may not be familiar with and which they may find useful. So far, we have done such talks on:
+\begin{itemize}
+	\item Git and branching hygiene;
+	\item C++ and Qt.
+\end{itemize}
+If team members find they have resolved all issues currently assigned to them, then tasks such as log keeping and creating reports for the next deadline are always available.
+As the following graph shows, code contributions have been mostly uniform across team members. The discrepancy in the first week is explained by the prototypes which we chose not to continue (whose code is not counted) and the effort expanded in understanding the mathematical foundations of network generation.
+
+\includegraphics[scale=0.5]{work}
+
+
+\begin{figure}[ht]
+  \begin{minipage}[b]{0.5\linewidth}
+\includegraphics[scale=0.5]{impact}
+\caption{Changes in lines per commiter per week}
+  \end{minipage}
+\end{figure}
+
+When working in a team, conflicts and debate are unavoidable. We try to keep all members engaged and interested at all times, however due to technical background and prior knowledge, some members are more suitable for some tasks than others. In such a case, the task gets assigned to the most qualified member. In other cases, we try to distribute tasks around the team to ensure that specific knowledge well-distributed across the team.
+
+When conflicting opinions regarding the design of the system emerge, the team sits down and debates each solution. For now this system has worked very well, which is reflected in our project’s progress. In order to promote harmony, we have a sign much like the following in which we record our success.
 
 
 
@@ -988,9 +1072,6 @@ graph generation time and the OpenGL drawing).
 
 After we implemented the 3D view we had to write an extension to FADE to support3D, which proved to be straight forward. Now we have a 3-dimensional space,
 which is recursively divided into $8$ cubes.
-
-
-
 
 \section{Looking back}
 %% This section corresponds to 'Conclusions' in part D of the requirements
