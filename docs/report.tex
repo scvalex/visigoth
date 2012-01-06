@@ -25,6 +25,10 @@
 \usepackage[noend]{algorithmic}
 \algsetup{indent=1.5em}
 
+%%Code
+\usepackage{listings}
+\lstset{language=C++,breaklines=true}
+
 %% Linux Libertine
 \usepackage[T1]{fontenc}
 \usepackage{libertine}
@@ -63,29 +67,45 @@
 
 
 %% Final Report -- due: 9th Jan 2012, at 11:00
-%% Contents for Final Report: The project report should not be longer than 45 pages, and might be organized according to the following structure:
+%% Contents for Final Report: The project report should not be longer than 45
+%% pages, and might be organized according to the following structure:
 
-%% A. High Level, Nontechnical Description Why you should buy this product/listen to this presentation? What is the functionality of the product?
+%% A. High Level, Nontechnical Description Why you should buy this
+%% product/listen to this presentation? What is the functionality of the product?
 %% B. Short Technical Description
 %% Short introduction into technologies used
-%% Design of your software, possibly including a diagram of the major components of the project
+%% Design of your software, possibly including a diagram of the major components
+%% of the project
 %% Main achievements
 %% C. Software Engineering Issues:
-%% What technology was used and why; what other technology was considered but not used and why
+%% What technology was used and why; what other technology was considered but
+%% not used and why
 %% Any technical challenges encountered and how addressed
 %% Any risks anticipated, and how mitigated?
 %% Any collaboration/coordination difficulties encountered and how addressed
-%% Development and testing methods and/or tools used; comparison of plans with actual achievements
-%% Estimates of length of code in each of the components, or any other comparable measure of the effort required.
+%% Development and testing methods and/or tools used; comparison of plans with
+%% actual achievements
+%% Estimates of length of code in each of the components, or any other
+%% comparable measure of the effort required.
 %% Summary of each team member's contributions
-%% D. Validation and Conclusions How did you validate your product? Was the project successful? What did you learn? What might you have done differently?
+%% D. Validation and Conclusions How did you validate your product? Was the
+%% project successful? What did you learn? What might you have done differently?
 %% E. Bibliography
-%% F. Appendix The appendix is optional, and does not count towards the 45 pages. It may contain thing like: User guide, installation instructions; more extensive design, testing, statistics etc.
-%% Feel free to re-use material from the previous reports as you see fit, but make sure that the final report presents a coherent story. Ask advice from your supervisor. You might also draw inspiration from the instructions about writing up your individual project.
+%% F. Appendix The appendix is optional, and does not count towards the 45
+%% pages. It may contain thing like: User guide, installation instructions; more
+%% extensive design, testing, statistics etc.
+%% Feel free to re-use material from the previous reports as you see fit, but
+%% make sure that the final report presents a coherent story. Ask advice from your
+%% supervisor. You might also draw inspiration from the instructions about writing
+%% up your individual project.
 
-%% Bear in mind, that most of the project assessors will not have followed the project throughout and will only have a short time to listen to a presentation or see a demonstration. For this reason they will rely heavily on the report to judge the project.
+%% Bear in mind, that most of the project assessors will not have followed the
+%% project throughout and will only have a short time to listen to a presentation
+%% or see a demonstration. For this reason they will rely heavily on the report to
+%% judge the project.
 
-%% The report should be submitted to SGO in form of a hard copy, as well as electronically through CATE.
+%% The report should be submitted to SGO in form of a hard copy, as well as
+%% electronically through CATE.
 
 \begin{document}
 \title{\Huge Visigoth\\\Large Graph visualisations}
@@ -232,11 +252,250 @@ may be re-used for other mathematical projects in the future.
 
 \subsection{Erdos Renyi}
 
+The Erd\H{o}s-R\'{e}nyi model, named for Paul Erd\"{o}s and Alfr\'{e}d R\'{e}nyi is an algorithm for
+generation random networks. This is the simplest graph generation algorithm in
+Visigoth's repertoire.
+
+Edges in the network are created depending on a probability cutoff value which
+can be set by the user. For every pair of nodes in the network, if a random
+probability is below the cutoff value, the two nodes are connected.
+
+This is implemented in the following way:
+\begin{lstlisting}
+    for (int i(0); i < size; ++i) {
+        for (int j(i+1); j < size; ++j) {
+            if ((double)qrand() / RAND_MAX < probability) {
+                scene->newEdge(nodesVector[i], nodesVector[j]);
+            } else {
+                continue;
+            }
+        }
+    }
+\end{lstlisting}
 \subsection{Watts Strogatz}
+
+The Watts-Strogatz model is a graph generating model which generates random
+graphs with small-world properties, which are, short average path length and
+high clustering. It was proposed by Duncan J. Watts and Steven Strogatz in 1998.
+
+The model operates in two steps:
+First, generate a regular ring lattice with N nodes and K neighbours, K/2 on
+each side.
+\begin{lstlisting}
+          QVector<Node*> nodeVec(size);
+    for(int i(0); i < size; ++i){
+        Node *node = scene->newNode();
+        nodeVec[i] = node;    }
+    // construct ring lattice
+    for(int j(0); j < size; ++j) {
+        // connecting right side
+        for(int r(1); r<= degree/2; ++r) {
+            int nodeToConnect = (j+r)%size;
+            scene->newEdge(nodeVec[j], nodeVec[nodeToConnect]);
+        }
+        // connecting left side
+        for(int l(1); l<= degree/2; ++l) {
+            int nodeToConnect = (size+j-l)%size;
+            scene->newEdge(nodeVec[j], nodeVec[nodeToConnect]);
+        }
+\end{lstlisting}
+
+Then, for each edge, rewire it with probability $\beta$, where $0 \leq  \beta \leq 1$.
+\begin{lstlisting}
+ // rewire
+    for(int n(0); n < size; ++n) {
+        // only choose the right side, since we only select (ni,nj) with i < j
+        for(int r(1); r <= degree/2; ++r) {
+            int nodeToSelect = (n+r)%size;
+            if ((double)qrand() / RAND_MAX < probability) {
+                scene->removeEdge(nodeVec[n], nodeVec[nodeToSelect]);
+                int newNode = qrand()%size;
+                for (int cutOff(0);
+                     cutOff < 1000 && !scene->newEdge(nodeVec[n], 					    nodeVec[newNode]);
+                     ++cutOff) {
+                    newNode = qrand()%size;
+                }
+            }
+        }
+    }
+\end{lstlisting}
+
+\subsection{Barabasi Albert}
+
+The Barabasi-Albert model is an algorithm for generating scale-free networks
+using preferential attachment. Nodes are selected for attachment with a
+probability proportional to their
+degree in the network.  Such networks are present in natural and human
+made systems, such as the citation networks. 
+
+A network is deemed scale-free if the network exhibits a power law degree
+distribution. 
+\[
+degree(x) = ax^k
+ \] 
+In context, this means that the frequency of attachment to a node
+varies as a power of its degree. Such networks are also scale invariant meaning
+that the network's size has no effect on its attributes i.e. degree
+distribution.
+
+The model is implemented as follows:
+\begin{enumerate}
+\item Select a node by generating a random percentage with $2$ decimal place
+precision.
+The preferences of nodes are stored cumulatively therefore, the random number
+serves as an index with the node as the indexed element, which can be accessed
+using a binary search.
+\begin{lstlisting}
+    const float E = 0.01;
+    int l;
+    for (l = 1; l < nodes.size(); l <<= 1)
+        ;
+    int i(0);
+    for (; l > 0; l >>= 1) {
+        if (l + i < nodes.size()) {
+            if (cumulativePreferences[l + i] <= genPref + E)
+                i += l;
+        }
+    }
+    return nodes[i];
+\end{lstlisting}
+  \item Attach the node to the indexed element.
+  \item If more edges are to be added, repeat the procedure.
+\begin{lstlisting}
+    while (edgesToAdd > 0) {
+        vPref = getPreference(nodes, genRandom());
+        int cutOff;
+        for (cutOff = 0; cutOff < 100 && !graph->newEdge(vertex, vPref);
+             ++cutOff) {
+            vPref = getPreference(nodes, genRandom());
+        }
+        if (cutOff == 100)
+            break;
+        --edgesToAdd;
+        usedNodes << vPref;
+        if (usedNodes.size() >= numNodes)
+            break;
+    }
+\end{lstlisting}
+  \item Recompute the preferences.
+\begin{lstlisting}
+    updatePreference(graph->nodes(), 2 * numEdges);
+\end{lstlisting}
+\end{enumerate}
 
 \subsection{Bipartite Model}
 
+A Bipartite graph is a graph which consists of two node sets. The nodes from
+each set are only allowed to connect to nodes which are not a member of their
+own set.
+
+\footnote{http://en.wikipedia.org/wiki/File:Simple-bipartite-graph.svg}\includegraphics[scale=0.3]{bipartite}
+
+The algorithm constructs a network in three simple steps
+\begin{enumerate}
+   \item Generate a bipartite graph with two node sets e.g. set U and set V.
+   \item Connect all nodes in U that are connected to the same node in V.
+   \item Remove the nodes from set V from the graph.
+\end{enumerate}
+
+This procedure is implemented as follows:
+\begin{enumerate}
+   \item Generate two node vectors, \code{uVector} and \code{vVector}.
+\begin{lstlisting}
+	for (int i(0); i < uSize; ++i) {
+        	uVector << scene->newNode();
+	}
+	 for (int i(0); i < vSize; ++i) {
+        	vVector << scene->newNode();
+	}
+\end{lstlisting}
+   \item For each member of \code{vVector}, obtain it's degree distribution:
+\code{double degree = degreeDist(i)} and add as many nodes from uVector as degree permits
+   \item Connect any members of \code{uVector}, which are disjoint, to the network.
+   \item Generate a set of vVector members, e.g. vector A, which are connected to some members of \code{uVector}
+\begin{lstlisting}
+       	foreach (Edge *e, scene->edges()) {
+            	if (e->destNode()->tag() == v->tag()) {
+                A << e;
+            }
+\end{lstlisting}
+   \item For all members in vector A, connect nodes which share a common \code{vVector} member.
+\begin{lstlisting}
+	foreach (Edge *e1, A) {
+            foreach (Edge *e2, A) {
+                Node *u1 = e1->sourceNode();
+                Node *u2 = e2->sourceNode();
+                if (u1->tag() != u2->tag()){
+                        scene->newEdge(u1,u2);
+                }
+            }
+        }
+\end{lstlisting}
+   \item Remove all edges and nodes which are associated with a member of \code{vVector}.
+\end{enumerate}
+
 \subsection{Preferential Attachment}
+Preferential attachment and clustering are two distinct concepts which are used in graph generation.
+When using preferential attachment we assign nodes in a network a preference depending on their degree. Nodes with more edges, that is, which are more connected will have a higher preference than nodes with less edges. The preference ranges from ]0,1], assuming no disjoint nodes exist and, for a node N, is calculated as 
+\[
+\frac{N_\mathrm{edges}}{Total_\mathrm{edges}}
+\]
+
+Clustering is a concept which determines how to connect a node N, once a connection with at least one other node N' has been established. This procedure determines the intersection set of N' with all its neighbours. Then node N is connected to all members of the intersection set.
+
+The algorithm described here uses both concepts to generate networks with scale-free characteristics. First, nodes are added to the network via the preferential attachment method then, once attached are connected to the rest of the network via the clustering procedure.
+
+This is implemented as follows:
+\begin{enumerate}
+\item Select a node by generating a random percentage with 2 decimal place
+precision.
+The preferences of nodes are stored cumulatively therefore, the random number
+serves as an index with the node as the indexed element, which can be accessed
+using a binary search.
+\begin{lstlisting}
+    const float E = 0.01;
+    int l;
+    for (l = 1; l < nodes.size(); l <<= 1)
+        ;
+    int i(0);
+    for (; l > 0; l >>= 1) {
+        if (l + i < nodes.size()) {
+            if (cumulativePreferences[l + i] <= genPref + E)
+                i += l;
+        }
+    }
+    return nodes[i];
+\end{lstlisting}
+   \item Attach the node to the indexed element.
+   \item Use the clustering procedure to determine other edges.
+\begin{lstlisting}
+    int length = neighbours.size();
+    while (edgesToAdd > 0 && !(neighbours.empty())) {
+        int rand = qrand()%length;
+        Node *vi = neighbours[rand];
+        if (graph->newEdge(vertex, vi)) {
+            --edgesToAdd;
+            usedNodes << vi;
+            neighbours = getIntersection(neighbours, vi->neighbours());
+        } else {
+            neighbours.remove(rand);
+        }
+        length = neighbours.size();
+    }
+   }  
+\end{lstlisting}
+   \item If more edges are to be added, repeat the procedure.
+\begin{lstlisting}
+    while (edgesToAdd > 0) {
+	continue....
+   }
+\end{lstlisting}
+   \item Recompute the preferences.
+\begin{lstlisting}
+	updatePreference(graph->nodes(), 2 * numEdges);
+\end{lstlisting}
+
+\end{enumerate}
 
 \subsection{Real Small World Networks}
 Finally, as Visigoth is supposed to help in analysing Small World
@@ -244,7 +503,170 @@ Networks, it can also fetch real world data from `live' social
 networks Twitter and identi.ca.
 
 
+\section{Statistics}
 
+
+In addition to network generation Visigoth also calculates statistics about the
+generated networks in real time. The statistics which are calculated are:
+
+
+\begin{itemize}
+	\item Average Degree
+	\item Average Path Length
+	\item Clustering Average
+	\item Scale Free Exponent
+	\item Clustering Coefficient
+\end{itemize}
+
+\subsection{Average Degree}
+\[
+\frac{2\sum_{i=1}^{\mathrm{max\ edges}} edges_i}{\sum_{j=1}^{\mathrm{max\
+verticies}} vertecies_j}
+\]
+
+\begin{lstlisting}
+return (2.0 * graph->edges().count()) / graph->nodes().count())
+\end{lstlisting}
+
+\subsection{Average Path Length}
+\[
+\frac{\sum_{i,j}distance_\mathrm{shortest}(verticie_i,verticie_j)}{\sum
+vertices^2 - \sum vertices}
+\]
+
+The first step in this algorithms is to calculate the path length from every
+node to every node
+
+\begin{lstlisting}
+foreach (Node *n, graph->nodes()) {
+        allLengths += lengthSum(n, visited, distance);
+	 ...
+    }
+\end{lstlisting}
+Then divide the calculation by $k_i(k_i-1)$
+\begin{lstlisting}
+return allLengths/(double)(graph->nodes().size()*(graph->nodes().size()-1));
+\end{lstlisting}
+
+Here \code{lengthSum} is a sub procedure which traverses the network in a
+breadth-first manner and calculates the minimum distance to each node.
+It then returns the sum of all distances
+\begin{lstlisting}
+while(!queue.empty()) {
+        Node *parent = queue.dequeue();
+        QList<Edge*> edges = parent->edges();
+
+        foreach(Edge *e, edges) {
+            Node *n;
+
+            if(e->sourceNode()->tag() == parent->tag()) {
+                n = e->destNode();
+            } else {
+                n = e->sourceNode();
+            }
+
+            if(!visited.contains(n)) {
+                visited.insert(n);
+                distance[n] = distance.value(parent, 0) + 1;
+                queue.enqueue(n);
+            }
+
+        }
+
+        retLength += distance[parent];
+    }
+
+    return retLength;
+\end{lstlisting}
+
+\subsection{Clustering Coefficient}
+\[
+C_i = \frac{2|\{e_j,_k\}|}{k_i(k_i-1)}
+\]
+Where $k_i$ is the number of vertices immediately connected to $vertex_i$
+\newline
+The set ${e_j,_k}$ is set of all edges common to the neighbours of $vertex_i$\\
+
+The first step is to calculate the intersection of the neighbours of the node wewant to calculate the statistic for and the neighbours of that node's neighbours\begin{lstlisting}
+while (!edges.empty()) {
+        Edge *e = edges.takeFirst();
+        Node *src = e->sourceNode();
+        Node *dest = e->destNode();
+        QVector<Node*> nNeigh = node->neighbours();
+        if(src->tag() == node->tag()) {
+            QVector<Node*> dNeigh = dest->neighbours();
+            intersection += intersectionCount(nNeigh, dNeigh);
+        } else {
+            QVector<Node*> dNeigh = src->neighbours();
+            intersection += intersectionCount(nNeigh, dNeigh);
+        }
+    }
+\end{lstlisting}
+If the node's degree is greater than 1 we return the calculation.
+\begin{lstlisting}
+return k > 1 ? (2*intersection)/(double) (k*(k-1)):0 
+\end{lstlisting}
+
+\subsection{Clusering Average}
+\[
+C_\mathrm{avg} = \frac{1}{\mathrm{\sum vertecies}}\sum_{i=1}^{\mathrm{max\
+vertecies}} C_i
+\]
+\begin{lstlisting}
+ foreach (Node *n, graph->nodes()) {
+        clusterCumulative += clusteringCoeff(n);
+    }
+    return clusterCumulative / (double)graph->nodes().size();
+\end{lstlisting}
+
+\subsection{Scale Free Exponent}
+
+Before we are able to calculate any gradient Visigoth has to probe the network
+and determine the degree distribution. Since we are dealing with exponential
+growth, the algorithm takes the natural logarithm of both, the degree and its
+frequency in the network, so that the gradient can be calculated as a straight
+line.
+
+\[
+f(x) = ax^k \equiv ln(f(x)) = kln(a) + kln(x) \equiv y = mx + b
+\]
+
+\begin{lstlisting}
+    for (double i(0); i < maxDegree; ++i) {
+        double count = graph->nodeCount(i);
+        double y = count / (double)graph->nodes().size();
+
+        if (y != 0) {
+            // incase we want to plot
+            QPointF p(qLn(i+1), qLn(y));
+            plot << p;
+        }
+    }
+\end{lstlisting}
+
+After the degree distribution has been recorded, the algorithm proceeds to
+calculate the straight line gradient of the captured points.
+
+\begin{lstlisting}
+    foreach (QPointF p, plot) {
+        // init calculation
+        if (c == 0) {
+           yPref = p.ry();
+           deltaX = p.rx();
+           ++c;
+        } else {
+            deltaY += p.ry() - yPref;
+            yPref = p.ry();
+            deltaX = p.rx() - deltaX;
+            ++c;
+        }
+    }
+
+    return (-1) * (deltaY / deltaX);
+\end{lstlisting}
+
+The result is multiplied by -1 since the straight line gradient is downwards
+sloping.
 
 \section{Visigoth technologies}
 
@@ -564,8 +986,7 @@ already difficult with the simple algorithm, FADE can easily handle
 \(10000\) nodes, after which other performance limits are hit (the
 graph generation time and the OpenGL drawing).
 
-After we implemented the 3D view we had to write an extension to FADE to support
-3D, which proved to be straight forward. Now we have a 3-dimensional space,
+After we implemented the 3D view we had to write an extension to FADE to support3D, which proved to be straight forward. Now we have a 3-dimensional space,
 which is recursively divided into $8$ cubes.
 
 
