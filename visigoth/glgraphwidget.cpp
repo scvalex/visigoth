@@ -353,6 +353,40 @@ void GLGraphWidget::drawOverlay() {
 
 /*** Graph drawing ***/
 
+inline void GLGraphWidget::drawSphere(GLfloat r, int lats, int longs) {
+    for (int i = 0; i <= lats; ++i) {
+        GLfloat lat0 = M_PI * (-0.5 + (GLfloat) (i - 1) / lats);
+        GLfloat z0  = sin(lat0);
+        GLfloat zr0 =  cos(lat0);
+
+        GLfloat lat1 = M_PI * (-0.5 + (GLfloat) i / lats);
+        GLfloat z1 = sin(lat1);
+        GLfloat zr1 = cos(lat1);
+
+        glBegin(GL_QUAD_STRIP);
+            for(int j = 0; j <= longs; ++j) {
+                GLfloat lng = 2 * M_PI * (GLfloat) (j - 1) / longs;
+                GLfloat x = cos(lng);
+                GLfloat y = sin(lng);
+
+                glNormal3f(x * zr0, y * zr0, z0);
+                glVertex3f(x * zr0 * r, y * zr0 * r, z0 * r);
+                glNormal3f(x * zr1, y * zr1, z1);
+                glVertex3f(x * zr1 * r, y * zr1 * r, z1 * r);
+            }
+        glEnd();
+    }
+}
+
+inline void GLGraphWidget::drawCircle(GLfloat r, int longs) {
+    glBegin(GL_TRIANGLE_FAN);
+        for (int i = 0; i < longs; ++i) {
+            GLfloat lng = 2 * M_PI * (GLfloat) (i - 1) / longs;
+            glVertex2f(sin(lng) * r, cos(lng) * r);
+        }
+    glEnd();
+}
+
 inline void GLGraphWidget::drawNode(Node *node) {
     QColor c = node->colour();
     glColor4f(c.redF(), c.greenF(), c.blueF(), c.alphaF());
@@ -362,7 +396,12 @@ inline void GLGraphWidget::drawNode(Node *node) {
 
     glPushMatrix();
         glTranslatef(p.x, p.y, p.z);
-        glaDrawSphere(radius, 10, 10);
+
+        if (mode3d) {
+            drawSphere(radius, 10, 10);
+        } else {
+            drawCircle(radius, 10);
+        }
     glPopMatrix();
 }
 
@@ -433,25 +472,23 @@ void GLGraphWidget::initOverlayProjection() {
 /* Lighting */
 
 void GLGraphWidget::setupLighting() {
-    // Lightining
-    GLfloat sunDirection[] = {0.0, 2.0, -1.0, 1.0};
-    GLfloat sunIntensity[] = {0.7, 0.7, 0.7, 1.0};
-    GLfloat ambientIntensity[] = {0.3, 0.3, 0.3, 1.0};
+    if (mode3d) {
+        // Lightining
+        GLfloat sunDirection[] = {0.0, 2.0, -1.0, 1.0};
+        GLfloat sunIntensity[] = {0.7, 0.7, 0.7, 1.0};
+        GLfloat ambientIntensity[] = {0.3, 0.3, 0.3, 1.0};
 
-    if (!mode3d) {
-        ambientIntensity[0] = 0.8;
-        ambientIntensity[1] = 0.8;
-        ambientIntensity[2] = 0.8;
+        // Set up ambient light
+        glEnable(GL_LIGHTING);
+        glLightModelfv(GL_LIGHT_MODEL_AMBIENT, ambientIntensity);
+
+        // Set up sun light
+        glEnable(GL_LIGHT0);
+        glLightfv(GL_LIGHT0, GL_POSITION, sunDirection);
+        glLightfv(GL_LIGHT0, GL_DIFFUSE, sunIntensity);
+    } else {
+        glDisable(GL_LIGHTING);
     }
-
-    // Set up ambient light
-    glEnable(GL_LIGHTING);
-    glLightModelfv(GL_LIGHT_MODEL_AMBIENT, ambientIntensity);
-
-    // Set up sun light
-    glEnable(GL_LIGHT0);
-    glLightfv(GL_LIGHT0, GL_POSITION, sunDirection);
-    glLightfv(GL_LIGHT0, GL_DIFFUSE, sunIntensity);
 }
 
 

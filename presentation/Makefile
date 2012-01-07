@@ -1,5 +1,5 @@
-DOCBASE=report
-GRAPHICS=$(wildcard *.tex)
+DOCBASE=visigoth-presentation
+GRAPHICS=
 LATEX?=pdflatex
 
 all: $(GRAPHICS) $(DOCBASE).pdf pdfclean
@@ -22,15 +22,17 @@ all: $(GRAPHICS) $(DOCBASE).pdf pdfclean
 %.ps: %.dot
 	dot $< -Tps2 -o $@
 
-$(DOCBASE).pdf: $(DOCBASE).tex $(GRAPHICS)
-	$(LATEX) $(DOCBASE).tex
-	$(LATEX) $(DOCBASE).tex
+%.ps: %.dvi
+	dvips -o $@ $<
 
-#$(DOCBASE).ps: $(DOCBASE).tex $(GRAPHICS)
+#$(DOCBASE).dvi: $(DOCBASE).tex $(GRAPHICS)
 #	latex $(DOCBASE).tex
 #	latex $(DOCBASE).tex
 #	dvips $(DOCBASE).dvi
-#	ps2pdf $(DOCBASE).ps
+
+$(DOCBASE).pdf: $(DOCBASE).tex $(GRAPHICS)
+	$(LATEX) $(DOCBASE).tex
+	$(LATEX) $(DOCBASE).tex
 
 .PHONY: pdfclean
 pdfclean:
@@ -39,6 +41,8 @@ pdfclean:
 	rm -f $(DOCBASE).aux
 	rm -f $(DOCBASE).out
 	rm -f $(DOCBASE).toc
+	rm -f $(DOCBASE).nav
+	rm -f $(DOCBASE).snm
 	rm -f $(DOCBASE).log
 	rm -f texput.log
 	rm -f *~
