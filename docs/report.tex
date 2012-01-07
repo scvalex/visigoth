@@ -368,27 +368,29 @@ the course of the last decade.
 
 \subsection{Erdos-Renyi}
 % FIXME
-The Erd\H{o}s-R\'{e}nyi model, named for Paul Erd\"{o}s and Alfr\'{e}d R\'{e}nyi is an algorithm for
-generation random networks. This is the simplest graph generation algorithm in
-Visigoth's repertoire.
+The Erd\H{o}s-R\'{e}nyi model, named for Paul Erd\"{o}s and Alfr\'{e}d R\'{e}nyi
+is an algorithm for generation random networks. This is the simplest graph
+generation algorithm in Visigoth's repertoire.
 
 Edges in the network are created depending on a probability cutoff value which
 can be set by the user. For every pair of nodes in the network, if a random
 probability is below the cutoff value, the two nodes are connected.
 
-This is implemented in the following way:
-\begin{lstlisting}
-    for (int i(0); i < size; ++i) {
-        for (int j(i+1); j < size; ++j) {
-            if ((double)qrand() / RAND_MAX < probability) {
-                scene->newEdge(nodesVector[i], nodesVector[j]);
-            } else {
-                continue;
-            }
-        }
-    }
-\end{lstlisting}
-
+This is implemented in the following way, where $N$ is the number of vertices
+in the graph, and $P$ is the probability cutoff value:
+\begin{algorithmic}
+  \REQUIRE $0 \leq P \leq 1$
+  \FOR{$i = 0 \to N - 1$}
+    \FOR{$j = i + 1 \to N - 1$}
+      \STATE $k \gets $ random real in $[0, 1]$
+      \IF{$k < P$}
+        \STATE Add a new edge between $i$ and $j$.
+      \ELSE
+        \STATE \textbf{continue}
+      \ENDIF
+    \ENDFOR
+  \ENDFOR
+\end{algorithmic}
 
 \subsection{Watts-Strogatz}
 % FIXME
@@ -398,53 +400,57 @@ high clustering}. It was proposed by Duncan J. Watts and Steven Strogatz in 1998
 
 The model operates in two steps:
 
-First, \(generate\) a regular ring lattice with N nodes and K neighbours, K/2 on
-each side.
+\begin{itemize}
 
-\begin{lstlisting}
-    QVector<Node*> nodeVec(size);
-    for(int i(0); i < size; ++i) {
-        Node *node = scene->newNode();
-        nodeVec[i] = node;
-    }
-\end{lstlisting}
- \(Constructing\) \(ring\) \(lattice\):
-\begin{lstlisting}
-    for(int j(0); j < size; ++j) {
-        // connecting right side
-        for(int r(1); r<= degree/2; ++r) {
-            int nodeToConnect = (j+r)%size;
-            scene->newEdge(nodeVec[j], nodeVec[nodeToConnect]);
-        }
-        // connecting left side
-        for(int l(1); l<= degree/2; ++l) {
-            int nodeToConnect = (size+j-l)%size;
-            scene->newEdge(nodeVec[j], nodeVec[nodeToConnect]);
-        }
-    }
-\end{lstlisting}
+\item
+  First, we generate a regular ring lattice with $N$ nodes and $K$ neighbours,
+  $\frac{K}{2}$ on each side.
 
-Then, for each edge, rewire it with probability $\beta$, where $0 \leq  \beta \leq 1$.
+  \begin{algorithmic}
+    \REQUIRE{$N \gg K \gg \ln{N} \gg 1$}
+    \FOR{$i = 0 \to N - 1$}
+      \STATE Create node $i$.
+    \ENDFOR
 
-\(Rewiring:\)
+    \FOR{$i = 0 \to N - 1$}
+      \FOR{$j = 1 \to \frac{K}{2}$}
+        \STATE $k \gets (i + j) \bmod{N}$
+        \STATE Add edge between $i$ and $k$.
+      \ENDFOR
 
-\begin{lstlisting}
-    for(int n(0); n < size; ++n) {
-        // only choose the right side, since we only select (ni,nj) with i < j
-        for(int r(1); r <= degree/2; ++r) {
-            int nodeToSelect = (n+r)%size;
-            if ((double)qrand() / RAND_MAX < probability) {
-                scene->removeEdge(nodeVec[n], nodeVec[nodeToSelect]);
-                int newNode = qrand()%size;
-                for (int cutOff(0);
-                     cutOff < 1000 && !scene->newEdge(nodeVec[n], 					    nodeVec[newNode]);
-                     ++cutOff) {
-                    newNode = qrand()%size;
-                }
-            }
-        }
-    }
-\end{lstlisting}
+      \FOR{$j = 1 \to \frac{K}{2}$}
+        \STATE $k \gets (N + i - j) \bmod{N}$
+        \STATE Add edge between $i$ and $k$.
+      \ENDFOR
+    \ENDFOR
+  \end{algorithmic}
+
+\item
+  Then, for each edge, rewire it to another random node with probability
+  $\beta$, where $\gamma$ is a high number to prevent infinite looping:
+
+  \begin{algorithmic}
+    \REQUIRE $0 \leq \beta \leq 1$
+    \FOR{$i = 0 \to N - 1$}
+      \FOR{$r = 1 \to \frac{K}{2}$}
+        \STATE $j \gets (n + r) \bmod{N}$
+        \STATE $r \gets$ random real in $[0, 1]$
+        \IF{$r < \beta$}
+          \STATE Remove edge between $i$ and $j$.
+          \STATE $cut \gets 0$
+          \FOR{$cut = 1 \to \gamma$}
+            \STATE $k \gets$ random integer in $[0, N)$
+            \IF{edge between $i$ and $k$ exists}
+              \STATE \textbf{break}
+            \ELSE
+              \STATE Add edge between $i$ and $k$.
+            \ENDIF
+          \ENDFOR
+        \ENDIF
+      \ENDFOR
+    \ENDFOR
+  \end{algorithmic}
+\end{itemize}
 
 \subsection{Barabasi-Albert}
 % FIXME
@@ -519,7 +525,7 @@ each set are only allowed to connect to nodes which are not a member of their
 own set.
 
 \footnote{http://en.wikipedia.org/wiki/File:Simple-bipartite-graph.svg}
-%% \includegraphics[scale=0.3]{bipartite.png}
+\includegraphics[scale=0.3]{bipartite.png}
 
 The algorithm constructs a network in three simple steps
 \begin{enumerate}
