@@ -17,6 +17,9 @@
 %% Side-by-side images
 \usepackage{subfig}
 
+%% Wrapped figures
+\usepackage{wrapfig}
+
 %% Drawing trees and other stuff
 \usepackage{tikz}
 \usetikzlibrary{trees,arrows}
@@ -31,10 +34,7 @@
 \usepackage{libertine}
 \renewcommand*\oldstylenums[1]{{\fontfamily{fxlj}\selectfont #1}}
 
-%% %%%%%%%%%%%%%%%%%%%% END PACKAGES %%%%%%%%%%%%%%%%%%%%
-
-
-%% %%%%%%%%%%%%%%%%%%%% BEGIN COMMANDS %%%%%%%%%%%%%%%%%%%%
+\input{colors.tex}
 
 \let\stdhref\href
 \renewcommand{\href}[2]{\stdhref{#1}{\texttt{#2}}}
@@ -56,12 +56,6 @@
 
 %% %%%%%%%%%%%%%%%%%%%% BEGIN COLORS %%%%%%%%%%%%%%%%%%%%
 
-\definecolor{cffffff}{RGB}{255,255,255}
-\definecolor{c787aff}{RGB}{120,122,255}
-\definecolor{cff7374}{RGB}{255,115,116}
-\definecolor{c79ff79}{RGB}{121,255,121}
-\definecolor{cff7374}{RGB}{255,115,116}
-\definecolor{c7372ff}{RGB}{115,114,255}
 
 %% %%%%%%%%%%%%%%%%%%%% END COLORS %%%%%%%%%%%%%%%%%%%%
 
@@ -176,11 +170,9 @@ being linked by a mutual acquaintance.
 
 %% FIXME: Explain how networks with the above properties are useful.
 
-Examples of real networks in the real-world are:
-
 Social networks, neural networks, ecosystems, the World Wide Web, electrical
-power grids and protein networks are all complex networks that exhibit a range
-of understanding dynamic behaviour that currently escape our understanding.
+power grids, and protein networks are all complex networks that exhibit a range
+of understanding dynamic behaviour that currently escapes our understanding.
 
 Ideas from network science have been applied to the analysis of metabolic and
 genetic regulatory networks, the design of robust and scalable communication
@@ -200,15 +192,13 @@ A \emph{network} is a graph, an ordered pair $G(V,E)$ comprising a set of
 \emph{vertices}.
 
 The $degree$, $K_i$, of vertex $i$ is the number of vertices that it is
-connected to.
+connected to. The average degree, $k$, of a network is $k =\frac{2m}{N}$ where
+$m$ is the number of edges in the network.
 
-The average degree, $k$, of a network is $k =\frac{2m}{N}$ where $m$ is the
-number of edges in the network.
+\subsubsection{The Small-World effect}
 
-\subsubsection{Six degress of separation}
-
-This concept is the idea that everyone is approximately six steps away, by
-introduction, from any other person on Earth.
+The concept of ``Six degrees of separation'' is the idea that everyone is
+approximately six steps away, by introduction, from any other person on Earth.
 
 A group of people can be represented by a \emph{social network}, where
 individuals are the vertices and an edge betwen individuals represents
@@ -218,13 +208,7 @@ The steps from one individual to another are then the edges that must be
 traversed to connect them. We refer to the number of steps from one individual
 to another as the \emph{shortest path length} between them.
 
-\subsubsection{The Small-World Effect}
-
-The ``small-world effect" denotes the result that the average distance linking
-two nodes belonging to the same network can be orders of magnitude smaller than
-the number of nodes making up the network \cite{complexAdapt}.
-
-Frigyes Karinthy was the first proponent of the six degrees of separation
+Frigyes Karinthy was first proposed the idea of the six degrees of separation
 concept in his short story ``Chains" (1929).
 
 The small world experiment (done by Stanley Milgram and other researchers in the
@@ -234,20 +218,25 @@ the target was unknown by them, they should have sent the letter to a friend or
 relative who was more likely to know the target. Milgram's experiment concluded
 that the \emph{shortest path length} between individuals is, on average, $6$.
 
+This result lead to the more genereal idea of a ``small-world effect", which
+denotes the result that the average distance linking two nodes belonging to the
+same network can be orders of magnitude smaller than the number of nodes making
+up the network \cite{complexAdapt}.
+
 The properties of a small world network are:
 
 \begin{itemize}
-%FIXME: fix the space so that the items from the itemize sections appear from a
-%new line
 \item Low average path length.
-
 \item High clustering coefficient.
-
 \item Scale-free degree distribution.
-
 \end{itemize}
 
+We shall analyse in more detail these characteristics in the next sections.
+
 \subsubsection{Path Length}
+
+The path length between two vertices in a graph indicates how many nodes must be
+visited to go from one node to the other.
 
 We can apply Dijkstra's algorithm or A* for finding the shortest path length,
 $d(v_i, v_j)$ between to vertices $v_i$ and $v_j$ in a network.  The average
@@ -260,9 +249,11 @@ where $d(v_i, v_j) = 0$ when there is no path between vertices $v_i$ and $v_j$.
 
 \subsubsection{Clustering coefficient}
 
-\emph{Clustering} is about the tendency of real networks to form \emph{cliques}.
-For example, in social networks, cliques represent circles of friends or
-acquitances in which every member knows every other member.
+\emph{Clustering} is about the tendency of real networks to form
+\emph{cliques}. In a graph, a clique is a subset of the vertices which are all
+connected to each other. For example, in social networks, cliques represent
+circles of friends or acquaintances in which every member knows every other
+member.
 
 The clustering coefficient proposed by Watts and Strogatz is calculated for each
 vertex, $i$.
@@ -270,13 +261,13 @@ vertex, $i$.
 \[ C_i = \frac{2E_i}{k_i(k_i-1)} \]
 
 where $k_i$ is the number of neighbours of vertex $i$q and $E_i$ is the number
-of edges between the neighbours of vertex $i$.
-
-The average clustering coefficient over the network is:
+of edges between the neighbours of vertex $i$. Thus, the average clustering
+coefficient over the network is:
 
 \[ \ C_{avg} = \frac{1}{N}\sum_{i=0}^{N} C_i \]
 
 \subsubsection{Scale-free distribution}
+\label{sec:scale-free}
 
 Barabasi and Albert showed that real networks such as the World Wide Web are
 scale-free. The \emph{degree distribution} of scale-free networks follows a
@@ -286,26 +277,30 @@ power law:
 
 where $P(k)$ is the probability that a node in the network will be of degree $k$.
 
-\subsection{Small World Networks}
 
-Small World Networks derive their denomination from the well-known Small World
-Hypothesis\footnote{FIXME: citation needed}, which states that any two persons
-are related through a chain of at most seven friends\footnote{FIXME: citation
-  needed}.
+%% The following section is just repetition of 1.1 and 1.2.2. We have to merge them in
+%% some way.
 
-Indeed, Small World Networks are graphs resembling the connections within human
-social networks, where nodes represent people, and edges between nodes represent
-relations of some sort\footnote{FIXME: citation needed, probably one of the two
-  main papers}.
+%% \subsection{Small World Networks}
 
-For example, if someone were to draw every user\footnote{or at least a
-  \emph{large} number of users} of a social network (e.g. Twitter) on a canvas
-and then connect each pair of them if either is ``following'' the other or if
-they are ``friends'', the resulting graph is a Small World Network. Over the
-course of time, several mathematical algorithms that generate random Small World
-Networks have been discovered. However, the resulting graphs have only lately
-begun to resemble those that have grown naturally in the form of social
-networks.
+%% Small World Networks derive their denomination from the well-known Small World
+%% Hypothesis\footnote{FIXME: citation needed}, which states that any two persons
+%% are related through a chain of at most seven friends\footnote{FIXME: citation
+%%   needed}.
+
+%% Indeed, Small World Networks are graphs resembling the connections within human
+%% social networks, where nodes represent people, and edges between nodes represent
+%% relations of some sort\footnote{FIXME: citation needed, probably one of the two
+%%   main papers}.
+
+%% For example, if someone were to draw every user\footnote{or at least a
+%%   \emph{large} number of users} of a social network (e.g. Twitter) on a canvas
+%% and then connect each pair of them if either is ``following'' the other or if
+%% they are ``friends'', the resulting graph is a Small World Network. Over the
+%% course of time, several mathematical algorithms that generate random Small World
+%% Networks have been discovered. However, the resulting graphs have only lately
+%% begun to resemble those that have grown naturally in the form of social
+%% networks.
 
 %% FIXME: Huh?  Are they really SWNs if they don't resemble the
 %% natural graphs?  Not by our definition.  So, either the definition
@@ -454,37 +449,33 @@ The model operates in two steps:
 
 \subsection{Barabasi-Albert}
 % FIXME
-The Barabasi-Albert model is an algorithm for generating \emph{scale-free} networks
+The Barabasi-Albert model is an algorithm for generating \emph{scale-free}
+networks, as described in section \ref{sec:scale-free}. This is achieved using
 using preferential attachment. Nodes are selected for attachment with a
-probability proportional to their
-degree in the network.
+probability proportional to their degree in the network.
 
-Such networks are present in natural and human
-made systems, such as the citation networks.
+Such networks are present in natural and human made systems, such as the
+citation networks. The characteristic of a scale-free network are des
 
-A network is deemed scale-free if the network exhibits a power law degree
-distribution.
-\[
-degree(x) = ax^k
- \]
-In context, this means that the frequency of attachment to a node
-varies as a power of its degree. Such networks are \emph{also scale invariant} meaning
-that the network's size has no effect on its attributes i.e. degree
-distribution.
+As explained in section \ref{sec:scale-free}, a network is deemed scale-free if
+its degree distribution follows a power law.  In context, this means that the
+frequency of attachment to a node varies as a power of its degree. Such networks
+are \emph{also scale invariant} meaning that the network's size has no effect on
+its attributes i.e. degree distribution.
 
 The model is implemented as follows:
 \begin{enumerate}
-\item Select a node by generating a random percentage with $2$ decimal place
-precision.
-The preferences of nodes are stored cumulatively therefore, the random number
-serves as an index with the node as the indexed element, which can be accessed
-using a binary search.
-\begin{algorithmic}
-\REQUIRE A real random number genPreference in the range of [0,100]
-\FOR{$l=1 \to N-1$}
-\STATE{$l \gets 2l$}
-	\FOR {$i=0 \to l \ge 0$}
-	\STATE $l \gets \frac{l}{2}$
+\item
+  Select a node by generating a random percentage with $2$ decimal place
+  precision.  The preferences of nodes are stored cumulatively therefore, the
+  random number serves as an index with the node as the indexed element, which
+  can be accessed using a binary search.
+  \begin{algorithmic}
+    \REQUIRE A real random number $pref$ in $[0,100]$.
+    \FOR{$l=1 \to N-1$}
+      \STATE{$l \gets 2l$}
+	    \FOR {$i=0 \to l \ge 0$}
+	      \STATE $l \gets \frac{l}{2}$
 	\IF{$l+i \le N$}
 		\IF{cumulative preference[l+i] $\leq$ genPreference}
 		\STATE $i = i+l$
@@ -526,14 +517,19 @@ using a binary search.
 
 \subsection{Bipartite Model}
 % FIXME
+
+\begin{wrapfigure}{R}{0.4\textwidth}
+  \begin{center}
+    \input{bipartite-graph.tex}
+  \end{center}
+  \caption{A sample bipartite graph}
+\end{wrapfigure}
+
 A Bipartite graph is a graph which consists of two node sets. The nodes from
 each set are only allowed to connect to nodes which are not a member of their
 own set.
 
-\footnote{http://en.wikipedia.org/wiki/File:Simple-bipartite-graph.svg}
-\includegraphics[scale=0.3]{bipartite.png}
-
-The algorithm constructs a network in three simple steps
+The algorithm constructs a network in three simple steps:
 \begin{enumerate}
    \item Generate a bipartite graph with two node sets e.g. set U and set V.
    \item Connect all nodes in U that are connected to the same node in V.
@@ -541,116 +537,151 @@ The algorithm constructs a network in three simple steps
 \end{enumerate}
 
 This procedure is implemented as follows:
+
 \begin{enumerate}
-   \item Generate two node vectors, \code{uVector} and \code{vVector}.
-\begin{algorithmic}
-\REQUIRE uSize > 0
-\REQUIRE vSize > 0
-\FOR{$i=0 \to uSize$}
-	\STATE ++i
-	\STATE uVector[i] $\gets$ newNode()
-\ENDFOR
-\FOR{$i=0 \to vSize$}
-	\STATE ++i
-	\STATE vVector[i] $\gets$ newNode()
-\ENDFOR
-\end{algorithmic}
-   \item For each member of \code{vVector}, obtain it's degree distribution:
-\code{double degree = degreeDist(i)} and add as many nodes from uVector as degree permits
-   \item Connect any members of \code{uVector}, which are disjoint, to the network.
-   \item Generate a set, e.g. vector A, which holds all members of \code{uVector} which are connected
-to the same \code{vVector} member
+   \item
+     Generate two node vectors, $U$ and $V$, with respective sizes $N_U$ and
+     $N_V$:
 
-\begin{algorithmic}
+     \begin{algorithmic}
+       \REQUIRE $N_U > 0$
+       \REQUIRE $N_V > 0$
 
-\FORALL{Edges $E_i$}
-	\IF{$E_i$ is connected between uVector and vVector}
-		\STATE add $E_i$ to set A
-	\ENDIF
-\ENDFOR
-\end{algorithmic}
-   \item For all members in vector A, connect nodes which share a common \code{vVector} member.
-\begin{algorithmic}
-\REQUIRE non empty edge set A
-\FORALL{Edges $E_i$ in A}
-	\FORALL{Edges $E_j$ in A}
-		\IF{$E_i$ and $E_j$ share the same uVector member}
-			\STATE create new edge
-		\ENDIF
-	\ENDFOR
-\ENDFOR
-\end{algorithmic}
-   \item Remove all edges and nodes which are associated with a member of \code{vVector}.
+       \FOR{$i=0 \to N_U$}
+	        \STATE $i \gets i + 1$
+	        \STATE $U$[i] $\gets$ New node
+       \ENDFOR
+
+       \FOR{$i=0 \to N_V$}
+	       \STATE $i \gets i + 1$
+	       \STATE $V$[i] $\gets$ New node
+       \ENDFOR
+     \end{algorithmic}
+
+   \item
+     For each member of $V$, obtain it's degree distribution, and add as many
+     nodes from $U$ as the degree permits.
+
+   \item
+     Connect any members of $U$, which are disjoint, to the network.
+
+   \item
+     Generate a set (e.g. $S$), which holds all members of $U$
+     which are connected to the same member in $V$:
+
+     \begin{algorithmic}
+
+       \FORALL{edges $E_i$}
+	       \IF{$E_i$ connects $U$ and $V$}
+		       \STATE Add $E_i$ to set $S$
+	       \ENDIF
+       \ENDFOR
+     \end{algorithmic}
+
+   \item
+     For all members in set $S$, connect nodes which share a common
+     $V$ member.
+
+     \begin{algorithmic}
+       \REQUIRE Non empty edge set $S$
+       \FORALL{edges $E_i$ in $S$}
+  	     \FORALL{edges $E_j$ in $S$}
+		       \IF{$E_i$ and $E_j$ share the same node in $U$}
+			       \STATE Create new edge
+		       \ENDIF
+	       \ENDFOR
+       \ENDFOR
+     \end{algorithmic}
+
+   \item
+     Remove all edges and nodes which are associated with a member of $V$.
+
 \end{enumerate}
 
-
 \subsection{Preferential Attachment with Clustering}
+
 % FIXME
-Preferential attachment and clustering are two distinct concepts which are used in graph generation.
+Preferential attachment and clustering are two distinct concepts which are used
+in graph generation.
 
-When using preferential attachment we assign nodes in a network a preference depending on their degree. Nodes with more edges, that is, which are more connected will have a higher preference than nodes with less edges. The preference ranges from [0,1], assuming no disjoint nodes exist and, for a node N, is calculated as
-\[
-\frac{N_\mathrm{edges}}{Total_\mathrm{edges}}
-\]
+When using preferential attachment we assign nodes in a network a preference
+depending on their degree. Nodes with more edges, that is, which are more
+connected will have a higher preference than nodes with less edges. The
+preference ranges in $[0,1]$ and, assuming that no disjoint nodes exist and, is
+\[ \frac{K_N}{Edges} \]
+for a certain node $N$ with degree $N_K$, and $Edges$ being the total number of
+edges.
 
-\emph{Clustering} is a concept which determines how to connect a node N, once a connection with at least one other node N' has been established. This procedure determines the intersection set of N' with all its neighbours. Then node N is connected to all members of the intersection set.
+\emph{Clustering} is a concept which determines how to connect a node $N$, once
+a connection with at least one other node $N'$ has been established. This
+procedure determines the intersection set of $N'$ with all its neighbours. Then
+node $N$ is connected to all members of the intersection set.
 
-The algorithm described here uses both concepts to generate networks with scale-free characteristics. First, nodes are added to the network via the preferential attachment method then, once attached are connected to the rest of the network via the clustering procedure.
+The algorithm described here uses both concepts to generate networks with
+scale-free characteristics. First, nodes are added to the network via the
+preferential attachment method. Then, once attached are connected to the rest of
+the network via the clustering procedure. %% FIXME: i don't understand this phrase.
 
 This is implemented as follows:
-\begin{enumerate}
-\item Select a node by generating a random percentage with 2 decimal place
-precision.
-The preferences of nodes are stored cumulatively therefore, the random number
-serves as an index with the node as the indexed element, which can be accessed
-using a binary search.
-\begin{algorithmic}
-\FOR{$l=1 \to N-1$}
-\STATE{$l \gets 2l$}
-	\FOR {$i=0 \to l \ge 0$}
-	\STATE $l \gets \frac{l}{2}$
-	\IF{$l+i \le N$}
-		\STATE genPreference $\gets$ real in the range of [0,100]
-		\IF{cumulative preference[l+i] $\leq$ genPreference}
-		\STATE $i \gets i+l$
-		\ENDIF
-	\ENDIF
-	\ENDFOR
-\ENDFOR
-\RETURN Nodes[i]
-\end{algorithmic}
-   \item Attach the node to the indexed element.
-   \item Use the clustering procedure to determine other edges.
-\begin{algorithmic}
-\REQUIRE New Node $N_i$
-\REQUIRE Neighbour vector with all nodes neighbouring $N_i$
-\REQUIRE Edge count with amount of edges to be added
-\REQUIRE Used nodes vector
-\STATE length = neighbours.size
-\WHILE{There are edges to add $\land$ neighbour vector is not empty}
-	\STATE rand $\gets$ random integer $\bmod$ length
-	\STATE Node $R_i \gets$ neighbour[rand]
-	\IF{Edge creation between $N_i$ and $R_i$ was successful}
-		\STATE --edge count
-		\STATE add $R_i$ to used nodes vector
-		\STATE neighbour vector $\gets$ intersection(neighbour vector,neighbours($R_i$))
-	\ELSE
-		\STATE remove neighbours[rand]
-	\ENDIF
-	\STATE length $\gets$ neighbours.size()
-\ENDWHILE
-\end{algorithmic}
-   \item If more edges are to be added, repeat the procedure.
-\begin{algorithmic}
-\WHILE {edgesToAdd > 0}
-	\STATE continue \dots
-\ENDWHILE
-\end{algorithmic}
-   \item Recompute the preferences.
-\begin{algorithmic}
-\STATE updatePreference(Nodes, 2Edges)
-\end{algorithmic}
 
+\begin{enumerate}
+  \item
+    Select a node by generating a random percentage with 2 decimal place
+    precision.  The preferences of nodes are stored cumulatively. Therefore, the
+    random number serves as an index with the node as the indexed element, which
+    can be accessed using a binary search.
+
+    %% FIXME: I don't understand this. What is Nodes? are you doing the binary
+    %% search here? either way, it doesn't make sense
+    \begin{algorithmic}
+      \FOR{$l=1 \to N-1$}
+        \STATE{$l \gets 2l$}
+        \STATE{$i \gets 0$}
+        \WHILE{$l \ge 0$}
+	        \STATE $l \gets \frac{l}{2}$
+	        \IF{$l+i \le N$}
+		        \STATE pref $\gets$ real in  $[0,100]$
+		        \IF{Comulative preference of $l$ $\leq$ pref}
+		          \STATE $i \gets i+l$
+		        \ENDIF
+	        \ENDIF
+	      \ENDWHILE
+      \ENDFOR
+      \RETURN Nodes[i]
+    \end{algorithmic}
+
+   \item
+     Attach the node to the indexed element.
+
+   \item
+     Use the clustering procedure to determine other edges.
+
+     \begin{algorithmic}
+       \REQUIRE New Node $N_i$
+       \REQUIRE Neighbour vector with all nodes neighbouring $N_i$
+       \REQUIRE Edge count with amount of edges to be added
+       \REQUIRE Used nodes vector
+       \STATE length = neighbours.size
+
+       \WHILE{There are edges to add $\land$ neighbour vector is not empty}
+	       \STATE rand $\gets$ random integer $\bmod$ length
+	       \STATE Node $R_i \gets$ neighbour[rand]
+	       \IF{Edge creation between $N_i$ and $R_i$ was successful}
+		       \STATE --edge count
+		       \STATE add $R_i$ to used nodes vector
+		       \STATE neighbour vector $\gets$ intersection(neighbour vector,neighbours($R_i$))
+	       \ELSE
+		       \STATE remove neighbours[rand]
+	       \ENDIF
+	       \STATE length $\gets$ neighbours.size()
+       \ENDWHILE
+     \end{algorithmic}
+
+   \item
+     If more edges are to be added, repeat the procedure.
+
+   \item
+     Recompute the preferences.
 \end{enumerate}
 
 
@@ -718,7 +749,7 @@ It then returns the sum of all distances
 	\FORALL{E in edges}
 	\STATE Node n $\gets$ E.getDifferentFromParent()
 		\IF{!visited.contain(n)}
-			\STATE visited.insert(n) 
+			\STATE visited.insert(n)
 			\STATE distance[n] $\gets$ distance.value(parent, 0) + 1
 			\STATE queue.enqueue(n)
 		\ENDIF
