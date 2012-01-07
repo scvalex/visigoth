@@ -176,11 +176,9 @@ being linked by a mutual acquaintance.
 
 %% FIXME: Explain how networks with the above properties are useful.
 
-Examples of real networks in the real-world are:
-
 Social networks, neural networks, ecosystems, the World Wide Web, electrical
-power grids and protein networks are all complex networks that exhibit a range
-of understanding dynamic behaviour that currently escape our understanding.
+power grids, and protein networks are all complex networks that exhibit a range
+of understanding dynamic behaviour that currently escapes our understanding.
 
 Ideas from network science have been applied to the analysis of metabolic and
 genetic regulatory networks, the design of robust and scalable communication
@@ -200,15 +198,13 @@ A \emph{network} is a graph, an ordered pair $G(V,E)$ comprising a set of
 \emph{vertices}.
 
 The $degree$, $K_i$, of vertex $i$ is the number of vertices that it is
-connected to.
+connected to. The average degree, $k$, of a network is $k =\frac{2m}{N}$ where
+$m$ is the number of edges in the network.
 
-The average degree, $k$, of a network is $k =\frac{2m}{N}$ where $m$ is the
-number of edges in the network.
+\subsubsection{The Small-World effect}
 
-\subsubsection{Six degress of separation}
-
-This concept is the idea that everyone is approximately six steps away, by
-introduction, from any other person on Earth.
+The concept of ``Six degrees of separation'' is the idea that everyone is
+approximately six steps away, by introduction, from any other person on Earth.
 
 A group of people can be represented by a \emph{social network}, where
 individuals are the vertices and an edge betwen individuals represents
@@ -217,12 +213,6 @@ acquaintance.
 The steps from one individual to another are then the edges that must be
 traversed to connect them. We refer to the number of steps from one individual
 to another as the \emph{shortest path length} between them.
-
-\subsubsection{The Small-World Effect}
-
-The ``small-world effect" denotes the result that the average distance linking
-two nodes belonging to the same network can be orders of magnitude smaller than
-the number of nodes making up the network \cite{complexAdapt}.
 
 Frigyes Karinthy was the first proponent of the six degrees of separation
 concept in his short story ``Chains" (1929).
@@ -234,20 +224,25 @@ the target was unknown by them, they should have sent the letter to a friend or
 relative who was more likely to know the target. Milgram's experiment concluded
 that the \emph{shortest path length} between individuals is, on average, $6$.
 
+This result lead to the more genereal idea of a ``small-world effect", which
+denotes the result that the average distance linking two nodes belonging to the
+same network can be orders of magnitude smaller than the number of nodes making
+up the network \cite{complexAdapt}.
+
 The properties of a small world network are:
 
 \begin{itemize}
-%FIXME: fix the space so that the items from the itemize sections appear from a
-%new line
 \item Low average path length.
-
 \item High clustering coefficient.
-
 \item Scale-free degree distribution.
-
 \end{itemize}
 
+We shall analyse in more detail these characteristics in the next sections.
+
 \subsubsection{Path Length}
+
+The path length between two vertices in a graph indicates how many nodes must be
+visited to go from one node to the other.
 
 We can apply Dijkstra's algorithm or A* for finding the shortest path length,
 $d(v_i, v_j)$ between to vertices $v_i$ and $v_j$ in a network.  The average
@@ -260,9 +255,11 @@ where $d(v_i, v_j) = 0$ when there is no path between vertices $v_i$ and $v_j$.
 
 \subsubsection{Clustering coefficient}
 
-\emph{Clustering} is about the tendency of real networks to form \emph{cliques}.
-For example, in social networks, cliques represent circles of friends or
-acquitances in which every member knows every other member.
+\emph{Clustering} is about the tendency of real networks to form
+\emph{cliques}. In a graph, a clique is a subset of the vertices which are all
+connected to each other. For example, in social networks, cliques represent
+circles of friends or acquaintances in which every member knows every other
+member.
 
 The clustering coefficient proposed by Watts and Strogatz is calculated for each
 vertex, $i$.
@@ -270,9 +267,8 @@ vertex, $i$.
 \[ C_i = \frac{2E_i}{k_i(k_i-1)} \]
 
 where $k_i$ is the number of neighbours of vertex $i$q and $E_i$ is the number
-of edges between the neighbours of vertex $i$.
-
-The average clustering coefficient over the network is:
+of edges between the neighbours of vertex $i$. Thus, the average clustering
+coefficient over the network is:
 
 \[ \ C_{avg} = \frac{1}{N}\sum_{i=0}^{N} C_i \]
 
