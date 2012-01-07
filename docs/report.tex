@@ -366,7 +366,10 @@ the course of the last decade.
 % FIXME
 The Erd\H{o}s-R\'{e}nyi model, named for Paul Erd\"{o}s and Alfr\'{e}d R\'{e}nyi
 is an algorithm for generation random networks. This is the simplest graph
-generation algorithm in Visigoth's repertoire.
+generation algorithm in Visigoth's repertoire. The simplicity of this algorithm
+is attractive. However, random networks produced by this model do not exhibit
+all of the characteristics of real networks since clustering is low and the 
+degree distribution is binomial and not scale-free.
 
 Edges in the network are created depending on a probability cutoff value which
 can be set by the user. For every pair of nodes in the network, if a random
@@ -391,8 +394,15 @@ in the graph, and $P$ is the probability cutoff value:
 \subsection{Watts-Strogatz}
 % FIXME
 The Watts-Strogatz model is a graph generating model which generates random
-graphs with small-world properties, which are, \emph{short average path length and
-high clustering}. It was proposed by Duncan J. Watts and Steven Strogatz in 1998.
+graphs with small-world properties, which are, \emph{short average path length 
+andhigh clustering}. It was proposed by Duncan J. Watts and Steven Strogatz in 
+1998.
+
+This model is based on stocastically `rewiring' the edges of a regular ring 
+lattice. The resulting network is an interpolation between a regular ring lattice
+and a random Erd\H{o}s-R\'{e}nyi network. So, there exists a large range of
+networks which vary on the probability of rewiring an edge.
+
 
 The model operates in two steps:
 
@@ -452,11 +462,13 @@ The model operates in two steps:
 % FIXME
 The Barabasi-Albert model is an algorithm for generating \emph{scale-free} networks
 using preferential attachment. Nodes are selected for attachment with a
-probability proportional to their
-degree in the network.
+probability proportional to their degree in the network. This model demonstrates
+that a power-law degree distribution can arise following growth and the 
+preferential attachment and that the combination of these two elements may be an 
+important factor in the formation of real networks. \cite{oconn11}
 
-Such networks are present in natural and human
-made systems, such as the citation networks.
+Such networks are present in natural and human made systems, such as the 
+citation networks.
 
 A network is deemed scale-free if the network exhibits a power law degree
 distribution.
@@ -464,8 +476,8 @@ distribution.
 degree(x) = ax^k
  \]
 In context, this means that the frequency of attachment to a node
-varies as a power of its degree. Such networks are \emph{also scale invariant} meaning
-that the network's size has no effect on its attributes i.e. degree
+varies as a power of its degree. Such networks are \emph{also scale invariant} 
+meaning that the network's size has no effect on its attributes i.e. degree
 distribution.
 
 The model is implemented as follows:
@@ -513,6 +525,13 @@ using a binary search.
 \end{lstlisting}
 \end{enumerate}
 
+The average path length of BA networks is comparable to average path length of 
+ER networks of equal size and average degree.
+
+The clustering coefficient of BA networks is greater than the clustering
+coefficient of ER networks of equal size and average degree \cite{oconn11}, but relatively low
+compared to real networks.
+
 
 \subsection{Bipartite Model}
 % FIXME
@@ -522,6 +541,11 @@ own set.
 
 \footnote{http://en.wikipedia.org/wiki/File:Simple-bipartite-graph.svg}
 \includegraphics[scale=0.3]{bipartite.png}
+
+This model is able to generate realistic networks with low average path length,
+high clustering coefficient and power-law distribution. The properties of the 
+network generated are dependent on the distribution of edges in the bipartite 
+graph.
 
 The algorithm constructs a network in three simple steps
 \begin{enumerate}
@@ -567,18 +591,33 @@ This procedure is implemented as follows:
 \end{enumerate}
 
 
-\subsection{Preferential Attachment}
+\subsection{Preferential Attachment with Clustering}
 % FIXME
 Preferential attachment and clustering are two distinct concepts which are used in graph generation.
 
-When using preferential attachment we assign nodes in a network a preference depending on their degree. Nodes with more edges, that is, which are more connected will have a higher preference than nodes with less edges. The preference ranges from [0,1], assuming no disjoint nodes exist and, for a node N, is calculated as
+When using \emph{preferential attachment} we assign nodes in a network a preference 
+depending on their degree. Nodes with more edges, that is, which are more connected 
+will have a higher preference than nodes with less edges. The preference ranges 
+from [0,1], assuming no disjoint nodes exist and, for a node N, is calculated as
 \[
 \frac{N_\mathrm{edges}}{Total_\mathrm{edges}}
 \]
 
-\emph{Clustering} is a concept which determines how to connect a node N, once a connection with at least one other node N' has been established. This procedure determines the intersection set of N' with all its neighbours. Then node N is connected to all members of the intersection set.
+\emph{Clustering} is a concept which determines how to connect a node N, once a 
+connection with at least one other node N' has been established. This procedure 
+determines the intersection set of N' with all its neighbours. Then node N is 
+connected to all members of the intersection set.
 
-The algorithm described here uses both concepts to generate networks with scale-free characteristics. First, nodes are added to the network via the preferential attachment method then, once attached are connected to the rest of the network via the clustering procedure.
+The BA model has frequently been used to model real networks. A simple adaptation
+of it increases the clustering whlist retaining the power-law degree distribution 
+of generated networks.
+
+The bipartite nature of real networks can be interpreted as a tendency for cliques
+to form in real networks. \emph{Cliques} are fully connected subsets of vertices of a 
+graph. Their presence greatly increases the clustering coefficient of a network.
+
+In the original BA model, a new vertex is added to the network by preferential
+attachment to a fixed number of vertices, whereas the algorithm described \emph{here} uses both concepts to generate networks with scale-free characteristics. First, nodes are added to the network via the preferential attachment method then, once attached are connected to the rest of the network via the clustering procedure.
 
 This is implemented as follows:
 \begin{enumerate}
@@ -1375,7 +1414,7 @@ instances. The lessons to take away were twofold:
         with the newer infrastructure. We were still semi-maintaining
         internal structures for an old rendering front-end, though
         not cleaning them up properly. We have recently began to
-        track test coverage statistics.  These should help us in
+        track test coverage statistics. These should help us in
         identifying dead and duplicate code in the future.
   \item On the other hand, even a three-way merges as done by Git
         should be done with great care: merge conflicts between
@@ -1419,7 +1458,7 @@ timely fashion.
 \subsubsection{Tools and policies}
 We use Git\footnote{http://git-scm.com/} to manage our code base and
 to enable parallel development; using its lightweight branching
-extensively in our work-flow.  Additionally, the distributed nature
+extensively in our work-flow. Additionally, the distributed nature
 of Git enabled more efficient peer reviews, as we could pull/push
 changes directly from one another. As a general policy, code needed
 to be checked and corrected by at least one other developer before it
