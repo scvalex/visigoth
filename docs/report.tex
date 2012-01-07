@@ -17,6 +17,9 @@
 %% Side-by-side images
 \usepackage{subfig}
 
+%% Wrapped figures
+\usepackage{wrapfig}
+
 %% Drawing trees and other stuff
 \usepackage{tikz}
 \usetikzlibrary{trees,arrows}
@@ -31,10 +34,7 @@
 \usepackage{libertine}
 \renewcommand*\oldstylenums[1]{{\fontfamily{fxlj}\selectfont #1}}
 
-%% %%%%%%%%%%%%%%%%%%%% END PACKAGES %%%%%%%%%%%%%%%%%%%%
-
-
-%% %%%%%%%%%%%%%%%%%%%% BEGIN COMMANDS %%%%%%%%%%%%%%%%%%%%
+\input{colors.tex}
 
 \let\stdhref\href
 \renewcommand{\href}[2]{\stdhref{#1}{\texttt{#2}}}
@@ -56,12 +56,6 @@
 
 %% %%%%%%%%%%%%%%%%%%%% BEGIN COLORS %%%%%%%%%%%%%%%%%%%%
 
-\definecolor{cffffff}{RGB}{255,255,255}
-\definecolor{c787aff}{RGB}{120,122,255}
-\definecolor{cff7374}{RGB}{255,115,116}
-\definecolor{c79ff79}{RGB}{121,255,121}
-\definecolor{cff7374}{RGB}{255,115,116}
-\definecolor{c7372ff}{RGB}{115,114,255}
 
 %% %%%%%%%%%%%%%%%%%%%% END COLORS %%%%%%%%%%%%%%%%%%%%
 
@@ -214,7 +208,7 @@ The steps from one individual to another are then the edges that must be
 traversed to connect them. We refer to the number of steps from one individual
 to another as the \emph{shortest path length} between them.
 
-Frigyes Karinthy was the first proponent of the six degrees of separation
+Frigyes Karinthy was first proposed the idea of the six degrees of separation
 concept in his short story ``Chains" (1929).
 
 The small world experiment (done by Stanley Milgram and other researchers in the
@@ -282,26 +276,30 @@ power law:
 
 where $P(k)$ is the probability that a node in the network will be of degree $k$.
 
-\subsection{Small World Networks}
 
-Small World Networks derive their denomination from the well-known Small World
-Hypothesis\footnote{FIXME: citation needed}, which states that any two persons
-are related through a chain of at most seven friends\footnote{FIXME: citation
-  needed}.
+%% The following section is just repetition of 1.1 and 1.2.2. We have to merge them in
+%% some way.
 
-Indeed, Small World Networks are graphs resembling the connections within human
-social networks, where nodes represent people, and edges between nodes represent
-relations of some sort\footnote{FIXME: citation needed, probably one of the two
-  main papers}.
+%% \subsection{Small World Networks}
 
-For example, if someone were to draw every user\footnote{or at least a
-  \emph{large} number of users} of a social network (e.g. Twitter) on a canvas
-and then connect each pair of them if either is ``following'' the other or if
-they are ``friends'', the resulting graph is a Small World Network. Over the
-course of time, several mathematical algorithms that generate random Small World
-Networks have been discovered. However, the resulting graphs have only lately
-begun to resemble those that have grown naturally in the form of social
-networks.
+%% Small World Networks derive their denomination from the well-known Small World
+%% Hypothesis\footnote{FIXME: citation needed}, which states that any two persons
+%% are related through a chain of at most seven friends\footnote{FIXME: citation
+%%   needed}.
+
+%% Indeed, Small World Networks are graphs resembling the connections within human
+%% social networks, where nodes represent people, and edges between nodes represent
+%% relations of some sort\footnote{FIXME: citation needed, probably one of the two
+%%   main papers}.
+
+%% For example, if someone were to draw every user\footnote{or at least a
+%%   \emph{large} number of users} of a social network (e.g. Twitter) on a canvas
+%% and then connect each pair of them if either is ``following'' the other or if
+%% they are ``friends'', the resulting graph is a Small World Network. Over the
+%% course of time, several mathematical algorithms that generate random Small World
+%% Networks have been discovered. However, the resulting graphs have only lately
+%% begun to resemble those that have grown naturally in the form of social
+%% networks.
 
 %% FIXME: Huh?  Are they really SWNs if they don't resemble the
 %% natural graphs?  Not by our definition.  So, either the definition
@@ -516,12 +514,17 @@ using a binary search.
 
 \subsection{Bipartite Model}
 % FIXME
+
+\begin{wrapfigure}{R}{0.4\textwidth}
+  \begin{center}
+    \input{bipartite-graph.tex}
+  \end{center}
+  \caption{A sample bipartite graph}
+\end{wrapfigure}
+
 A Bipartite graph is a graph which consists of two node sets. The nodes from
 each set are only allowed to connect to nodes which are not a member of their
 own set.
-
-\footnote{http://en.wikipedia.org/wiki/File:Simple-bipartite-graph.svg}
-\includegraphics[scale=0.3]{bipartite.png}
 
 The algorithm constructs a network in three simple steps
 \begin{enumerate}
@@ -565,7 +568,6 @@ This procedure is implemented as follows:
 \end{lstlisting}
    \item Remove all edges and nodes which are associated with a member of \code{vVector}.
 \end{enumerate}
-
 
 \subsection{Preferential Attachment}
 % FIXME
