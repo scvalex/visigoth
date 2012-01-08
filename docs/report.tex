@@ -171,7 +171,7 @@ characteristic structural properties of Small World Networks.
 The networks of interest here are mathematical graphs in which most nodes,
 while not being connected directly, can be reached from any other node via a
 small number of steps. In the context of a social network, this results in the
-``small world phenomenon'' \footnote{FIXME: citation needed} of strangers
+``small world phenomenon'' \cite{smphen} of strangers
 being linked by a mutual acquaintance.
 
 %% FIXME: Explain how networks with the above properties are useful.
@@ -179,6 +179,8 @@ being linked by a mutual acquaintance.
 Social networks, neural networks, ecosystems, the World Wide Web, electrical
 power grids and protein networks are all complex networks the dynamic
 behaviour of which currently escapes our understanding.
+
+%maybe we can add here a picture of some neural networks in the brain?
 
 Ideas from network science have been applied to the analysis of metabolic and
 genetic regulatory networks, the design of robust and scalable communication
@@ -288,34 +290,17 @@ power law:
 
 where $P(k)$ is the probability that a node in the network will be of degree $k$.
 
+\subsection{Small World Networks}
 
-%% The following section is just repetition of 1.1 and 1.2.2. We have to merge them in
-%% some way.
+Small-world networks tend to contain \emph{cliques}, and \emph{near-cliques}, meaning sub-networks which have connections between almost any two nodes within them. This follows from the defining property of a high clustering coefficient. 
 
-%% \subsection{Small World Networks}
+Secondly, most pairs of nodes will be connected by at least one short path. This follows from the defining property that the mean-shortest path length be small.
 
-%% Small World Networks derive their denomination from the well-known Small World
-%% Hypothesis\footnote{FIXME: citation needed}, which states that any two persons
-%% are related through a chain of at most seven friends\footnote{FIXME: citation
-%%   needed}.
+Several other properties are often associated with small-world networks. Typically there is an over-abundance of hubs - nodes in the network with a high number of connections (known as high degree). These hubs serve as the common connections mediating the short path lengths between other edges. By analogy, the small-world network of airline flights has a small mean-path length (i.e. between any two cities you are likely to have to take three or fewer flights) because many flights are routed through hub cities. \cite{smnet}
 
-%% Indeed, Small World Networks are graphs resembling the connections within human
-%% social networks, where nodes represent people, and edges between nodes represent
-%% relations of some sort\footnote{FIXME: citation needed, probably one of the two
-%%   main papers}.
+Small-world properties are found in \emph{many} real-world phenomena, including road maps, food chains, electric power grids, metabolite processing networks, networks of brain neurons, voter networks, telephone call graphs, and social influence networks.
 
-%% For example, if someone were to draw every user\footnote{or at least a
-%%   \emph{large} number of users} of a social network (e.g. Twitter) on a canvas
-%% and then connect each pair of them if either is ``following'' the other or if
-%% they are ``friends'', the resulting graph is a Small World Network. Over the
-%% course of time, several mathematical algorithms that generate random Small World
-%% Networks have been discovered. However, the resulting graphs have only lately
-%% begun to resemble those that have grown naturally in the form of social
-%% networks.
-
-%% FIXME: Huh?  Are they really SWNs if they don't resemble the
-%% natural graphs?  Not by our definition.  So, either the definition
-%% is wrong, or the last two sentences need to be rewritten.
+Networks of \emph{connected proteins} have small world properties such as power-law obeying degree distributions. Similarly \emph{transcriptional networks}, in which the nodes are genes, and they are linked if one gene has an up or down-regulatory genetic influence on the other, have small world network properties.
 
 %% FIXME: Explain how SWNs exhibit *all* the properties we're
 %% interested in.  Include some math.
@@ -356,8 +341,6 @@ graphs generated, real-world data fetching from social networks
 positive reaction to our suggestions we then added them to our
 product, creating a comprehensive base for analysing graphs that
 may be re-used for other mathematical projects in the future.
-
-
 
 
 %\section{In detail}
@@ -703,14 +686,14 @@ generated networks in real time. The statistics which are calculated are:
 \subsection{Average Degree}
 \[
 \frac{2\sum_{i=1}^{\mathrm{max\ edges}} edges_i}{\sum_{j=1}^{\mathrm{max\
-verticies}} vertecies_j}
+verticies}} verteces_j}
 \]
 
 Implementation is trivial
 
 \subsection{Average Path Length}
 \[
-\frac{\sum_{i,j}distance_\mathrm{shortest}(verticie_i,verticie_j)}{\sum
+\frac{\sum_{i,j}distance_\mathrm{shortest}(vertice_i,vertice_j)}{\sum
 vertices^2 - \sum vertices}
 \]
 
@@ -761,7 +744,7 @@ Where $k_i$ is the number of vertices immediately connected to $vertex_i$
 \newline
 The set ${e_j,_k}$ is set of all edges common to the neighbours of $vertex_i$\\
 
-The first step is to calculate the intersection of the neighbours of the node wewant to calculate the statistic for and the neighbours of that node's neighbours
+The first step is to calculate the intersection of the neighbours of the node we want to calculate the statistic for and the neighbours of that node's neighbours
 \begin{algorithmic}
 \REQUIRE A node N
 \REQUIRE An edge vector with edges connected to N
@@ -853,7 +836,64 @@ sloping.
 % FIXME: Describe what we can do. Generate, set properties, save
 %        screenshots, move nodes, fly in 3D, the kitchen sink.
 
+\subsection{Graph Display}
+Visigoth is able to draw graphs in both 2D and 3D, showing the graph either
+ in a planar display or in ``space" and thus allowing the user to ``fly" through it. 
+Notably, the user can switch between the two modes at any time while preserving 
+the graph.
 
+\subsection{Graph Generation}
+Visigoth implements five distinct graph generating algorithms for the user to interact with:
+\begin{enumerate}
+\item \emph{Preferential Attachment with Clustering}
+
+Selects a node for attachment depending on the number of edges they hold 
+compared with the whole system. Creates links to nodes neighbouring that node.
+
+\item \emph{Bipartite Generation}
+
+Creates a bipartite graph and for all nodes, links all nodes of set A connected to 
+the same node in set B. Finally, removes all nodes form set B.
+
+\item \emph{Erd\H{o}s-R\'{e}nyi}
+
+Generates a random graph.
+
+\item \emph{Watts-Strogatz}
+
+Creates a ring of connected nodes and re-links some nodes randomly within that ring.
+
+\item \emph{Barabasi-Albert}
+
+Nodes added to by preferential attachment, with no clustering.
+
+\end{enumerate}
+
+In addition to these five algorithms, we also implement a Twitter data-mining option, 
+which lets users use their Twitter account to graph the relations between followers 
+starting from themselves.
+
+The algorithms may be configured by a variety of parameters exposed to users 
+via inputs. Most algorithms may also be later expanded by adding nodes.
+
+\subsection{Graph Interaction}
+There are several ways to interact with the graph: by \emph{dragging} it using the mouse,
+ the graph is moved on the screen. In 3D mode, it can also be rotated and moved 
+back and forth.
+
+Similarly, nodes can be dragged using the mouse, resulting in a reordering of the 
+graph according to the built-in spring force model. \emph{Clicking} a node calculates 
+node specific statistics, such as the clustering coefficient.
+
+A \emph{toolbar} gives easy access to common actions such as graph regeneration and 
+node reshuffling.
+
+A simple \emph{menu} option allows users to customize the appearance of the generated graph, 
+such as: change edges and nodes colour, choose a different background, highlight 
+cliques or highlight selected node and connections with it's direct neighbours.
+
+\subsection{Export to PNG, JPEG files}
+Finally, Visigoth allows taking snapshots of the graphs and exporting them to image files. The supported formats include PNG and JPEG, which are the image formats supported by most computers.
 
 \section{Visigoth technologies}
 
@@ -1666,6 +1706,12 @@ Springer,
 
 \bibitem{complexNets}
   \url{http://en.wikipedia.org/wiki/Complex_network}
+
+\bibitem{swphen}
+ \url{http://en.wikipedia.org/wiki/Small_world_experiment}
+
+\bibitem{smnet}
+ \url{http://en.wikipedia.org/wiki/Small-world_network}
 
 \end{thebibliography}
 
