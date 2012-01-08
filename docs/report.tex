@@ -863,11 +863,12 @@ Visigoth relies heavily on some of Qt's features:
   with its own \buzz{meta-object
     compiler} \footnote{\url{http://developer.qt.nokia.com/doc/qt-4.8/moc.html}}.
   This preprocessor augments normal C++ objects with modern features
-  such as introspection and signals. We use introspection extensively
-  in our tests; see Section \ref{tests}. We use signals to decouple
-  objects, which leads to a cleaner design and has the side-effect of
-  simplifying writing test cases (mock and stub objects are not
-  necessary anymore); for details, see Section \ref{interaction};
+  such as introspection and \code{signal}s. We use introspection
+  extensively in our tests; see Section \ref{tests}. We use
+  \code{signal}s to decouple objects, which leads to a cleaner design
+  and has the side-effect of simplifying writing test cases (mock and
+  stub objects are not necessary anymore); for details, see Section
+  \ref{interaction};
 \item [xml] Like most modern frameworks, Qt provides an \buzz{XML}
   parsing
   library\footnote{\url{http://developer.qt.nokia.com/doc/qt-4.8/qtxml.html}}.
@@ -1139,6 +1140,7 @@ Figure \ref{fig:gui-sketch}.1).
 \end{description}
 
 \subsection{Components}
+\label{components}
 %% This is an overview of the classes (including a class diagram).
 
 The \emph{[mostly]} independent components of Visigoth are:
@@ -1185,12 +1187,28 @@ usages.
 %% This is an overview of the signals sent between objects (or of the
 %% public interfaces they subscribe to).
 
+Initially, we had designed Visigoth as a standard Object-Oriented
+application, each object holding references to any other objects it
+needed to communicate with. This quickly proved problematic, both in
+replacing components (for instance, changing the 2D renderer with the
+OpenGL-enabled 3D renderer) and in testing existing components
+(e.g. in order to test the \code{GraphScene}, we needed to create a
+fake \code{MainWindow}).
+
+Recognizing the need for a loosely-coupled architecture, we converted
+roughly half of the inter-object calls to Qt \code{signal}s. This
+relatively small change solved the above problems and also simplified
+the object interfaces somewhat, as more objects could now react to the
+same \code{signal}. Figure \ref{fig:interaction} shows the top-level
+interaction between the components described in Section
+\ref{components}.
+
 \begin{figure}[ht]
   \centering
   \input{interaction.tex}
-  \caption{Diagram illustrating (a) the flow of information upwards
-    via signals and (b) the flow of commands downward}
-  \label{fig:classes}
+  \caption{Flow of (a) information upwards via \code{signal}s and (b)
+    commands downward}
+  \label{fig:interaction}
 \end{figure}
 
 \subsection{Graph drawing}
