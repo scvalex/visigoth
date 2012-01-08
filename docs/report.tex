@@ -130,9 +130,6 @@ fetch and display real-world networks.
 
 \tableofcontents
 
-
-
-
 \section{Introduction}
 %% This section corresponds to A in the requirements.
 
@@ -303,7 +300,7 @@ Small-world properties are found in \emph{many} real-world phenomena, including 
 Networks of \emph{connected proteins} have small world properties such as power-law obeying degree distributions. Similarly \emph{transcriptional networks}, in which the nodes are genes, and they are linked if one gene has an up or down-regulatory genetic influence on the other, have small world network properties.
 
 %% FIXME: Explain how SWNs exhibit *all* the properties we're
-%% interested in.  Include some math.
+%% interested in. Include some math.
 
 \subsection{Introducing Visigoth}
 
@@ -472,7 +469,7 @@ degree(x) = ax^k
  \]
 
 As explained in section \ref{sec:scale-free}, a network is deemed scale-free if
-its degree distribution follows a power law.  In context, this means that the
+its degree distribution follows a power law. In context, this means that the
 frequency of attachment to a node varies as a power of its degree. Such networks
 are \emph{also scale invariant} meaning that the network's size has no effect on
 its attributes i.e. degree distribution.
@@ -481,7 +478,7 @@ The model is implemented as follows:
 \begin{enumerate}
 \item
   Select a node by generating a random percentage with $2$ decimal place
-  precision.  The preferences of nodes are stored cumulatively therefore, the
+  precision. The preferences of nodes are stored cumulatively therefore, the
   random number serves as an index with the node as the indexed element, which
   can be accessed using a binary search.
   \begin{algorithmic}
@@ -604,7 +601,7 @@ This is implemented as follows:
 \begin{enumerate}
   \item
     Select a node by generating a random percentage with 2 decimal place
-    precision.  The preferences of nodes are stored cumulatively. Therefore, the
+    precision. The preferences of nodes are stored cumulatively. Therefore, the
     random number serves as an index with the node as the indexed element, which
     can be accessed using a binary search.
 
@@ -1007,7 +1004,7 @@ impressive.
 After being left unsatisfied with the performance achieved with a
 screen renderer using \Qt graphics primitives, we looked for a
 `bare-metal' graphics output solution in order to eliminate the
-graphics bottleneck.  Thanks to \OpenGL \footnote{\OpenGL
+graphics bottleneck. Thanks to \OpenGL \footnote{\OpenGL
   documentation: https://www.opengl.org/documentation/}, we can now
 draw even large graphs very quickly, no matter whether in 2D or in 3D.
 
