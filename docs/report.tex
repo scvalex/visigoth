@@ -1709,7 +1709,16 @@ When conflicting opinions regarding the design of the system emerge, the team si
 
 
 \subsection{Ethical and Environmental Impact}
-%Check Report 2
+
+\subsubsection{Environmental}
+Since we are developing an end-user application, we do not consider lowering power-consumption to be a priority. In fact, our goal is to take advantage of all the resources available on said user's machine. Towards that end, we have taken steps to improve the efficiency of the application (by using the GPU for graphics computations and by improving the asymptotic complexity of the various processes).
+
+Unfortunately, the CPU is still the bottleneck for performance and power consumption. CPU load spikes are anticipated and unavoidable in large networks since some algorithms for calculating metrics, such as the average path length have O(n2) essential complexity and therefore are inherently CPU intensive. The item on our roadmap towards improving this is taking advantage of multi-core processors.
+
+\subsubsection{Ethical}
+Our product exhibits very few ethical issues. Visigoth is built from open-source software  components (i.e. Qt, OpenGL, and QOAuth) and is, for the most part, open-source (GPL3). Until they are published, some of the algorithms will remain hidden.
+
+The Twitter backend will require users to be logged in to Twitter in order to make web API calls, but since we use OAuth for authentication, we will not store any personal details other than the username, and the user always has the option of revoking Visigoth's access to his account remotely via Twitter.
 
 \addcontentsline{toc}{section}{References}
 \begin{thebibliography}{9}
