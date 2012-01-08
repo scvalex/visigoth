@@ -52,10 +52,11 @@
 \newcommand{\buzz}[1]{\emph{#1}}
 \newcommand{\magic}[1]{\buzz{#1}}
 
-%% Acronyms
+%% Acronyms, names, blah
 \newcommand{\Qt}{\buzz{Qt} }
 \newcommand{\OpenGL}{\buzz{OpenGL} }
 \newcommand{\FADE}{\buzz{FADE} }
+\newcommand{\master}{\code{master} }
 
 %% %%%%%%%%%%%%%%%%%%%% END COMMANDS %%%%%%%%%%%%%%%%%%%%
 
@@ -1503,27 +1504,44 @@ current 3D Renderer.
 \subsection{Development methodologies}
 
 \subsubsection{Peer review}
-Our rule of thumb, ``\emph{the master branch is always releasable}'',
-has been
-the foundation of our testing practices. To adhere to this, we have
-had to ensure that no bugs crept into the master branch. Towards this
-goal, no changes are merged into master until at least another member
-of the team reviews them. Through this practice of peer review the
-whole team has stayed informed on the current state of the project
-in addition to exposing and fixing bugs missed by the original code
-author. While this does indeed slow done writing code, we like to
-think that it otherwise shortens overall development time.
+Our rule of thumb,
+\begin{quote}
+  ``the \master branch is always releasable'',
+\end{quote}
+has been the foundation of our testing and review practices.
+
+The corollary is, ``no unstable code in \master''. To adhere to this,
+we have had to ensure that no bugs crept into the \master
+branch. Towards this goal, no changes are merged into \master until at
+least another member of the team reviews them. Through this practice
+of peer review, the whole team has stayed informed on the current
+state of the project in addition to exposing and fixing bugs missed by
+the original author of the code. While this does indeed slow done
+writing code, we like to think that it otherwise shortens overall
+development time.
 
 \subsubsection{Scrum}
 To further promote group awareness of the complete state of the
-project we held frequent short meetings true to the idea of scrum.
+project we held frequent short meetings true to the idea of
+scrum \footnote{\url{http://en.wikipedia.org/wiki/Scrum_(development)}}.
 These were whole-group meetings held every few days, in which team
-members shared comments on what features they were working on at
-the time and the future outlook of the project.
+members shared comments on what features they were working on at the
+time and the future outlook of the project.
 
-\subsubsection{Client feedback}
-Towards the end of each iteration, we held meetings with our client
-in order to report on our progress and get feedback on new
+\subsubsection{User feedback}
+While our development methodology was not test-driven or focused on
+usability, we continuously tested the software on volunteers and
+towards the end of each iteration, we held meetings with our
+client. See Section \ref{validation} for details. These tests and
+meetings uncovered a few problems, which eventually lead to small
+redesigns.
+
+\section{Validation}
+\label{validation}
+%% The client is a happy puppy
+
+\subsection{Client validation}
+In order to report on our progress and get feedback on new
 developments. These meetings would consist of a short demo of newly
 added features, a short "impromptu" usability test and a discussion
 on what new features should be the focus of the following iteration.
@@ -1536,8 +1554,7 @@ client's wishes referred to extensions to the functionality of
 our product, such as a 3D rendering mode and the network generation
 algorithms.
 
-
-\subsubsection{Other users' feedback}
+\subsection{Other users' feedback}
 Near the end of each iteration we asked classmates and friends for
 their sincere point of view concerning our progress and project
 overall, to that specific point in time.
@@ -1549,16 +1566,7 @@ we added the possibility to change the color of the nodes, edges,
 background; to highlight selected nodes as well as their direct
 neighbours.
 
-
-
-\section{Looking back}
-%% This section corresponds to 'Conclusions' in part D of the requirements
-
-\subsection{Validation}
-%% The client is a happy puppy
-% FIXME: This is text from Report 3
-
-\subsubsection{Tests}
+\subsection{Tests}
 To automate regression detection we use a test suite written using the
 \Qt Unit-Testing framework, which covers a significant portion of the
 codebase. In particular, it completely covers the intricate
@@ -1598,7 +1606,7 @@ instances. The lessons to take away were twofold:
         the situation described above.
 \end{itemize}
 
-\subsubsection{Continuous Integration}
+\subsection{Continuous Integration}
 We use a Jenkins CI\footnote{http://jenkins-ci.org/} server. It is
 set up to track the master branch. On receiving a change notification
 from the central repository, it proceeds to do a fresh build of the
@@ -1610,7 +1618,7 @@ a rough idea of what the current status of the project is. It is also
 set up to notify team members (via the project mailing-list) when
 problems occur.
 
-\subsubsection{Stability under load}
+\subsection{Stability under load}
 Load-testing Visigoth is a straightforward affair: generate networks
 with a large number of nodes. We have found our software to stay
 sufficiently responsive even under load. This is especially true
@@ -1619,7 +1627,7 @@ recalculating the node positions using the spring force model. In
 particular, we met our initial goal of displaying thousands of nodes
 in real-time.
 
-\subsubsection{Style}
+\subsection{Style}
 We have strived to use consistent style throughout the code and
 documentation. To this extent, it fell to the reviewer doing the
 merge to mention and fix any style issues. This has worked adequately
@@ -1631,7 +1639,7 @@ timely fashion.
 \subsection{Documentation}
 % FIXME: This is text from Report 3.
 
-\subsubsection{Tools and policies}
+\subsection{Tools and policies}
 We use Git\footnote{http://git-scm.com/} to manage our code base and
 to enable parallel development; using its lightweight branching
 extensively in our work-flow. Additionally, the distributed nature
@@ -1640,7 +1648,7 @@ changes directly from one another. As a general policy, code needed
 to be checked and corrected by at least one other developer before it
 made its way into the master branch.
 
-\subsubsection{Knowledge transfer}
+\subsection{Knowledge transfer}
 Due to our peer review scheme, at least two people would know every
 bit of code. Also, mutual interest in each other's area of expertise
 has fostered cooperation in labs where problems were solved together
@@ -1701,6 +1709,9 @@ When conflicting opinions regarding the design of the system emerge, the team si
   \caption{Development impact of team members}
   \label{fig:punch}
 \end{figure}
+
+\section{Looking back}
+%% This section corresponds to 'Conclusions' in part D of the requirements
 
 \subsection{Lessons learned}
 
