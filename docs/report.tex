@@ -1539,6 +1539,23 @@ client. See Section \ref{validation} for details. These tests and
 meetings uncovered a few problems, which eventually lead to small
 redesigns.
 
+\subsubsection{Version Control}
+We use Git\footnote{\url{http://git-scm.com/}} to manage our codebase
+and to enable parallel development. Additionally, the distributed
+nature of Git enabled more efficient peer reviews, as we could
+pull/push changes directly from one another.
+
+\subsubsection{Style}
+We have strived to use consistent style throughout the code and
+documentation. To this extent, it fell to the reviewer doing the merge
+to mention and fix any style issues. This has worked adequately most
+of the time, and in the few instances where badly styled code slipped
+through, subsequent global reviews remedied the problem in a timely
+fashion.
+
+In retrospect, it would have been useful to setup a linting tool as a
+pre-commit hook such that badly formatted code would not be committed.
+
 \section{Validation}
 \label{validation}
 %% The client is a happy puppy
@@ -1629,27 +1646,6 @@ since it is usually generating a high CPU load itself when
 recalculating the node positions using the spring force model. In
 particular, we met our initial goal of displaying thousands of nodes
 in real-time.
-
-\subsection{Style}
-We have strived to use consistent style throughout the code and
-documentation. To this extent, it fell to the reviewer doing the
-merge to mention and fix any style issues. This has worked adequately
-most of the time, and in the few instances where badly styled code
-slipped through, subsequent global reviews remedied the problem in a
-timely fashion.
-
-
-\subsection{Documentation}
-% FIXME: This is text from Report 3.
-
-\subsection{Tools and policies}
-We use Git\footnote{http://git-scm.com/} to manage our code base and
-to enable parallel development; using its lightweight branching
-extensively in our work-flow. Additionally, the distributed nature
-of Git enabled more efficient peer reviews, as we could pull/push
-changes directly from one another. As a general policy, code needed
-to be checked and corrected by at least one other developer before it
-made its way into the master branch.
 
 \subsection{Knowledge transfer}
 Due to our peer review scheme, at least two people would know every
