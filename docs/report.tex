@@ -52,6 +52,8 @@
 \newcommand{\buzz}[1]{\emph{#1}}
 \newcommand{\magic}[1]{\buzz{#1}}
 
+\newcommand{\myhref}[1]{\href{http://#1}{#1}}
+
 %% Acronyms, names, blah
 \newcommand{\Qt}{\buzz{Qt} }
 \newcommand{\OpenGL}{\buzz{OpenGL} }
@@ -903,7 +905,7 @@ Finally, Visigoth allows taking snapshots of the graphs and exporting them to im
 \subsection{\Qt}
 
 The UI toolkit, standard library replacement, and application
-framework Visigoth uses is \Qt\footnote{\url{http://qt.nokia.com/}}.
+framework Visigoth uses is \Qt\footnote{\myhref{qt.nokia.com}}.
 
 Visigoth relies heavily on some of \Qt's features:
 \begin{description}
@@ -913,9 +915,9 @@ Visigoth relies heavily on some of \Qt's features:
   built using this framework. A more detailed explanation is included
   in Section \ref{gui};
 \item [meta-objects] \Qt supplements the venerable \buzz{C}
-  pre-processor\footnote{\url{http://gcc.gnu.org/onlinedocs/cpp/}}
+  pre-processor\footnote{\myhref{gcc.gnu.org/onlinedocs/cpp}}
   with its own \buzz{meta-object
-    compiler} \footnote{\url{http://developer.qt.nokia.com/doc/qt-4.8/moc.html}}.
+    compiler} \footnote{\myhref{developer.qt.nokia.com/doc/qt-4.8/moc.html}}.
   This preprocessor augments normal \buzz{C++} objects with modern
   features such as introspection and \code{signal}s. We use
   introspection extensively in our tests; see Section \ref{tests}. We
@@ -925,7 +927,7 @@ Visigoth relies heavily on some of \Qt's features:
   Section \ref{interaction};
 \item [xml] Like most modern frameworks, \Qt provides an \buzz{XML}
   parsing
-  library\footnote{\url{http://developer.qt.nokia.com/doc/qt-4.8/qtxml.html}}.
+  library\footnote{\myhref{developer.qt.nokia.com/doc/qt-4.8/qtxml.html}}.
   In addition to a standard \buzz{SAX} parser, it exposes an extremely
   clean \buzz{HTML DOM}-like interface for manipulating \buzz{XML}
   documents. We use it in order to parse results from queries to
@@ -933,15 +935,15 @@ Visigoth relies heavily on some of \Qt's features:
   \href{http://identi.ca}{Identi.ca};
 \item [containers] \Qt provides a fully-featured library of containers
   similar to Java
-  \buzz{collections}\footnote{\url{http://docs.oracle.com/javase/1.5.0/docs/api/java/util/package-summary.html}}
+  \buzz{collections}\footnote{\myhref{docs.oracle.com/javase/1.5.0/docs/api/java/util/package-summary.html}}
   and significantly more complete than the standard or SGI
-  \buzz{STL}\footnote{\url{http://www.sgi.com/tech/stl/}}. The
+  \buzz{STL}\footnote{\myhref{www.sgi.com/tech/stl}}. The
   availability of these meant that advanced data-structures were one
   less concern to worry about during development;
 \item [concurrency] \Qt also provides high-level
-  threading\footnote{\url{http://developer.qt.nokia.com/doc/qt-4.8/threads.html}}
+  threading\footnote{\myhref{developer.qt.nokia.com/doc/qt-4.8/threads.html}}
   and
-  concurrency\footnote{\url{http://developer.qt.nokia.com/doc/qt-4.8/threads-qtconcurrent.html}}
+  concurrency\footnote{\myhref{developer.qt.nokia.com/doc/qt-4.8/threads-qtconcurrent.html}}
   APIs. Our experiments showed that separating the CPU-intensive
   computations (e.g. generating new networks, calculating layout
   positions) onto a separate thread could speed up certain operations
@@ -956,8 +958,8 @@ Visigoth relies heavily on some of \Qt's features:
 \Qt has a healthy plugin ecosystems, with a myriad of libraries
 available to plug into the main framework. We make use of two of
 these, namely
-\buzz{QCA}\footnote{\url{http://delta.affinix.com/qca/}} and
-\buzz{QOAuth}\footnote{\url{https://github.com/ayoy/qoauth/wiki}}.
+\buzz{QCA}\footnote{\myhref{delta.affinix.com/qca}} and
+\buzz{QOAuth}\footnote{\href{https://github.com/ayoy/qoauth/wiki}{github.com/ayoy/qoauth/wiki}}.
 
 \begin{description}
 \item [QCA] The \buzz{Qt Cryptographic Architecture} includes many
@@ -965,7 +967,7 @@ these, namely
   provider when establishing \buzz{TLS}-secured channels to the online
   sources (e.g. \Twitter);
 \item [QOAuth] This library is an implementation of the \buzz{OAuth
-  2.0}\footnote{\url{http://oauth.net/}} secure API authorization
+  2.0}\footnote{\myhref{oauth.net}} secure API authorization
   standard (\buzz{OAuth} is becoming the de-facto authorization
   mechanism on the web); again, this was required in order to
   authenticate with the online sources.
@@ -974,7 +976,7 @@ these, namely
 \subsubsection{Cross-platform}
 
 Thanks to \Qt's cross-platform nature, in general, and to
-\buzz{qmake}\footnote{\url{http://developer.qt.nokia.com/doc/qt-4.8/qmake-manual.html}},
+\buzz{qmake}\footnote{\myhref{developer.qt.nokia.com/doc/qt-4.8/qmake-manual.html}},
 in particular, Visigoth works on Windows, OSX and Linux with a minimum
 of fuss on the development side.
 
@@ -1128,7 +1130,7 @@ However, \buzz{C++} also has its downsides:
   keyword is a great mechanism to mark immutability at type
   level. However, some of them can and have been misused\footnote{For
     an hilarious example, see
-    \url{http://weegen.home.xs4all.nl/eelis/analogliterals.xhtml}},
+    \myhref{weegen.home.xs4all.nl/eelis/analogliterals.xhtml}},
   and as a consequence,
   \begin{quote}
     ``When you're programming \buzz{C++}, no one can ever agree on
@@ -1307,7 +1309,7 @@ we had to choose the one that fit best.
 
 First we experimented with the existing solutions. One of the most
 complete free graph-drawing algorithm is
-GraphViz\footnote{\href{http://www.graphviz.org/}{www.graphviz.org}},
+GraphViz\footnote{\myhref{www.graphviz.org}},
 and it provides various algorithms:
 
 \begin{description}
@@ -1469,9 +1471,9 @@ amount of effort required to finish each component.
 \end{figure}
 
 An \emph{impact} graph, as generated by
-\GitHub\footnote{\url{https://github.com}} is included in Figure
+\GitHub\footnote{\href{https://github.com}{github.com}} is included in Figure
 \ref{fig:impact}. It shows that, at least in terms of
-SLOC\footnote{\url{http://en.wikipedia.org/wiki/Source_lines_of_code}},
+SLOC\footnote{\myhref{en.wikipedia.org/wiki/Source\_lines\_of\_code}},
 the effort was well spread out across the development team.
 
 \begin{figure}[h]
@@ -1542,7 +1544,7 @@ development time.
 \subsubsection{Scrum}
 To further promote group awareness of the complete state of the
 project we held frequent short meetings true to the idea of
-scrum\footnote{\url{http://en.wikipedia.org/wiki/Scrum_(development)}}.
+scrum\footnote{\myhref{en.wikipedia.org/wiki/Scrum\_(development)}}.
 These were whole-group meetings held every few days, in which team
 members shared comments on what features they were working on at the
 time and the future outlook of the project.
@@ -1556,7 +1558,7 @@ meetings uncovered a few problems, which eventually lead to small
 redesigns.
 
 \subsubsection{Version Control}
-We use \Git\footnote{\url{http://git-scm.com/}} to manage our
+We use \Git\footnote{\myhref{git-scm.com}} to manage our
 codebase and to enable parallel development. Additionally, the
 distributed nature of \Git enabled more efficient peer reviews, as we
 could pull/push changes directly from one another.
