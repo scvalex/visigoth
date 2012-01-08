@@ -52,6 +52,10 @@
 \newcommand{\buzz}[1]{\emph{#1}}
 \newcommand{\magic}[1]{\buzz{#1}}
 
+%% Acronyms
+\newcommand{\Qt}{\buzz{Qt} }
+\newcommand{\OpenGL}{\buzz{OpenGL} }
+
 %% %%%%%%%%%%%%%%%%%%%% END COMMANDS %%%%%%%%%%%%%%%%%%%%
 
 %% %%%%%%%%%%%%%%%%%%%% BEGIN COLORS %%%%%%%%%%%%%%%%%%%%
@@ -852,19 +856,19 @@ sloping.
 
 \section{Visigoth technologies}
 
-\subsection{Qt}
+\subsection{\Qt}
 
 The UI toolkit, standard library replacement, and application
-framework Visigoth uses is Qt\footnote{\url{http://qt.nokia.com/}}.
+framework Visigoth uses is \Qt \footnote{\url{http://qt.nokia.com/}}.
 
-Visigoth relies heavily on some of Qt's features:
+Visigoth relies heavily on some of \Qt's features:
 \begin{description}
-\item [gui] Qt is famous for providing a cross-platform, high-level,
+\item [gui] \Qt is famous for providing a cross-platform, high-level,
   UI toolkit that automatically uses the native drawing systems on
   each host platform. All of Visigoth's user visible interface was
   built using this framework. A more detailed explanation is included
   in Section \ref{gui};
-\item [meta-objects] Qt supplements the venerable C
+\item [meta-objects] \Qt supplements the venerable C
   pre-processor\footnote{\url{http://gcc.gnu.org/onlinedocs/cpp/}}
   with its own \buzz{meta-object
     compiler} \footnote{\url{http://developer.qt.nokia.com/doc/qt-4.8/moc.html}}.
@@ -875,7 +879,7 @@ Visigoth relies heavily on some of Qt's features:
   and has the side-effect of simplifying writing test cases (mock and
   stub objects are not necessary anymore); for details, see Section
   \ref{interaction};
-\item [xml] Like most modern frameworks, Qt provides an \buzz{XML}
+\item [xml] Like most modern frameworks, \Qt provides an \buzz{XML}
   parsing
   library\footnote{\url{http://developer.qt.nokia.com/doc/qt-4.8/qtxml.html}}.
   In addition to a standard \buzz{SAX} parser, it exposes an extremely
@@ -883,14 +887,14 @@ Visigoth relies heavily on some of Qt's features:
   documents. We use it in order to parse results from queries to
   online sources such as \href{http://twitter.com}{Twitter} and
   \href{http://identi.ca}{Identi.ca};
-\item [containers] Qt provides a fully-featured library of containers
+\item [containers] \Qt provides a fully-featured library of containers
   similar to Java
   \buzz{collections} \footnote{\url{http://docs.oracle.com/javase/1.5.0/docs/api/java/util/package-summary.html}}
   and significantly more complete than the standard or SGI
   \buzz{STL}\footnote{\url{http://www.sgi.com/tech/stl/}}. The
   availability of these meant that advanced data-structures were one
   less concern to worry about during development;
-\item [concurrency] Qt also provides high-level
+\item [concurrency] \Qt also provides high-level
   threading\footnote{\url{http://developer.qt.nokia.com/doc/qt-4.8/threads.html}}
   and
   concurrency\footnote{\url{http://developer.qt.nokia.com/doc/qt-4.8/threads-qtconcurrent.html}}
@@ -905,7 +909,7 @@ Visigoth relies heavily on some of Qt's features:
 
 \subsubsection{Plugins}
 
-Qt has a healthy plugin ecosystems, with a myriad of libraries
+\Qt has a healthy plugin ecosystems, with a myriad of libraries
 available to plug into the main framework. We make use of two of
 these, namely
 \buzz{QCA} \footnote{\url{http://delta.affinix.com/qca/}} and
@@ -913,7 +917,7 @@ these, namely
 
 \begin{description}
 \item [QCA] The \buzz{Qt Cryptographic Architecture} includes many
-  security providers for Qt application. We used the \buzz{OpenSSL}
+  security providers for \Qt application. We used the \buzz{OpenSSL}
   provider when establishing TLS-secured channels to the online
   sources (e.g. \href{http://twitter.com}{Twitter});
 \item [QOAuth] This library is an implementation of the \buzz{OAuth
@@ -925,13 +929,13 @@ these, namely
 
 \subsubsection{Cross-platform}
 
-Thanks to Qt's cross-platform nature, in general, and to
+Thanks to \Qt's cross-platform nature, in general, and to
 \buzz{qmake} \footnote{\url{http://developer.qt.nokia.com/doc/qt-4.8/qmake-manual.html}},
 in particular, Visigoth works on Windows, OSX and Linux with a minimum
 of fuss on the development side.
 
 \begin{description}
-\item [qmake] Qt's build system, \buzz{qmake}, takes a high level
+\item [qmake] \Qt's build system, \buzz{qmake}, takes a high level
   project description and outputs platform-specific build files
   (\buzz{Makefile}s on Linux, \buzz{XCode} projects on OSX and
   \buzz{Visual Studio} projects on Windows). It also simplifies
@@ -940,9 +944,9 @@ of fuss on the development side.
 \end{description}
 
 The only tweaks necessary for Visigoth to build on each of the above
-platforms are a few defines to deal with the misplaced \buzz{OpenGL}
-headers on OSX and few conditionals in the project description to
-handle the library finding on Windows.
+platforms are a few defines to deal with the misplaced \OpenGL headers
+on OSX and few conditionals in the project description to handle the
+library finding on Windows.
 
 The following screenshots show Visigoth working on the three
 platforms.
@@ -950,66 +954,65 @@ platforms.
 
 \subsubsection{Rapid prototyping}
 
-One of lesser known advantages to using Qt we discovered is rapid
+One of lesser known advantages to using \Qt we discovered is rapid
 prototyping. Point in case, the original prototype for Visigoth took
 two days to write. It included roughly half of the customer's
 \emph{must-have} features, was cross-platform and was visually
 impressive.
 
-\subsection{OpenGL}
+\subsection{\OpenGL}
 \label{opengl}
 
 After being left unsatisfied with the performance achieved with a
-screen renderer using Qt graphics primitives, we looked for a `bare-metal'
-graphics output solution in order to eliminate the graphics bottleneck.
-Thanks to OpenGL\footnote{OpenGL documentation:
-https://www.opengl.org/documentation/},
-we can now draw even large graphs very quickly,
-no matter whether in 2D or in 3D.
+screen renderer using \Qt graphics primitives, we looked for a
+`bare-metal' graphics output solution in order to eliminate the
+graphics bottleneck.  Thanks to \OpenGL \footnote{\OpenGL
+  documentation: https://www.opengl.org/documentation/}, we can now
+draw even large graphs very quickly, no matter whether in 2D or in 3D.
 
-OpenGL itself is a graphics drawing interface commonly used to
+\OpenGL itself is a graphics drawing interface commonly used to
 leverage hardware acceleration for common operations, such as vector
 transformations necessary to compute 3D graphics. Every modern
-operating system uses it to animate its user interface smoothly,
-and games and professional CAD (Computer Assisted Design) applications
+operating system uses it to animate its user interface smoothly, and
+games and professional CAD (Computer Assisted Design) applications
 have long used it for real-time 3D graphics interaction.
 
 Not only are we leveraging this power to speed up our graph
 visualiser, but this may also allow for ports to other
-platforms in the future. Thanks to the Qt/OpenGL base, Visigoth
+platforms in the future. Thanks to the \Qt/\OpenGL base, Visigoth
 could theoretically be compiled for mobile phones and slates
 with minimal porting effort.
 
-OpenGL made several extensions possible, as outlined in the following
+\OpenGL made several extensions possible, as outlined in the following
 subsections.
 
 \subsubsection{3D graphs and camera}
-OpenGL provides only the very fundamental drawing primitives like
+\OpenGL provides only the very fundamental drawing primitives like
 lines and points - however, it includes hardware acceleration for
-vector transformation. This allows the implementation of a virtual
-3D space through which a `camera' can move. As even this is actually
-a composite functionality, we wrote a helper code library (glAncillary)
-to provide us with easy camera transformation functions. They are
-used whenever the user decides to move around the graph, i.e. to
-pan or tilt.
+vector transformation. This allows the implementation of a virtual 3D
+space through which a `camera' can move. As even this is actually a
+composite functionality, we wrote a helper code library (glAncillary)
+to provide us with easy camera transformation functions. They are used
+whenever the user decides to move around the graph, i.e. to pan or
+tilt.
 
 \subsubsection{Selection}
-The OpenGL interface also eases object selection: Since it is
+The \OpenGL interface also eases object selection: Since it is
 responsible for the depth transformations when drawing the graphics,
 it can also perform the inverse of these transformations from any
-given point on the drawing surface, finding the original point
-in space. In this case we check the position the mouse pointer is at
-and find the object selected by the user. This is fundamental in
-allowing us to move nodes around and selecting them for statistical
-analysis.
+given point on the drawing surface, finding the original point in
+space. In this case we check the position the mouse pointer is at and
+find the object selected by the user. This is fundamental in allowing
+us to move nodes around and selecting them for statistical analysis.
 
 \subsection{C++}
 
 Visigoth, ignoring the XML files describing the interface, is entirely
-written in \buzz{C++}. Initially, while being conscious of its disadvantages,
-we made this decision for one reason: \buzz{Qt}. As described in the previous
-paragraph, the library by TrollTech is so convenient that alone
-justifies the use of C++ instead of another safer language.
+written in \buzz{C++}. Initially, while being conscious of its
+disadvantages, we made this decision for one reason: \buzz{\Qt}. As
+described in the previous paragraph, the library by Nokia is so
+convenient that alone justifies the use of C++ instead of another
+safer language.
 
 All in all, we think it was the right decision. The appreciation of
 C++ varies in our team, but looking back we are confident that C++ was
@@ -1020,13 +1023,13 @@ The main advantages were:
 
 \begin{description}
 
-\item [Availability of tools and library] As mentioned, \buzz{Qt} alone
-  was a deal sealer, but the fact that we were able to access OpenGL
-  `natively' (in a Qt widget) was also a big advantage. While interfaces
-  to both libraries exist in other languages as well, we felt that
-  sticking to Qt's `native' C++ environment would be the most stable
-  solution and that the foreign language bindings would have degraded
-  performance.
+\item [Availability of tools and library] As mentioned, \Qt alone was
+  a deal sealer, but the fact that we were able to access \OpenGL
+  `natively' (in a \Qt widget) was also a big advantage. While
+  interfaces to both libraries exist in other languages as well, we
+  felt that sticking to \Qt's `native' C++ environment would be the
+  most stable solution and that the foreign language bindings would
+  have degraded performance.
 
 \item [Performance] We did not consider this factor at the beginning,
   but a few weeks into the project we started hitting various
@@ -1107,6 +1110,49 @@ which we overcame by dividing the application into mostly-independent
 components. The following sections provide overviews and short
 descriptions for each component.
 
+\subsection{Components}
+\label{components}
+%% This is an overview of the classes (including a class diagram).
+
+The \emph{[mostly]} independent components of Visigoth are:
+\begin{description}
+  \item [tests] The test system is heavily oriented towards
+    functionality testing, checking that user actions cause the
+    expected behaviour. For more details on the testing methodology,
+    see Section \ref{tests};
+
+  \item [GUI] The GUI is the only user-visible component. It was
+    relies heavily on \Qt's widget library and \OpenGL. A brief
+    description of the UI is provided in Section \ref{gui}, and a
+    brief overview of the issues surrounding the 3D renderer can be
+    found in Section \ref{opengl};
+
+  \item [GraphScene] We took an \buzz{Model-View-Controller} approach
+    in Visigoth's design. Whist the GUI system is the \buzz{view}, the
+    \code{GraphScene} is the \buzz{model} and encapsulates the
+    \buzz{controller}. For a brief description on how it is used, see
+    Section \ref{interaction};
+
+  \item [Algorithms] The last component of Visigoth are the
+    algorithms. These were described in Section
+    \ref{smallworldnetworks}. All the individual algorithms implement
+    the \code{Algorithm} interface, which allows them to be easily
+    plugged into the \code{GraphScene}.
+\end{description}
+
+A bare-bones class diagram of the above components is include in
+Figure \ref{fig:classes}. Since the internal workings of the classes
+are unlikely to be of interest to the reader and to highlight the
+relationships between components, we only include inheritance and
+usages.
+
+\begin{figure}[ht]
+  \centering
+  \input{classes.tex}
+  \caption{Class diagram for each of Visigoth's components}
+  \label{fig:classes}
+\end{figure}
+
 \subsection{GUI}
 \label{gui}
 
@@ -1118,7 +1164,7 @@ considered contain very few steps (hence, there is little need for
 As shown in Figure \ref{fig:gui-sketch}, the Visigoth UI is
 \emph{flat}. All relevant options and displays are presented to the
 user in a single encompassing interface. Relevancy is determined by
-context; for instance, the generation parameters (Figure
+context; for instance, the generation parameters shown (Figure
 \ref{fig:gui-sketch}.3) vary depending on the algorithm selected (in
 Figure \ref{fig:gui-sketch}.1).
 
@@ -1145,64 +1191,21 @@ Figure \ref{fig:gui-sketch}.1).
     generated graph to a file or to an image.
 \end{description}
 
-\subsection{Components}
-\label{components}
-%% This is an overview of the classes (including a class diagram).
-
-The \emph{[mostly]} independent components of Visigoth are:
-\begin{description}
-  \item [tests] The test system is heavily oriented towards
-    functionality testing, checking that user actions cause the
-    expected behaviour. For more details on the testing methodology,
-    see Section \ref{tests};
-
-  \item [GUI] The GUI is the only user-visible component. It was
-    relies heavily on Qt's widget library and OpenGL. A brief
-    description of the UI is provided in Section \ref{gui}, and a
-    brief overview of the issues surrounding the 3D renderer can be
-    found in Section \ref{opengl};
-
-  \item [GraphScene] We took an \buzz{Model-View-Controller} approach
-    in Visigoth's design. Whist the GUI system is the View, the
-    \code{GraphScene} is the model and encapsulates the
-    controller. For a brief description on how it is used, see Section
-    \ref{interaction};
-
-  \item [Algorithm] The last component of Visigoth are the
-    algorithms. These were described in Section
-    \ref{smallworldnetworks}. All the individual algorithms implement
-    the \code{Algorithm} interface, which allows them to be easily
-    plugged into the \code{GraphScene}.
-\end{description}
-
-A bare-bones class diagram of the above components is include in
-Figure \ref{fig:classes}. Since the internal workings of the classes
-are unlikely to be of interest to the reader and to highlight the
-relationships between components, we only include inheritance and
-usages.
-
-\begin{figure}[ht]
-  \centering
-  \input{classes.tex}
-  \caption{Class diagram for each of Visigoth's components}
-  \label{fig:classes}
-\end{figure}
-
 \subsection{Object interaction}
 \label{interaction}
 %% This is an overview of the signals sent between objects (or of the
 %% public interfaces they subscribe to).
 
-Initially, we had designed Visigoth as a standard Object-Oriented
+Initially, we had designed Visigoth as a standard object-oriented
 application, each object holding references to any other objects it
 needed to communicate with. This quickly proved problematic, both in
 replacing components (for instance, changing the 2D renderer with the
-OpenGL-enabled 3D renderer) and in testing existing components
+\OpenGL-enabled 3D renderer) and in testing existing components
 (e.g. in order to test the \code{GraphScene}, we needed to create a
 fake \code{MainWindow}).
 
 Recognizing the need for a loosely-coupled architecture, we converted
-roughly half of the inter-object calls to Qt \code{signal}s. This
+roughly half of the inter-object calls to \Qt \code{signal}s. This
 relatively small change solved the above problems and also simplified
 the object interfaces somewhat, as more objects could now react to the
 same \code{signal}. Figure \ref{fig:interaction} shows the top-level
@@ -1219,27 +1222,36 @@ interaction between the components described in Section
 
 \subsection{Graph drawing}
 
-We looked into various graphics libraries which allow for
+We considered using various graphics libraries which allow for
 platform-independent drawing using primitives. Candidates were
-\buzz{Cairo}\footnote{Cairo homepage: http://cairographics.org/},
-\buzz{Qt} and \buzz{OpenGL}. The first two are the
-most common 2D drawing libraries used in modern open-source
-software; however, as they operate solely on the CPU, they proved
-too slow for the large graphs we wished to visualise.
+\buzz{Cairo}\footnote{Cairo homepage:
+  \href{http://cairographics.org/}{cairographics.org}}, \Qt and
+\OpenGL. The first two are the most common 2D drawing libraries used
+in modern open-source software; however, since they operate mostly on
+the CPU (with hardware-acceleration being very limited), they proved
+too slow for the large graphs we wished to visualise \footnote{during
+  our first iteration, we wrote a prototype for each of the libraries
+  in order to benchmark their speed and ease of development; \Qt won
+  on ease of development, which is what we used for rendering during
+  the early iterations; \OpenGL won on speed, which is what we decided
+  to use in the end}.
 
-Therefore we decided to use \buzz{OpenGL} for drawing graphs on
-the screen. Thanks to its hardware accelerated nature, we can now
-(re-)draw thousands of nodes and edges often enough every second
-to give the user the impression of a smooth interface when interacting
+In the end, we decided to use \OpenGL for drawing graphs on the
+screen. Thanks to its hardware accelerated nature, Visigoth can
+(re-)draw thousands of nodes and edges often enough every second to
+give the user the impression of a smooth interface when interacting
 with the graph.
 
-Implementing the camera handling, the node/edge drawing and the
-interface allowing the user to `fly' through a 3D graph we also
-developed a helper library, \code{glAncillary}. A significant portion
-of our code can now be reused in similar projects using OpenGL,
-and this is important since applications such as Visigoth require a
-completely different type of graphics engine compared to the ones
-commonly found e.g. in video games.
+Whilst implementing the camera handling, the node/edge drawing and the
+interface allowing the user to `fly' through a 3D graph, we developed
+a helper library, \code{glAncillary}. A significant portion of our
+code can now be reused in similar \OpenGL projects; this is important
+since applications such as Visigoth require a completely different
+kind of graphics engine than the ones commonly found in other 3D
+applications such as video games.
+
+%% FIXME Max, could you say a few words about an issue you encountered
+%% and how you fixed it? (for instance, dragging in 3D)
 
 
 \subsection{Graph layout}
@@ -1251,8 +1263,8 @@ we had to choose the one that fit best.
 
 First we experimented with the existing solutions. One of the most
 complete free graph-drawing algorithm is
-OpenViz\footnote{\url{http://www.graphviz.org/}}, and it provides
-various algorithms:
+OpenViz\footnote{\href{http://www.graphviz.org/}{www.graphviz.org}},
+and it provides various algorithms:
 
 \begin{description}
 \item [dot] A hierarchical layout, used for directed graphs. Our small
@@ -1380,7 +1392,7 @@ Once implemented, the FADE algorithm lead to great speedups while
 preserving good node placements. While drawing \(1000\) nodes is
 already difficult with the simple algorithm, FADE can easily handle
 \(10000\) nodes, after which other performance limits are hit (the
-graph generation time and the OpenGL drawing).
+graph generation time and the \OpenGL drawing).
 
 After we implemented the 3D view we had to write an extension to FADE to support
 3D, which proved to be straight forward. Now we have a 3-dimensional space,
@@ -1507,12 +1519,12 @@ neighbours.
 % FIXME: This is text from Report 3
 
 \subsubsection{Tests}
-To automate regression detection we use a test suite written using
-the Qt Unit-Testing framework, which covers a significant portion
-of the codebase. In particular, it completely covers the intricate
-algorithmic and UI logic encoded in the Algorithm classes. Running
-the test suite can expose changes breaking rarely-used functions
-which would have slipped past a quick tests by the coder.
+To automate regression detection we use a test suite written using the
+\Qt Unit-Testing framework, which covers a significant portion of the
+codebase. In particular, it completely covers the intricate
+algorithmic and UI logic encoded in the Algorithm classes. Running the
+test suite can expose changes breaking rarely-used functions which
+would have slipped past a quick tests by the coder.
 
 The tests we use to determine our product's integrity are split
 into two categories: system and interface tests. System tests focus
