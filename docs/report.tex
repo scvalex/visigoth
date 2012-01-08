@@ -8,6 +8,7 @@
 \usepackage{fullpage}
 \usepackage{url}
 \usepackage{hyperref}
+\usepackage{listings}
 \hypersetup{pdfborder=0 0 0}
 
 %% Images
@@ -15,6 +16,9 @@
 
 %% Side-by-side images
 \usepackage{subfig}
+
+%% Wrapped figures
+\usepackage{wrapfig}
 
 %% Drawing trees and other stuff
 \usepackage{tikz}
@@ -34,12 +38,12 @@
 \usepackage{libertine}
 \renewcommand*\oldstylenums[1]{{\fontfamily{fxlj}\selectfont #1}}
 
-%% %%%%%%%%%%%%%%%%%%%% END PACKAGES %%%%%%%%%%%%%%%%%%%%
+\input{colors.tex}
 
+\let\stdhref\href
+\renewcommand{\href}[2]{\stdhref{#1}{\texttt{#2}}}
 
-%% %%%%%%%%%%%%%%%%%%%% BEGIN COMMANDS %%%%%%%%%%%%%%%%%%%%
-
-\newcommand{\mailto}[1]{\href{mailto:#1}{\texttt{#1}}}
+\newcommand{\mailto}[1]{\href{mailto:#1}{#1}}
 
 \let\stdsection\section         % because LaTeX cannot handle
                                 % recursive commands
@@ -56,12 +60,6 @@
 
 %% %%%%%%%%%%%%%%%%%%%% BEGIN COLORS %%%%%%%%%%%%%%%%%%%%
 
-\definecolor{cffffff}{RGB}{255,255,255}
-\definecolor{c787aff}{RGB}{120,122,255}
-\definecolor{cff7374}{RGB}{255,115,116}
-\definecolor{c79ff79}{RGB}{121,255,121}
-\definecolor{cff7374}{RGB}{255,115,116}
-\definecolor{c7372ff}{RGB}{115,114,255}
 
 %% %%%%%%%%%%%%%%%%%%%% END COLORS %%%%%%%%%%%%%%%%%%%%
 
@@ -154,6 +152,25 @@ display real networks.
 %% This section should contain most of the references to hamm10 and
 %% oconn11.
 
+Complex networks are ubiquitous in nature and society.
+
+The structural and dynamical properties of complex networks are non-trivial, and
+powerful computer architecture is needed for being able to compute the required
+statistical analysis. As a result, it is only in the last decade or so that we
+have been able to study the vast data sets that describe real networks
+\cite{oconn11}.
+
+The structural properties of real networks have been studied extensively over
+the years. The main interest was focused on the fact that many real networks
+share common characteristic properties. These networks have low average length
+path, high clustering coefficient and scale-free degree distribution.
+
+In order to be able to further understand the behaviour of real networks, we
+simulate their dynamics on randomly generated networks.  For an accurate
+modelling of their behaviour we need to generate and observe the results of
+algorithms which present the characteristic structural properties of this kind
+of networks.
+
 \subsection{Realistic looking networks}
 %% This subsection should *not* use the term ``Small World Networks''.
 %% The point is to describe what properties we want.  The SWN
@@ -165,35 +182,145 @@ display real networks.
 %% nodes shouldn't be too far apart, the number of neighbours should
 %% fit a natural distribution).
 
-\subsubsection{Uses}
+The networks we are interested in are mathematical graphs in which most nodes
+are not neighbors of one another, but they can be reached from every other by a
+small number of steps. In the context of a social network, this results in the
+``small world phenomenon'' \footnote{FIXME: citation needed} of strangers
+being linked by a mutual acquaintance.
 
 %% FIXME: Explain how networks with the above properties are useful.
 
-\subsubsection{The maths}
+Social networks, neural networks, ecosystems, the World Wide Web, electrical
+power grids, and protein networks are all complex networks that exhibit a range
+of understanding dynamic behaviour that currently escapes our understanding.
+
+Ideas from network science have been applied to the analysis of metabolic and
+genetic regulatory networks, the design of robust and scalable communication
+networks both wired and wireless, the development of vaccination strategies for
+the control of disease, and a broad range of other practical
+issues \cite{complexNets}.
+
+\subsection{The maths}
 
 %% FIXME: Give formal mathematical definitions for qualities.
 
-\subsection{Small World Networks}
+\subsubsection{Networks}
 
-Small World Networks derive their denomination from the well-known
-Small World Hypothesis\footnote{FIXME: citation needed}, which states
-that any two persons are related through a chain of at most seven
-friends\footnote{FIXME: citation needed}.
+A \emph{network} is a graph, an ordered pair $G(V,E)$ comprising a set of
+\emph{vertices}, $V$, and a set of \emph{edges}, $E$. An \emph{edge} is a
+2-element subset of $V$ representing a \emph{connection} between a pair of
+\emph{vertices}.
 
-Indeed, Small World Networks are graphs resembling the connections
-within human social networks, where nodes represent people, and edges
-between nodes represent relations of some sort\footnote{FIXME:
-  citation needed, probably one of the two main papers}.
+The $degree$, $K_i$, of vertex $i$ is the number of vertices that it is
+connected to. The average degree, $k$, of a network is $k =\frac{2m}{N}$ where
+$m$ is the number of edges in the network.
 
-For example, if someone were to draw every user\footnote{or at least a
-  \emph{large} number of users} of a social network (e.g. Twitter) on
-a canvas and then connect each pair of them if either is ``following''
-the other or if they are ``friends'', the resulting graph is a Small
-World Network. Over the course of time, several mathematical
-algorithms that generate random Small World Networks have been
-discovered. However, the resulting graphs have only lately begun to
-resemble those that have grown naturally in the form of social
-networks.
+\subsubsection{The Small-World effect}
+
+The concept of ``Six degrees of separation'' is the idea that everyone is
+approximately six steps away, by introduction, from any other person on Earth.
+
+A group of people can be represented by a \emph{social network}, where
+individuals are the vertices and an edge betwen individuals represents
+acquaintance.
+
+The steps from one individual to another are then the edges that must be
+traversed to connect them. We refer to the number of steps from one individual
+to another as the \emph{shortest path length} between them.
+
+Frigyes Karinthy was first proposed the idea of the six degrees of separation
+concept in his short story ``Chains" (1929).
+
+The small world experiment (done by Stanley Milgram and other researchers in the
+1960s), formalised the concept. In this, letters were sent to randomly selected
+individuals asking them to forwards the letter to a randomly selected target. If
+the target was unknown by them, they should have sent the letter to a friend or
+relative who was more likely to know the target. Milgram's experiment concluded
+that the \emph{shortest path length} between individuals is, on average, $6$.
+
+This result lead to the more genereal idea of a ``small-world effect", which
+denotes the result that the average distance linking two nodes belonging to the
+same network can be orders of magnitude smaller than the number of nodes making
+up the network \cite{complexAdapt}.
+
+The properties of a small world network are:
+
+\begin{itemize}
+\item Low average path length.
+\item High clustering coefficient.
+\item Scale-free degree distribution.
+\end{itemize}
+
+We shall analyse in more detail these characteristics in the next sections.
+
+\subsubsection{Path Length}
+
+The path length between two vertices in a graph indicates how many nodes must be
+visited to go from one node to the other.
+
+We can apply Dijkstra's algorithm or A* for finding the shortest path length,
+$d(v_i, v_j)$ between to vertices $v_i$ and $v_j$ in a network.  The average
+path length, $L_G$, is the average of the shortest path length over all pairs of
+vertices:
+
+\[ L_G = \frac{1}{N(N-1)} \sum_{i, j} d(v_i, v_j) \]
+
+where $d(v_i, v_j) = 0$ when there is no path between vertices $v_i$ and $v_j$.
+
+\subsubsection{Clustering coefficient}
+
+\emph{Clustering} is about the tendency of real networks to form
+\emph{cliques}. In a graph, a clique is a subset of the vertices which are all
+connected to each other. For example, in social networks, cliques represent
+circles of friends or acquaintances in which every member knows every other
+member.
+
+The clustering coefficient proposed by Watts and Strogatz is calculated for each
+vertex, $i$.
+
+\[ C_i = \frac{2E_i}{k_i(k_i-1)} \]
+
+where $k_i$ is the number of neighbours of vertex $i$q and $E_i$ is the number
+of edges between the neighbours of vertex $i$. Thus, the average clustering
+coefficient over the network is:
+
+\[ \ C_{avg} = \frac{1}{N}\sum_{i=0}^{N} C_i \]
+
+\subsubsection{Scale-free distribution}
+\label{sec:scale-free}
+
+Barabasi and Albert showed that real networks such as the World Wide Web are
+scale-free. The \emph{degree distribution} of scale-free networks follows a
+power law:
+
+\[ P(k) \sim k^{-\gamma} \]
+
+where $P(k)$ is the probability that a node in the network will be of degree $k$.
+
+
+%% The following section is just repetition of 1.1 and 1.2.2. We have to merge them in
+%% some way.
+
+%% \subsection{Small World Networks}
+
+%% Small World Networks derive their denomination from the well-known Small World
+%% Hypothesis\footnote{FIXME: citation needed}, which states that any two persons
+%% are related through a chain of at most seven friends\footnote{FIXME: citation
+%%   needed}.
+
+%% Indeed, Small World Networks are graphs resembling the connections within human
+%% social networks, where nodes represent people, and edges between nodes represent
+%% relations of some sort\footnote{FIXME: citation needed, probably one of the two
+%%   main papers}.
+
+%% For example, if someone were to draw every user\footnote{or at least a
+%%   \emph{large} number of users} of a social network (e.g. Twitter) on a canvas
+%% and then connect each pair of them if either is ``following'' the other or if
+%% they are ``friends'', the resulting graph is a Small World Network. Over the
+%% course of time, several mathematical algorithms that generate random Small World
+%% Networks have been discovered. However, the resulting graphs have only lately
+%% begun to resemble those that have grown naturally in the form of social
+%% networks.
 
 %% FIXME: Huh?  Are they really SWNs if they don't resemble the
 %% natural graphs?  Not by our definition.  So, either the definition
@@ -204,11 +331,11 @@ networks.
 
 \subsection{Introducing Visigoth}
 
-Visigoth makes peeking into the current state-of-the-art of artificial
-Small World Networks simple and fun. By integrating existing
-generation algorithms and visualisations into a single, easy-to-use
-interface, the user can make a head start into the small world of
-Small World Networks and:
+Visigoth makes peeking into the current state-of-the-art of artificial Small
+World Networks simple and fun. By integrating existing generation algorithms and
+visualisations into a single, easy-to-use interface, the user can make a head
+start into the small world of Small World Networks and:
+
 \begin{itemize}
   \item see how these algorithms have improved on each other over time
     generating increasingly better networks,
@@ -239,92 +366,6 @@ positive reaction to our suggestions we then added them to our
 product, creating a comprehensive base for analysing graphs that
 may be re-used for other mathematical projects in the future.
 
-\section{Collaboration and Coordination}
-
-\subsection{Requirements and Pacing}
-
-Visigoth is a highly complex and capable piece of software which has a lot of
-interesting features. Inorder to have an efficient development process we
-categorized requirements into \buzz{key} and \buzz{extensions}. A complete
-list of these requirements are:
-
-\begin{enumerate}
-
-	\item Key
-	\begin{itemize}
-		\item	Real-time 2D graph renderer
-		\item Several Random Network and Small World Network generation algorithms to
-				choose from for the visualiser.
-		\item Simple user interaction: zoom/pan the display, input basic graph
-		generation parameters, rearrange nodes, add vertices (where the algorithm allows
-		us to).
-		\item User interaction using mouse or keyboard shortcuts.
-		\item Statistics about generated networks.
-	\end{itemize}
-
-	\item Extensions
-	\begin{itemize}
-		\item Real-time 3D graph renderer.
-		\item Choice of visualisation algorithms (e.g. highlight clusters, reveal most-connected nodes)
-		\item Extended user input: more graph generation parameters, user editing of generated graphs
-		\item "Save As" PDF
-		\item Data mining existing networks (e.g. Twitter, academic citations)	
-
-	\end{itemize}
-\end{enumerate}
-
-Inorder to help us determine the pace of our project we developed a schedule during the first week
-of our project .\\
-\includegraphics[scale=0.5]{schedule}
-
-During our development process we have religously kept to this plan and we have hit every deadline
-with target functionality and features. 
-
-\subsection{Development Methodologies}
-
-The Visigoth team is \buzz{agile}, and we use the following methodologies: repeated short development cycles, evolutionary design and \buzz{scrum}.  We hold short review meetings in the spirit of scrum every few days, in which each of the team members mention what they are working on, what plans they have and what difficulties they have encountered. We also hold a meeting at the beginning of each week to measure our progress to adjust future plans; we measure progress by whether deadlines for planned features were met. We aim to implement all of the core features and at least 80 $\%$ of the extras.
-
-Throughout the development process we have strived to use consistent style throughout the code and documentation. To this extent, it fell to the reviewer doing the merge to mention and fix any style issues. This has worked adequately most of the time, and in the few instances where badly styled code slipped through, subsequent \buzz{global} reviews remedied the problem in a timely fashion.
-
-We do not assign specific roles to people; instead team members are rotated through all the roles (development, review/testing, documentation). This ensures that all members are familiar with the entire project.
-
-\buzz{Git} is used for source and version control and we rely heavily on its versatile branching.  The slogan is "the master branch is always releasable"; in order to make a release, we need only build master. Changes are made on separate branches, and are only merged into master after going through code review. In addition to keeping master stable, this style of \buzz{continuous integration} allows us to work on several items at once and, via code review, ensures that at least two people are familiar with any piece of code. We plan to use \buzz{QuickCheck}-like property testing for the graph-generation algorithms and normal unit-testing for the user interface.
-
-
-\subsection{People Management}
-
-Visigoth Graph Visualisations covers a broad range of software engineering tasks, each with a different level of technical skill requirement. For instance, the kinds of problems we encountered are:
-\begin{itemize}
-	\item developing graph renderers (C/OpenGL and C/Cairo);
-	\item UI programming (C++/Qt);
-	\item implementing mathematical models (pen/paper);
-	\item profiling and optimisations (valgrind, Google profiling tools);
-	\item binding to various web services (OAuth/Twitter and REST/GitHub).
-\end{itemize}
-
-Hence, each member of the team is constantly being challenged individually. We also organise short technical talks to introduce other team members to concepts they may not be familiar with and which they may find useful. So far, we have done such talks on:
-\begin{itemize}
-	\item Git and branching hygiene;
-	\item C++ and Qt.
-\end{itemize}
-If team members find they have resolved all issues currently assigned to them, then tasks such as log keeping and creating reports for the next deadline are always available.
-As the following graph shows, code contributions have been mostly uniform across team members. The discrepancy in the first week is explained by the prototypes which we chose not to continue (whose code is not counted) and the effort expanded in understanding the mathematical foundations of network generation.
-
-\includegraphics[scale=0.5]{work}
-
-
-\begin{figure}[ht]
-  \begin{minipage}[b]{0.5\linewidth}
-\includegraphics[scale=0.5]{impact}
-\caption{Changes in lines per commiter per week}
-  \end{minipage}
-\end{figure}
-
-When working in a team, conflicts and debate are unavoidable. We try to keep all members engaged and interested at all times, however due to technical background and prior knowledge, some members are more suitable for some tasks than others. In such a case, the task gets assigned to the most qualified member. In other cases, we try to distribute tasks around the team to ensure that specific knowledge well-distributed across the team.
-
-When conflicting opinions regarding the design of the system emerge, the team sits down and debates each solution. For now this system has worked very well, which is reflected in our project’s progress. In order to promote harmony, we have a sign much like the following in which we record our success.
-
-
 
 %\section{In detail}
 %% This section corresponds to B in the requirements
@@ -334,148 +375,181 @@ When conflicting opinions regarding the design of the system emerge, the team si
 %% illustrating the graph generated by the algorithm and an exported
 %% image of a large graph Visigoth generated.
 
-\subsection{Erdos Renyi}
+On request of our customer we have implemented several generation
+algorithms for Small World Networks which have been analysed over
+the course of the last decade.
 
-The Erd\H{o}s-R\'{e}nyi model, named for Paul Erd\"{o}s and Alfr\'{e}d R\'{e}nyi is an algorithm for
-generation random networks. This is the simplest graph generation algorithm in
-Visigoth's repertoire.
+\subsection{Erdos-Renyi}
+% FIXME
+The Erd\H{o}s-R\'{e}nyi model, named for Paul Erd\"{o}s and Alfr\'{e}d R\'{e}nyi
+is an algorithm for generation random networks. This is the simplest graph
+generation algorithm in Visigoth's repertoire.
 
 Edges in the network are created depending on a probability cutoff value which
 can be set by the user. For every pair of nodes in the network, if a random
 probability is below the cutoff value, the two nodes are connected.
 
-This is implemented in the following way:
-\begin{lstlisting}
-    for (int i(0); i < size; ++i) {
-        for (int j(i+1); j < size; ++j) {
-            if ((double)qrand() / RAND_MAX < probability) {
-                scene->newEdge(nodesVector[i], nodesVector[j]);
-            } else {
-                continue;
-            }
-        }
-    }
-\end{lstlisting}
-\subsection{Watts Strogatz}
+This is implemented in the following way, where $N$ is the number of vertices
+in the graph, and $P$ is the probability cutoff value:
+\begin{algorithmic}
+  \REQUIRE $0 \leq P \leq 1$
+  \FOR{$i = 0 \to N - 1$}
+    \FOR{$j = i + 1 \to N - 1$}
+      \STATE $k \gets $ random real in $[0, 1]$
+      \IF{$k < P$}
+        \STATE Add a new edge between $i$ and $j$.
+      \ELSE
+        \STATE \textbf{continue}
+      \ENDIF
+    \ENDFOR
+  \ENDFOR
+\end{algorithmic}
 
+\subsection{Watts-Strogatz}
+% FIXME
 The Watts-Strogatz model is a graph generating model which generates random
-graphs with small-world properties, which are, short average path length and
-high clustering. It was proposed by Duncan J. Watts and Steven Strogatz in 1998.
+graphs with small-world properties, which are, \emph{short average path length and
+high clustering}. It was proposed by Duncan J. Watts and Steven Strogatz in 1998.
 
 The model operates in two steps:
-First, generate a regular ring lattice with N nodes and K neighbours, K/2 on
-each side.
-\begin{lstlisting}
-          QVector<Node*> nodeVec(size);
-    for(int i(0); i < size; ++i){
-        Node *node = scene->newNode();
-        nodeVec[i] = node;    }
-    // construct ring lattice
-    for(int j(0); j < size; ++j) {
-        // connecting right side
-        for(int r(1); r<= degree/2; ++r) {
-            int nodeToConnect = (j+r)%size;
-            scene->newEdge(nodeVec[j], nodeVec[nodeToConnect]);
-        }
-        // connecting left side
-        for(int l(1); l<= degree/2; ++l) {
-            int nodeToConnect = (size+j-l)%size;
-            scene->newEdge(nodeVec[j], nodeVec[nodeToConnect]);
-        }
-\end{lstlisting}
 
-Then, for each edge, rewire it with probability $\beta$, where $0 \leq  \beta \leq 1$.
-\begin{lstlisting}
- // rewire
-    for(int n(0); n < size; ++n) {
-        // only choose the right side, since we only select (ni,nj) with i < j
-        for(int r(1); r <= degree/2; ++r) {
-            int nodeToSelect = (n+r)%size;
-            if ((double)qrand() / RAND_MAX < probability) {
-                scene->removeEdge(nodeVec[n], nodeVec[nodeToSelect]);
-                int newNode = qrand()%size;
-                for (int cutOff(0);
-                     cutOff < 1000 && !scene->newEdge(nodeVec[n], 					    nodeVec[newNode]);
-                     ++cutOff) {
-                    newNode = qrand()%size;
-                }
-            }
-        }
-    }
-\end{lstlisting}
+\begin{itemize}
 
-\subsection{Barabasi Albert}
+\item
+  First, we generate a regular ring lattice with $N$ nodes and $K$ neighbours,
+  $\frac{K}{2}$ on each side.
 
-The Barabasi-Albert model is an algorithm for generating scale-free networks
+  \begin{algorithmic}
+    \REQUIRE{$N \gg K \gg \ln{N} \gg 1$}
+    \FOR{$i = 0 \to N - 1$}
+      \STATE Create node $i$.
+    \ENDFOR
+
+    \FOR{$i = 0 \to N - 1$}
+      \FOR{$j = 1 \to \frac{K}{2}$}
+        \STATE $k \gets (i + j) \bmod{N}$
+        \STATE Add edge between $i$ and $k$.
+      \ENDFOR
+
+      \FOR{$j = 1 \to \frac{K}{2}$}
+        \STATE $k \gets (N + i - j) \bmod{N}$
+        \STATE Add edge between $i$ and $k$.
+      \ENDFOR
+    \ENDFOR
+  \end{algorithmic}
+
+\item
+  Then, for each edge, rewire it to another random node with probability
+  $\beta$, where $\gamma$ is a high number to prevent infinite looping:
+
+  \begin{algorithmic}
+    \REQUIRE $0 \leq \beta \leq 1$
+    \FOR{$i = 0 \to N - 1$}
+      \FOR{$r = 1 \to \frac{K}{2}$}
+        \STATE $j \gets (n + r) \bmod{N}$
+        \STATE $r \gets$ random real in $[0, 1]$
+        \IF{$r < \beta$}
+          \STATE Remove edge between $i$ and $j$.
+          \STATE $cut \gets 0$
+          \FOR{$cut = 1 \to \gamma$}
+            \STATE $k \gets$ random integer in $[0, N)$
+            \IF{edge between $i$ and $k$ exists}
+              \STATE \textbf{break}
+            \ELSE
+              \STATE Add edge between $i$ and $k$.
+            \ENDIF
+          \ENDFOR
+        \ENDIF
+      \ENDFOR
+    \ENDFOR
+  \end{algorithmic}
+\end{itemize}
+
+\subsection{Barabasi-Albert}
+% FIXME
+The Barabasi-Albert model is an algorithm for generating \emph{scale-free}
+networks, as described in section \ref{sec:scale-free}. This is achieved using
 using preferential attachment. Nodes are selected for attachment with a
-probability proportional to their
-degree in the network.  Such networks are present in natural and human
-made systems, such as the citation networks. 
+probability proportional to their degree in the network.
 
-A network is deemed scale-free if the network exhibits a power law degree
-distribution. 
-\[
-degree(x) = ax^k
- \] 
-In context, this means that the frequency of attachment to a node
-varies as a power of its degree. Such networks are also scale invariant meaning
-that the network's size has no effect on its attributes i.e. degree
-distribution.
+Such networks are present in natural and human made systems, such as the
+citation networks. The characteristic of a scale-free network are des
+
+As explained in section \ref{sec:scale-free}, a network is deemed scale-free if
+its degree distribution follows a power law.  In context, this means that the
+frequency of attachment to a node varies as a power of its degree. Such networks
+are \emph{also scale invariant} meaning that the network's size has no effect on
+its attributes i.e. degree distribution.
 
 The model is implemented as follows:
 \begin{enumerate}
-\item Select a node by generating a random percentage with $2$ decimal place
-precision.
-The preferences of nodes are stored cumulatively therefore, the random number
-serves as an index with the node as the indexed element, which can be accessed
-using a binary search.
-\begin{lstlisting}
-    const float E = 0.01;
-    int l;
-    for (l = 1; l < nodes.size(); l <<= 1)
-        ;
-    int i(0);
-    for (; l > 0; l >>= 1) {
-        if (l + i < nodes.size()) {
-            if (cumulativePreferences[l + i] <= genPref + E)
-                i += l;
-        }
-    }
-    return nodes[i];
-\end{lstlisting}
+\item
+  Select a node by generating a random percentage with $2$ decimal place
+  precision.  The preferences of nodes are stored cumulatively therefore, the
+  random number serves as an index with the node as the indexed element, which
+  can be accessed using a binary search.
+  \begin{algorithmic}
+    \REQUIRE A real random number $pref$ in $[0,100]$.
+    \FOR{$l=1 \to N-1$}
+      \STATE{$l \gets 2l$}
+	    \FOR {$i=0 \to l \ge 0$}
+	      \STATE $l \gets \frac{l}{2}$
+	\IF{$l+i \le N$}
+		\IF{cumulative preference[l+i] $\leq$ genPreference}
+		\STATE $i = i+l$
+		\ENDIF
+	\ENDIF
+	\ENDFOR
+\ENDFOR
+\RETURN Nodes[i]
+\end{algorithmic}
   \item Attach the node to the indexed element.
   \item If more edges are to be added, repeat the procedure.
-\begin{lstlisting}
-    while (edgesToAdd > 0) {
-        vPref = getPreference(nodes, genRandom());
-        int cutOff;
-        for (cutOff = 0; cutOff < 100 && !graph->newEdge(vertex, vPref);
-             ++cutOff) {
-            vPref = getPreference(nodes, genRandom());
-        }
-        if (cutOff == 100)
-            break;
-        --edgesToAdd;
-        usedNodes << vPref;
-        if (usedNodes.size() >= numNodes)
-            break;
-    }
-\end{lstlisting}
+
+\begin{algorithmic}
+\REQUIRE  new Node $N_i$
+\REQUIRE Edge count with amount of edges to be added
+\REQUIRE A vector of used nodes
+\REQUIRE A vector of all nodes exluding $N_i$ called Nodes
+\WHILE{Edge count $>$ 0}
+	\STATE r $\gets$ random real in $[0, 1]$
+	\STATE Node vPref $\gets$ getPreference(Nodes,r)
+	\WHILE{Adding edges between $N_i$ and vPref failed}
+		\STATE r $\gets$ random real in $[0, 1]$
+		\STATE Node vPref $\gets$ getPreference(Nodes,r)
+	\ENDWHILE
+	\STATE -- edge count
+	\STATE usedNodes.add(vPref)
+	\IF{All nodes are used}
+		\STATE break
+	\ENDIF
+\ENDWHILE
+
+\end{algorithmic}
   \item Recompute the preferences.
-\begin{lstlisting}
-    updatePreference(graph->nodes(), 2 * numEdges);
-\end{lstlisting}
+\begin{algorithmic}
+	\STATE updatePreferences(Nodes, 2Edges)
+\end{algorithmic}
 \end{enumerate}
 
+
+
+
 \subsection{Bipartite Model}
+% FIXME
+
+\begin{wrapfigure}{R}{0.4\textwidth}
+  \begin{center}
+    \input{bipartite-graph.tex}
+  \end{center}
+  \caption{A sample bipartite graph}
+\end{wrapfigure}
 
 A Bipartite graph is a graph which consists of two node sets. The nodes from
 each set are only allowed to connect to nodes which are not a member of their
 own set.
 
-\footnote{http://en.wikipedia.org/wiki/File:Simple-bipartite-graph.svg}\includegraphics[scale=0.3]{bipartite}
-
-The algorithm constructs a network in three simple steps
+The algorithm constructs a network in three simple steps:
 \begin{enumerate}
    \item Generate a bipartite graph with two node sets e.g. set U and set V.
    \item Connect all nodes in U that are connected to the same node in V.
@@ -483,109 +557,160 @@ The algorithm constructs a network in three simple steps
 \end{enumerate}
 
 This procedure is implemented as follows:
+
 \begin{enumerate}
-   \item Generate two node vectors, \code{uVector} and \code{vVector}.
-\begin{lstlisting}
-	for (int i(0); i < uSize; ++i) {
-        	uVector << scene->newNode();
-	}
-	 for (int i(0); i < vSize; ++i) {
-        	vVector << scene->newNode();
-	}
-\end{lstlisting}
-   \item For each member of \code{vVector}, obtain it's degree distribution:
-\code{double degree = degreeDist(i)} and add as many nodes from uVector as degree permits
-   \item Connect any members of \code{uVector}, which are disjoint, to the network.
-   \item Generate a set of vVector members, e.g. vector A, which are connected to some members of \code{uVector}
-\begin{lstlisting}
-       	foreach (Edge *e, scene->edges()) {
-            	if (e->destNode()->tag() == v->tag()) {
-                A << e;
-            }
-\end{lstlisting}
-   \item For all members in vector A, connect nodes which share a common \code{vVector} member.
-\begin{lstlisting}
-	foreach (Edge *e1, A) {
-            foreach (Edge *e2, A) {
-                Node *u1 = e1->sourceNode();
-                Node *u2 = e2->sourceNode();
-                if (u1->tag() != u2->tag()){
-                        scene->newEdge(u1,u2);
-                }
-            }
-        }
-\end{lstlisting}
-   \item Remove all edges and nodes which are associated with a member of \code{vVector}.
+   \item
+     Generate two node vectors, $U$ and $V$, with respective sizes $N_U$ and
+     $N_V$:
+
+     \begin{algorithmic}
+       \REQUIRE $N_U > 0$
+       \REQUIRE $N_V > 0$
+
+       \FOR{$i=0 \to N_U$}
+	        \STATE $i \gets i + 1$
+	        \STATE $U$[i] $\gets$ New node
+       \ENDFOR
+
+       \FOR{$i=0 \to N_V$}
+	       \STATE $i \gets i + 1$
+	       \STATE $V$[i] $\gets$ New node
+       \ENDFOR
+     \end{algorithmic}
+
+   \item
+     For each member of $V$, obtain it's degree distribution, and add as many
+     nodes from $U$ as the degree permits.
+
+   \item
+     Connect any members of $U$, which are disjoint, to the network.
+
+   \item
+     Generate a set (e.g. $S$), which holds all members of $U$
+     which are connected to the same member in $V$:
+
+     \begin{algorithmic}
+
+       \FORALL{edges $E_i$}
+	       \IF{$E_i$ connects $U$ and $V$}
+		       \STATE Add $E_i$ to set $S$
+	       \ENDIF
+       \ENDFOR
+     \end{algorithmic}
+
+   \item
+     For all members in set $S$, connect nodes which share a common
+     $V$ member.
+
+     \begin{algorithmic}
+       \REQUIRE Non empty edge set $S$
+       \FORALL{edges $E_i$ in $S$}
+  	     \FORALL{edges $E_j$ in $S$}
+		       \IF{$E_i$ and $E_j$ share the same node in $U$}
+			       \STATE Create new edge
+		       \ENDIF
+	       \ENDFOR
+       \ENDFOR
+     \end{algorithmic}
+
+   \item
+     Remove all edges and nodes which are associated with a member of $V$.
+
 \end{enumerate}
 
-\subsection{Preferential Attachment}
-Preferential attachment and clustering are two distinct concepts which are used in graph generation.
-When using preferential attachment we assign nodes in a network a preference depending on their degree. Nodes with more edges, that is, which are more connected will have a higher preference than nodes with less edges. The preference ranges from ]0,1], assuming no disjoint nodes exist and, for a node N, is calculated as 
-\[
-\frac{N_\mathrm{edges}}{Total_\mathrm{edges}}
-\]
+\subsection{Preferential Attachment with Clustering}
 
-Clustering is a concept which determines how to connect a node N, once a connection with at least one other node N' has been established. This procedure determines the intersection set of N' with all its neighbours. Then node N is connected to all members of the intersection set.
+% FIXME
+Preferential attachment and clustering are two distinct concepts which are used
+in graph generation.
 
-The algorithm described here uses both concepts to generate networks with scale-free characteristics. First, nodes are added to the network via the preferential attachment method then, once attached are connected to the rest of the network via the clustering procedure.
+When using preferential attachment we assign nodes in a network a preference
+depending on their degree. Nodes with more edges, that is, which are more
+connected will have a higher preference than nodes with less edges. The
+preference ranges in $[0,1]$ and, assuming that no disjoint nodes exist and, is
+\[ \frac{K_N}{Edges} \]
+for a certain node $N$ with degree $N_K$, and $Edges$ being the total number of
+edges.
+
+\emph{Clustering} is a concept which determines how to connect a node $N$, once
+a connection with at least one other node $N'$ has been established. This
+procedure determines the intersection set of $N'$ with all its neighbours. Then
+node $N$ is connected to all members of the intersection set.
+
+The algorithm described here uses both concepts to generate networks with
+scale-free characteristics. First, nodes are added to the network via the
+preferential attachment method. Then, once attached are connected to the rest of
+the network via the clustering procedure. %% FIXME: i don't understand this phrase.
 
 This is implemented as follows:
-\begin{enumerate}
-\item Select a node by generating a random percentage with 2 decimal place
-precision.
-The preferences of nodes are stored cumulatively therefore, the random number
-serves as an index with the node as the indexed element, which can be accessed
-using a binary search.
-\begin{lstlisting}
-    const float E = 0.01;
-    int l;
-    for (l = 1; l < nodes.size(); l <<= 1)
-        ;
-    int i(0);
-    for (; l > 0; l >>= 1) {
-        if (l + i < nodes.size()) {
-            if (cumulativePreferences[l + i] <= genPref + E)
-                i += l;
-        }
-    }
-    return nodes[i];
-\end{lstlisting}
-   \item Attach the node to the indexed element.
-   \item Use the clustering procedure to determine other edges.
-\begin{lstlisting}
-    int length = neighbours.size();
-    while (edgesToAdd > 0 && !(neighbours.empty())) {
-        int rand = qrand()%length;
-        Node *vi = neighbours[rand];
-        if (graph->newEdge(vertex, vi)) {
-            --edgesToAdd;
-            usedNodes << vi;
-            neighbours = getIntersection(neighbours, vi->neighbours());
-        } else {
-            neighbours.remove(rand);
-        }
-        length = neighbours.size();
-    }
-   }  
-\end{lstlisting}
-   \item If more edges are to be added, repeat the procedure.
-\begin{lstlisting}
-    while (edgesToAdd > 0) {
-	continue....
-   }
-\end{lstlisting}
-   \item Recompute the preferences.
-\begin{lstlisting}
-	updatePreference(graph->nodes(), 2 * numEdges);
-\end{lstlisting}
 
+\begin{enumerate}
+  \item
+    Select a node by generating a random percentage with 2 decimal place
+    precision.  The preferences of nodes are stored cumulatively. Therefore, the
+    random number serves as an index with the node as the indexed element, which
+    can be accessed using a binary search.
+
+    %% FIXME: I don't understand this. What is Nodes? are you doing the binary
+    %% search here? either way, it doesn't make sense
+    \begin{algorithmic}
+      \FOR{$l=1 \to N-1$}
+        \STATE{$l \gets 2l$}
+        \STATE{$i \gets 0$}
+        \WHILE{$l \ge 0$}
+	        \STATE $l \gets \frac{l}{2}$
+	        \IF{$l+i \le N$}
+		        \STATE pref $\gets$ real in  $[0,100]$
+		        \IF{Comulative preference of $l$ $\leq$ pref}
+		          \STATE $i \gets i+l$
+		        \ENDIF
+	        \ENDIF
+	      \ENDWHILE
+      \ENDFOR
+      \RETURN Nodes[i]
+    \end{algorithmic}
+
+   \item
+     Attach the node to the indexed element.
+
+   \item
+     Use the clustering procedure to determine other edges.
+
+     \begin{algorithmic}
+       \REQUIRE New Node $N_i$
+       \REQUIRE Neighbour vector with all nodes neighbouring $N_i$
+       \REQUIRE Edge count with amount of edges to be added
+       \REQUIRE Used nodes vector
+       \STATE length = neighbours.size
+
+       \WHILE{There are edges to add $\land$ neighbour vector is not empty}
+	       \STATE rand $\gets$ random integer $\bmod$ length
+	       \STATE Node $R_i \gets$ neighbour[rand]
+	       \IF{Edge creation between $N_i$ and $R_i$ was successful}
+		       \STATE --edge count
+		       \STATE add $R_i$ to used nodes vector
+		       \STATE neighbour vector $\gets$ intersection(neighbour vector,neighbours($R_i$))
+	       \ELSE
+		       \STATE remove neighbours[rand]
+	       \ENDIF
+	       \STATE length $\gets$ neighbours.size()
+       \ENDWHILE
+     \end{algorithmic}
+
+   \item
+     If more edges are to be added, repeat the procedure.
+
+   \item
+     Recompute the preferences.
 \end{enumerate}
 
+
+
 \subsection{Real Small World Networks}
+% FIXME
 Finally, as Visigoth is supposed to help in analysing Small World
 Networks, it can also fetch real world data from `live' social
 networks Twitter and identi.ca.
-
 
 \section{Statistics}
 
@@ -608,9 +733,7 @@ generated networks in real time. The statistics which are calculated are:
 verticies}} vertecies_j}
 \]
 
-\begin{lstlisting}
-return (2.0 * graph->edges().count()) / graph->nodes().count())
-\end{lstlisting}
+Implementation is trivial
 
 \subsection{Average Path Length}
 \[
@@ -621,48 +744,42 @@ vertices^2 - \sum vertices}
 The first step in this algorithms is to calculate the path length from every
 node to every node
 
-\begin{lstlisting}
-foreach (Node *n, graph->nodes()) {
-        allLengths += lengthSum(n, visited, distance);
-	 ...
-    }
-\end{lstlisting}
-Then divide the calculation by $k_i(k_i-1)$
-\begin{lstlisting}
-return allLengths/(double)(graph->nodes().size()*(graph->nodes().size()-1));
-\end{lstlisting}
+\begin{algorithmic}
+\FORALL{Nodes N}
+	\STATE cumulativeLength $\gets$ lengthSum(N,visited,distance)
+	\STATE \dots
+\ENDFOR
+\end{algorithmic}
+Then divide the calculation by $N_i(N_i-1)$
+\begin{algorithmic}
+	\RETURN  $\frac{\mathrm{cummulativeLength}}{N(N-1)}$
+\end{algorithmic}
 
 Here \code{lengthSum} is a sub procedure which traverses the network in a
 breadth-first manner and calculates the minimum distance to each node.
 It then returns the sum of all distances
-\begin{lstlisting}
-while(!queue.empty()) {
-        Node *parent = queue.dequeue();
-        QList<Edge*> edges = parent->edges();
 
-        foreach(Edge *e, edges) {
-            Node *n;
+\begin{algorithmic}
+\REQUIRE Starting node parent
+\REQUIRE Queue of nodes adjecent to parent
+\REQUIRE A vector of visited nodes called visited
+\REQUIRE A distance vector
+\WHILE{Queue is not empty}
+	\STATE parent $\gets$ queue.dequeue()
+	\STATE edges $\gets$ parent.edges()
+	\FORALL{E in edges}
+	\STATE Node n $\gets$ E.getDifferentFromParent()
+		\IF{!visited.contain(n)}
+			\STATE visited.insert(n)
+			\STATE distance[n] $\gets$ distance.value(parent, 0) + 1
+			\STATE queue.enqueue(n)
+		\ENDIF
+	\ENDFOR
+	\STATE retLength += distance[parent]
+\ENDWHILE
 
-            if(e->sourceNode()->tag() == parent->tag()) {
-                n = e->destNode();
-            } else {
-                n = e->sourceNode();
-            }
-
-            if(!visited.contains(n)) {
-                visited.insert(n);
-                distance[n] = distance.value(parent, 0) + 1;
-                queue.enqueue(n);
-            }
-
-        }
-
-        retLength += distance[parent];
-    }
-
-    return retLength;
-\end{lstlisting}
-
+\RETURN retLength
+\end{algorithmic}
 \subsection{Clustering Coefficient}
 \[
 C_i = \frac{2|\{e_j,_k\}|}{k_i(k_i-1)}
@@ -671,37 +788,40 @@ Where $k_i$ is the number of vertices immediately connected to $vertex_i$
 \newline
 The set ${e_j,_k}$ is set of all edges common to the neighbours of $vertex_i$\\
 
-The first step is to calculate the intersection of the neighbours of the node wewant to calculate the statistic for and the neighbours of that node's neighbours\begin{lstlisting}
-while (!edges.empty()) {
-        Edge *e = edges.takeFirst();
-        Node *src = e->sourceNode();
-        Node *dest = e->destNode();
-        QVector<Node*> nNeigh = node->neighbours();
-        if(src->tag() == node->tag()) {
-            QVector<Node*> dNeigh = dest->neighbours();
-            intersection += intersectionCount(nNeigh, dNeigh);
-        } else {
-            QVector<Node*> dNeigh = src->neighbours();
-            intersection += intersectionCount(nNeigh, dNeigh);
-        }
-    }
-\end{lstlisting}
+The first step is to calculate the intersection of the neighbours of the node wewant to calculate the statistic for and the neighbours of that node's neighbours
+\begin{algorithmic}
+\REQUIRE A node N
+\REQUIRE An edge vector with edges connected to N
+\REQUIRE A counter called intersection
+\WHILE {!edges.empty()}
+	\STATE Edge e $\gets$ edges.takeFirst()
+	\STATE Vector nNeighbours = N.neighbours()
+	\STATE Node $N_i \gets$ e.differentFrom(N)
+	\STATE Vector otherNeighbours $\gets$  $N_i$.neighbours()
+	\STATE  intersection += intersectionCount(nNeighbours, otherNeighbours);
+\ENDWHILE
+\end{algorithmic}
 If the node's degree is greater than 1 we return the calculation.
-\begin{lstlisting}
-return k > 1 ? (2*intersection)/(double) (k*(k-1)):0 
-\end{lstlisting}
+\begin{algorithmic}
+\REQUIRE k = N.degree()
+\IF{k $>$ 1}
+	\RETURN $\frac{2intersection}{k*(k-1)}$
+\ELSE
+	\RETURN 0
+\ENDIF
+\end{algorithmic}
 
-\subsection{Clusering Average}
+\subsection{Clustering Average}
 \[
 C_\mathrm{avg} = \frac{1}{\mathrm{\sum vertecies}}\sum_{i=1}^{\mathrm{max\
 vertecies}} C_i
 \]
-\begin{lstlisting}
- foreach (Node *n, graph->nodes()) {
-        clusterCumulative += clusteringCoeff(n);
-    }
-    return clusterCumulative / (double)graph->nodes().size();
-\end{lstlisting}
+\begin{algorithmic}
+\FORALL {Nodes N}
+	\STATE clusterCumulative += clusteringCoeff(N)
+\ENDFOR
+\RETURN $\frac{clusterCumulative}{Node Cont}$
+\end{algorithmic}
 
 \subsection{Scale Free Exponent}
 
@@ -715,50 +835,156 @@ line.
 f(x) = ax^k \equiv ln(f(x)) = kln(a) + kln(x) \equiv y = mx + b
 \]
 
-\begin{lstlisting}
-    for (double i(0); i < maxDegree; ++i) {
-        double count = graph->nodeCount(i);
-        double y = count / (double)graph->nodes().size();
-
-        if (y != 0) {
-            // incase we want to plot
-            QPointF p(qLn(i+1), qLn(y));
-            plot << p;
-        }
-    }
-\end{lstlisting}
+\begin{algorithmic}
+\REQUIRE maxDegree which holds the maximum degree of the network
+\REQUIRE A vector to hold objects of type point
+\FOR { $i = 0 \to maxDegree$}
+	\STATE ++i
+	\STATE count $\gets$ graph.nodesWithDegree(i)
+	\STATE y = $\frac{count}{Total Nodes}$
+	\IF { $y \ne 0$}
+		\STATE  point p($ln(i+1)$,$ln(y)$)
+		\STATE plot.add(p)
+	\ENDIF
+\ENDFOR
+\end{algorithmic}
 
 After the degree distribution has been recorded, the algorithm proceeds to
 calculate the straight line gradient of the captured points.
 
-\begin{lstlisting}
-    foreach (QPointF p, plot) {
-        // init calculation
-        if (c == 0) {
-           yPref = p.ry();
-           deltaX = p.rx();
-           ++c;
-        } else {
-            deltaY += p.ry() - yPref;
-            yPref = p.ry();
-            deltaX = p.rx() - deltaX;
-            ++c;
-        }
-    }
-
-    return (-1) * (deltaY / deltaX);
-\end{lstlisting}
+\begin{algorithmic}
+\REQUIRE A vector to hold objects of type point
+\REQUIRE A counter c
+\STATE $c = 0$
+\FORALL {Point p in Plot}
+	\IF { $c = 0$ }
+		\STATE yPrev $\gets$ p.getY()
+		\STATE  deltaX $\gets$ p.getX()
+	\ELSE
+		\STATE deltaX += p.getY() - yPref
+		\STATE yPref $\gets$ p.getY()
+		\STATE deltaX $\gets$ p.getX() - deltaX
+	\ENDIF
+		\STATE ++c
+\ENDFOR
+\RETURN $-1\frac{deltaY}{deltaX}$
+\end{algorithmic}
 
 The result is multiplied by -1 since the straight line gradient is downwards
 sloping.
+
+
+
+\section{Visigoth functionality}
+
+% FIXME: Describe what we can do. Generate, set properties, save
+%        screenshots, move nodes, fly in 3D, the kitchen sink.
+
 
 \section{Visigoth technologies}
 
 \subsection{Qt}
 
 The UI toolkit, standard library replacement, and application
-framework we used is Qt\footnote{FIXME: add link to the Qt Labs?
-  website}.
+framework Visigoth uses is Qt\footnote{\url{http://qt.nokia.com/}}.
+
+Visigoth relies heavily on some of Qt's features:
+\begin{description}
+\item [gui] Qt is famous for providing a cross-platform, high-level,
+  UI toolkit that automatically uses the native drawing systems on
+  each host platform. All of Visigoth's user visible interface was
+  built using this framework. A more detailed explanation is included
+  in Section \ref{gui};
+\item [meta-objects] Qt supplements the venerable C
+  pre-processor\footnote{\url{http://gcc.gnu.org/onlinedocs/cpp/}}
+  with its own \buzz{meta-object
+    compiler} \footnote{\url{http://developer.qt.nokia.com/doc/qt-4.8/moc.html}}.
+  This preprocessor augments normal C++ objects with modern features
+  such as introspection and signals. We use introspection extensively
+  in our tests; see Section \ref{tests}. We use signals to decouple
+  objects, which leads to a cleaner design and has the side-effect of
+  simplifying writing test cases (mock and stub objects are not
+  necessary anymore); for details, see Section \ref{interaction};
+\item [xml] Like most modern frameworks, Qt provides an \buzz{XML}
+  parsing
+  library\footnote{\url{http://developer.qt.nokia.com/doc/qt-4.8/qtxml.html}}.
+  In addition to a standard \buzz{SAX} parser, it exposes an extremely
+  clean \buzz{HTML DOM}-like interface for manipulating \buzz{XML}
+  documents. We use it in order to parse results from queries to
+  online sources such as \href{http://twitter.com}{Twitter} and
+  \href{http://identi.ca}{Identi.ca};
+\item [containers] Qt provides a fully-featured library of containers
+  similar to Java
+  \buzz{collections} \footnote{\url{http://docs.oracle.com/javase/1.5.0/docs/api/java/util/package-summary.html}}
+  and significantly more complete than the standard or SGI
+  \buzz{STL}\footnote{\url{http://www.sgi.com/tech/stl/}}. The
+  availability of these meant that advanced data-structures were one
+  less concern to worry about during development;
+\item [concurrency] Qt also provides high-level
+  threading\footnote{\url{http://developer.qt.nokia.com/doc/qt-4.8/threads.html}}
+  and
+  concurrency\footnote{\url{http://developer.qt.nokia.com/doc/qt-4.8/threads-qtconcurrent.html}}
+  APIs. Our experiments showed that separating the CPU-intensive
+  computations (e.g. generating new networks, calculating layout
+  positions) onto a separate thread could speed up certain operations
+  by as much as a factor of $6$. The concurrency API, which provides
+  functional programming style parallelized primitives
+  (e.g. \code{map}, \code{filter}) could further improve performance.
+  This is an area where further work could be done in Visigoth.
+\end{description}
+
+\subsubsection{Plugins}
+
+Qt has a healthy plugin ecosystems, with a myriad of libraries
+available to plug into the main framework. We make use of two of
+these, namely
+\buzz{QCA} \footnote{\url{http://delta.affinix.com/qca/}} and
+\buzz{QOAuth} \footnote{\url{https://github.com/ayoy/qoauth/wiki}}.
+
+\begin{description}
+\item [QCA] The \buzz{Qt Cryptographic Architecture} includes many
+  security providers for Qt application. We used the \buzz{OpenSSL}
+  provider when establishing TLS-secured channels to the online
+  sources (e.g. \href{http://twitter.com}{Twitter});
+\item [QOAuth] This library is an implementation of the \buzz{OAuth
+  2.0}\footnote{\url{http://oauth.net/}} secure API authorization
+  standard (\buzz{OAuth} is becoming the de-facto authorization
+  mechanism on the web); again, this was required in order to
+  authenticate with the online sources.
+\end{description}
+
+\subsubsection{Cross-platform}
+
+Thanks to Qt's cross-platform nature, in general, and to
+\buzz{qmake} \footnote{\url{http://developer.qt.nokia.com/doc/qt-4.8/qmake-manual.html}},
+in particular, Visigoth works on Windows, OSX and Linux with a minimum
+of fuss on the development side.
+
+\begin{description}
+\item [qmake] Qt's build system, \buzz{qmake}, takes a high level
+  project description and outputs platform-specific build files
+  (\buzz{Makefile}s on Linux, \buzz{XCode} projects on OSX and
+  \buzz{Visual Studio} projects on Windows). It also simplifies
+  finding external libraries (by using its own mechanism on Linux,
+  \buzz{pkg-config} on OSX and the registry on Windows).
+\end{description}
+
+The only tweaks necessary for Visigoth to build on each of the above
+platforms are a few defines to deal with the misplaced \buzz{OpenGL}
+headers on OSX and few conditionals in the project description to
+handle the library finding on Windows.
+
+The following screenshots show Visigoth working on the three
+platforms.
+%% FIXME: add screenshots
+
+\subsubsection{Rapid prototyping}
+
+One of lesser known advantages to using Qt we discovered is rapid
+prototyping. Point in case, the original prototype for Visigoth took
+two days to write. It included roughly half of the customer's
+\emph{must-have} features, was cross-platform and was visually
+impressive.
 
 \subsection{OpenGL}
 
@@ -904,6 +1130,57 @@ highlight the points that we felt the most while developing Visigoth.
 
 \section{Engineering Visigoth}
 %% This section corresponds to C in the requirements
+
+We encountered a number of difficulties whilst building Visigoth,
+which we overcame by dividing the application into mostly-independent
+components. The following sections provide overviews and short
+descriptions for each component.
+
+\subsection{GUI}
+\label{gui}
+
+Since Visigoth is an end-user-oriented application, the GUI is, by
+far, the most important component. Luckily, the user work-flows we
+considered contain very few steps (hence, there is little need for
+``Wizards'' or nested-design).
+
+As shown in Figure \ref{fig:gui-sketch}, the Visigoth UI is
+\emph{flat}. All relevant options and displays are presented to the
+user in a single encompassing interface. Relevancy is determined by
+context; for instance, the generation parameters (Figure
+\ref{fig:gui-sketch}.3) vary depending on the algorithm selected (in
+Figure \ref{fig:gui-sketch}.1).
+
+\begin{figure}[h]
+  \centering
+  \input{gui-sketch.tex}
+  \caption{UI wire-frame sketch: 1. Generation algorithm chooser;
+    2. Statistics; 3. Generation parameters; 4. Graph display; 5. Main
+    menu; 6. Quick actions; 7. Status bar}
+  \label{fig:gui-sketch}
+\end{figure}
+
+\noindent The most general user work-flow is as follows:
+\begin{description}
+  \setlength{\itemindent}{\parindent}
+  \item [Figure \ref{fig:gui-sketch}.1] User selects a generation
+    algorithm;
+  \item [Figure \ref{fig:gui-sketch}.2] User checks whether the graph
+    has the properties desired and
+  \item [Figure \ref{fig:gui-sketch}.3] tweaks the parameters;
+  \item [Figure \ref{fig:gui-sketch}.4] User checks the generated
+    graph and, if necessary, manually adjusts its layout;
+  \item [Figure \ref{fig:gui-sketch}.5, 6] User decides to save the
+    generated graph to a file or to an image.
+\end{description}
+
+\subsection{Classes}
+%% This is an overview of the classes (including a class diagram).
+
+\subsection{Object interaction}
+\label{interaction}
+%% This is an overview of the signals sent between objects (or of the
+%% public interfaces they subscribe to).
 
 \subsection{Graph drawing}
 
@@ -1073,13 +1350,181 @@ graph generation time and the OpenGL drawing).
 After we implemented the 3D view we had to write an extension to FADE to support3D, which proved to be straight forward. Now we have a 3-dimensional space,
 which is recursively divided into $8$ cubes.
 
+
+\subsection{Development methodologies}
+% FIXME: This is text from Report 3.
+
+\subsubsection{Peer review}
+Our rule of thumb, ``\emph{the master branch is always releasable}'',
+has been
+the foundation of our testing practices. To adhere to this, we have
+had to ensure that no bugs crept into the master branch. Towards this
+goal, no changes are merged into master until at least another member
+of the team reviews them. Through this practice of peer review the
+whole team has stayed informed on the current state of the project
+in addition to exposing and fixing bugs missed by the original code
+author. While this does indeed slow done writing code, we like to
+think that it otherwise shortens overall development time.
+
+\subsubsection{Scrum}
+To further promote group awareness of the complete state of the
+project we held frequent short meetings true to the idea of scrum.
+These were whole-group meetings held every few days, in which team
+members shared comments on what features they were working on at
+the time and the future outlook of the project.
+
+\subsubsection{Client feedback}
+Towards the end of each iteration, we held meetings with our client
+in order to report on our progress and get feedback on new
+developments. These meetings would consist of a short demo of newly
+added features, a short "impromptu" usability test and a discussion
+on what new features should be the focus of the following iteration.
+
+The feedback we received at the end of each iteration was
+consistently positive. The Visigoth interface always met our
+client's demands and only minor changes have been made from
+iteration to iteration, e.g. button placements. Most of the our
+client's wishes referred to extensions to the functionality of
+our product, such as a 3D rendering mode and the network generation
+algorithms.
+
+
+\subsubsection{Other users' feedback}
+Near the end of each iteration we asked classmates and friends for
+their sincere point of view concerning our progress and project
+overall, to that specific point in time.
+
+The last impression was that they were mainly happy. We followed their
+advice when it appeared. For example, at some point, they wanted to be
+able to customize the graph a bit more following their own taste. So,
+we added the possibility to change the color of the nodes, edges,
+background; to highlight selected nodes as well as their direct
+neighbours.
+
+
+
 \section{Looking back}
 %% This section corresponds to 'Conclusions' in part D of the requirements
 
 \subsection{Validation}
 %% The client is a happy puppy
+% FIXME: This is text from Report 3
+
+\subsubsection{Tests}
+To automate regression detection we use a test suite written using
+the Qt Unit-Testing framework, which covers a significant portion
+of the codebase. In particular, it completely covers the intricate
+algorithmic and UI logic encoded in the Algorithm classes. Running
+the test suite can expose changes breaking rarely-used functions
+which would have slipped past a quick tests by the coder.
+
+The tests we use to determine our product's integrity are split
+into two categories: system and interface tests. System tests focus
+on the Visigoth back-end, i.e. memory consistency and build stability.
+The interface tests were deployed to ensure that user input in the
+graphical interface is successfully passed to and feedback returned
+from the system's back-end. More specifically, the interface tests
+encode a number of common use-cases and ensure that Visigoth indeed
+behaves as per the user's expectations.
+
+These user interface tests proved quite useful and revealed several
+problems, all of them caused by internal API changes and code not
+being updated to reflect the changes. These would manifest as
+misleading readings on the Visigoth graph-information panels and
+were thus caught by the use-case tests.
+
+When testing our product, the most profound fault that was revealed
+by our system tests were memory leaks, found in two separate
+instances. The lessons to take away were twofold:
+\begin{itemize}
+  \item One the one hand, old code that sees no use and just rots
+        should be removed immediately so that it cannot interfere
+        with the newer infrastructure. We were still semi-maintaining
+        internal structures for an old rendering front-end, though
+        not cleaning them up properly. We have recently began to
+        track test coverage statistics.  These should help us in
+        identifying dead and duplicate code in the future.
+  \item On the other hand, even a three-way merges as done by Git
+        should be done with great care: merge conflicts between
+        diverged branches may re-introduce old code, leading to
+        the situation described above.
+\end{itemize}
+
+\subsubsection{Continuous Integration}
+We use a Jenkins CI\footnote{http://jenkins-ci.org/} server. It is
+set up to track the master branch. On receiving a change notification
+from the central repository, it proceeds to do a fresh build of the
+project, runs the tests and generates the coverage statistics. It
+also keeps track of previous builds and aggregates information about
+the overall health of the project.
+The server is publicly accessible so that interested parties can get
+a rough idea of what the current status of the project is. It is also
+set up to notify team members (via the project mailing-list) when
+problems occur.
+
+\subsubsection{Stability under load}
+Load-testing Visigoth is a straightforward affair: generate networks
+with a large number of nodes. We have found our software to stay
+sufficiently responsive even under load. This is especially true
+since it is usually generating a high CPU load itself when
+recalculating the node positions using the spring force model. In
+particular, we met our initial goal of displaying thousands of nodes
+in real-time.
+
+\subsubsection{Style}
+We have strived to use consistent style throughout the code and
+documentation. To this extent, it fell to the reviewer doing the
+merge to mention and fix any style issues. This has worked adequately
+most of the time, and in the few instances where badly styled code
+slipped through, subsequent global reviews remedied the problem in a
+timely fashion.
+
+
+\subsection{Documentation}
+% FIXME: This is text from Report 3.
+
+\subsubsection{Tools and policies}
+We use Git\footnote{http://git-scm.com/} to manage our code base and
+to enable parallel development; using its lightweight branching
+extensively in our work-flow.  Additionally, the distributed nature
+of Git enabled more efficient peer reviews, as we could pull/push
+changes directly from one another. As a general policy, code needed
+to be checked and corrected by at least one other developer before it
+made its way into the master branch.
+
+\subsubsection{Knowledge transfer}
+Due to our peer review scheme, at least two people would know every
+bit of code. Also, mutual interest in each other's area of expertise
+has fostered cooperation in labs where problems were solved together
+in eXtreme Programming setups (one person coding, the other watching
+and correcting).
+
+We also held periodic "Direct Mental Download" meetings in which one
+team-member would dump his accumulated knowledge into the willing
+minds of other team-member (referred to as recipients in our terminology).
+
+Additionally, we shared relevant articles/papers between us to ease
+the used principles understanding and to improve the existent work.
+This exchange of written or verbal knowledge transfer allowed us not
+only to improve team-working but to gain new technical skills as well.
+
+%Add the Log-Book in appendix
+
+
+\subsection{Functional testing}
+\label{tests}
+
+
+
+
+\subsection{People management and contributions}
+%This is from Report 2 except the summary of contributions which is a new add
 
 \subsection{Lessons learned}
+
+
+\subsection{Ethical and Environmental Impact}
+%Check Report 2
 
 \addcontentsline{toc}{section}{References}
 \begin{thebibliography}{9}
@@ -1101,6 +1546,15 @@ which is recursively divided into $8$ cubes.
   \emph{FADE: Graph drawing, clustering and visual abstraction}.
   Department of Computer Science and Software Engineering,
   Univ. of  Newcastle, Australia, 2000.
+
+\bibitem{complexAdapt}
+Claudius Gros,
+\emph{Complex and Adaptive Dynamical Systems}.
+Springer,
+2008.
+
+\bibitem{complexNets}
+  \url{http://en.wikipedia.org/wiki/Complex_network}
 
 \end{thebibliography}
 

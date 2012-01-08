@@ -9,7 +9,6 @@ void glaInit(void);
 void glaCameraRotatef(GLfloat *cmat, GLfloat angle, GLfloat x, GLfloat y, GLfloat z);
 void glaCameraTranslatef(GLfloat *cmat, GLfloat x, GLfloat y, GLfloat z);
 void glaDrawExample(void);
-void glaDrawSphere(GLfloat r, int lats, int longs);
 
 #ifdef __cplusplus
 }

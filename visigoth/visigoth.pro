@@ -2,12 +2,13 @@ QT += core gui opengl xml network
 
 RESOURCES = resources.qrc \
 
-CONFIG += oauth
-oauth {
-    CONFIG += link_pkgconfig
-    PKGCONFIG += qoauth
-    DEFINES += HAS_OAUTH
-}
+
+#CONFIG += oauth
+#oauth {
+#    CONFIG += link_pkgconfig
+#    PKGCONFIG += qoauth
+#    DEFINES += HAS_OAUTH
+#}
 
 TARGET = visigoth
 TEMPLATE = app
@@ -64,12 +65,12 @@ test {
     LIBS += -lgcov
 }
 
-oauth {
-    SOURCES += twitter.cpp
-    HEADERS += twitter.h
-    FORMS += twitauthdialog.ui \
-             twittercontrol.ui
-}
+#oauth {
+#    SOURCES += twitter.cpp
+#    HEADERS += twitter.h
+#    FORMS += twitauthdialog.ui \
+#             twittercontrol.ui
+#}
 
 OTHER_FILES += \
     helpFile.html
