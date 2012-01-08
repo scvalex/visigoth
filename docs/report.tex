@@ -166,7 +166,7 @@ characteristic structural properties of Small World Networks.
 The networks of interest here are mathematical graphs in which most nodes,
 while not being connected directly, can be reached from any other node via a
 small number of steps. In the context of a social network, this results in the
-``small world phenomenon'' \footnote{FIXME: citation needed} of strangers
+``small world phenomenon'' \cite{smphen} of strangers
 being linked by a mutual acquaintance.
 
 %% FIXME: Explain how networks with the above properties are useful.
@@ -174,6 +174,8 @@ being linked by a mutual acquaintance.
 Social networks, neural networks, ecosystems, the World Wide Web, electrical
 power grids and protein networks are all complex networks the dynamic
 behaviour of which currently escapes our understanding.
+
+%maybe we can add here a picture of some neural networks in the brain?
 
 Ideas from network science have been applied to the analysis of metabolic and
 genetic regulatory networks, the design of robust and scalable communication
@@ -283,34 +285,17 @@ power law:
 
 where $P(k)$ is the probability that a node in the network will be of degree $k$.
 
+\subsection{Small World Networks}
 
-%% The following section is just repetition of 1.1 and 1.2.2. We have to merge them in
-%% some way.
+Small-world networks tend to contain \emph{cliques}, and \emph{near-cliques}, meaning sub-networks which have connections between almost any two nodes within them. This follows from the defining property of a high clustering coefficient. 
 
-%% \subsection{Small World Networks}
+Secondly, most pairs of nodes will be connected by at least one short path. This follows from the defining property that the mean-shortest path length be small.
 
-%% Small World Networks derive their denomination from the well-known Small World
-%% Hypothesis\footnote{FIXME: citation needed}, which states that any two persons
-%% are related through a chain of at most seven friends\footnote{FIXME: citation
-%%   needed}.
+Several other properties are often associated with small-world networks. Typically there is an over-abundance of hubs - nodes in the network with a high number of connections (known as high degree). These hubs serve as the common connections mediating the short path lengths between other edges. By analogy, the small-world network of airline flights has a small mean-path length (i.e. between any two cities you are likely to have to take three or fewer flights) because many flights are routed through hub cities. \cite{smnet}
 
-%% Indeed, Small World Networks are graphs resembling the connections within human
-%% social networks, where nodes represent people, and edges between nodes represent
-%% relations of some sort\footnote{FIXME: citation needed, probably one of the two
-%%   main papers}.
+Small-world properties are found in \emph{many} real-world phenomena, including road maps, food chains, electric power grids, metabolite processing networks, networks of brain neurons, voter networks, telephone call graphs, and social influence networks.
 
-%% For example, if someone were to draw every user\footnote{or at least a
-%%   \emph{large} number of users} of a social network (e.g. Twitter) on a canvas
-%% and then connect each pair of them if either is ``following'' the other or if
-%% they are ``friends'', the resulting graph is a Small World Network. Over the
-%% course of time, several mathematical algorithms that generate random Small World
-%% Networks have been discovered. However, the resulting graphs have only lately
-%% begun to resemble those that have grown naturally in the form of social
-%% networks.
-
-%% FIXME: Huh?  Are they really SWNs if they don't resemble the
-%% natural graphs?  Not by our definition.  So, either the definition
-%% is wrong, or the last two sentences need to be rewritten.
+Networks of \emph{connected proteins} have small world properties such as power-law obeying degree distributions. Similarly \emph{transcriptional networks}, in which the nodes are genes, and they are linked if one gene has an up or down-regulatory genetic influence on the other, have small world network properties.
 
 %% FIXME: Explain how SWNs exhibit *all* the properties we're
 %% interested in.  Include some math.
@@ -698,14 +683,14 @@ generated networks in real time. The statistics which are calculated are:
 \subsection{Average Degree}
 \[
 \frac{2\sum_{i=1}^{\mathrm{max\ edges}} edges_i}{\sum_{j=1}^{\mathrm{max\
-verticies}} vertecies_j}
+verticies}} verteces_j}
 \]
 
 Implementation is trivial
 
 \subsection{Average Path Length}
 \[
-\frac{\sum_{i,j}distance_\mathrm{shortest}(verticie_i,verticie_j)}{\sum
+\frac{\sum_{i,j}distance_\mathrm{shortest}(vertice_i,vertice_j)}{\sum
 vertices^2 - \sum vertices}
 \]
 
@@ -756,7 +741,7 @@ Where $k_i$ is the number of vertices immediately connected to $vertex_i$
 \newline
 The set ${e_j,_k}$ is set of all edges common to the neighbours of $vertex_i$\\
 
-The first step is to calculate the intersection of the neighbours of the node wewant to calculate the statistic for and the neighbours of that node's neighbours
+The first step is to calculate the intersection of the neighbours of the node we want to calculate the statistic for and the neighbours of that node's neighbours
 \begin{algorithmic}
 \REQUIRE A node N
 \REQUIRE An edge vector with edges connected to N
@@ -1651,6 +1636,12 @@ Springer,
 
 \bibitem{complexNets}
   \url{http://en.wikipedia.org/wiki/Complex_network}
+
+\bibitem{swphen}
+ \url{http://en.wikipedia.org/wiki/Small_world_experiment}
+
+\bibitem{smnet}
+ \url{http://en.wikipedia.org/wiki/Small-world_network}
 
 \end{thebibliography}
 
