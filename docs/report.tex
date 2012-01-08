@@ -1390,19 +1390,21 @@ which is recursively divided into $8$ cubes.
 
 Work was divided between team members such that each would focus on
 developing a particular component and reviewing another. Table
-\ref{fig:effort} gives provides an overview of the distribution of
-work and the amount of effort required to finish each component.
+\ref{fig:effort} gives an overview of the distribution of work and the
+amount of effort required to finish each component.
 
 \begin{figure}[h]
   \centering
   \begin{tabular}{c|c|c}
     Component         & Team members    & Effort \\
     \hline
-    GUI               & Ingrid, Max     & ? phrs \\
-    3D Renderer       & Max, Francesco  & ? phrs\\
-    \code{GraphScene} & Francesco, Alex & ? phrs\\
-    Algorithms        & Marc, Ingrid    & ? phrs\\
-    Testing           & Alex, Marc      & ? phrs
+    GUI               & Ingrid, Max     & ~80 phrs \\
+    3D Renderer       & Max, Francesco  & ~60 phrs\\
+    \code{GraphScene} & Francesco, Alex & ~80 phrs\\
+    Algorithms        & Marc, Ingrid    & ~120 phrs\\
+    Testing           & Alex, Marc      & ~20 phrs\\
+    \hline
+    Total             &                 & ~360 phrs
   \end{tabular}
   \caption{Effort expanded on each component in person-hours}
   \label{fig:effort}
@@ -1423,7 +1425,10 @@ the effort was well spread out across the development team.
 
 The total amount of code\footnote{as generated using David
   A. Wheeler's `SLOCCount'} required for each component is included in
-Figure \ref{fig:sloc}.
+Figure \ref{fig:sloc}. Note that this table does not show the all the
+code that did \emph{not} make it into the final product; for instance,
+the renderer went through two complete rewrites before being the
+current 3D Renderer.
 
 \begin{figure}[h]
   \centering
