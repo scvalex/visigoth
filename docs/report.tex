@@ -1502,7 +1502,8 @@ current 3D Renderer.
   \label{fig:sloc}
 \end{figure}
 
-\subsection{Development methodologies}
+\subsection{Development practices}
+\label{practices}
 
 \subsubsection{Iterative development}
 
@@ -1602,66 +1603,74 @@ The lasting impression was that they were happy with the software, but
 watching them struggle with certain aspects led to improvements in
 usability.
 
-\subsection{Tests}
-To automate regression detection we use a test suite written using the
-\Qt Unit-Testing framework, which covers a significant portion of the
-codebase. In particular, it completely covers the intricate
-algorithmic and UI logic encoded in the Algorithm classes. Running the
-test suite can expose changes breaking rarely-used functions which
-would have slipped past a quick tests by the coder.
+\subsection{Functionality tests}
+\label{tests}
 
-The tests we use to determine our product's integrity are split
-into two categories: system and interface tests. System tests focus
-on the Visigoth back-end, i.e. memory consistency and build stability.
-The interface tests were deployed to ensure that user input in the
-graphical interface is successfully passed to and feedback returned
-from the system's back-end. More specifically, the interface tests
-encode a number of common use-cases and ensure that Visigoth indeed
-behaves as per the user's expectations.
+In addition to the manual validations described in the previous
+sections, we use and automated suite of tests, which covers a
+significant portion of the codebase. In particular, it completely
+covers the intricate algorithmic and UI logic encoded in the
+\code{Algorithm} and \code{GraphScene} classes.
+
+The tests we use to determine our product's integrity are split into
+two categories: property and functional tests. Property tests focus on
+the \code{Algorithm} classes and check that basic invariants hold for
+the generated networks. The interface tests focus on the
+\code{GraphScene} and simulate user work-flows, checking outcomes
+against expected outcomes. They were deployed to ensure that user
+input in the graphical interface is successfully passed to and
+feedback returned from the system's back-end (which we found to be
+unexpectedly tricky to do).
 
 These user interface tests proved quite useful and revealed several
 problems, all of them caused by internal API changes and code not
 being updated to reflect the changes. These would manifest as
-misleading readings on the Visigoth graph-information panels and
-were thus caught by the use-case tests.
+misleading readings on the Visigoth graph-information panels and were
+thus caught by the use-case tests.
 
 When testing our product, the most profound fault that was revealed
-by our system tests were memory leaks, found in two separate
-instances. The lessons to take away were twofold:
+were memory leaks, found in two separate instances. The lessons to
+take away were twofold:
 \begin{itemize}
   \item One the one hand, old code that sees no use and just rots
-        should be removed immediately so that it cannot interfere
-        with the newer infrastructure. We were still semi-maintaining
-        internal structures for an old rendering front-end, though
-        not cleaning them up properly. We have recently began to
-        track test coverage statistics. These should help us in
-        identifying dead and duplicate code in the future.
+    should be removed immediately so that it cannot interfere with the
+    newer infrastructure. We were still semi-maintaining internal
+    structures for an old rendering front-end, though not cleaning
+    them up properly. We have recently began to track test coverage
+    statistics. These should help us in identifying dead and duplicate
+    code in the future.
   \item On the other hand, even a three-way merges as done by \Git
-        should be done with great care: merge conflicts between
-        diverged branches may re-introduce old code, leading to
-        the situation described above.
+    should be done with great care: merge conflicts between diverged
+    branches may re-introduce old code, leading to the situation
+    described above.
 \end{itemize}
 
 \subsection{Continuous Integration}
-We use a Jenkins CI\footnote{http://jenkins-ci.org/} server. It is
-set up to track the master branch. On receiving a change notification
-from the central repository, it proceeds to do a fresh build of the
-project, runs the tests and generates the coverage statistics. It
-also keeps track of previous builds and aggregates information about
-the overall health of the project.
-The server is publicly accessible so that interested parties can get
-a rough idea of what the current status of the project is. It is also
-set up to notify team members (via the project mailing-list) when
-problems occur.
+Having the tests and not running them would be a pointless exercise,
+so we use a Jenkins
+CI \footnote{\href{http://jenkins-ci.org/}{jenkins-ci.org}} server. It
+is set up to track the master branch. On receiving a change
+notification from the central repository, it proceeds to do a fresh
+build of the project, runs the tests and generates the coverage
+statistics. It also keeps track of previous builds and aggregates
+information about the overall health of the project.  The server is
+publicly accessible so that interested parties can get a rough idea of
+what the current status of the project is. It is also set up to notify
+team members, via the project mailing-list, when problems occur.
 
-\subsection{Stability under load}
-Load-testing Visigoth is a straightforward affair: generate networks
-with a large number of nodes. We have found our software to stay
-sufficiently responsive even under load. This is especially true
-since it is usually generating a high CPU load itself when
-recalculating the node positions using the spring force model. In
-particular, we met our initial goal of displaying thousands of nodes
-in real-time.
+As a testament to the development practices described in Section
+\ref{practices}, after $220$ builds, we have never had a failure on
+master.
+
+\subsection{In hindsight}
+We started automated testing too late in the development cycle, and to
+date, too little of the code is being exercised by the tests. Had we
+started earlier, we would have detected certain errors much more
+quickly and we would have greater confidence in the correctness of the
+codebase.
+
+\section{Looking back}
+%% This section corresponds to 'Conclusions' in part D of the requirements
 
 \subsection{Knowledge transfer}
 Due to our peer review scheme, at least two people would know every
@@ -1678,15 +1687,6 @@ Additionally, we shared relevant articles/papers between us to ease
 the used principles understanding and to improve the existent work.
 This exchange of written or verbal knowledge transfer allowed us not
 only to improve team-working but to gain new technical skills as well.
-
-%Add the Log-Book in appendix
-
-
-\subsection{Functional testing}
-\label{tests}
-
-
-
 
 \subsection{People management and contributions}
 %This is from Report 2 except the summary of contributions which is a new add
@@ -1724,9 +1724,6 @@ When conflicting opinions regarding the design of the system emerge, the team si
   \caption{Development impact of team members}
   \label{fig:punch}
 \end{figure}
-
-\section{Looking back}
-%% This section corresponds to 'Conclusions' in part D of the requirements
 
 \subsection{Lessons learned}
 
