@@ -39,6 +39,9 @@
      <string>Help</string>
     </property>
     <addaction name="helpAct"/>
+    <addaction name="separator"/>
+    <addaction name="aboutAct"/>
+    <addaction name="aboutQtAct"/>
    </widget>
    <widget class="QMenu" name="menuView">
     <property name="title">
@@ -76,6 +79,7 @@
    <addaction name="newNodeAct"/>
    <addaction name="randomizeAct"/>
    <addaction name="generateAct"/>
+   <addaction name="mode3DAct"/>
   </widget>
   <widget class="QDockWidget" name="chooserDock">
    <property name="windowTitle">

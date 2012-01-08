@@ -16,6 +16,10 @@ class GraphScene;
 class Bipartite;
 class QWidget;
 
+namespace Ui {
+    class BipartiteControl;
+};
+
 class Bipartite : public Algorithm {
     Q_OBJECT
 
@@ -23,13 +27,13 @@ public:
     Bipartite(GraphScene *scene);
     virtual ~Bipartite();
 
+    int getUSize() const;
+    int getVSize() const;
+
     void reset();
     bool canAddVertex();
     void addVertex();
     QWidget* controlWidget(QWidget *parent = 0);
-
-    void init(int vSize, int uSize);
-    void showBipartite();
 
 private slots:
     void onUSizeChanged(int newSize);
@@ -55,6 +59,9 @@ private:
     int vSize;
 
     GraphScene *scene;
+    Ui::BipartiteControl *bipartiteCtl;
+
+    void updateUI();
 };
 
 #endif // BIPARTITE_H

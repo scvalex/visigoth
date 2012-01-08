@@ -7,6 +7,7 @@
 #endif
 
 #include "glancillary.h"
+#include "math.h"
 
 
 
@@ -28,10 +29,11 @@ void glaInit(void)
 
     // Reset MV matrix
     glLoadIdentity();
+
+    // Configure glColor()
+    glEnable(GL_COLOR_MATERIAL);
+    glColorMaterial(GL_FRONT, GL_AMBIENT_AND_DIFFUSE);
 }
-
-
-
 
 /****************************
  * GL camera simulation helpers
@@ -100,3 +102,5 @@ void glaDrawExample(void)
         glVertex3f(-1.0, 1.0, -1.0);
     glEnd();
 }
+
+

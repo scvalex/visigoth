@@ -24,14 +24,14 @@
 GLGraphWidget::GLGraphWidget(QWidget *parent) :
     QGLWidget(parent),
     myScene(0),
-    zoom(1.0),
     mouseMode(MOUSE_IDLE),
-    mode3d(false),
     isHighlighted(false),
     animTimerId(0)
 {
     setFocusPolicy(Qt::StrongFocus);
     setMouseTracking(true);
+
+    set3DMode(false);
 }
 
 void GLGraphWidget::setScene(GraphScene *newScene) {
@@ -41,6 +41,17 @@ void GLGraphWidget::setScene(GraphScene *newScene) {
     connect(myScene, SIGNAL(algorithmChanged(Algorithm*)), this, SIGNAL(algorithmChanged(Algorithm*)));
     connect(myScene, SIGNAL(nodeMoved()), this, SLOT(onNodeMoved()));
     setAnimation(true);
+    myScene->set3DMode(mode3d);
+}
+
+void GLGraphWidget::set3DMode(bool enabled) {
+    mode3d = enabled;
+    zoom = 1.0;
+    initializeCamera();
+    setupLighting();
+
+    if (myScene)
+        myScene->set3DMode(mode3d);
 }
 
 GLGraphWidget::~GLGraphWidget() {
@@ -69,7 +80,10 @@ void GLGraphWidget::scaleView(qreal scaleFactor) {
 }
 
 void GLGraphWidget::fitToScreen() {
-  // FIXME: fitToScreen needs to be completely redone for 3D.
+    // TODO: Possibly reposition so the graph is inside the window. 3D?
+    if (!mode3d) {
+        zoom = (qreal)height() / myScene->graphCube().longestEdge();
+    }
 }
 
 void GLGraphWidget::wheelEvent(QWheelEvent *event) {
@@ -202,7 +216,7 @@ void GLGraphWidget::mouseMoveEvent(QMouseEvent *event) {
 
     switch(mouseMode) {
         case MOUSE_TRANSLATING_2D:
-            glaCameraTranslatef(cameramat, (GLfloat)dx/zoom, (GLfloat)dy/zoom, 0.0);
+            glaCameraTranslatef(cameramat, (GLfloat)dx/zoom, (-1.0)*(GLfloat)dy/zoom, 0.0);
             break;
         case MOUSE_TRANSLATING_XY:
             glaCameraTranslatef(cameramat, (3.0) * dx, (-3.0) * dy, 0.0);
@@ -216,22 +230,33 @@ void GLGraphWidget::mouseMoveEvent(QMouseEvent *event) {
             glaCameraRotatef(cameramat, dy, 1.0, 0.0, 0.0);
             break;
         case MOUSE_DRAGGING:
+        {
             GLdouble newX, newY, newZ;
             GLdouble model[16], proj[16];
+            VPointF p = draggedNode->pos();
 
+            // Get matrices  as double instead of single precision floats
+            glMatrixMode(GL_MODELVIEW);
             glPushMatrix();
               glLoadMatrixf(cameramat);
               glGetDoublev(GL_MODELVIEW_MATRIX, model);
               glLoadMatrixf(projmat);
-              glGetDoublev(GL_PROJECTION_MATRIX, proj);
+              glGetDoublev(GL_MODELVIEW_MATRIX, proj);
             glPopMatrix();
 
-            gluUnProject((GLdouble)mouseX, (GLdouble)(viewmat[3] - mouseY), 0.0,
+            gluProject(p.x, p.y, p.z, model, proj, viewmat,
+                        &newX, &newY, &newZ);
+
+            newX = (GLdouble)mouseX;
+            newY = (GLdouble)(viewmat[3] - mouseY);
+
+            gluUnProject(newX, newY, newZ,
                         model, proj, viewmat,
                         &newX, &newY, &newZ);
 
-            draggedNode->setPos(VPointF(newX, newY, 0.0));
+            draggedNode->setPos(VPointF(newX, newY, newZ));
             break;
+        }
         default:
             break;
     }
@@ -243,10 +268,6 @@ void GLGraphWidget::keyPressEvent(QKeyEvent *event) {
     switch (event->key()) {
     case Qt::Key_G:
         myScene->repopulate();
-        break;
-    case Qt::Key_Escape:
-        //helping = false;
-        this->repaint();
         break;
     case Qt::Key_Equal:
     case Qt::Key_Plus:
@@ -268,17 +289,17 @@ void GLGraphWidget::keyPressEvent(QKeyEvent *event) {
     case Qt::Key_N:
         myScene->addVertex();
         break;
-    case Qt::Key_Left:
-        glaCameraTranslatef(cameramat, (-20.0)/zoom, 0.0, 0.0);
-        break;
-    case Qt::Key_Up:
-        glaCameraTranslatef(cameramat, 0.0, (-20.0)/zoom, 0.0);
-        break;
     case Qt::Key_Right:
-        glaCameraTranslatef(cameramat, 20.0/zoom, 0.0, 0.0);
+        glaCameraTranslatef(cameramat, (-20.0)/zoom, 0.0, 0.0);
         break;
     case Qt::Key_Down:
         glaCameraTranslatef(cameramat, 0.0, 20.0/zoom, 0.0);
+        break;
+    case Qt::Key_Left:
+        glaCameraTranslatef(cameramat, 20.0/zoom, 0.0, 0.0);
+        break;
+    case Qt::Key_Up:
+        glaCameraTranslatef(cameramat, 0.0, (-20.0)/zoom, 0.0);
         break;
     default:
         QGLWidget::keyPressEvent(event);
@@ -310,29 +331,39 @@ void GLGraphWidget::timerEvent(QTimerEvent *) {
 void GLGraphWidget::initializeGL() {
     glaInit();
 
-    // Init camera matrix
     glMatrixMode(GL_MODELVIEW);
-    // Warning: Do not set the camera far away when using small
-    //     zNear, zFar values. Darkness awaits.
-    //gluLookAt(0.0, 0.0, 5.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0);
-    glGetFloatv(GL_MODELVIEW_MATRIX, cameramat);
     glLoadIdentity();
+
+    initializeCamera();
+}
+
+void GLGraphWidget::initializeCamera() {
+    glPushMatrix();
+        glLoadIdentity();
+        if (mode3d) {
+            // Warning: Do not set the camera far away when using small
+            //     zNear, zFar values. Darkness awaits.
+            gluLookAt(0.0, 0.0, 500.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0);
+        }
+        glGetFloatv(GL_MODELVIEW_MATRIX, cameramat);
+    glPopMatrix();
 }
 
 void GLGraphWidget::paintGL() {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    // Reinit the projection for drawing the graph
-    this->initProjection();
+    // Draw 2D background elements
+    initOverlayProjection();
+    drawBackground();
 
-    // Set up the camera
-    glLoadMatrixf(cameramat);
-
-    // Draw the old example objects
+    // Draw the graph and the central box
+    initGraphProjection();
     glaDrawExample();
-
-    // Draw the graph
     drawGraphGL();
+
+    // Draw 2D overlay elements
+    initOverlayProjection();
+    drawOverlay();
 
     glFlush();
 }
@@ -351,6 +382,53 @@ void GLGraphWidget::resizeGL(int w, int h) {
  * GL graph drawing and projection setup (private)
  ***************************/
 
+/*** 2D overlay/background drawing ***/
+
+void GLGraphWidget::drawBackground() {
+    QColor c = myScene->colour();
+    glClearColor(c.redF(), c.greenF(), c.blueF(), 1.0);
+}
+
+void GLGraphWidget::drawOverlay() {
+}
+
+
+/*** Graph drawing ***/
+
+inline void GLGraphWidget::drawSphere(GLfloat r, int lats, int longs) {
+    for (int i = 0; i <= lats; ++i) {
+        GLfloat lat0 = M_PI * (-0.5 + (GLfloat) (i - 1) / lats);
+        GLfloat z0  = sin(lat0);
+        GLfloat zr0 =  cos(lat0);
+
+        GLfloat lat1 = M_PI * (-0.5 + (GLfloat) i / lats);
+        GLfloat z1 = sin(lat1);
+        GLfloat zr1 = cos(lat1);
+
+        glBegin(GL_QUAD_STRIP);
+            for(int j = 0; j <= longs; ++j) {
+                GLfloat lng = 2 * M_PI * (GLfloat) (j - 1) / longs;
+                GLfloat x = cos(lng);
+                GLfloat y = sin(lng);
+
+                glNormal3f(x * zr0, y * zr0, z0);
+                glVertex3f(x * zr0 * r, y * zr0 * r, z0 * r);
+                glNormal3f(x * zr1, y * zr1, z1);
+                glVertex3f(x * zr1 * r, y * zr1 * r, z1 * r);
+            }
+        glEnd();
+    }
+}
+
+inline void GLGraphWidget::drawCircle(GLfloat r, int longs) {
+    glBegin(GL_TRIANGLE_FAN);
+        for (int i = 0; i < longs; ++i) {
+            GLfloat lng = 2 * M_PI * (GLfloat) (i - 1) / longs;
+            glVertex2f(sin(lng) * r, cos(lng) * r);
+        }
+    glEnd();
+}
+
 inline void GLGraphWidget::drawNode(Node *node) {
     QColor c = node->colour();
     glColor4f(c.redF(), c.greenF(), c.blueF(), c.alphaF());
@@ -358,19 +436,15 @@ inline void GLGraphWidget::drawNode(Node *node) {
     float radius = (log(node->edges().size()) / log(2)) + 1.0;
     VPointF p = node->pos();
 
-    // FIXME: Draw spheres instead of flat circles.
-    glBegin(GL_TRIANGLE_FAN);
-    // glBegin(GL_LINE_LOOP);
-        // int step = 180 / (radius > 50 ? 50 : (int) radius);
-        int step = 30;
-        for (int angle(0); angle < 360; angle += step) {
-            GLfloat rangle = (GLfloat) angle * (3.1415926 / 180.0);
-            glVertex3f((GLfloat)p.x + sin(rangle) * radius,
-                       (GLfloat)p.y + cos(rangle) * radius,
-                       //(GLfloat)p.z + cos(rangle) * radius);
-                       0.0);
+    glPushMatrix();
+        glTranslatef(p.x, p.y, p.z);
+
+        if (mode3d) {
+            drawSphere(radius, 10, 10);
+        } else {
+            drawCircle(radius, 10);
         }
-    glEnd();
+    glPopMatrix();
 }
 
 void GLGraphWidget::drawGraphGL() {
@@ -393,7 +467,10 @@ void GLGraphWidget::drawGraphGL() {
     }
 }
 
-void GLGraphWidget::initProjection() {
+
+/*** Projection setup ***/
+
+void GLGraphWidget::initGraphProjection() {
     // Set up the Projection transformation
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
@@ -407,64 +484,102 @@ void GLGraphWidget::initProjection() {
         gluPerspective(90, (GLfloat)width()/(GLfloat)height(), 0.0001, 100000.0);
     else
         // Flat projection
-        gluOrtho2D((GLfloat)width() / -2, (GLfloat)width() / 2, (GLfloat)height() / 2, (GLfloat)height() / -2);
+        glOrtho((GLfloat)width() / -2, (GLfloat)width() / 2,
+                (GLfloat)height() / -2, (GLfloat)height() / 2,
+                -100, 100);
 
     // Save the projection matrix for later use, e.g. mouse interaction
     glGetFloatv(GL_PROJECTION_MATRIX, projmat);
 
     // Switch to Model/view transformation for drawing objects
     glMatrixMode(GL_MODELVIEW);
+    glLoadMatrixf(cameramat);   // Load camera for 3D graph
+
 }
+
+void GLGraphWidget::initOverlayProjection() {
+    // Set up the Projection transformation
+    glMatrixMode(GL_PROJECTION);
+    glLoadIdentity();
+
+    // Flat projection, Qt-style y axis.
+    gluOrtho2D(0, (GLfloat)width(), (GLfloat)height(), 0);
+
+    // Switch to Model/view transformation for drawing objects
+    glMatrixMode(GL_MODELVIEW);
+    glLoadIdentity();   // Reset camera for 2D overlay
+}
+
+
+/* Lighting */
+
+void GLGraphWidget::setupLighting() {
+    if (mode3d) {
+        // Lightining
+        GLfloat sunDirection[] = {0.0, 2.0, -1.0, 1.0};
+        GLfloat sunIntensity[] = {0.7, 0.7, 0.7, 1.0};
+        GLfloat ambientIntensity[] = {0.3, 0.3, 0.3, 1.0};
+
+        // Set up ambient light
+        glEnable(GL_LIGHTING);
+        glLightModelfv(GL_LIGHT_MODEL_AMBIENT, ambientIntensity);
+
+        // Set up sun light
+        glEnable(GL_LIGHT0);
+        glLightfv(GL_LIGHT0, GL_POSITION, sunDirection);
+        glLightfv(GL_LIGHT0, GL_DIFFUSE, sunIntensity);
+    } else {
+        glDisable(GL_LIGHTING);
+    }
+}
+
+
+/*** Selection ***/
 
 Node* GLGraphWidget::selectGL(int x, int y)
 {
     Node* hitNode = NULL;
-
     GLuint namebuf[64] = {0};
     GLint hits;
 
+    glSelectBuffer(64, namebuf);
 
     // Account for inverse Y coordinate
     y = viewmat[3] - y;
 
-    glSelectBuffer(64, namebuf);
+    initGraphProjection();
 
     // Restrict projection matrix to selection area
     glMatrixMode(GL_PROJECTION);
-    glPushMatrix();
-        glLoadIdentity();
-        gluPickMatrix(x, y, 1.0, 1.0, viewmat);
-        glMultMatrixf(projmat);
+    glLoadIdentity();
+    gluPickMatrix(x, y, 1.0, 1.0, viewmat);
+    glMultMatrixf(projmat);
 
-        // Redraw points to fill selection buffer
-        glMatrixMode(GL_MODELVIEW);
+    // Redraw points to fill selection buffer
+    glMatrixMode(GL_MODELVIEW);
 
-        QVector<Node*> &nodes = myScene->nodes();
-        for (int i = nodes.size() - 1; i >= 0; --i) {
-            glSelectBuffer(64, namebuf);
-            glRenderMode(GL_SELECT);
+    QVector<Node*> &nodes = myScene->nodes();
+    for (int i = nodes.size() - 1; i >= 0; --i) {
+        glSelectBuffer(64, namebuf);
+        glRenderMode(GL_SELECT);
 
-            // Reset name stack
-            glInitNames();
-            glPushName(0);
+        // Reset name stack
+        glInitNames();
+        glPushName(0);
 
-            // Draw the node
-            drawNode(nodes[i]);
+        // Draw the node
+        drawNode(nodes[i]);
 
-            hits = glRenderMode(GL_RENDER);
+        hits = glRenderMode(GL_RENDER);
 
-            if (hits) {
-                hitNode = nodes[i];
-                break;
-            }
+        if (hits) {
+            hitNode = nodes[i];
+            break;
         }
+    }
 
-  // Reset projection
-  glMatrixMode(GL_PROJECTION);
-  glPopMatrix();
+    glMatrixMode(GL_MODELVIEW);
+    this->repaint();
 
-  glMatrixMode(GL_MODELVIEW);
-  this->repaint();
-
-  return hitNode;
+    return hitNode;
 }

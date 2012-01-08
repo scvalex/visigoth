@@ -16,7 +16,6 @@ class Node;
 class Algorithm;
 class Statistics;
 
-
 class GraphScene : public QObject
 {
     Q_OBJECT
@@ -46,10 +45,19 @@ public:
     QList<QString> algorithms() const;
 
     VCubeF graphCube();
+    void removeNode(Node *n);
+    void setAllNodes(int i);
+    void removeEdges(int cutoffTag);
+    void removeEdge(Node * source, Node* dst);
+
     Statistics* getStatistics();
 
     QColor myEdgeColor;
     QColor myNodeColor;
+
+    void set3DMode(bool enabled);
+
+    void setColour(const QColor &b);
 
 signals:
     void nodeMoved();
@@ -77,6 +85,7 @@ private:
         PREFERENTIAL_ATTACHAMENT,
         ERDOS_RENYI,
         BARABASI_ALBERT,
+        WATTS_STROGATZ,
         TWITTER
     };
     Algorithm *algo;
@@ -89,6 +98,8 @@ private:
     QMap<QString, int> myAlgorithms;
 
     QColor myBackgroundColor;
+    bool mode3d;
+    QColor myColour;
 };
 
 #endif // GRAPHSCENE_H

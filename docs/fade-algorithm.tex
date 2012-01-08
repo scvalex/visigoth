@@ -1,0 +1,20 @@
+\begin{algorithmic}
+  \REQUIRE \(0 < \theta < 1\)
+  \REQUIRE \(\beta > 1\)
+  \REQUIRE \(\vec{n} \neq \vec{q}\)
+\end{algorithmic}
+force\((n, q)\):
+\begin{algorithmic}
+  \STATE \(\vec{d} \gets \vec{n} - \vec{q}\)
+  \IF { \(q\) is terminal \OR \(\frac{\vec{d}}{\textrm{width}(q)} < \theta\) }
+  \STATE \(\vec{v} \gets \vec{d} \cdot \frac{\beta}{|{\vec{d}}|^2}\)
+  \STATE \(\vec{v} \gets \vec{v} \cdot \textrm{mass}(q)\)
+  \RETURN \(\vec{v} \cdot \frac{\beta}{|{\vec{d}}|^2}\)
+  \ELSE
+  \STATE \(\vec{v} \gets 0\)
+  \FOR {\(q'\) in children\((q)\)}
+  \STATE \(\vec{v} \gets \vec{v} + \textrm{force}(n, q')\)
+  \ENDFOR
+  \RETURN \(\vec{v}\)
+  \ENDIF
+\end{algorithmic}

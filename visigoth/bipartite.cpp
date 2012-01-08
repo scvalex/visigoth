@@ -9,15 +9,29 @@
 #include <QWidget>
 
 Bipartite::Bipartite(GraphScene *scene) :
-    Algorithm(scene),
+    // true will be set when it actually works
+    Algorithm(scene, true),
     ctlW(0),
     uSize(START_USIZE),
     vSize(START_VSIZE),
-    scene(scene)
+    scene(scene),
+    bipartiteCtl(0)
 {
 }
 
 Bipartite::~Bipartite() {
+    if (ctlW != 0) {
+        delete ctlW;
+        delete bipartiteCtl;
+    }
+}
+
+int Bipartite::getUSize() const {
+    return uSize;
+}
+
+int Bipartite::getVSize() const {
+    return vSize;
 }
 
 void Bipartite::reset() {
@@ -49,7 +63,7 @@ void Bipartite::reset() {
         while ((n < degree) && usedNodes.size() < uSize && cutoff < 1000) {
 
             // may have to implement check for infinite looping
-            double rand = fmod(qrand(), cumulativePreferences.value(uSize-1));
+            double rand = fmod(qrand(), cumulativePreferences.value(uSize-1)) + (fmod(qrand(),1000)/1000);
             Node *u = uVector[getPreference(rand)];
 
             if (!scene->doesEdgeExist(u,v)) {
@@ -95,7 +109,12 @@ void Bipartite::reset() {
                 }
             }
         }
+    }
 
+    scene->removeEdges(uSize);
+
+    for(int i(vSize-1); i >= 0 ; --i){
+        scene->removeNode(vVector[i]);
     }
 
     vVector.clear();
@@ -111,12 +130,15 @@ void Bipartite::addVertex() {
 }
 
 QWidget* Bipartite::controlWidget(QWidget *parent) {
-    if (!ctlW) {
+    if (ctlW == 0) {
         ctlW = new QWidget(parent);
-        Ui::BipartiteControl *bipCtl = new Ui::BipartiteControl();
-        bipCtl->setupUi(ctlW);
-        connect(bipCtl->uSizeEdit, SIGNAL(valueChanged(int)), this, SLOT(onUSizeChanged(int)));
-        connect(bipCtl->vSizeEdit, SIGNAL(valueChanged(int)), this, SLOT(onVSizeChanged(int)));
+        bipartiteCtl = new Ui::BipartiteControl();
+        bipartiteCtl->setupUi(ctlW);
+
+        updateUI();
+
+        connect(bipartiteCtl->uSizeEdit, SIGNAL(valueChanged(int)), this, SLOT(onUSizeChanged(int)));
+        connect(bipartiteCtl->vSizeEdit, SIGNAL(valueChanged(int)), this, SLOT(onVSizeChanged(int)));
     }
     return ctlW;
 }
@@ -130,17 +152,19 @@ double Bipartite::fitnessDist(int x) {
 }
 
 // Ceil because we can not have fractional degrees
+// 0.125 is an expoent we found to give an good scale free exponent
 double Bipartite::degreeDist(int x) {
     if (x == 0) {
         return 1;
     }
 
-    return qCeil(qPow(static_cast<double>(x), (qLn(3)/qLn(2)) - 1));
+    return qPow(static_cast<double>(x), .125);
 }
+
 
 // Return the preferred node, using binary search.
 int Bipartite::getPreference(double genPref) {
-    const float E = 0.01;
+    const float E = 0.0001;
     int l;
     for (l = 1; l < uVector.size(); l <<= 1)
         ;
@@ -170,11 +194,31 @@ void Bipartite::updatePreference() {
 }
 
 void Bipartite::onUSizeChanged(int newSize) {
+    if (newSize == uSize)
+        return;
+
     uSize = newSize;
+    updateUI();
     scene->repopulate();
 }
 
 void Bipartite::onVSizeChanged(int newSize) {
+    if (newSize == vSize)
+        return;
+
     vSize = newSize;
+    updateUI();
     scene->repopulate();
+}
+
+void Bipartite::updateUI() {
+    if (!bipartiteCtl)
+        return;
+
+    if (bipartiteCtl->uSizeEdit->value() != uSize) {
+        bipartiteCtl->uSizeEdit->setValue(uSize);
+    }
+    if (bipartiteCtl->vSizeEdit->value() != vSize) {
+        bipartiteCtl->vSizeEdit->setValue(vSize);
+    }
 }

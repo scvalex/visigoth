@@ -1,0 +1,1763 @@
+\documentclass[a4paper,11pt,titlepage]{article}
+\parskip 3pt
+
+%% %%%%%%%%%%%%%%%%%%%% BEGIN PACKAGES %%%%%%%%%%%%%%%%%%%%
+
+%%\usepackage[top=1in, bottom=1in, left=1in, right=1in]{geometry}
+
+%%\usepackage{fullpage}
+\usepackage{url}
+\usepackage{hyperref}
+\usepackage{listings}
+\hypersetup{pdfborder=0 0 0}
+
+%% Images
+\usepackage{graphicx}
+
+%% Side-by-side images
+\usepackage{subfig}
+
+%% Wrapped figures
+\usepackage{wrapfig}
+
+%% Drawing trees and other stuff
+\usepackage{tikz}
+\usetikzlibrary{trees,arrows}
+\usepackage{amssymb}
+
+%% Pseudocode
+\usepackage[noend]{algorithmic}
+\algsetup{indent=1.5em}
+
+%% Linux Libertine
+\usepackage[T1]{fontenc}
+\usepackage{libertine}
+\renewcommand*\oldstylenums[1]{{\fontfamily{fxlj}\selectfont #1}}
+
+\input{colors.tex}
+
+\let\stdhref\href
+\renewcommand{\href}[2]{\stdhref{#1}{\texttt{#2}}}
+
+\newcommand{\mailto}[1]{\href{mailto:#1}{#1}}
+
+\let\stdsection\section         % because LaTeX cannot handle
+                                % recursive commands
+\renewcommand{\section}{\newpage\stdsection}
+
+\let\tikzsquare\square
+\renewcommand{\square}{\ensuremath\tikzsquare}
+
+\newcommand{\code}[1]{\texttt{#1}}
+\newcommand{\buzz}[1]{\emph{#1}}
+\newcommand{\magic}[1]{\buzz{#1}}
+
+\newcommand{\myhref}[1]{\href{http://#1}{#1}}
+
+%% Acronyms, names, blah
+\newcommand{\Qt}{\buzz{Qt} }
+\newcommand{\OpenGL}{\buzz{OpenGL} }
+\newcommand{\FADE}{\buzz{FADE} }
+\newcommand{\master}{\code{master} }
+\newcommand{\Git}{\buzz{Git} }
+\newcommand{\Cairo}{\buzz{Cairo} }
+\newcommand{\Twitter}{\href{http://twitter.com}{Twitter} }
+\newcommand{\GitHub}{\href{https://github.com}{GitHub} }
+
+%% %%%%%%%%%%%%%%%%%%%% END COMMANDS %%%%%%%%%%%%%%%%%%%%
+
+%% %%%%%%%%%%%%%%%%%%%% BEGIN COLORS %%%%%%%%%%%%%%%%%%%%
+
+
+%% %%%%%%%%%%%%%%%%%%%% END COLORS %%%%%%%%%%%%%%%%%%%%
+
+
+%% Final Report -- due: 9th Jan 2012, at 11:00
+%% Contents for Final Report: The project report should not be longer than 45 pages, and might be organized according to the following structure:
+
+%% A. High Level, Nontechnical Description Why you should buy this product/listen to this presentation? What is the functionality of the product?
+%% B. Short Technical Description
+%% Short introduction into technologies used
+%% Design of your software, possibly including a diagram of the major components of the project
+%% Main achievements
+%% C. Software Engineering Issues:
+%% What technology was used and why; what other technology was considered but not used and why
+%% Any technical challenges encountered and how addressed
+%% Any risks anticipated, and how mitigated?
+%% Any collaboration/coordination difficulties encountered and how addressed
+%% Development and testing methods and/or tools used; comparison of plans with actual achievements
+%% Estimates of length of code in each of the components, or any other comparable measure of the effort required.
+%% Summary of each team member's contributions
+%% D. Validation and Conclusions How did you validate your product? Was the project successful? What did you learn? What might you have done differently?
+%% E. Bibliography
+%% F. Appendix The appendix is optional, and does not count towards the 45 pages. It may contain thing like: User guide, installation instructions; more extensive design, testing, statistics etc.
+%% Feel free to re-use material from the previous reports as you see fit, but make sure that the final report presents a coherent story. Ask advice from your supervisor. You might also draw inspiration from the instructions about writing up your individual project.
+
+%% Bear in mind, that most of the project assessors will not have followed the project throughout and will only have a short time to listen to a presentation or see a demonstration. For this reason they will rely heavily on the report to judge the project.
+
+%% The report should be submitted to SGO in form of a hard copy, as well as electronically through CATE.
+
+\begin{document}
+\title{\includegraphics[width=2cm]{v.png}\\
+  \Huge Visigoth\\\Large Graph visualisations}
+\author{
+  Andreea-Ingrid Funie\\\mailto{aif109@doc.ic.ac.uk}\and
+  Alexandru Scvor\c tov\\\mailto{as10109@doc.ic.ac.uk}\and
+  Francesco Mazzoli\\\mailto{fm2209@doc.ic.ac.uk}\and
+  Marc-David Haubenstock\\\mailto{mh808@doc.ic.ac.uk}\and
+  Maximilian Staudt\\\mailto{ms9109@doc.ic.ac.uk}
+}
+\date{January 2012}
+\maketitle
+
+\begin{abstract}
+%% FIXME: This needs more work.
+
+Visigoth is a tool to generate, analyse and visualise Small World
+Networks. These are particular kinds of graphs which \emph{look} like
+naturally grown networks and share many mathematical properties with them.
+For instance, friendship graphs and graphs of followers in modern
+web-based ``social networks'' are Small World Networks.
+
+As an educational tool Visigoth allows users to explore Small
+World Networks and hence can be used when introducing them. By
+exploring these networks users will have a firmer, more intuitive
+grasp of the mathematical properties they exhibit.
+
+The networks may be generated using several algorithms,
+allowing users to compare their output and its adherence to
+the properties Small World Networks. The
+generated networks form a smooth progression in the number of
+exhibited desired properties from completely random graphs,
+generated by the Erd\H{o}s-R\'{e}nyi algorithm, to fully compliant
+Small World Networks,
+generated by the Preferential Attachment algorithm. Additionally,
+Visigoth can connect to social networking platforms such as \Twitter to
+fetch and display real-world networks.
+\end{abstract}
+
+\tableofcontents
+
+\section{Introduction}
+%% This section corresponds to A in the requirements.
+
+%% This section should contain most of the references to hamm10 and
+%% oconn11.
+
+Complex networks are ubiquitous in nature and society.
+
+The dynamics and structural properties of complex networks are non-trivial,
+making performant computation gear a must for statistical analysis.
+It has therefore only been feasible to study real networks with their
+large underlying data sets for about a decade.
+\cite{oconn11}.
+
+The structural properties of real networks have been studied extensively
+over the years, mainly focusing their common characteristic properties.
+These networks share low average path lengths, high clustering
+coefficients and scale-free degree distribution.
+
+In order to easen further analysis of real networks we simulate them
+using procedurally generated networks. However, this requires the
+generation algorithms used to output networks which are true to the
+characteristic structural properties of Small World Networks.
+
+\subsection{Realistically looking networks}
+%% This subsection should *not* use the term ``Small World Networks''.
+%% The point is to describe what properties we want. The SWN
+%% subsection below should be used in order to explain how they fit
+%% the requirements.
+
+%% FIXME: Define the qualities of the networks we want. These
+%% shouldn't be too mathy, just a layperson explanation (e.g. the
+%% nodes shouldn't be too far apart, the number of neighbours should
+%% fit a natural distribution).
+
+The networks of interest here are mathematical graphs in which most nodes,
+while not being connected directly, can be reached from any other node via a
+small number of steps. In the context of a social network, this results in the
+``small world phenomenon'' \cite{smphen} of strangers
+being linked by a mutual acquaintance.
+
+%% FIXME: Explain how networks with the above properties are useful.
+
+Social networks, neural networks, ecosystems, the World Wide Web, electrical
+power grids and protein networks are all complex networks the dynamic
+behaviour of which currently escapes our understanding.
+
+%maybe we can add here a picture of some neural networks in the brain?
+
+Ideas from network science have been applied to the analysis of metabolic and
+genetic regulatory networks, the design of robust and scalable communication
+networks (both wired and wireless), the development of vaccination strategies
+for disease control and a broad range of other practical
+uses. \cite{complexNets}
+
+\subsection{The maths}
+
+%% FIXME: Give formal mathematical definitions for qualities.
+
+\subsubsection{Networks}
+
+A \emph{network} is a graph, which in turn is an ordered pair $G(V,E)$
+comprising of a set of \emph{vertices} $V$ and a set of \emph{edges}, $E$.
+An \emph{edge} is a 2-element subset of $V$ representing a
+\emph{connection} between a pair of \emph{vertices}.
+
+The \emph{degree} $K_i$ of a vertex $i$ is the number of vertices that it is
+connected to. The average degree $k$ of a network is $k =\frac{2 \cdot m}{N}$
+where $m$ is the number of edges in the network.
+
+\subsubsection{The small-world effect}
+
+The concept of ``Six degrees of separation'' is the idea that if the
+acquaintances between every human being on Earth were to be recorded
+in a graph, everyone would be at most approximately six hops (from
+acquaintance to acquaintance) away from any other person on Earth.
+
+A group of people can be represented by a \emph{social network} where
+individuals are the vertices and an edge betwen individuals represents
+an acquaintance.
+
+The steps from one individual to another are then the edges that must be
+traversed in order to connect them. We refer to the number of steps from
+one individual to another as the \emph{length of the shortest path} between
+them.
+
+Frigyes Karinthy first proposed the idea of ``six degrees of separation''
+in his short story ``Chains'' (1929).
+
+The small world experiment (done by Stanley Milgram and other researchers in the
+1960s) formalised the aforementioned concept. In this experiment, letters were
+sent to randomly selected individuals, asking them to forward the letter to a
+randomly selected recipient. In case the destination should be unknown to them
+they were asked to send the letter to a friend or
+relative who was more likely to know the recipient.
+The conclusion Milgram drew from his experiment was that the
+\emph{shortest path length} between individuals is on average $6$.
+
+This result lead to the more genereal idea of a ``small-world effect" which
+denotes the fact that the average distance linking two nodes belonging to the
+same network can be orders of magnitude smaller than the number of nodes making
+up the network. \cite{complexAdapt}
+
+The characteristic properties of a small world network are:
+
+\begin{itemize}
+\item Low average path length.
+\item High clustering coefficient.
+\item Scale-free degree distribution.
+\end{itemize}
+
+These characteristics shall be analysed in more detail in the following subsections.
+
+\subsubsection{Path Length}
+
+The path length between two nodes in a graph indicates how many nodes
+have to be visited in order to go from the first node to the second.
+
+Both Dijkstra's algorithm and A* can be used to find the shortest path length
+$d(v_i, v_j)$ between to vertices $v_i$ and $v_j$ in a network. The average
+path length $L_G$ is the average of the shortest path length over all pairs of
+vertices:
+
+\[ L_G = \frac{1}{N(N-1)} \sum_{i, j} d(v_i, v_j) \]
+
+where $d(v_i, v_j) = 0$ when there is no path between vertices $v_i$ and $v_j$.
+
+\subsubsection{Clustering coefficient}
+
+\emph{Clustering} is refers to the tendency of real networks to form
+\emph{cliques}. In a graph, a clique is a subset of vertices in which all
+vertices are connected to each other. For example, in social networks
+cliques represent circles of friends or acquaintances in which every
+member knows every other member.
+
+The clustering coefficient proposed by Watts and Strogatz is calculated for each
+vertex $i$.
+
+\[ C_i = \frac{2E_i}{k_i(k_i-1)} \]
+
+where $k_i$ is the number of neighbours of vertex $i$ and $E_i$ is the number
+of edges between the neighbours of vertex $i$. Thus, the average clustering
+coefficient over the network is:
+
+\[ \ C_{avg} = \frac{1}{N}\sum_{i=0}^{N} C_i \]
+
+\subsubsection{Scale-free distribution}
+\label{sec:scale-free}
+
+Barabasi and Albert showed that real networks such as the World Wide Web are
+scale-free. The \emph{degree distribution} of scale-free networks follows a
+power law:
+
+\[ P(k) \sim k^{-\gamma} \]
+
+where $P(k)$ is the probability that a node in the network will be of degree $k$.
+
+\subsection{Small World Networks}
+
+Small-world networks tend to contain \emph{cliques}, and \emph{near-cliques}, meaning sub-networks which have connections between almost any two nodes within them. This follows from the defining property of a high clustering coefficient. 
+
+Secondly, most pairs of nodes will be connected by at least one short path. This follows from the defining property that the mean-shortest path length be small.
+
+Several other properties are often associated with small-world networks. Typically there is an over-abundance of hubs - nodes in the network with a high number of connections (known as high degree). These hubs serve as the common connections mediating the short path lengths between other edges. By analogy, the small-world network of airline flights has a small mean-path length (i.e. between any two cities you are likely to have to take three or fewer flights) because many flights are routed through hub cities. \cite{smnet}
+
+Small-world properties are found in \emph{many} real-world phenomena, including road maps, food chains, electric power grids, metabolite processing networks, networks of brain neurons, voter networks, telephone call graphs, and social influence networks.
+
+Networks of \emph{connected proteins} have small world properties such as power-law obeying degree distributions. Similarly \emph{transcriptional networks}, in which the nodes are genes, and they are linked if one gene has an up or down-regulatory genetic influence on the other, have small world network properties.
+
+%% FIXME: Explain how SWNs exhibit *all* the properties we're
+%% interested in. Include some math.
+
+\subsection{Introducing Visigoth}
+
+Visigoth makes peeking into the current state-of-the-art of artificial Small
+World Networks simple and fun. By integrating existing generation algorithms and
+visualisations into a single, easy-to-use interface, the user can make a head
+start into the small world of Small World Networks and:
+
+\begin{itemize}
+  \item see how these algorithms have improved on each other over time
+    generating increasingly better networks,
+  \item see the effects of changing algorithm parameters on the
+    resulting networks, and
+  \item compare them to naturally grown networks.
+\end{itemize}
+
+\subsection{Customer requirements and iterative (re-)specification}
+
+% What our customer wanted.
+%
+% What we suggested, and what he finally wanted.
+% (E.g. once we suggested 3D he didn't want to let go of the idea)
+%
+% Finally, on overview of what we did, and what we added as a bonus.
+% Possibly another subsection.
+
+Our customer initially asked for a simple, easy-to-use, graphical
+application that would allow him to compare various Small World
+Network generation algorithms and parameters thereof, both visually
+by looking at the graphs as well as numerically by calculating
+several statistical properties of the graphs.
+We suggested several additional features, such as a 3D view of the
+graphs generated, real-world data fetching from social networks
+(\Twitter) and graph interaction. Following our customer's highly
+positive reaction to our suggestions we then added them to our
+product, creating a comprehensive base for analysing graphs that
+may be re-used for other mathematical projects in the future.
+
+
+%\section{In detail}
+%% This section corresponds to B in the requirements
+
+\section{Generating Small World Networks}
+\label{smallworldnetworks}
+%% For all of the following, we should include a hand-drawn sketch
+%% illustrating the graph generated by the algorithm and an exported
+%% image of a large graph Visigoth generated.
+
+On request of our customer we have implemented several generation
+algorithms for Small World Networks which have been analysed over
+the course of the last decade.
+
+\subsection{Erd\H{o}s-R\'{e}nyi}
+% FIXME
+The Erd\H{o}s-R\'{e}nyi model, named for Paul Erd\"{o}s and Alfr\'{e}d R\'{e}nyi
+is an algorithm for generation random networks. This is the simplest graph
+generation algorithm in Visigoth's repertoire. The simplicity of this algorithm
+is attractive. However, random networks produced by this model do not exhibit
+all of the characteristics of real networks since clustering is low and the
+degree distribution is binomial and not scale-free.
+
+Edges in the network are created depending on a probability cutoff value which
+can be set by the user. For every pair of nodes in the network, if a random
+probability is below the cutoff value, the two nodes are connected.
+
+This is implemented in the following way, where $N$ is the number of vertices
+in the graph, and $P$ is the probability cutoff value:
+\begin{algorithmic}
+  \REQUIRE $0 \leq P \leq 1$
+  \FOR{$i = 0 \to N - 1$}
+    \FOR{$j = i + 1 \to N - 1$}
+      \STATE $k \gets $ random real in $[0, 1]$
+      \IF{$k < P$}
+        \STATE Add a new edge between $i$ and $j$.
+      \ELSE
+        \STATE \textbf{continue}
+      \ENDIF
+    \ENDFOR
+  \ENDFOR
+\end{algorithmic}
+
+\subsection{Watts-Strogatz}
+% FIXME
+The Watts-Strogatz model is a graph generating model which generates random
+graphs with small-world properties, which are, \emph{short average path length
+andhigh clustering}. It was proposed by Duncan J. Watts and Steven Strogatz in
+1998.
+
+This model is based on stocastically `rewiring' the edges of a regular ring
+lattice. The resulting network is an interpolation between a regular ring lattice
+and a random Erd\H{o}s-R\'{e}nyi network. So, there exists a large range of
+networks which vary on the probability of rewiring an edge.
+
+
+The model operates in two steps:
+
+\begin{itemize}
+
+\item
+  First, we generate a regular ring lattice with $N$ nodes and $K$ neighbours,
+  $\frac{K}{2}$ on each side.
+
+  \begin{algorithmic}
+    \REQUIRE{$N \gg K \gg \ln{N} \gg 1$}
+    \FOR{$i = 0 \to N - 1$}
+      \STATE Create node $i$.
+    \ENDFOR
+
+    \FOR{$i = 0 \to N - 1$}
+      \FOR{$j = 1 \to \frac{K}{2}$}
+        \STATE $k \gets (i + j) \bmod{N}$
+        \STATE Add edge between $i$ and $k$.
+      \ENDFOR
+
+      \FOR{$j = 1 \to \frac{K}{2}$}
+        \STATE $k \gets (N + i - j) \bmod{N}$
+        \STATE Add edge between $i$ and $k$.
+      \ENDFOR
+    \ENDFOR
+  \end{algorithmic}
+
+\item
+  Then, for each edge, rewire it to another random node with probability
+  $\beta$, where $\gamma$ is a high number to prevent infinite looping:
+
+  \begin{algorithmic}
+    \REQUIRE $0 \leq \beta \leq 1$
+    \FOR{$i = 0 \to N - 1$}
+      \FOR{$r = 1 \to \frac{K}{2}$}
+        \STATE $j \gets (n + r) \bmod{N}$
+        \STATE $r \gets$ random real in $[0, 1]$
+        \IF{$r < \beta$}
+          \STATE Remove edge between $i$ and $j$.
+          \STATE $cut \gets 0$
+          \FOR{$cut = 1 \to \gamma$}
+            \STATE $k \gets$ random integer in $[0, N)$
+            \IF{edge between $i$ and $k$ exists}
+              \STATE \textbf{break}
+            \ELSE
+              \STATE Add edge between $i$ and $k$.
+            \ENDIF
+          \ENDFOR
+        \ENDIF
+      \ENDFOR
+    \ENDFOR
+  \end{algorithmic}
+\end{itemize}
+
+\subsection{Barabasi-Albert}
+% FIXME-scale-free network characteristics
+The Barabasi-Albert model is an algorithm for generating \emph{scale-free}
+networks, as described in section \ref{sec:scale-free}. This is achieved using
+using preferential attachment. Nodes are selected for attachment with a
+probability proportional to their degree in the network. This model demonstrates
+that a power-law degree distribution can arise following growth and the
+preferential attachment and that the combination of these two elements may be an
+important factor in the formation of real networks. \cite{oconn11}
+
+Such networks are present in natural and human made systems, such as the
+citation networks.
+
+A network is deemed scale-free if the network exhibits a power law degree
+distribution.
+\[
+degree(x) = ax^k
+ \]
+
+As explained in section \ref{sec:scale-free}, a network is deemed scale-free if
+its degree distribution follows a power law. In context, this means that the
+frequency of attachment to a node varies as a power of its degree. Such networks
+are \emph{also scale invariant} meaning that the network's size has no effect on
+its attributes i.e. degree distribution.
+
+The model is implemented as follows:
+\begin{enumerate}
+\item
+  Select a node by generating a random percentage with $2$ decimal place
+  precision. The preferences of nodes are stored cumulatively therefore, the
+  random number serves as an index with the node as the indexed element, which
+  can be accessed using a binary search.
+  \begin{algorithmic}
+    \REQUIRE A real random number $pref$ in $[0,100]$.
+    \FOR{$l=1 \to N-1$}
+      \STATE{$l \gets 2l$}
+	    \FOR {$i=0 \to l \ge 0$}
+	      \STATE $l \gets \frac{l}{2}$
+	\IF{$l+i \le N$}
+		\IF{cumulative preference[l+i] $\leq$ genPreference}
+		\STATE $i = i+l$
+		\ENDIF
+	\ENDIF
+	\ENDFOR
+\ENDFOR
+\RETURN Nodes[i]
+\end{algorithmic}
+  \item Attach the node to the indexed element.
+  \item If more edges are to be added, repeat the procedure.
+
+\begin{algorithmic}
+\REQUIRE  new Node $N_i$
+\REQUIRE Edge count with amount of edges to be added
+\REQUIRE A vector of used nodes
+\REQUIRE A vector of all nodes exluding $N_i$ called Nodes
+\WHILE{Edge count $>$ 0}
+	\STATE r $\gets$ random real in $[0, 1]$
+	\STATE Node vPref $\gets$ getPreference(Nodes,r)
+	\WHILE{Adding edges between $N_i$ and vPref failed}
+		\STATE r $\gets$ random real in $[0, 1]$
+		\STATE Node vPref $\gets$ getPreference(Nodes,r)
+	\ENDWHILE
+	\STATE -- edge count
+	\STATE usedNodes.add(vPref)
+	\IF{All nodes are used}
+		\STATE break
+	\ENDIF
+\ENDWHILE
+
+\end{algorithmic}
+  \item Recompute the preferences.
+\begin{algorithmic}
+	\STATE updatePreferences(Nodes, 2Edges)
+\end{algorithmic}
+\end{enumerate}
+
+The average path length of BA networks is comparable to average path length of
+ER networks of equal size and average degree.
+
+The clustering coefficient of BA networks is greater than the clustering
+coefficient of ER networks of equal size and average degree \cite{oconn11}, but relatively low
+compared to real networks.
+
+
+\subsection{Bipartite Model}
+% FIXME
+
+\begin{wrapfigure}{R}{0.4\textwidth}
+  \begin{center}
+    \input{bipartite-graph.tex}
+  \end{center}
+  \caption{A sample bipartite graph}
+\end{wrapfigure}
+
+A Bipartite graph is a graph which consists of two node sets. The nodes from
+each set are only allowed to connect to nodes which are not a member of their
+own set.
+
+This model is able to generate realistic networks with low average path length,
+high clustering coefficient and power-law distribution. The properties of the
+network generated are dependent on the distribution of edges in the bipartite
+graph.
+
+The algorithm constructs a network in three simple steps:
+
+\begin{enumerate}
+   \item Generate a bipartite graph with two node sets e.g. set U and set V.
+   \item Connect all nodes in U that are connected to the same node in V.
+   \item Remove the nodes from set V from the graph.
+\end{enumerate}
+
+This procedure is implemented as follows: add the implementation ???
+
+\subsection{Preferential Attachment with Clustering}
+
+% FIXME
+Preferential attachment and clustering are two distinct concepts which are used
+in graph generation.
+
+When using \emph{preferential attachment} we assign nodes in a network a preference
+depending on their degree. Nodes with more edges, that is, which are more
+connected will have a higher preference than nodes with less edges. The
+preference ranges in $[0,1]$ and, assuming that no disjoint nodes exist and, is
+\[ \frac{K_N}{Edges} \]
+for a certain node $N$ with degree $N_K$, and $Edges$ being the total number of
+edges.
+
+\emph{Clustering} is a concept which determines how to connect a node $N$, once
+a connection with at least one other node $N'$ has been established. This
+procedure determines the intersection set of $N'$ with all its neighbours. Then
+node $N$ is connected to all members of the intersection set.
+
+The BA model has frequently been used to model real networks. A simple adaptation
+of it increases the clustering whlist retaining the power-law degree distribution
+of generated networks.
+
+The bipartite nature of real networks can be interpreted as a tendency for cliques
+to form in real networks. \emph{Cliques} are fully connected subsets of vertices of a
+graph. Their presence greatly increases the clustering coefficient of a network.
+
+In the original BA model, a new vertex is added to the network by preferential
+attachment to a fixed number of vertices, whereas the algorithm described
+ \emph{here} uses both concepts to generate networks with scale-free characteristics.
+First, nodes are added to the network via the preferential attachment method.
+Then, once attached they are connected to the rest of the network via the clustering procedure.
+%% FIXME: i don't understand this phrase.
+
+This is implemented as follows:
+
+\begin{enumerate}
+  \item
+    Select a node by generating a random percentage with 2 decimal place
+    precision. The preferences of nodes are stored cumulatively. Therefore, the
+    random number serves as an index with the node as the indexed element, which
+    can be accessed using a binary search.
+
+    %% FIXME: I don't understand this. What is Nodes? are you doing the binary
+    %% search here? either way, it doesn't make sense
+    \begin{algorithmic}
+      \FOR{$l=1 \to N-1$}
+        \STATE{$l \gets 2l$}
+        \STATE{$i \gets 0$}
+        \WHILE{$l \ge 0$}
+	        \STATE $l \gets \frac{l}{2}$
+	        \IF{$l+i \le N$}
+		        \STATE pref $\gets$ real in  $[0,100]$
+		        \IF{Comulative preference of $l$ $\leq$ pref}
+		          \STATE $i \gets i+l$
+		        \ENDIF
+	        \ENDIF
+	      \ENDWHILE
+      \ENDFOR
+      \RETURN Nodes[i]
+    \end{algorithmic}
+
+   \item
+     Attach the node to the indexed element.
+
+   \item
+     Use the clustering procedure to determine other edges.
+
+     \begin{algorithmic}
+       \REQUIRE New Node $N_i$
+       \REQUIRE Neighbour vector with all nodes neighbouring $N_i$
+       \REQUIRE Edge count with amount of edges to be added
+       \REQUIRE Used nodes vector
+       \STATE length = neighbours.size
+
+       \WHILE{There are edges to add $\land$ neighbour vector is not empty}
+	       \STATE rand $\gets$ random integer $\bmod$ length
+	       \STATE Node $R_i \gets$ neighbour[rand]
+	       \IF{Edge creation between $N_i$ and $R_i$ was successful}
+		       \STATE --edge count
+		       \STATE add $R_i$ to used nodes vector
+		       \STATE neighbour vector $\gets$ intersection(neighbour vector,neighbours($R_i$))
+	       \ELSE
+		       \STATE remove neighbours[rand]
+	       \ENDIF
+	       \STATE length $\gets$ neighbours.size()
+       \ENDWHILE
+     \end{algorithmic}
+
+   \item
+     If more edges are to be added, repeat the procedure.
+
+   \item
+     Recompute the preferences.
+\end{enumerate}
+
+
+\subsection{Real Small World Networks}
+% FIXME
+Finally, as Visigoth is supposed to help in analysing Small World
+Networks, it can also fetch real world data from `live' social
+networks \Twitter and identi.ca.
+
+\section{Statistics}
+
+
+In addition to network generation Visigoth also calculates statistics about the
+generated networks in real time. The statistics which are calculated are:
+
+
+\begin{itemize}
+	\item Average Degree
+	\item Average Path Length
+	\item Clustering Average
+	\item Scale Free Exponent
+	\item Clustering Coefficient
+\end{itemize}
+
+\subsection{Average Degree}
+\[
+\frac{2\sum_{i=1}^{\mathrm{max\ edges}} edges_i}{\sum_{j=1}^{\mathrm{max\
+verticies}} verteces_j}
+\]
+
+Implementation is trivial
+
+\subsection{Average Path Length}
+\[
+\frac{\sum_{i,j}distance_\mathrm{shortest}(vertice_i,vertice_j)}{\sum
+vertices^2 - \sum vertices}
+\]
+
+The first step in this algorithms is to calculate the path length from every
+node to every node
+
+\begin{algorithmic}
+\FORALL{Nodes N}
+	\STATE cumulativeLength $\gets$ lengthSum(N,visited,distance)
+	\STATE \dots
+\ENDFOR
+\end{algorithmic}
+Then divide the calculation by $N_i(N_i-1)$
+\begin{algorithmic}
+	\RETURN  $\frac{\mathrm{cummulativeLength}}{N(N-1)}$
+\end{algorithmic}
+
+Here \code{lengthSum} is a sub procedure which traverses the network in a
+breadth-first manner and calculates the minimum distance to each node.
+It then returns the sum of all distances
+
+\begin{algorithmic}
+\REQUIRE Starting node parent
+\REQUIRE Queue of nodes adjecent to parent
+\REQUIRE A vector of visited nodes called visited
+\REQUIRE A distance vector
+\WHILE{Queue is not empty}
+	\STATE parent $\gets$ queue.dequeue()
+	\STATE edges $\gets$ parent.edges()
+	\FORALL{E in edges}
+	\STATE Node n $\gets$ E.getDifferentFromParent()
+		\IF{!visited.contain(n)}
+			\STATE visited.insert(n)
+			\STATE distance[n] $\gets$ distance.value(parent, 0) + 1
+			\STATE queue.enqueue(n)
+		\ENDIF
+	\ENDFOR
+	\STATE retLength += distance[parent]
+\ENDWHILE
+
+\RETURN retLength
+\end{algorithmic}
+\subsection{Clustering Coefficient}
+\[
+C_i = \frac{2|\{e_j,_k\}|}{k_i(k_i-1)}
+\]
+Where $k_i$ is the number of vertices immediately connected to $vertex_i$
+\newline
+The set ${e_j,_k}$ is set of all edges common to the neighbours of $vertex_i$\\
+
+The first step is to calculate the intersection of the neighbours of the node we want to calculate the statistic for and the neighbours of that node's neighbours
+\begin{algorithmic}
+\REQUIRE A node N
+\REQUIRE An edge vector with edges connected to N
+\REQUIRE A counter called intersection
+\WHILE {!edges.empty()}
+	\STATE Edge e $\gets$ edges.takeFirst()
+	\STATE Vector nNeighbours = N.neighbours()
+	\STATE Node $N_i \gets$ e.differentFrom(N)
+	\STATE Vector otherNeighbours $\gets$  $N_i$.neighbours()
+	\STATE  intersection += intersectionCount(nNeighbours, otherNeighbours);
+\ENDWHILE
+\end{algorithmic}
+If the node's degree is greater than 1 we return the calculation.
+\begin{algorithmic}
+\REQUIRE k = N.degree()
+\IF{k $>$ 1}
+	\RETURN $\frac{2intersection}{k*(k-1)}$
+\ELSE
+	\RETURN 0
+\ENDIF
+\end{algorithmic}
+
+\subsection{Clustering Average}
+\[
+C_\mathrm{avg} = \frac{1}{\mathrm{\sum vertecies}}\sum_{i=1}^{\mathrm{max\
+vertecies}} C_i
+\]
+\begin{algorithmic}
+\FORALL {Nodes N}
+	\STATE clusterCumulative += clusteringCoeff(N)
+\ENDFOR
+\RETURN $\frac{clusterCumulative}{Node Cont}$
+\end{algorithmic}
+
+\subsection{Scale Free Exponent}
+
+Before we are able to calculate any gradient Visigoth has to probe the network
+and determine the degree distribution. Since we are dealing with exponential
+growth, the algorithm takes the natural logarithm of both, the degree and its
+frequency in the network, so that the gradient can be calculated as a straight
+line.
+
+\[
+f(x) = ax^k \equiv ln(f(x)) = kln(a) + kln(x) \equiv y = mx + b
+\]
+
+\begin{algorithmic}
+\REQUIRE maxDegree which holds the maximum degree of the network
+\REQUIRE A vector to hold objects of type point
+\FOR { $i = 0 \to maxDegree$}
+	\STATE ++i
+	\STATE count $\gets$ graph.nodesWithDegree(i)
+	\STATE y = $\frac{count}{Total Nodes}$
+	\IF { $y \ne 0$}
+		\STATE  point p($ln(i+1)$,$ln(y)$)
+		\STATE plot.add(p)
+	\ENDIF
+\ENDFOR
+\end{algorithmic}
+
+After the degree distribution has been recorded, the algorithm proceeds to
+calculate the straight line gradient of the captured points.
+
+\begin{algorithmic}
+\REQUIRE A vector to hold objects of type point
+\REQUIRE A counter c
+\STATE $c = 0$
+\FORALL {Point p in Plot}
+	\IF { $c = 0$ }
+		\STATE yPrev $\gets$ p.getY()
+		\STATE  deltaX $\gets$ p.getX()
+	\ELSE
+		\STATE deltaX += p.getY() - yPref
+		\STATE yPref $\gets$ p.getY()
+		\STATE deltaX $\gets$ p.getX() - deltaX
+	\ENDIF
+		\STATE ++c
+\ENDFOR
+\RETURN $-1\frac{deltaY}{deltaX}$
+\end{algorithmic}
+
+The result is multiplied by -1 since the straight line gradient is downwards
+sloping.
+
+
+
+\section{Visigoth functionality}
+
+% FIXME: Describe what we can do. Generate, set properties, save
+%        screenshots, move nodes, fly in 3D, the kitchen sink.
+
+\subsection{Graph Display}
+Visigoth is able to draw graphs in both 2D and 3D, showing the graph either
+ in a planar display or in ``space" and thus allowing the user to ``fly" through it. 
+Notably, the user can switch between the two modes at any time while preserving 
+the graph.
+
+\subsection{Graph Generation}
+Visigoth implements five distinct graph generating algorithms for the user to interact with:
+\begin{enumerate}
+\item \emph{Preferential Attachment with Clustering}
+
+Selects a node for attachment depending on the number of edges they hold 
+compared with the whole system. Creates links to nodes neighbouring that node.
+
+\item \emph{Bipartite Generation}
+
+Creates a bipartite graph and for all nodes, links all nodes of set A connected to 
+the same node in set B. Finally, removes all nodes form set B.
+
+\item \emph{Erd\H{o}s-R\'{e}nyi}
+
+Generates a random graph.
+
+\item \emph{Watts-Strogatz}
+
+Creates a ring of connected nodes and re-links some nodes randomly within that ring.
+
+\item \emph{Barabasi-Albert}
+
+Nodes added to by preferential attachment, with no clustering.
+
+\end{enumerate}
+
+In addition to these five algorithms, we also implement a \Twitter data-mining option, 
+which lets users use their \Twitter account to graph the relations between followers 
+starting from themselves.
+
+The algorithms may be configured by a variety of parameters exposed to users 
+via inputs. Most algorithms may also be later expanded by adding nodes.
+
+\subsection{Graph Interaction}
+There are several ways to interact with the graph: by \emph{dragging} it using the mouse,
+ the graph is moved on the screen. In 3D mode, it can also be rotated and moved 
+back and forth.
+
+Similarly, nodes can be dragged using the mouse, resulting in a reordering of the 
+graph according to the built-in spring force model. \emph{Clicking} a node calculates 
+node specific statistics, such as the clustering coefficient.
+
+A \emph{toolbar} gives easy access to common actions such as graph regeneration and 
+node reshuffling.
+
+A simple \emph{menu} option allows users to customize the appearance of the generated graph, 
+such as: change edges and nodes colour, choose a different background, highlight 
+cliques or highlight selected node and connections with it's direct neighbours.
+
+\subsection{Export to PNG, JPEG files}
+Finally, Visigoth allows taking snapshots of the graphs and exporting them to image files. The supported formats include PNG and JPEG, which are the image formats supported by most computers.
+
+\section{Visigoth technologies}
+
+\subsection{\Qt}
+
+The UI toolkit, standard library replacement, and application
+framework Visigoth uses is \Qt\footnote{\myhref{qt.nokia.com}}.
+
+Visigoth relies heavily on some of \Qt's features:
+\begin{description}
+\item [gui] \Qt is famous for providing a cross-platform, high-level,
+  UI toolkit that automatically uses the native drawing systems on
+  each host platform. All of Visigoth's user visible interface was
+  built using this framework. A more detailed explanation is included
+  in Section \ref{gui};
+\item [meta-objects] \Qt supplements the venerable \buzz{C}
+  pre-processor\footnote{\myhref{gcc.gnu.org/onlinedocs/cpp}}
+  with its own \buzz{meta-object
+    compiler} \footnote{\myhref{developer.qt.nokia.com/doc/qt-4.8/moc.html}}.
+  This preprocessor augments normal \buzz{C++} objects with modern
+  features such as introspection and \code{signal}s. We use
+  introspection extensively in our tests; see Section \ref{tests}. We
+  use \code{signal}s to decouple objects, which leads to a cleaner
+  design and has the side-effect of simplifying writing test cases
+  (mock and stub objects are not necessary anymore); for details, see
+  Section \ref{interaction};
+\item [xml] Like most modern frameworks, \Qt provides an \buzz{XML}
+  parsing
+  library\footnote{\myhref{developer.qt.nokia.com/doc/qt-4.8/qtxml.html}}.
+  In addition to a standard \buzz{SAX} parser, it exposes an extremely
+  clean \buzz{HTML DOM}-like interface for manipulating \buzz{XML}
+  documents. We use it in order to parse results from queries to
+  online sources such as \Twitter and
+  \href{http://identi.ca}{Identi.ca};
+\item [containers] \Qt provides a fully-featured library of containers
+  similar to Java
+  \buzz{collections}\footnote{\myhref{docs.oracle.com/javase/1.5.0/docs/api/java/util/package-summary.html}}
+  and significantly more complete than the standard or SGI
+  \buzz{STL}\footnote{\myhref{www.sgi.com/tech/stl}}. The
+  availability of these meant that advanced data-structures were one
+  less concern to worry about during development;
+\item [concurrency] \Qt also provides high-level
+  threading\footnote{\myhref{developer.qt.nokia.com/doc/qt-4.8/threads.html}}
+  and
+  concurrency\footnote{\myhref{developer.qt.nokia.com/doc/qt-4.8/threads-qtconcurrent.html}}
+  APIs. Our experiments showed that separating the CPU-intensive
+  computations (e.g. generating new networks, calculating layout
+  positions) onto a separate thread could speed up certain operations
+  by as much as a factor of $6$. The concurrency API, which provides
+  functional programming style parallelized primitives
+  (e.g. \code{map}, \code{filter}) could further improve performance.
+  This is an area where further work could be done in Visigoth.
+\end{description}
+
+\subsubsection{Plugins}
+
+\Qt has a healthy plugin ecosystems, with a myriad of libraries
+available to plug into the main framework. We make use of two of
+these, namely
+\buzz{QCA}\footnote{\myhref{delta.affinix.com/qca}} and
+\buzz{QOAuth}\footnote{\href{https://github.com/ayoy/qoauth/wiki}{github.com/ayoy/qoauth/wiki}}.
+
+\begin{description}
+\item [QCA] The \buzz{Qt Cryptographic Architecture} includes many
+  security providers for \Qt applications. We used the \buzz{OpenSSL}
+  provider when establishing \buzz{TLS}-secured channels to the online
+  sources (e.g. \Twitter);
+\item [QOAuth] This library is an implementation of the \buzz{OAuth
+  2.0}\footnote{\myhref{oauth.net}} secure API authorization
+  standard (\buzz{OAuth} is becoming the de-facto authorization
+  mechanism on the web); again, this was required in order to
+  authenticate with the online sources.
+\end{description}
+
+\subsubsection{Cross-platform}
+
+Thanks to \Qt's cross-platform nature, in general, and to
+\buzz{qmake}\footnote{\myhref{developer.qt.nokia.com/doc/qt-4.8/qmake-manual.html}},
+in particular, Visigoth works on Windows, OSX and Linux with a minimum
+of fuss on the development side.
+
+\begin{description}
+\item [qmake] \Qt's build system, \buzz{qmake}, takes a high level
+  project description and outputs platform-specific build files
+  (\buzz{Makefile}s on Linux, \buzz{XCode} projects on OSX and
+  \buzz{Visual Studio} projects on Windows). It also simplifies
+  finding external libraries (by using its own mechanism on Linux,
+  \buzz{pkg-config} on OSX, and the registry on Windows).
+\end{description}
+
+The only tweaks necessary for Visigoth to build on each of the above
+platforms are a few defines to deal with the misplaced \OpenGL headers
+on OSX and few conditionals in the project description to handle the
+library finding on Windows.
+
+%% FIXME: add screenshots
+
+\subsubsection{Rapid prototyping}
+
+One of lesser known advantages to using \Qt we discovered is rapid
+prototyping. Point in case, the original prototype for Visigoth took
+two days to write. It included roughly half of the customer's
+\emph{must-have} features, was cross-platform and was visually
+impressive.
+
+\subsection{\OpenGL}
+\label{opengl}
+
+After being left unsatisfied with the performance achieved with a
+screen renderer using \Qt graphics primitives, we looked for a
+`bare-metal' graphics output solution in order to eliminate the
+graphics bottleneck. Thanks to \OpenGL\footnote{\OpenGL
+  documentation: https://www.opengl.org/documentation/}, we can now
+draw even large graphs very quickly, no matter whether in 2D or in 3D.
+
+\OpenGL itself is a graphics drawing interface commonly used to
+leverage hardware acceleration for common operations, such as vector
+transformations necessary to compute 3D graphics. Modern operating
+systems use it to animate their user interfaces smoothly, and games
+and professional \buzz{CAD}\footnote{Computer Assisted Design}
+applications have long used it for real-time 3D graphics interaction.
+
+Not only are we leveraging this power to speed up our graph
+visualiser, but this may also allow for ports to other
+platforms in the future. Thanks to the \Qt/\OpenGL base, Visigoth
+could theoretically be compiled for mobile phones and slates
+with minimal porting effort.
+
+\OpenGL made several extensions possible, as outlined in the following
+subsections.
+
+\subsubsection{3D graphs and camera}
+\OpenGL provides only the very fundamental drawing primitives like
+lines and points --- however, it includes hardware acceleration for
+vector transformations. This allows the implementation of a virtual 3D
+space through which a `camera' can move. As even this is actually a
+composite functionality, we wrote a helper code library
+(\code{glAncillary}) to provide us with easy camera transformation
+functions. They are used whenever the user decides to move around the
+graph (i.e. to pan or tilt).
+
+\subsubsection{Selection}
+The \OpenGL interface also eases object selection: Since it is
+responsible for the depth transformations when drawing the graphics,
+it can also perform the inverse of these transformations from any
+given point on the drawing surface, finding the original point in
+space. In this case we check the position the mouse pointer is at and
+find the object selected by the user. This is fundamental in allowing
+us to move nodes around and selecting them for statistical analysis.
+
+\subsection{C++}
+
+Visigoth, ignoring the \buzz{XML} files describing the interface, is
+entirely written in \buzz{C++}. Initially, while being conscious of
+its disadvantages, we made this decision for one reason ---
+\buzz{\Qt}. As described in the previous section, the library by Nokia
+is so convenient that alone justifies the use of \buzz{C++} over
+another safer language.
+
+All in all, we think it was the right decision. The appreciation of
+\buzz{C++} varies in our team, but looking back we are confident that
+\buzz{C++} was one of the best choices considering the nature of the
+application we have been developing.
+
+The main advantages were:
+
+\begin{description}
+
+\item [Availability of tools and library] As mentioned, \Qt alone was
+  a deal sealer, but the fact that we were able to access \OpenGL
+  `natively' (in a \Qt widget) was also a big advantage. While
+  interfaces to both libraries exist in other languages as well, we
+  felt that sticking to \Qt's `native' \buzz{C++} environment would be
+  the most stable solution and that the foreign language bindings
+  would have degraded performance.
+
+\item [Performance] We did not consider this factor at the beginning,
+  but a few weeks into the project we started hitting various
+  bottlenecks. We can only speculate about actual performance gains,
+  but the fact that we were using \buzz{C++} allowed us to fine-tune
+  the application (specifically on the memory management side) in a
+  way that we would not be able to do with managed
+  languages. Furthermore, having an optimising compiler instead of an
+  interpreter or JIT (as it would have been the case using a language
+  like Python or Ruby) aided performance as well.
+
+\item [Abstraction] The previous two points (especially the second)
+  are partly shared by \buzz{C++} with its predecessor,
+  \buzz{C}. However, the possibility to structure our code into
+  classes facilitates greatly structuring a medium sized application
+  like Visigoth, especially considering that we had to coordinate five
+  people working together.  For example, there is a common
+  \code{Algorithm} interface which all graph generation algorithms
+  have to implement. They can then be plugged into the main widget at
+  will: this kind of operation would have been much more laborious and
+  less type-safe in \buzz{C}.
+
+\end{description}
+
+However, \buzz{C++} also has its downsides:
+
+\begin{description}
+
+\item [Unmanaged memory] This is by far \buzz{C++}'s most
+  ``dangerous'' feature (or better, lack of feature). While enabling
+  greater control and thus greater performance, it requires a much
+  more attentive analysis of the code. This is, in a way, a good
+  thing, since it forces the programmer to reason more about what the
+  code is doing; but it also paves the way to a nasty class of bugs
+  and memory leaks that more than once took hours (in one case days)
+  to track down. This is a somewhat controversial subject in our team
+  as well as the broader programming community and our opinions differ
+  on how much better a garbage collected language would have been when
+  considering the loss in performance. \buzz{C++} also has the
+  characteristic (required by its unmanaged nature) of allowing
+  objects to be used in the heap through pointers and on the stack as
+  values, which slows down compilation considerably - when changing a
+  header file, all code that uses that object as a value has to be
+  recompiled. Moreover, \buzz{C++} allows two kinds of references:
+  immutable references and \buzz{C}-style pointers, the former with a
+  rather confusing syntax - references are indistinguishable from
+  values when used. All these factors generate much confusion which is
+  absent in most modern O-O languages.
+
+\item [Language bloat] \buzz{C++} is a very broad language with a
+  number of esoteric language features. Notable examples are
+  templates, operator overloading and ``friend'' attributes. Some of
+  them are very useful and never harmful, e.g. the \code{const}
+  keyword is a great mechanism to mark immutability at type
+  level. However, some of them can and have been misused\footnote{For
+    an hilarious example, see
+    \myhref{weegen.home.xs4all.nl/eelis/analogliterals.xhtml}},
+  and as a consequence,
+  \begin{quote}
+    ``When you're programming \buzz{C++}, no one can ever agree on
+    which ten percent of the language is safe to use.'' -- Jamie
+    Zawinski
+  \end{quote}
+  This kind of ``programming language discipline''
+  is required when working on a \buzz{C++} project and we had our fair
+  share of arguments on which subset of the language is safe to use;
+  nevertheless we think we have managed to keep the code clean to high
+  standards in the \buzz{C++} world.
+
+\end{description}
+
+
+
+\section{Engineering Visigoth}
+%% This section corresponds to C in the requirements
+
+We encountered a number of difficulties whilst building Visigoth,
+which we overcame by dividing the application into mostly-independent
+components. The following sections provide overviews and short
+descriptions for each component.
+
+\subsection{Components}
+\label{components}
+%% This is an overview of the classes (including a class diagram).
+
+The \emph{[mostly]} independent components of Visigoth are:
+\begin{description}
+  \item [tests] The test system is heavily oriented towards
+    functionality testing, checking that user actions cause the
+    expected behaviour. For more details on the testing methodology,
+    see Section \ref{tests};
+
+  \item [GUI] The GUI is the only user-visible component. It was
+    relies heavily on \Qt's widget library and \OpenGL. A brief
+    description of the UI is provided in Section \ref{gui}, and a
+    brief overview of the issues surrounding the 3D renderer can be
+    found in Section \ref{opengl};
+
+  \item [GraphScene] We took an \buzz{Model-View-Controller} approach
+    in Visigoth's design. Whist the GUI system is the \buzz{view}, the
+    \code{GraphScene} is the \buzz{model} and encapsulates the
+    \buzz{controller}. For a brief description on how it is used, see
+    Section \ref{interaction};
+
+  \item [Algorithms] The last component of Visigoth are the
+    algorithms. These were described in Section
+    \ref{smallworldnetworks}. All the individual algorithms implement
+    the \code{Algorithm} interface, which allows them to be easily
+    plugged into the \code{GraphScene}.
+\end{description}
+
+A bare-bones class diagram of the above components is include in
+Figure \ref{fig:classes}. Since the internal workings of the classes
+are unlikely to be of interest to the reader and to highlight the
+relationships between components, we only include inheritance and
+usages.
+
+\begin{figure}[ht!]
+  \centering
+  \input{classes.tex}
+  \caption{Class diagram for each of Visigoth's components}
+  \label{fig:classes}
+\end{figure}
+
+\subsection{GUI}
+\label{gui}
+
+Since Visigoth is an end-user-oriented application, the GUI is, by
+far, the most important component. Luckily, the user work-flows we
+considered contain very few steps (hence, there is little need for
+``Wizards'' or nested-design).
+
+As shown in Figure \ref{fig:gui-sketch}, the Visigoth UI is
+\emph{flat}. All relevant options and displays are presented to the
+user in a single encompassing interface. Relevancy is determined by
+context; for instance, the generation parameters shown (Figure
+\ref{fig:gui-sketch}.3) vary depending on the algorithm selected (in
+Figure \ref{fig:gui-sketch}.1).
+
+\begin{figure}[ht!]
+  \centering
+  \input{gui-sketch.tex}
+  \caption{UI wire-frame sketch: 1. Generation algorithm chooser;
+    2. Statistics; 3. Generation parameters; 4. Graph display; 5. Main
+    menu; 6. Quick actions; 7. Status bar}
+  \label{fig:gui-sketch}
+\end{figure}
+
+\noindent The most general user work-flow is as follows:
+\begin{description}
+  \setlength{\itemindent}{\parindent}
+  \item [Figure \ref{fig:gui-sketch}.1] User selects a generation
+    algorithm;
+  \item [Figure \ref{fig:gui-sketch}.2] User checks whether the graph
+    has the properties desired and
+  \item [Figure \ref{fig:gui-sketch}.3] tweaks the parameters;
+  \item [Figure \ref{fig:gui-sketch}.4] User checks the generated
+    graph and, if necessary, manually adjusts its layout;
+  \item [Figure \ref{fig:gui-sketch}.5, 6] User decides to save the
+    generated graph to a file or to an image.
+\end{description}
+
+\subsection{Object interaction}
+\label{interaction}
+%% This is an overview of the signals sent between objects (or of the
+%% public interfaces they subscribe to).
+
+Initially, we had designed Visigoth as a standard object-oriented
+application, each object holding references to any other objects it
+needed to communicate with. This quickly proved problematic, both in
+replacing components (for instance, changing the 2D renderer with the
+\OpenGL-enabled 3D renderer) and in testing existing components
+(e.g. in order to test the \code{GraphScene}, we needed to create a
+fake \code{MainWindow}).
+
+Recognizing the need for a loosely-coupled architecture, we converted
+roughly half of the inter-object calls to \Qt \code{signal}s. This
+relatively small change solved the above problems and also simplified
+the object interfaces somewhat, as more objects could now react to the
+same \code{signal}. Figure \ref{fig:interaction} shows the top-level
+interaction between the components described in Section
+\ref{components}.
+
+\begin{figure}[ht!]
+  \centering
+  \input{interaction.tex}
+  \caption{Flow of (a) information upwards via \code{signal}s and (b)
+    commands downward}
+  \label{fig:interaction}
+\end{figure}
+
+\subsection{Rendering graphs}
+
+When writing the renderer, we considered using various graphics
+libraries which allow for platform-independent drawing using
+primitives. Candidates were \Cairo\footnote{\Cairo homepage:
+  \href{http://cairographics.org/}{cairographics.org}}, \Qt and
+\OpenGL. The first two are the most common 2D drawing libraries used
+in modern open-source software; however, since they operate mostly on
+the CPU (with hardware-acceleration being very limited), they proved
+too slow for the large graphs we wished to visualise\footnote{during
+  our first iteration, we wrote a prototype for each of the libraries
+  in order to benchmark their speed and ease of development; \Qt won
+  on ease of development, which is what we used for rendering during
+  the early iterations; \OpenGL won on speed, which is what we decided
+  to use in the end}.
+
+In the end, we decided to use \OpenGL for drawing graphs on the
+screen. Thanks to its hardware accelerated nature, Visigoth can
+(re-)draw thousands of nodes and edges often enough every second to
+give the user the impression of a smooth interface when interacting
+with the graph.
+
+Whilst implementing the camera handling, the node/edge drawing and the
+interface allowing the user to `fly' through a 3D graph, we developed
+a helper library, \code{glAncillary}. A significant portion of our
+code can now be reused in similar \OpenGL projects; this is important
+since applications such as Visigoth require a completely different
+kind of graphics engine than the ones commonly found in other 3D
+applications such as video games.
+
+%% FIXME Max, could you say a few words about an issue you encountered
+%% and how you fixed it? (for instance, dragging in 3D)
+
+
+\subsection{Graph layout}
+
+Laying out a graph is a tricky problem, mainly due to the fact that
+the prime interest when engineering layouts is to please humans' taste
+instead of some logical property. A wide array of such algorithms have
+been proposed, and since drawing graphs is a central task in Visigoth,
+we had to choose the one that fit best.
+
+First we experimented with the existing solutions. One of the most
+complete free graph-drawing algorithm is
+GraphViz\footnote{\myhref{www.graphviz.org}},
+and it provides various algorithms:
+
+\begin{description}
+\item [dot] A hierarchical layout, used for directed graphs. Our small
+  world networks are not directed, so it was immediately clear they
+  would not fit this model well;
+
+\item [twopi, circo] Radial and circular layout, respectively. Again,
+  they are unsuitable for the quasi-random networks used in Visigoth.
+
+\item [neato] A spring model layout, which seemed to work reasonably
+  well with random graphs.
+\end{description}
+
+The spring model seemed to be the best fit. This class of algorithms
+works by treating edges like springs\footnote{rubber bands, actually}:
+in this way clusters of highly connected nodes would be drawn
+together. To counter this force (that would lead to nodes lumping
+together), nodes are treated as charged particles of the same
+polarity, causing repulsion between every node and the others.
+
+When generating a graph, the nodes are first places at random
+locations in the space. Then, by applying the algorithm repeatedly
+until the forces are low enough that the graph can be considered to be
+\emph{stable}.
+
+Spring model algorithms are nice for two main reasons:
+
+\begin{description}
+\item [good results] Spring force algorithms produce pleasant-looking
+  graphs for almost all kind of networks. Some algorithms might
+  produce better results for specific kinds of graph, but spring force
+  algorithms are by far the more adaptable.
+
+\item [ease of implementation] Our original implementation of the
+  algorithm took a little less then $50$ lines of C++ code, and worked
+  well on medium-density graphs of up to a thousand nodes.
+
+\item [real time drawing] Force based algorithms can be used to show
+  in real time the untangling of the graph, which is usually an
+  interesting effect. It also permits interaction, for example in the
+  form of node-dragging that changes the shape of the graph.
+\end{description}
+
+\subsubsection{\FADE}
+
+However, it is clear from even a simple description of the algorithms
+that they are very costly: for each particle, one needs to iterate
+through all the connected nodes to calculate the spring forces, and
+more importantly through all the nodes of the graph to calculate the
+repulsion forces. Thus, the algorithm is $O(m + n^2)$, where $m$ is
+the number of edges and $n$ is the number of nodes.
+
+For this reason, our implementation would work smoothly up to around
+$1000$ nodes, but then performance would degrade quickly, and the
+program would become unresponsive.
+
+Various solutions have been studied, most of which rely on various
+approximations. We chose to implement the \FADE algorithm \cite{fade},
+which works by recursively subdividing the graph space into
+sub-spaces, and then treats sub-spaces as single node when they are
+far enough. This algorithm, while improving performance, is a lot more
+complex then the na\"ive one.
+
+\begin{figure}[ht!]
+  \centering
+  \subfloat[Graph view]{
+    \input{quadtree-graph.tex}
+  }
+  \hspace{4pt}
+  \subfloat[Tree representation]{
+    \input{quadtree-tree.tex}
+  }
+  \caption{The \buzz{QuadTree} for a sample graph (empty branches
+    omitted)}
+  \label{fig:quadtree}
+\end{figure}
+
+The first step is to build a data structure representing the recursive
+subdivision. This kind of data structure is called a \buzz{TreeCode},
+which recursively subdivides the space until only one node remains in
+the current space, or a maximum depth/minimum space size is
+reached. The space decomposition can be irregular (e.g. \buzz{Voronoi}
+spaces) or regular. In the latter case, the space is recursively
+subdivided in squares. We chose to use a regular, $4$-way space
+decomposition, mainly due to its simplicity. This kind of structure is
+called \buzz{QuadTree}. Figure \ref{fig:quadtree} shows a sample
+\buzz{QuadTree} for a Visigoth graph. In it, each sub-quadrant
+preserves the weighted centre of gravity relative to the contained
+nodes.
+
+Building the tree is the difficult part of the algorithm and can be
+done in linear time. Once that is done, in order to calculate the
+non-edge forces for a given node, the algorithm proceeds as indicated
+in Figure \ref{proc:FADE}.
+
+\begin{figure}[ht!]
+  \begin{minipage}[b]{0.5\linewidth}
+    \input{fade-algorithm.tex}
+    \caption{This procedure calculates the non-edge force of a given
+      node $n$, given the \buzz{QuadTree} $q$. The vectors, $\vec{n}$
+      and $\vec{q}$, correspond to the respective centers of
+      gravity. $\beta$ is an empirically determined parameter used to
+      regulate the amount of force --- $75$ has worked well for
+      us. $\theta$ is central to the \FADE algorithm and determines
+      the amount of approximation. If $\geq 1$, the algorithm is
+      unstable; we used found $0.5 \leq \theta \leq 0.8$ to produce
+      satisfactory results. See Figure \ref{fig:theta} for a visual
+      explanation. The mass of a quadrant is simply the number of
+      nodes residing in it. }
+    \label{proc:FADE}
+  \end{minipage}
+  \hspace{10pt}
+  \begin{minipage}[b]{0.5\linewidth}
+    \centering
+    \input{fade-distance.tex}
+    \caption{In this case, $n_1$ and $n_2$ are nodes and $q$ is a
+      quadrant with edge length $s$. When calculating the non-edge
+      force between $n_1$ and $q$, where $s$ is the quadrant will be
+      judged to be too close to approximate, since $\frac{s}{d_1} >
+      1$, while $n_2$ might be judged far enough, depending on
+      $\theta$.}
+    \label{fig:theta}
+  \end{minipage}
+\end{figure}
+
+Once implemented, the \FADE algorithm lead to great speedups while
+preserving good node placements. While drawing $1000$ nodes is already
+difficult with the simple algorithm, \FADE can easily handle $10000$
+nodes, after which other performance bottlenecks are hit (the graph
+generation time and the \OpenGL drawing).
+
+Once the 3D Renderer was implemented, we had to write extend \FADE to
+support 3D, which proved to be straightforward. Now we have a
+$3$-dimensional space, which is recursively divided into $8$ cubes.
+
+\subsection{Effort}
+
+Work was divided between team members such that each would focus on
+developing a particular component and reviewing another. Table
+\ref{fig:effort} gives an overview of the distribution of work and the
+amount of effort required to finish each component.
+
+\begin{figure}[ht!]
+  \centering
+  \begin{tabular}{c|c|c}
+    Component         & Team members    & Effort \\
+    \hline
+    GUI               & Ingrid, Max     & ~80 phrs \\
+    3D Renderer       & Max, Francesco  & ~60 phrs\\
+    \code{GraphScene} & Francesco, Alex & ~80 phrs\\
+    Algorithms        & Marc, Ingrid    & ~120 phrs\\
+    Testing           & Alex, Marc      & ~20 phrs\\
+    \hline
+    Total             &                 & ~360 phrs
+  \end{tabular}
+  \caption{Effort expanded on each component in person-hours}
+  \label{fig:effort}
+\end{figure}
+
+An \emph{impact} graph, as generated by
+\GitHub\footnote{\href{https://github.com}{github.com}} is included in Figure
+\ref{fig:impact}. It shows that, at least in terms of
+SLOC\footnote{\myhref{en.wikipedia.org/wiki/Source\_lines\_of\_code}},
+the effort was well spread out across the development team.
+
+\begin{figure}[ht!]
+  \centering
+  \includegraphics[width=\textwidth]{impact.png}
+  \caption{Development impact of team members}
+  \label{fig:impact}
+\end{figure}
+
+The total amount of code\footnote{as generated using David
+  A. Wheeler's `SLOCCount'} required for each component is included in
+Figure \ref{fig:sloc}. Note that this table does not show the all the
+code that did \emph{not} make it into the final product; for instance,
+the renderer went through two complete rewrites before being the
+current 3D Renderer.
+
+\begin{figure}[ht!]
+  \centering
+  \begin{tabular}{c|l}
+    Component         & SLOC \\
+    \hline
+    GUI               & $180$ C++, 1037 XML\\
+    3D Renderer       & $452$ C++, 82 C\\
+    \code{GraphScene} & $686$ C++\\
+    Algorithms        & $1220$ C++\\
+    Testing           & $238$ C++ \\
+    \hline
+    Total             & $3061$ C++, $1037$ XML, $82$ C
+  \end{tabular}
+  \caption{Lines of code in each component}
+  \label{fig:sloc}
+\end{figure}
+
+\subsection{Development practices}
+\label{practices}
+
+\subsubsection{Iterative development}
+
+We chose an iterative development model, where each iteration
+consisted of adding a small number of features to the existing
+product.  Figure \ref{fig:iterations} represents the original
+schedule, to which we have adhered until the end.
+
+\begin{figure}[ht!]
+  \centering
+  \input{iterations.tex}
+  \caption{Initial schedule of work divided into iteration}
+  \label{fig:iterations}
+\end{figure}
+
+\subsubsection{Peer review}
+Our rule of thumb,
+\begin{quote}
+  ``the \master branch is always releasable'',
+\end{quote}
+has been the foundation of our testing and review practices.
+
+The corollary is, ``no unstable code in \master''. To adhere to this,
+we have had to ensure that no bugs crept into the \master
+branch. Towards this goal, no changes are merged into \master until at
+least another member of the team reviews them. Through this practice
+of peer review, the whole team has stayed informed on the current
+state of the project in addition to exposing and fixing bugs missed by
+the original author of the code. While this does indeed slow done
+writing code, we like to think that it otherwise shortens overall
+development time.
+
+\subsubsection{Scrum}
+To further promote group awareness of the complete state of the
+project we held frequent short meetings true to the idea of
+scrum\footnote{\myhref{en.wikipedia.org/wiki/Scrum\_(development)}}.
+These were whole-group meetings held every few days, in which team
+members shared comments on what features they were working on at the
+time and the future outlook of the project.
+
+\subsubsection{User feedback}
+While our development methodology was not test-driven or focused on
+usability, we continuously tested the software on volunteers and
+towards the end of each iteration, we held meetings with our
+client. See Section \ref{validation} for details. These tests and
+meetings uncovered a few problems, which eventually lead to small
+redesigns.
+
+\subsubsection{Version Control}
+We use \Git\footnote{\myhref{git-scm.com}} to manage our
+codebase and to enable parallel development. Additionally, the
+distributed nature of \Git enabled more efficient peer reviews, as we
+could pull/push changes directly from one another.
+
+\subsubsection{Style}
+We have strived to use consistent style throughout the code and
+documentation. To this extent, it fell to the reviewer doing the merge
+to mention and fix any style issues. This has worked adequately most
+of the time, and in the few instances where badly styled code slipped
+through, subsequent global reviews remedied the problem in a timely
+fashion.
+
+In retrospect, it would have been useful to setup a linting tool as a
+pre-commit hook such that badly formatted code would not be committed.
+
+\section{Validation}
+\label{validation}
+%% The client is a happy puppy
+
+We relied on several different processes to validate Visigoth. The
+following sections give an overview of these.
+
+\subsection{Client validation}
+We distinguish between \emph{the client} (i.e. the person ``paying''
+for the development of Visigoth) and \emph{the users} (i.e. the people
+who would end up using Visigoth).
+
+We held meetings with \emph{the client} near the end of each iteration
+in order to report on our progress and get feedback on new
+developments. These meetings would consist of a short demo of newly
+added features, a short ``impromptu'' usability test and a discussion
+on what new features should be the focus of the following iteration.
+
+The feedback we received at the end of each iteration was consistently
+positive. The Visigoth interface always met our client's demands and
+only minor changes have been made from iteration to iteration ---
+e.g. button placements. Most of the our client's wishes referred to
+extensions to the functionality of our product, such as a 3D rendering
+mode and the online network generation algorithms.
+
+\subsection{User validation}
+Near the end of each iteration we asked classmates and friends to try
+out accomplishing certain tasks in Visigoth while we watched. At the
+end, we would ask what felt awkward or wrong.
+
+The lasting impression was that they were happy with the software, but
+watching them struggle with certain aspects led to improvements in
+usability.
+
+\subsection{Functionality tests}
+\label{tests}
+
+In addition to the manual validations described in the previous
+sections, we use and automated suite of tests, which covers a
+significant portion of the codebase. In particular, it completely
+covers the intricate algorithmic and UI logic encoded in the
+\code{Algorithm} and \code{GraphScene} classes.
+
+The tests we use to determine our product's integrity are split into
+two categories: property and functional tests. Property tests focus on
+the \code{Algorithm} classes and check that basic invariants hold for
+the generated networks. The interface tests focus on the
+\code{GraphScene} and simulate user work-flows, checking outcomes
+against expected outcomes. They were deployed to ensure that user
+input in the graphical interface is successfully passed to and
+feedback returned from the system's back-end (which we found to be
+unexpectedly tricky to do).
+
+These user interface tests proved quite useful and revealed several
+problems, all of them caused by internal API changes and code not
+being updated to reflect the changes. These would manifest as
+misleading readings on the Visigoth graph-information panels and were
+thus caught by the use-case tests.
+
+When testing our product, the most profound fault that was revealed
+were memory leaks, found in two separate instances. The lessons to
+take away were twofold:
+\begin{itemize}
+  \item One the one hand, old code that sees no use and just rots
+    should be removed immediately so that it cannot interfere with the
+    newer infrastructure. We were still semi-maintaining internal
+    structures for an old rendering front-end, though not cleaning
+    them up properly. We have recently began to track test coverage
+    statistics. These should help us in identifying dead and duplicate
+    code in the future.
+  \item On the other hand, even a three-way merges as done by \Git
+    should be done with great care: merge conflicts between diverged
+    branches may re-introduce old code, leading to the situation
+    described above.
+\end{itemize}
+
+\subsection{Continuous Integration}
+Having the tests and not running them would be a pointless exercise,
+so we use a \buzz{Jenkins
+CI}\footnote{\href{http://jenkins-ci.org/}{jenkins-ci.org}} server. It
+is set up to track the master branch. On receiving a change
+notification from the central repository, it proceeds to do a fresh
+build of the project, runs the tests and generates the coverage
+statistics. It also keeps track of previous builds and aggregates
+information about the overall health of the project.  The server is
+publicly accessible so that interested parties can get a rough idea of
+what the current status of the project is. It is also set up to notify
+team members, via the project mailing-list, when problems occur.
+
+As a testament to the development practices described in Section
+\ref{practices}, after $220$ builds, we have never had a failure on
+master.
+
+\subsection{In hindsight}
+We started automated testing too late in the development cycle, and to
+date, too little of the code is being exercised by the tests. Had we
+started earlier, we would have detected certain errors much more
+quickly and we would have greater confidence in the correctness of the
+codebase.
+
+\section{Looking back}
+%% This section corresponds to 'Conclusions' in part D of the requirements
+
+\subsection{Challenges}
+Visigoth covers a broad range of software engineering tasks, each with
+a different level of technical skill requirement. For instance, the
+kinds of problems we encountered are:
+\begin{itemize}
+\item developing graph renderers (\buzz{C}/\OpenGL and
+  \buzz{C}/\Cairo);
+\item UI programming (\buzz{C++}/\Qt);
+\item implementing mathematical models (pen/paper);
+\item profiling and optimisations (\buzz{Valgrind}, Google profiling
+  tools);
+\item binding to various web services (\buzz{OAuth}/\Twitter and
+  \buzz{REST}/\GitHub).
+\end{itemize}
+
+Hence, each member of the team was constantly being challenged
+individually. We would also organise short technical talks to
+introduce concepts that may be unfamiliar to some and which they may
+find useful; we have done such talks on \Git and branching hygiene and
+\buzz{C++} and \Qt.
+
+\subsection{Planning (or lack of thereof)}
+
+As a team, we were fairly \buzz{Agile} in developing Visigoth, but
+this came with a price: towards the end, we were beginning to feel the
+effects of lack of planning. In particular, we had to rewrite some
+components one too many times. If we had to do Visigoth over, we would
+spend more time initially on planning.
+
+\subsubsection{Other issues}
+
+Visigoth exhibits very few issues other than those related to software
+development. Since it is build wholly on open-source libraries, there
+are no restrictions to releasing and redistributing the source
+code\footnote{but since the code is under the \buzz{GPL-3} license,
+  it cannot be included in commercial products by third parties
+  without our approval} and since it is designed to run on end-user
+machines, there are no environmental issues to consider.
+
+\addcontentsline{toc}{section}{References}
+\begin{thebibliography}{9}
+
+\bibitem{hamm10}
+  David A. Hammond,
+  \emph{Altruism in Small World Models}.
+  Imperial College London,
+  2010.
+
+\bibitem{oconn11}
+  Luke M. O'Connor,
+  \emph{Algorithms for Constructing Realistic Networks}.
+  Imperial College London,
+  2011.
+
+\bibitem{fade}
+  Aaron Quigley and Peter Eades,
+  \emph{FADE: Graph drawing, clustering and visual abstraction}.
+  Department of Computer Science and Software Engineering,
+  Univ. of  Newcastle, Australia, 2000.
+
+\bibitem{complexAdapt}
+  Claudius Gros,
+  \emph{Complex and Adaptive Dynamical Systems}.
+  Springer,
+  2008.
+
+\bibitem{complexNets}
+  Wikipedia contributors,
+  \emph{Complex network}.
+  Wikipedia, The Free Encyclopedia, 1 Jan. 2012.
+
+\bibitem{swphen}
+  Wikipedia contributors,
+  \emph{Small world experiment}.
+  Wikipedia, The Free Encyclopedia, 28 Dec. 2011.
+
+\bibitem{smnet}
+  Wikipedia contributors,
+  \emph{Small-world network}.
+  Wikipedia, The Free Encyclopedia, 5 Jan. 2012.
+
+\end{thebibliography}
+
+\end{document}

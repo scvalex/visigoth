@@ -3,4 +3,16 @@ test/*
 profile/*
 visigoth-build-*/*
 visigoth/visigoth.pro.user*
-
+*.orig
+docs/*.toc
+docs/*.aux
+docs/*.out
+docs/*.log
+docs/*.pdf
+presentation/*.toc
+presentation/*.aux
+presentation/*.out
+presentation/*.nav
+presentation/*.snm
+presentation/*.log
+presentation/*.pdf

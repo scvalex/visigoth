@@ -80,7 +80,7 @@ VPointF Node::calculateNonEdgeForces(QuadTree::TreeNode* treeNode) {
         double l = vec.lengthSquared();
 
         if (l > 0) {
-            vel = vec * (75.0 / l);
+            vel = vec * (75.0 / l) * treeNode->size();
         } else {
             vel = VPointF(0.0);
         }
@@ -92,7 +92,6 @@ VPointF Node::calculateNonEdgeForces(QuadTree::TreeNode* treeNode) {
     }
     return vel;
 }
-
 
 bool Node::advance() {
     if (!allowAdvance)
@@ -143,10 +142,6 @@ int Node::size() const {
 
 VPointF Node::center() const {
     return pos();
-}
-
-bool Node::hasChildren() const {
-    return false;
 }
 
 const QVector<QuadTree::TreeNode*>& Node::children() const {

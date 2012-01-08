@@ -1,5 +1,7 @@
 QT += core gui opengl xml network
 
+RESOURCES = resources.qrc \
+
 CONFIG += oauth
 oauth {
     CONFIG += link_pkgconfig
@@ -24,6 +26,7 @@ SOURCES += main.cpp \
            statistics.cpp \
            quadtree.cpp \
            erdosrenyi.cpp \
+           wattsstrogatz.cpp \
            vtools.cpp
 
 HEADERS += mainwindow.h \
@@ -39,6 +42,7 @@ HEADERS += mainwindow.h \
            quadtree.h \
            barabasialbert.h \
            erdosrenyi.h \
+           wattsstrogatz.h \
            vtools.h
 
 FORMS += mainwindow.ui \
@@ -47,7 +51,8 @@ FORMS += mainwindow.ui \
          erdoscontrol.ui \
          barabasialbert.ui \
          helpWidget.ui \
-         statistics.ui
+         statistics.ui \
+         wattscontrol.ui
 
 test {
     CONFIG -= release
@@ -55,6 +60,8 @@ test {
     QT += testlib
     SOURCES -= main.cpp
     SOURCES += testsimple.cpp
+    QMAKE_CXXFLAGS += -g -coverage -O0
+    LIBS += -lgcov
 }
 
 oauth {
@@ -63,3 +70,6 @@ oauth {
     FORMS += twitauthdialog.ui \
              twittercontrol.ui
 }
+
+OTHER_FILES += \
+    helpFile.html

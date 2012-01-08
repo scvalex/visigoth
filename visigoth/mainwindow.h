@@ -36,6 +36,8 @@ private slots:
     void onGenerate();
     void onFocusedNodeChanged(Node *node);
     void pickColor();
+    void showAbout();
+    void showAboutQt();
 
 private:
     Ui::MainWindow *ui;

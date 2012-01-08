@@ -31,6 +31,7 @@ public:
 
     /* Return the new position. */
     VPointF calculatePosition(QuadTree::TreeNode& treeNode);
+    VPointF calculatePosition3D(QVector<Node*>& nodes);
 
     bool advance();
     void setAllowAdvance(bool allow);
@@ -42,7 +43,6 @@ public:
     // QuadTree
     int size() const;
     VPointF center() const;
-    bool hasChildren() const;
     bool isHighlighted;
     const QVector<TreeNode*>& children() const;
     vreal width() const;

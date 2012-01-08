@@ -52,17 +52,29 @@ protected:
     void timerEvent(QTimerEvent *event);
 
     void initializeGL();
+    void initializeCamera();
     void paintGL();
     void resizeGL(int w, int h);
 
 public slots:
     void onNodeMoved();
+    void set3DMode(bool enabled);
 
 private:
-    void drawGraphGL();
+    void drawBackground();
+    void drawOverlay();
+
+    void drawSphere(GLfloat r, int lats, int longs);
+    void drawCircle(GLfloat r, int longs);
     void drawNode(Node *node);
     void rebornGraph();
-    void initProjection();
+    void drawGraphGL();
+
+    void initGraphProjection();
+    void initOverlayProjection();
+
+    void setupLighting();
+
     Node *selectGL(int x, int y);
 
     GraphScene *myScene;

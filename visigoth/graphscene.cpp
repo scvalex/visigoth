@@ -9,8 +9,6 @@
 #include "statistics.h"
 #include "barabasialbert.h"
 #include <QColorDialog>
-#include <QMainWindow>
-#include "mainwindow.h"
 
 #ifdef HAS_OAUTH
 #include "twitter.h"
@@ -21,6 +19,7 @@ GraphScene::GraphScene(QMainWindow *mainWindow) :
     degreeCount(1),
     myEdgeColor(QColor::fromRgbF(0.0, 0.0, 1.0, 0.5)),
     myNodeColor(QColor::fromRgbF(0.0, 1.0, 0.3, 0.7)),
+    mode3d(false),
     myBackgroundColor(Qt::black)
 {
     myAlgorithms["Preferential Attachament"] = PREFERENTIAL_ATTACHAMENT;
@@ -30,6 +29,7 @@ GraphScene::GraphScene(QMainWindow *mainWindow) :
 #ifdef HAS_OAUTH
     myAlgorithms["Twitter"] = TWITTER;
 #endif
+    myAlgorithms["Watts Strogatz"] = WATTS_STROGATZ;
     stats = new Statistics(this);
 }
 
@@ -70,6 +70,12 @@ QList<Edge*>& GraphScene::edges() {
     return myEdges;
 }
 
+void GraphScene::set3DMode(bool enabled) {
+    mode3d = enabled;
+
+    randomizePlacement();
+}
+
 bool GraphScene::newEdge(Node *source, Node *dest) {
     Q_ASSERT(source != 0);
     Q_ASSERT(dest != 0);
@@ -100,14 +106,46 @@ Node* GraphScene::newNode() {
     node->setColour(myNodeColor);
 
     myNodes << node;
+
+    float z = 0;
+    if (mode3d) {
+        z = (qrand() % 600) - 300;
+    }
+
     node->setPos(VPointF((qrand() % 1000) - 500,
                          (qrand() % 600) - 300,
-                         //(qrand() % 600) - 300));
-                         0.0));
+                         z));
     connect(node, SIGNAL(nodeMoved()), this, SLOT(onNodeMoved()));
     onNodeMoved();
 
     return node;
+}
+
+// Pre: Will remove nodes staring from last node in list
+void GraphScene::removeNode(Node *n) {
+    myNodes.remove(n->tag());
+}
+
+// CutoffTag is for destNodes only!
+void GraphScene::removeEdges(int cutoffTag) {
+    for (int i(0); i < myEdges.size(); ++i) {
+        if (myEdges[i]->destNode()->tag() >= cutoffTag) {
+            myEdges.removeAt(i);
+            // just to make sure nothing is skipped
+            --i;
+        }
+    }
+}
+
+// used in Watts Strogatz
+void GraphScene::removeEdge(Node * source, Node* dst){
+    for(int i(0); i < myEdges.size(); ++i){
+        if(myEdges[i]->sourceNode()->tag() == source->tag() &&
+            myEdges[i]->destNode()->tag() == dst->tag()){
+            myEdges.removeAt(i);
+            --i;
+        }
+    }
 }
 
 bool GraphScene::doesEdgeExist(Node *source, Node *dest) const {
@@ -179,6 +217,9 @@ void GraphScene::repopulate() {
         case BARABASI_ALBERT:
             algo = new BarabasiAlbert(this);
             break;
+        case WATTS_STROGATZ:
+            algo = new WattsStrogatz(this);
+            break;
 #ifdef HAS_OAUTH
         case TWITTER:
             algo = new Twitter(this);
@@ -187,7 +228,26 @@ void GraphScene::repopulate() {
         }
     }
     algo->reset();
+    int counter = 0;
+    if(algo->getSWNFlag()){
+        if(!stats) {
+            stats = new Statistics(this);
+        }
+        // Cutoff value exsists because for low max degree
+        // generating a reasonable exponent is not possible
+        double exponent = stats->powerLawExponent();
+        while((exponent > 4.0 ||
+              exponent < 2.1 ) &&
+              (counter < 200))
+        {
+            reset();
+            algo->reset();
+            exponent = stats->powerLawExponent();
+            ++counter;
+        }
+    }
     randomizePlacement();
+
     emit repopulated();
 }
 
@@ -196,11 +256,15 @@ Algorithm* GraphScene::algorithm() const {
 }
 
 void GraphScene::randomizePlacement() {
+    float z = 0;
+    if (mode3d) {
+        z = (qrand() % 600) - 300;
+    }
+
     foreach (Node *node, nodes()) {
         node->setPos(VPointF((qrand() % 1000) - 500,
                               (qrand() % 600) - 300,
-                              //(qrand() % 600) - 300));
-                              0.0));
+                              z));
     }
 }
 
@@ -260,7 +324,7 @@ int GraphScene::maxDegree() const {
 
 int GraphScene::nodeCount(int degree) const {
     /*
-    actually it is degree is one less than the degree we are looking for
+    actually degree is one less than the degree we are looking for
     But since this is only used by statistics.cpp it does not matter
     */
     return degreeCount[degree].size();
@@ -300,4 +364,12 @@ VCubeF GraphScene::graphCube() {
     }
 
     return VCubeF(p1, p2);
+}
+
+QColor& GraphScene::colour() {
+    return myColour;
+}
+
+void GraphScene::setColour(const QColor &c) {
+    myColour = c;
 }

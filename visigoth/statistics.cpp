@@ -37,6 +37,7 @@ double Statistics::clusteringAvg() {
     }
 
     return clusterCumulative / (double)graph->nodes().size();
+
 }
 
 double Statistics::clusteringCoeff(Node *node) {
@@ -49,13 +50,13 @@ double Statistics::clusteringCoeff(Node *node) {
         Node *src = e->sourceNode();
         Node *dest = e->destNode();
 
-        QVector<Node*> nNeigh = buildNeighbourVector(node);
+        QVector<Node*> nNeigh = node->neighbours();
 
         if(src->tag() == node->tag()) {
-            QVector<Node*> dNeigh = buildNeighbourVector(dest);
+            QVector<Node*> dNeigh = dest->neighbours();
             intersection += intersectionCount(nNeigh, dNeigh);
         } else {
-            QVector<Node*> dNeigh = buildNeighbourVector(dest);
+            QVector<Node*> dNeigh = src->neighbours();
             intersection += intersectionCount(nNeigh, dNeigh);
         }
     }
@@ -75,24 +76,6 @@ double Statistics::clusteringDegree(int degree) {
     return clusterCumulative / degreeCount;
 }
 
-// private:
-
-QVector<Node*> Statistics::buildNeighbourVector(Node *n) {
-    QList<Edge*> eList = n->edges();
-    QVector<Node*> retVec(eList.size());
-
-    while(!eList.empty()) {
-        Edge *e = eList.takeFirst();
-
-        if(e->sourceNode()->tag() == n->tag()) {
-            retVec << e->destNode();
-        } else {
-            retVec << e->sourceNode();
-        }
-    }
-
-    return retVec;
-}
 
 double Statistics::lengthSum(Node *s, QSet<Node*> &visited, QMap<Node*, int> &distance) {
     QQueue<Node*> queue;
@@ -119,6 +102,7 @@ double Statistics::lengthSum(Node *s, QSet<Node*> &visited, QMap<Node*, int> &di
                 distance[n] = distance.value(parent, 0) + 1;
                 queue.enqueue(n);
             }
+
         }
 
         retLength += distance[parent];
@@ -131,26 +115,52 @@ int Statistics::intersectionCount(QVector<Node*> vec1, QVector<Node*> vec2) {
     QVector<Node*> retVec;
     QVector<Node*> *shorterVec;
     QVector<Node*> *longerVec;
-    int length;
 
+    // tags are unqiue, so no counter is needed
+    QMap<int,bool> mapShort;
+    QMap<int,bool> mapLong;
+
+
+    int length;
+    int shortLength;
     if (vec1.size() > vec2.size()) {
         length = vec1.size();
+        shortLength = vec2.size();
         shorterVec = &vec2;
         longerVec = &vec1;
     } else {
-        length = vec2.size();
-        shorterVec = &vec1;
-        longerVec = &vec2;
+       length = vec2.size();
+       shortLength = vec1.size();
+       shorterVec = &vec1;
+       longerVec = &vec2;
+    }
+
+    if (shortLength == 0) {
+        return 0;
     }
 
     for (int i(0); i < length; ++i) {
-        Node *tempPointer = longerVec->at(i);
-        if (shorterVec->contains(tempPointer)) {
-            retVec << tempPointer;
+        Node *longPointer;
+        Node *shortPointer;
+
+        if (i < shortLength) {
+            shortPointer = shorterVec->at(i);
+            mapShort.insert(shortPointer->tag(), true);
+
+        }
+
+        longPointer= longerVec->at(i);
+
+        mapLong.insert(longPointer->tag(), true);
+
+        // if it contains its true
+        if (mapShort.contains(longPointer->tag())) {
+            retVec << longPointer;
+            //don'thave to clear maps because tags are unique
         }
     }
 
-    return retVec.count();
+    return retVec.size();
 }
 
 
@@ -158,47 +168,36 @@ double Statistics::powerLawExponent() {
     //Made a list here incase we want to plot the data in a widget.
     QList<QPointF> plot;
 
-    int logCounter = 0;
-    double x(0);
-
     int maxDegree = graph->maxDegree();
-    for (double i(0); x < maxDegree; ++i) {
-        x = (i+1) * qPow(10, logCounter);
-        if (x >= maxDegree) {
-            break;
-        }
 
-        double count = graph->nodeCount(x);
+    for (double i(0); i < maxDegree; ++i) {
+        double count = graph->nodeCount(i);
         double y = count / (double)graph->nodes().size();
 
-
-        if (y != 0 && x!= 1) {
-            // in case we want to plot
-            QPointF p(qLn(x), qLn(y));
+        if (y != 0) {
+            // incase we want to plot
+            QPointF p(qLn(i+1), qLn(y));
             plot << p;
-        }
-
-        if (i == 9) {
-            ++logCounter;
-            i = 0;
         }
     }
 
     double deltaY = 0.0;
     double deltaX = 0.0;
+    double yPref;
     int c = 0;
 
     foreach (QPointF p, plot) {
         // init calculation
-        if (c == 0){
-            //yPrev = p.getY();
-            deltaY = p.y();
-            deltaX = p.x();
-        } else if (c == plot.size() -1) {
-            deltaY = p.y() - deltaY;
-            deltaX = p.x() - deltaX;
+        if (c == 0) {
+           yPref = p.ry();
+           deltaX = p.rx();
+           ++c;
+        } else {
+            deltaY += p.ry() - yPref;
+            yPref = p.ry();
+            deltaX = p.rx() - deltaX;
+            ++c;
         }
-        ++c;
     }
 
     return (-1) * (deltaY / deltaX);
