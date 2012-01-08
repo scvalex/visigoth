@@ -537,8 +537,8 @@ The model is implemented as follows:
   \begin{algorithmic}
     \REQUIRE  new Node $N_i$
     \REQUIRE Edge count with amount of edges to be added
-    \REQUIRE A vector of used nodes
-    \REQUIRE A vector of all nodes exluding $N_i$ called Nodes
+    \REQUIRE An array of used nodes
+    \REQUIRE An array of all nodes exluding $N_i$ called Nodes
     \WHILE{Edge count $>$ 0}
       \STATE r $\gets$ random real in $[0, 1]$
       \STATE Node vPref $\gets$ getPreference(Nodes,r)
@@ -599,8 +599,24 @@ The algorithm constructs a network in three simple steps:
 
 This procedure is implemented as follows:
 
-% FIXME: Insert pseudocode
-\large{\textbf{ ------ INSERT PSEUDOCODE HERE ------}}
+
+\begin{algorithmic}
+\REQUIRE An array of nodes of set U called uVector
+\REQUIRE An array of nodes of set V called vVector
+\REQUIRE A degree distribution for all nodes
+
+\STATE Populate uVector and vVector
+\FORALL{Elements of uVector}
+  \STATE Connect to random members of vVector. The degrees of the connections are governed
+              by the degree distribution.
+\ENDFOR
+\STATE Connect all disconnected members of uVector to a random member in vVector
+\FORALL{Elements of vVector $V_i$}
+  \STATE Connect all members of uVector connected to $V_i$
+\ENDFOR
+\STATE Remove all edges associated with vVector.
+\STATE Remove all vVector members.
+\end{algorithmic}
 
 \subsection{Preferential Attachment with Clustering}
 
