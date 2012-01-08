@@ -55,6 +55,7 @@
 %% Acronyms
 \newcommand{\Qt}{\buzz{Qt} }
 \newcommand{\OpenGL}{\buzz{OpenGL} }
+\newcommand{\FADE}{\buzz{FADE} }
 
 %% %%%%%%%%%%%%%%%%%%%% END COMMANDS %%%%%%%%%%%%%%%%%%%%
 
@@ -1220,11 +1221,11 @@ interaction between the components described in Section
   \label{fig:interaction}
 \end{figure}
 
-\subsection{Graph drawing}
+\subsection{Rendering graphs}
 
-We considered using various graphics libraries which allow for
-platform-independent drawing using primitives. Candidates were
-\buzz{Cairo}\footnote{Cairo homepage:
+When writing the renderer, we considered using various graphics
+libraries which allow for platform-independent drawing using
+primitives. Candidates were \buzz{Cairo}\footnote{Cairo homepage:
   \href{http://cairographics.org/}{cairographics.org}}, \Qt and
 \OpenGL. The first two are the most common 2D drawing libraries used
 in modern open-source software; however, since they operate mostly on
@@ -1255,77 +1256,79 @@ applications such as video games.
 
 
 \subsection{Graph layout}
-Laying out a graph is a tricky problem, mainly due to the fact that the
-prime interest when engineering layouts is to please humans' taste
+
+Laying out a graph is a tricky problem, mainly due to the fact that
+the prime interest when engineering layouts is to please humans' taste
 instead of some logical property. A wide array of such algorithms have
 been proposed, and since drawing graphs is a central task in Visigoth,
 we had to choose the one that fit best.
 
 First we experimented with the existing solutions. One of the most
 complete free graph-drawing algorithm is
-OpenViz\footnote{\href{http://www.graphviz.org/}{www.graphviz.org}},
+GraphViz\footnote{\href{http://www.graphviz.org/}{www.graphviz.org}},
 and it provides various algorithms:
 
 \begin{description}
 \item [dot] A hierarchical layout, used for directed graphs. Our small
-  world networks are not directed and it was clear from the beginning
-  that they did not fit this model well.
+  world networks are not directed, so it was immediately clear they
+  would not fit this model well;
 
 \item [twopi, circo] Radial and circular layout, respectively. Again,
-  unsuitable for the quasi-random networks that we use in Visigoth.
+  they are unsuitable for the quasi-random networks used in Visigoth.
 
 \item [neato] A spring model layout, which seemed to work reasonably
   well with random graphs.
 \end{description}
 
-The spring model seemed to be the best fit. This class of algorithm
-work by treating edges like springs: in this way clusters of highly
-connected nodes would be drawn together. To counter this force (that
-would lead to nodes lumping together), nodes are treated as charged
-particles of the same polarity, causing repulsion between every node
-and the others.
+The spring model seemed to be the best fit. This class of algorithms
+works by treating edges like springs\footnote{rubber bands, actually}:
+in this way clusters of highly connected nodes would be drawn
+together. To counter this force (that would lead to nodes lumping
+together), nodes are treated as charged particles of the same
+polarity, causing repulsion between every node and the others.
 
 When generating a graph, the nodes are first places at random
-locations in the space. Then, we apply the algorithm repeatedly until
-the forces are low enough that we can consider the graph to be stable.
+locations in the space. Then, by applying the algorithm repeatedly
+until the forces are low enough that the graph can be considered to be
+\emph{stable}.
 
-Spring model algorithms are nice for two reasons:
+Spring model algorithms are nice for two main reasons:
 
-\begin{itemize}
-\item Good results: spring force algorithms produce pleasant graphs
-  for almost all kind of networks. Some algorithms might produce
-  better results for specific kinds of graph, but spring force
-  algorithms are by far the more adaptive.
+\begin{description}
+\item [good results] Spring force algorithms produce pleasant-looking
+  graphs for almost all kind of networks. Some algorithms might
+  produce better results for specific kinds of graph, but spring force
+  algorithms are by far the more adaptable.
 
-\item Ease of implementation: Our simple implementation of the
-  algorithm take a little less then 50 lines of C++ code, and works
-  well up to medium-sized graphs.
+\item [ease of implementation] Our original implementation of the
+  algorithm took a little less then $50$ lines of C++ code, and worked
+  well on medium-density graphs of up to a thousand nodes.
 
-\item Real time drawing: force based algorithms can be used to show in
-  real time the untangling of the graph, which is usually an
+\item [real time drawing] Force based algorithms can be used to show
+  in real time the untangling of the graph, which is usually an
   interesting effect. It also permits interaction, for example in the
-  form of node-dragging that changes the shape of the graph. We employ
-  both techniques in Visigoth.
-\end{itemize}
+  form of node-dragging that changes the shape of the graph.
+\end{description}
 
-\subsubsection{FADE}
+\subsubsection{\FADE}
 
-However, even a simple description of the algorithms reveals its high
-cost. For each particle, we need to iterate through all the connected
-nodes to calculate the spring forces, and more importantly through all
-the particles of the graphs to calculate the repulsion forces. Thus,
-the algorithm is \(O(n^2)\), where \(n\) is the number of nodes.
+However, it is clear from even a simple description of the algorithms
+that they are very costly: for each particle, one needs to iterate
+through all the connected nodes to calculate the spring forces, and
+more importantly through all the nodes of the graph to calculate the
+repulsion forces. Thus, the algorithm is $O(m + n^2)$, where $m$ is
+the number of edges and $n$ is the number of nodes.
 
-For this reason, our implementation works smoothly up to around a
-\(1000\) nodes, but then performance degrades quickly, and the program
-becomes unresponsive. Various solutions have been studied, most of
-which rely on various approximations.
+For this reason, our implementation would work smoothly up to around
+$1000$ nodes, but then performance would degrade quickly, and the
+program would become unresponsive.
 
-We chose to implement the \emph{FADE} algorithm \cite{fade}, which works by
-recursively subdividing the graph space into sub-spaces, and then
-treats sub-spaces as single particles when they are far enough. This
-algorithm, while improving performance, is a lot more complex then the
-naive one.
+Various solutions have been studied, most of which rely on various
+approximations. We chose to implement the \FADE algorithm \cite{fade},
+which works by recursively subdividing the graph space into
+sub-spaces, and then treats sub-spaces as single node when they are
+far enough. This algorithm, while improving performance, is a lot more
+complex then the na\"ive one.
 
 \begin{figure}
   \centering
@@ -1336,40 +1339,41 @@ naive one.
   \subfloat[Tree representation]{
     \input{quadtree-tree.tex}
   }
-  \caption{The QuadTree for a sample graph, empty branches omitted}
+  \caption{The \buzz{QuadTree} for a sample graph (empty branches
+    omitted)}
   \label{fig:quadtree}
 \end{figure}
 
 The first step is to build a data structure representing the recursive
-subdivision. This kind of data structure is called a \emph{TreeCode},
+subdivision. This kind of data structure is called a \buzz{TreeCode},
 which recursively subdivides the space until only one node remains in
-the current space, or a maximum depth/minimum space size size is
-hit. The space decomposition can be irregular (e.g. \emph{Voronoi}
+the current space, or a maximum depth/minimum space size is
+reached. The space decomposition can be irregular (e.g. \buzz{Voronoi}
 spaces) or regular. In the latter case, the space is recursively
-subdivided in squares. We chose to use a regular, 4-way space
+subdivided in squares. We chose to use a regular, $4$-way space
 decomposition, mainly due to its simplicity. This kind of structure is
-called \emph{QuadTree}. Figure \ref{fig:quadtree} shows a sample
-QuadTree for a Visigoth graph. In the QuadTree, each sub-quadrant
-preserved the weighted centre of gravity relative to the contained
+called \buzz{QuadTree}. Figure \ref{fig:quadtree} shows a sample
+\buzz{QuadTree} for a Visigoth graph. In it, each sub-quadrant
+preserves the weighted centre of gravity relative to the contained
 nodes.
 
 Building the tree is the difficult part of the algorithm and can be
-done in linear time. Once that is done, to calculate the non-edge
-forces for a given node the algorithm proceeds as indicated in figure
-\ref{proc:FADE}.
+done in linear time. Once that is done, in order to calculate the
+non-edge forces for a given node, the algorithm proceeds as indicated
+in Figure \ref{proc:FADE}.
 
 \begin{figure}[ht]
   \begin{minipage}[b]{0.5\linewidth}
     \input{fade-algorithm.tex}
     \caption{This procedure calculates the non-edge force of a given
-      node \(n\), given the QuadTree \(q\). \(\vec{n}\) and
-      \(\vec{q}\) indicate the vectors corresponding to the respective
-      centers of gravity. \(\beta\) is an empirically determined
-      parameter used to regulate the amount of force - \(75\) has
-      worked well for us. \(\theta\) is central to the FADE algorithm
-      and determines the amount of approximation. If \(\geq 1\) the
-      algorithm is unstable, we used values between \(0.5\) and
-      \(0.8\). See figure \ref{fig:theta} for a visual
+      node $n$, given the \buzz{QuadTree} $q$. The vectors, $\vec{n}$
+      and $\vec{q}$, correspond to the respective centers of
+      gravity. $\beta$ is an empirically determined parameter used to
+      regulate the amount of force --- $75$ has worked well for
+      us. $\theta$ is central to the \FADE algorithm and determines
+      the amount of approximation. If $\geq 1$, the algorithm is
+      unstable; we used found $0.5 \leq \theta \leq 0.8$ to produce
+      satisfactory results. See Figure \ref{fig:theta} for a visual
       explanation. The mass of a quadrant is simply the number of
       nodes residing in it. }
     \label{proc:FADE}
@@ -1378,25 +1382,25 @@ forces for a given node the algorithm proceeds as indicated in figure
   \begin{minipage}[b]{0.5\linewidth}
     \centering
     \input{fade-distance.tex}
-    \caption{In this case, \(n_1\) and \(n_2\) are nodes and \(q\) is
-      a quadrant with edge length \(s\). When calculating the non-edge
-      force between \(n_1\) and \(q\), where \(s\) is the quadrant
-      will be judged to be too close to approximate, since
-      \(\frac{s}{d_1} > 1\), while \(n_2\) might be judged far enough,
-      depending on \(\theta\).}
+    \caption{In this case, $n_1$ and $n_2$ are nodes and $q$ is a
+      quadrant with edge length $s$. When calculating the non-edge
+      force between $n_1$ and $q$, where $s$ is the quadrant will be
+      judged to be too close to approximate, since $\frac{s}{d_1} >
+      1$, while $n_2$ might be judged far enough, depending on
+      $\theta$.}
     \label{fig:theta}
   \end{minipage}
 \end{figure}
 
-Once implemented, the FADE algorithm lead to great speedups while
-preserving good node placements. While drawing \(1000\) nodes is
-already difficult with the simple algorithm, FADE can easily handle
-\(10000\) nodes, after which other performance limits are hit (the
-graph generation time and the \OpenGL drawing).
+Once implemented, the \FADE algorithm lead to great speedups while
+preserving good node placements. While drawing $1000$ nodes is already
+difficult with the simple algorithm, \FADE can easily handle $10000$
+nodes, after which other performance bottlenecks are hit (the graph
+generation time and the \OpenGL drawing).
 
-After we implemented the 3D view we had to write an extension to FADE to support
-3D, which proved to be straight forward. Now we have a 3-dimensional space,
-which is recursively divided into $8$ cubes.
+Once the 3D Renderer was implemented, we had to write extend \FADE to
+support 3D, which proved to be straightforward. Now we have a
+$3$-dimensional space, which is recursively divided into $8$ cubes.
 
 \subsection{Effort}
 
