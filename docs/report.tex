@@ -57,6 +57,7 @@
 \newcommand{\OpenGL}{\buzz{OpenGL} }
 \newcommand{\FADE}{\buzz{FADE} }
 \newcommand{\master}{\code{master} }
+\newcommand{\Git}{\buzz{Git} }
 
 %% %%%%%%%%%%%%%%%%%%%% END COMMANDS %%%%%%%%%%%%%%%%%%%%
 
@@ -1503,6 +1504,20 @@ current 3D Renderer.
 
 \subsection{Development methodologies}
 
+\subsubsection{Iterative development}
+
+We chose an iterative development model, where each iteration
+consisted of adding a small number of features to the existing
+product.  Figure \ref{fig:iterations} represents the original
+schedule, to which we have adhered until the end.
+
+\begin{figure}
+  \centering
+  \input{iterations.tex}
+  \caption{Initial schedule of work divided into iteration}
+  \label{fig:iterations}
+\end{figure}
+
 \subsubsection{Peer review}
 Our rule of thumb,
 \begin{quote}
@@ -1537,10 +1552,10 @@ meetings uncovered a few problems, which eventually lead to small
 redesigns.
 
 \subsubsection{Version Control}
-We use Git\footnote{\url{http://git-scm.com/}} to manage our codebase
-and to enable parallel development. Additionally, the distributed
-nature of Git enabled more efficient peer reviews, as we could
-pull/push changes directly from one another.
+We use \Git \footnote{\url{http://git-scm.com/}} to manage our
+codebase and to enable parallel development. Additionally, the
+distributed nature of \Git enabled more efficient peer reviews, as we
+could pull/push changes directly from one another.
 
 \subsubsection{Style}
 We have strived to use consistent style throughout the code and
@@ -1557,31 +1572,35 @@ pre-commit hook such that badly formatted code would not be committed.
 \label{validation}
 %% The client is a happy puppy
 
+We relied on several different processes to validate Visigoth. The
+following sections give an overview of these.
+
 \subsection{Client validation}
-In order to report on our progress and get feedback on new
+We distinguish between \emph{the client} (i.e. the person ``paying''
+for the development of Visigoth) and \emph{the users} (i.e. the people
+who would end up using Visigoth).
+
+We held meetings with \emph{the client} near the end of each iteration
+in order to report on our progress and get feedback on new
 developments. These meetings would consist of a short demo of newly
-added features, a short "impromptu" usability test and a discussion
+added features, a short ``impromptu'' usability test and a discussion
 on what new features should be the focus of the following iteration.
 
-The feedback we received at the end of each iteration was
-consistently positive. The Visigoth interface always met our
-client's demands and only minor changes have been made from
-iteration to iteration, e.g. button placements. Most of the our
-client's wishes referred to extensions to the functionality of
-our product, such as a 3D rendering mode and the network generation
-algorithms.
+The feedback we received at the end of each iteration was consistently
+positive. The Visigoth interface always met our client's demands and
+only minor changes have been made from iteration to iteration ---
+e.g. button placements. Most of the our client's wishes referred to
+extensions to the functionality of our product, such as a 3D rendering
+mode and the online network generation algorithms.
 
-\subsection{Other users' feedback}
-Near the end of each iteration we asked classmates and friends for
-their sincere point of view concerning our progress and project
-overall, to that specific point in time.
+\subsection{User validation}
+Near the end of each iteration we asked classmates and friends to try
+out accomplishing certain tasks in Visigoth while we watched. At the
+end, we would ask what felt awkward or wrong.
 
-The last impression was that they were mainly happy. We followed their
-advice when it appeared. For example, at some point, they wanted to be
-able to customize the graph a bit more following their own taste. So,
-we added the possibility to change the color of the nodes, edges,
-background; to highlight selected nodes as well as their direct
-neighbours.
+The lasting impression was that they were happy with the software, but
+watching them struggle with certain aspects led to improvements in
+usability.
 
 \subsection{Tests}
 To automate regression detection we use a test suite written using the
@@ -1617,7 +1636,7 @@ instances. The lessons to take away were twofold:
         not cleaning them up properly. We have recently began to
         track test coverage statistics. These should help us in
         identifying dead and duplicate code in the future.
-  \item On the other hand, even a three-way merges as done by Git
+  \item On the other hand, even a three-way merges as done by \Git
         should be done with great care: merge conflicts between
         diverged branches may re-introduce old code, leading to
         the situation described above.
@@ -1686,7 +1705,7 @@ Hence, each member of the team is constantly being challenged individually. We a
 
 \begin{itemize}
 
-\item Git and branching hygiene;
+\item \Git and branching hygiene;
 \item C++ and Qt.
 
 \end{itemize}
