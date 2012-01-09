@@ -1,8 +1,9 @@
 DOCBASE=report
-GRAPHICS=$(wildcard *.tex)
+PRESENTATION=presentation
+GRAPHICS=
 LATEX?=pdflatex
 
-all: $(GRAPHICS) $(DOCBASE).pdf pdfclean
+all: $(GRAPHICS) $(DOCBASE).pdf $(PRESENTATION).pdf pdfclean
 
 %-crop.pdf: %.pdf
 	pdfcrop $<
@@ -26,20 +27,21 @@ $(DOCBASE).pdf: $(DOCBASE).tex $(GRAPHICS)
 	$(LATEX) $(DOCBASE).tex
 	$(LATEX) $(DOCBASE).tex
 
-#$(DOCBASE).ps: $(DOCBASE).tex $(GRAPHICS)
-#	latex $(DOCBASE).tex
-#	latex $(DOCBASE).tex
-#	dvips $(DOCBASE).dvi
-#	ps2pdf $(DOCBASE).ps
+$(PRESENTATION).pdf: $(PRESENTATION).tex $(GRAPHICS)
+	$(LATEX) $(PRESENTATION).tex
+	$(LATEX) $(PRESENTATION).tex
 
 .PHONY: pdfclean
 pdfclean:
-	rm -f $(DOCBASE).ps
-	rm -f $(DOCBASE).dvi
-	rm -f $(DOCBASE).aux
-	rm -f $(DOCBASE).out
-	rm -f $(DOCBASE).toc
-	rm -f $(DOCBASE).log
+	$(foreach f,$(DOCBASE) $(PRESENTATION),\
+	rm -f $(f).ps &&\
+	rm -f $(f).dvi &&\
+	rm -f $(f).aux &&\
+	rm -f $(f).out &&\
+	rm -f $(f).toc &&\
+	rm -f $(f).nav &&\
+	rm -f $(f).snm &&\
+	rm -f $(f).log)
 	rm -f texput.log
 	rm -f *~
 

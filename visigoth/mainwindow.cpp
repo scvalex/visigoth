@@ -20,6 +20,7 @@
 #include <QObject>
 #include <QAction>
 #include <QMessageBox>
+#include <QColorDialog>
 #include <QUrl>
 
 MainWindow::MainWindow(QWidget *parent) :
@@ -41,7 +42,7 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->helpAct, SIGNAL(toggled(bool)), this, SLOT(toggleHelp(bool)));
 
     view = new GLGraphWidget(this);
-    scene = new GraphScene();
+    scene = new GraphScene(this);
     view->setScene(scene);
 
     statsUi->setupUi(ui->statsWidget);
@@ -51,6 +52,9 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->newNodeAct, SIGNAL(triggered()), scene, SLOT(addVertex()));
     connect(ui->randomizeAct, SIGNAL(triggered()), scene, SLOT(randomizePlacement()));
     connect(ui->generateAct, SIGNAL(triggered()), scene, SLOT(repopulate()));
+
+    connect(ui->menuCustomizeGraph, SIGNAL(triggered(QAction*)), this, SLOT(customizeColour(QAction*)));
+
     connect(ui->mode3DAct, SIGNAL(toggled(bool)), view, SLOT(set3DMode(bool)));
     connect(ui->aboutAct, SIGNAL(triggered()), this, SLOT(showAbout()));
     connect(ui->aboutQtAct, SIGNAL(triggered()), this, SLOT(showAboutQt()));
@@ -69,6 +73,39 @@ MainWindow::MainWindow(QWidget *parent) :
 MainWindow::~MainWindow() {
     delete view;
     delete ui;
+}
+
+/* Asks the user for a color.  If the user cancels the action,
+return false and leave NEWCOLOR unchanged.  Otherwise, return
+true and update NEWCOLOUR to match the picked colour. */
+bool MainWindow::pickColour(QColor &newColour) {
+    const QColor& initial = QColor::fromRgbF(0.0, 0.0, 1.0, 0.5);
+    QColor c = QColorDialog::getColor(initial, this, "Select Colour", 0);
+    if (!c.isValid()) {
+        return false;
+    }
+
+    newColour = c;
+    return true;
+}
+
+void MainWindow::customizeColour(QAction *action) {
+    QColor colour;
+    if (action == ui->edgeColourAct) {
+        if (pickColour(colour)) {
+            scene->customizeEdgesColour(colour);
+        }
+    } else if (action == ui->nodeColourAct) {
+        if (pickColour(colour)) {
+            scene->customizeNodesColour(colour);
+        }
+    } else if (action == ui->backgroundColourAct) {
+        if (pickColour(colour)) {
+            scene->customizeBackgroundColour(colour);
+        }
+    } else if (action == ui->highlightNeighboursAct) {
+        view->highlightNeighbours(ui->highlightNeighboursAct->isChecked());
+    }
 }
 
 void MainWindow::toggleHelp(bool enabled) {

@@ -25,6 +25,7 @@ GLGraphWidget::GLGraphWidget(QWidget *parent) :
     QGLWidget(parent),
     myScene(0),
     mouseMode(MOUSE_IDLE),
+    isHighlighted(false),
     animTimerId(0)
 {
     setFocusPolicy(Qt::StrongFocus);
@@ -91,16 +92,46 @@ void GLGraphWidget::wheelEvent(QWheelEvent *event) {
     this->repaint();
 }
 
+void GLGraphWidget::highlightNeighbours(bool enabled) {
+    isHighlighted = enabled;
+    if (!enabled) {
+        resetGraphColours();
+    }
+}
+
+void GLGraphWidget::resetGraphColours() {
+    foreach(Edge* edge, myScene->edges()) {
+        if (edge->colour() != myScene->edgeColour())
+            edge->setColour(myScene->edgeColour());
+    }
+    foreach(Node* node, myScene->nodes()) {
+        if (node->colour() != myScene->nodeColour())
+            node->setColour(myScene->nodeColour());
+        }
+    repaint();
+}
+
 void GLGraphWidget::mouseDoubleClickEvent(QMouseEvent *event) {
     if (event->button() == Qt::LeftButton) {
         Node *hitNode = selectGL(event->x(), event->y());
-
-        if (hitNode) {
-            hitNode->setColour(QColor::fromRgbF(1.0, 0.0, 0.0, 1.0));
+        if (!hitNode || hitNode->highlighted() != isHighlighted) {
+            return;
         }
-    }
 
-    this->repaint();
+        isHighlighted = !isHighlighted;
+        hitNode->setHighlight(isHighlighted);
+        foreach (Node* node, hitNode->neighbours()) {
+            foreach (Edge* edge, hitNode->edges()) {
+                if ((edge->sourceNode() == hitNode && edge->destNode() == node) ||
+                    (edge->sourceNode() == node && edge->destNode() == hitNode))
+                {
+                    edge->setHighlight(isHighlighted);
+                }
+            }
+        }
+
+        this->repaint();
+    }
 }
 
 void GLGraphWidget::mousePressEvent(QMouseEvent *event) {
@@ -335,7 +366,7 @@ void GLGraphWidget::resizeGL(int w, int h) {
 /*** 2D overlay/background drawing ***/
 
 void GLGraphWidget::drawBackground() {
-    QColor c = myScene->colour();
+    QColor c = myScene->backgroundColour();
     glClearColor(c.redF(), c.greenF(), c.blueF(), 1.0);
 }
 
@@ -380,7 +411,7 @@ inline void GLGraphWidget::drawCircle(GLfloat r, int longs) {
 }
 
 inline void GLGraphWidget::drawNode(Node *node) {
-    QColor c = node->colour();
+    const QColor c = node->highlighted() ? Qt::red : node->colour();
     glColor4f(c.redF(), c.greenF(), c.blueF(), c.alphaF());
 
     float radius = (log(node->edges().size()) / log(2)) + 1.0;
@@ -400,7 +431,7 @@ inline void GLGraphWidget::drawNode(Node *node) {
 void GLGraphWidget::drawGraphGL() {
     // Draw edges
     foreach (Edge* edge, myScene->edges()) {
-        const QColor c = edge->colour();
+        const QColor c = edge->highlighted() ? Qt::yellow : edge->colour();
         glColor4f(c.redF(), c.greenF(), c.blueF(), c.alphaF());
 
         glBegin(GL_LINE_STRIP);

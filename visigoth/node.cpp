@@ -11,12 +11,13 @@ int Node::ALL_NODES(0);
 Node::Node(GraphScene *graph) :
     QObject(graph),
     graph(graph),
-    myColour(QColor::fromRgbF(0.0, 1.0, 0.3, 0.7)),
     curPos(0.0),
     newPos(0.0),
     allowAdvance(true),
     visited(false),
-    distance(0)
+    distance(0),
+    myColour(QColor::fromRgbF(0.0, 1.0, 0.3, 0.7)),
+    isHighlighted(false)
 {
     myTag = ALL_NODES++;
 }
@@ -121,6 +122,14 @@ QVector<Node*> Node::neighbours() const {
             ns << e->sourceNode();
     }
     return ns;
+}
+
+bool Node::highlighted() const {
+    return isHighlighted;
+}
+
+void Node::setHighlight(bool enabled) {
+    isHighlighted =  enabled;
 }
 
 void Node::reset() {
