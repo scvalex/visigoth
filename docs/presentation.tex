@@ -93,6 +93,8 @@
 % --- Fade in upcoming bullet points.
 \beamersetuncovermixins{\opaqueness<1>{25}}{\opaqueness<2->{15}}
 
+% \setlength{\parskip}{10pt plus 1pt minus 1pt}
+
 
 
 
@@ -431,6 +433,7 @@ Mathematically speaking, a small world network has the following properties:
   Each node is a charged particle, and each edge is a rubber band.
   \pause
 
+  \vspace{0.5cm}
   We chose this kind of algorithm because:
 
   \begin{itemize}
@@ -449,10 +452,11 @@ Mathematically speaking, a small world network has the following properties:
 \frame{
   \frametitle{FADE}
 
-  However, it also is.. \pause slow. Quite slow: $O(n^2)$, where $n$ is the
-  number of nodes.
+  However, it also is... \pause slow.\\
+  Quite slow: $O(n^2)$, where $n$ is the number of nodes.
   \pause
 
+  \vspace{0.5cm}
   The solution? FADE, an algorithm that achieves speed through approximation.
 }
 
@@ -460,7 +464,7 @@ Mathematically speaking, a small world network has the following properties:
   \frametitle{TreeCodes}
 
   FADE works by storing the nodes of a \emph{TreeCode}, a data structure that
-  stores the nodes recursively subdividing the space:
+  stores the nodes while recursively subdividing the space:
   \pause
 
   \begin{columns}
