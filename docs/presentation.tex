@@ -398,16 +398,12 @@ Mathematically speaking, a small world network has the following properties:
 
 \end{column}
 \end{columns}
-
-
 }
 
 
+
+
 \section{Engineering}
-
-
-\subsection{C++}
-
 
 \subsection{Graph drawing}
 
@@ -430,12 +426,9 @@ Mathematically speaking, a small world network has the following properties:
   \frametitle{Force-directed algorithms}
 
   For Visigoth, we use an optimized ``force directed'' algorithm.
-
-
   \pause
 
   Each node is a charged particle, and each edge is a rubber band.
-
   \pause
 
   We chose this kind of algorithm because:
@@ -443,8 +436,8 @@ Mathematically speaking, a small world network has the following properties:
   \begin{itemize}
     \item It gives good results for most graphs
     \pause
-    \item It is easy to implement, few tens of lines of \emph{C++} (\emph{C++}!) in
-      our case
+    \item It is easy to implement, few tens of lines of \emph{C++}
+      (\emph{C++}!) in our case
     \pause
     \item We can show the stabilization in real time (bling)
   \end{itemize}
@@ -458,7 +451,6 @@ Mathematically speaking, a small world network has the following properties:
 
   However, it also is.. \pause slow. Quite slow: $O(n^2)$, where $n$ is the
   number of nodes.
-
   \pause
 
   The solution? FADE, an algorithm that achieves speed through approximation.
@@ -469,7 +461,6 @@ Mathematically speaking, a small world network has the following properties:
 
   FADE works by storing the nodes of a \emph{TreeCode}, a data structure that
   stores the nodes recursively subdividing the space:
-
   \pause
 
   \begin{columns}
@@ -483,7 +474,6 @@ Mathematically speaking, a small world network has the following properties:
     \begin{column}{0.5\textwidth}
       \centering
       \input{quadtree-tree-pres.tex}
-
     \end{column}
   \end{columns}
 }
@@ -513,11 +503,9 @@ Mathematically speaking, a small world network has the following properties:
   \frametitle{C++}
 
   \emph{C++}, the world's friendliest language...
-
   \pause
 
   If you like segfaults.
-
   \pause
 
   And 3-pages long compiler errors.
@@ -567,39 +555,42 @@ Mathematically speaking, a small world network has the following properties:
 
 \subsection{OpenGL}
 
-\frame{\frametitle{OpenGL}
-OpenGL $\to$ super fast graphics!
-\pause
+\frame{
+  \frametitle{OpenGL}
 
-\vspace{0.5cm}
-We can...
+  OpenGL $\to$ super fast graphics with hardware acceleration!
+  \pause
 
-\begin{itemize}
-  \pause
-  \item Pan left/right/up/down
-  \pause
-  \item Zoom in/out.
-  \pause
-  \item And do it all in 3D - real-time!
-\end{itemize}
-\pause
+  \vspace{0.5cm}
+  We can...
 
-\vspace{0.5cm}
-Thanks to the FADE optimisation, it's fast - 1000s of nodes.
+  \begin{itemize}
+    \pause
+    \item Pan left/right/up/down
+    \pause
+    \item Zoom in/out.
+    \pause
+    \item And do it all in 3D - real-time!
+  \end{itemize}
+  \pause
+
+  \vspace{0.5cm}
+  Thanks to the FADE optimisation, it's fast - 1000s of nodes.
 }
 
-\frame{\frametitle{OpenGL selection}
-Selection made easy...
-\pause
+\frame{
+  \frametitle{OpenGL selection}
+  Selection made easy...
+  \pause
 
-\vspace{0.5cm}
-It's now the same for 2D and 3D:
+  \vspace{0.5cm}
+  It's now the same for 2D and 3D:
 
-OpenGL ``unprojects'' the mouse click.
-\pause
+  OpenGL ``unprojects'' the mouse click.
+  \pause
 
-\vspace{0.5cm}
-Selection triggers node stats recalculation, colouring...
+  \vspace{0.5cm}
+  Selection triggers node stats recalculation, colouring...
 }
 
 
