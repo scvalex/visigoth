@@ -73,29 +73,48 @@
 
 
 %% Final Report -- due: 9th Jan 2012, at 11:00
-%% Contents for Final Report: The project report should not be longer than 45 pages, and might be organized according to the following structure:
+%% Contents for Final Report: The project report should not be longer than 45
+%% pages, and might be organized according to the following structure:
 
-%% A. High Level, Nontechnical Description Why you should buy this product/listen to this presentation? What is the functionality of the product?
+%% A. High Level, Nontechnical Description Why you should buy this
+%% product/listen to this presentation? What is the functionality of the
+%% product?
+
 %% B. Short Technical Description
-%% Short introduction into technologies used
-%% Design of your software, possibly including a diagram of the major components of the project
-%% Main achievements
+%% Short introduction into technologies used Design of your software, possibly
+%% including a diagram of the major components of the project Main achievements
+
 %% C. Software Engineering Issues:
-%% What technology was used and why; what other technology was considered but not used and why
+%% What technology was used and why; what other technology was considered but
+%% not used and why
 %% Any technical challenges encountered and how addressed
 %% Any risks anticipated, and how mitigated?
 %% Any collaboration/coordination difficulties encountered and how addressed
-%% Development and testing methods and/or tools used; comparison of plans with actual achievements
-%% Estimates of length of code in each of the components, or any other comparable measure of the effort required.
+%% Development and testing methods and/or tools used; comparison of plans with
+%% actual achievements
+%% Estimates of length of code in each of the components, or any other
+%% comparable measure of the effort required.
 %% Summary of each team member's contributions
-%% D. Validation and Conclusions How did you validate your product? Was the project successful? What did you learn? What might you have done differently?
+
+%% D. Validation and Conclusions How did you validate your product? Was the
+%% project successful? What did you learn? What might you have done differently?
+
 %% E. Bibliography
-%% F. Appendix The appendix is optional, and does not count towards the 45 pages. It may contain thing like: User guide, installation instructions; more extensive design, testing, statistics etc.
-%% Feel free to re-use material from the previous reports as you see fit, but make sure that the final report presents a coherent story. Ask advice from your supervisor. You might also draw inspiration from the instructions about writing up your individual project.
 
-%% Bear in mind, that most of the project assessors will not have followed the project throughout and will only have a short time to listen to a presentation or see a demonstration. For this reason they will rely heavily on the report to judge the project.
+%% F. Appendix The appendix is optional, and does not count towards the 45
+%% pages. It may contain thing like: User guide, installation instructions; more
+%% extensive design, testing, statistics etc.
 
-%% The report should be submitted to SGO in form of a hard copy, as well as electronically through CATE.
+%% Feel free to re-use material from the previous reports as you see fit, but
+%% make sure that the final report presents a coherent story. Ask advice from
+%% your supervisor. You might also draw inspiration from the instructions about
+%% writing up your individual project.
+%% Bear in mind, that most of the project assessors will not have followed the
+%% project throughout and will only have a short time to listen to a
+%% presentation or see a demonstration. For this reason they will rely heavily
+%% on the report to judge the project.
+%% The report should be submitted to SGO in form of a hard copy, as well as
+%% electronically through CATE.
 
 \begin{document}
 \title{\includegraphics[width=2cm]{v.png}\\
@@ -112,32 +131,27 @@
 
 \begin{abstract}
 Visigoth is a tool to generate, analyse and visualise Small World
-Networks. These are particular kinds of graphs which \emph{look} like
-naturally grown networks and share many mathematical properties with them.
-For instance, friendship graphs and graphs of followers in modern
-web-based ``social networks'' are Small World Networks.
+Networks. These are particular kinds of graphs which \emph{look} like naturally
+grown networks and share many mathematical properties with them.  For instance,
+friendship graphs and graphs of followers in modern web-based ``social
+networks'' are Small World Networks.
 
-As an educational tool Visigoth allows users to explore Small
-World Networks and hence can be used as an introduction to them. By
-exploring these networks users will have a firmer, more intuitive
-grasp of the mathematical properties they exhibit.
+As an educational tool Visigoth allows users to explore Small World Networks and
+hence can be used as an introduction to them. By exploring these networks users
+will have a firmer, more intuitive grasp of the mathematical properties they
+exhibit.
 
-The networks may be generated using several algorithms,
-allowing users to compare their output and its adherence to
-the properties of Small World Networks. The network generation
-algorithms in Visigoth form a smooth progression in the number of
-exhibited desired properties from completely random graphs,
-generated by the Erd\H{o}s-R\'{e}nyi algorithm, to fully compliant
-Small World Networks,
-generated by the Preferential Attachment algorithm. Additionally,
-Visigoth can connect to social networking platforms such as \Twitter to
-fetch and display real-world networks.
+The networks may be generated using several algorithms, allowing users to
+compare their output and its adherence to the properties of Small World
+Networks. The network generation algorithms in Visigoth form a smooth
+progression in the number of exhibited desired properties from completely random
+graphs, generated by the Erd\H{o}s-R\'{e}nyi algorithm, to fully compliant Small
+World Networks, generated by the Preferential Attachment
+algorithm. Additionally, Visigoth can connect to social networking platforms
+such as \Twitter to fetch and display real-world networks.
 \end{abstract}
 
 \tableofcontents
-
-
-
 
 \section{Introduction}
 %% This section corresponds to A in the requirements.
@@ -149,20 +163,18 @@ Complex networks are ubiquitous in nature and society.
 
 The dynamics and structural properties of complex networks are non-trivial,
 making performant computation gear a requirement for their statistical
-analysis. As such it has only become feasible to study real networks
-with their large underlying data sets within the last decade.
-\cite{oconn11}
+analysis. As such it has only become feasible to study real networks with their
+large underlying data sets within the last decade.  \cite{oconn11}
 
-The structural properties of real networks have been studied extensively
-over the years, mainly focusing their common characteristic properties.
-These networks share low average path lengths, high clustering
-coefficients and scale-free degree distribution.
+The structural properties of real networks have been studied extensively over
+the years, mainly focusing their common characteristic properties.  These
+networks share low average path lengths, high clustering coefficients and
+scale-free degree distribution.
 
-In order to easen further analysis of real networks, the aim is to
-simulate them using procedurally generated networks. However, this
-requires the generation algorithms used to output networks which
-are true to the characteristic structural properties of \emph{Small
-World Networks}.
+In order to easen further analysis of real networks, the aim is to simulate them
+using procedurally generated networks. However, this requires the generation
+algorithms used to output networks which are true to the characteristic
+structural properties of \emph{Small World Networks}.
 
 \subsection{Realistically looking networks}
 %% This subsection should *not* use the term ``Small World Networks''.
@@ -175,15 +187,15 @@ World Networks}.
 %% nodes shouldn't be too far apart, the number of neighbours should
 %% fit a natural distribution).
 
-The networks of interest here are mathematical graphs in which most nodes,
-while not being connected directly, can be reached from any other node via a
-small number of steps. In the context of a social network this results in the
-``small world phenomenon'' \cite{swphen} of strangers
-being linked by a mutual acquaintance.
+The networks of interest here are mathematical graphs in which most nodes, while
+not being connected directly, can be reached from any other node via a small
+number of steps. In the context of a social network this results in the ``small
+world phenomenon'' \cite{swphen} of strangers being linked by a mutual
+acquaintance.
 
-Social networks, neural networks, the World Wide Web, electrical
-power grids and protein structures are all examples for complex networks
-the precise dynamic behaviour of which currently escapes our understanding.
+Social networks, neural networks, the World Wide Web, electrical power grids and
+protein structures are all examples for complex networks the precise dynamic
+behaviour of which currently escapes our understanding.
 
 % FIXME: Maybe we can add here a picture of some neural networks in the brain?
 
@@ -200,9 +212,9 @@ uses. \cite{complexNets}
 \subsubsection{Networks}
 
 A \emph{network} is a graph, which in turn is an ordered pair $G(N,E)$
-comprising of a set of \emph{nodes} $N$ and a set of \emph{edges}, $E$.
-An \emph{edge} is a 2-element subset of $N$ representing a
-\emph{connection} between a pair of \emph{nodes}.
+comprising of a set of \emph{nodes} $N$ and a set of \emph{edges}, $E$.  An
+\emph{edge} is a 2-element subset of $N$ representing a \emph{connection}
+between a pair of \emph{nodes}.
 
 The \emph{degree} $K_i$ of a node $i$ is the number of nodes that it is
 connected to. The average degree $k$ of a network is $k =\frac{2 \cdot m}{|N|}$
@@ -466,7 +478,6 @@ The algorithm operates in two steps:
         \STATE $r \gets$ random real in $[0, 1]$
         \IF{$r < \beta$}
           \STATE Remove edge between $i$ and $j$.
-          \STATE $cut \gets 0$
           \FOR{$cut = 1 \to \gamma$}
             \STATE $k \gets$ random integer in $[0, N)$
             \IF{edge between $i$ and $k$ exists}
@@ -481,38 +492,34 @@ The algorithm operates in two steps:
   \end{algorithmic}
 \end{itemize}
 
-\subsection{Barabasi-Albert}
-% FIXME-scale-free network characteristics
-The Barabasi-Albert model is an algorithm for generating \emph{scale-free}
-networks, as described in section \ref{sec:scale-free}. This is achieved
-using preferential attachment, meaning that nodes are added to the graph
-one by one and selected for attachment with a probability proportional
-to their degree in the network. This model demonstrates
-that a power-law degree distribution can arise following growth and the
-preferential attachment and that the combination of these two elements may be an
-important factor in the formation of real networks. \cite{oconn11}
+\subsection{Barab\'{a}si-Albert}
 
-Such networks are present in both natural and human made systems;
-cf. the networks in the quoted works.
-
-A network is deemed scale-free if the network exhibits a power
-law degree distribution:
-
-\[ degree(x) = ax^k \]
+The Barab\'{a}si-Albert model is an algorithm for generating \emph{scale-free}
+networks, as described in section \ref{sec:scale-free}.
 
 As explained in section \ref{sec:scale-free}, a network is deemed scale-free if
 its degree distribution follows a power law. In context, this means that the
 frequency of attachment to a node varies as a power of its degree. Such networks
-are also \emph{scale invariant} meaning that their size has no effect on
-their attributes (i.e. degree distribution).
+are also \emph{scale invariant} meaning that their size has no effect on their
+attributes (i.e. degree distribution).
+
+This is achieved using preferential attachment, meaning that nodes are added to
+the graph one by one and nodes will be selected to be linked to other nodes with
+a probability proportional to their degree in the network. This model
+demonstrates that a power-law degree distribution can arise following growth and
+the preferential attachment and that the combination of these two elements may
+be an important factor in the formation of real networks \cite{oconn11}.
 
 The model is implemented as follows:
+
+%% I'm really not sure how this works. Please Marc step in and make this
+%% understandable by a reader with no previous knowledge.
+
 \begin{enumerate}
 \item
-  Select a node by generating a random percentage with $2$ decimal place
-  precision. The preferences of nodes are stored cumulatively therefore; the
-  random number serves as an index with the node as the indexed element, which
-  can be accessed using a binary search.
+  Select a node by generating a random percentage. The preferences of nodes are
+  stored cumulatively therefore; the random number serves as an index with the
+  node as the indexed element, which can be accessed using a binary search.
   \begin{algorithmic}
     \REQUIRE A real random number $pref$ in $[0,100]$.
     \FOR{$l=1 \to N-1$}
@@ -558,15 +565,13 @@ The model is implemented as follows:
   \end{algorithmic}
 \end{enumerate}
 
-The average path length of Barabasi-Albert networks is comparable
-to the average path length of rd\H{o}s-R\'{e}nyi networks of equal
-size and average degree.
+The average path length of Barab\'{a}si-Albert networks is comparable to the
+average path length of Erd\H{o}s-R\'{e}nyi networks of equal size and average
+degree.
 
-The clustering coefficient of Barabasi-Albert networks is greater
-than the clustering coefficient of rd\H{o}s-R\'{e}nyi networks of
-equal size and average degree \cite{oconn11}, but relatively low
-compared to real networks.
-
+The clustering coefficient of Barab\'{a}si-Albert networks is greater than the
+clustering coefficient of Erd\H{o}s-R\'{e}nyi networks of equal size and average
+degree \cite{oconn11}, but relatively low compared to real networks.
 
 \subsection{Bipartite model}
 % FIXME
@@ -673,7 +678,7 @@ been established. This procedure determines the intersection set
 of $N'$ with all its neighbours. Then node $N$ is connected to
 all members of the intersection set.
 
-The Barabasi-Albert model has been used frequently to model real
+The Barab\'{a}si-Albert model has been used frequently to model real
 networks. A simple adaptation of it increases the clustering whilst
 retaining the power-law degree distribution of generated networks.
 
@@ -683,7 +688,7 @@ tendency for cliques to form in real networks. \emph{Cliques} are
 fully connected subsets of vertices of a graph. Their presence
 greatly increases the clustering coefficient of a network.
 
-In the original Barabasi-Albert model, a new vertex is added to
+In the original Barab\'{a}si-Albert model, a new vertex is added to
 the network by preferential attachment to a fixed number of
 vertices, whereas the algorithm described in \cite{oconn11} combines
 both concepts to generate networks with scale-free characteristics.
@@ -962,7 +967,7 @@ Generates a random graph.
 
 Creates a ring of connected nodes and re-links some nodes randomly within that ring.
 
-\item \emph{Barabasi-Albert}
+\item \emph{Barab\'{a}si-Albert}
 
 Nodes added to by preferential attachment, with no clustering.
 
