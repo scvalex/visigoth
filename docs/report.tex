@@ -771,7 +771,6 @@ graph.
 
 \subsection{Preferential attachment with clustering}
 
-% FIXME
 Preferential attachment and clustering are two distinct concepts used
 in graph generation.
 
@@ -780,20 +779,18 @@ depending on their degree. Nodes with more edges will have a higher
 preference than nodes with fewer edges. The preference lies within the
 range $[0,1]$ and, assuming that no disjoint nodes exist, is
 \[ \frac{k_n}{|E|} \]
-for a certain node $n$ with degree $k_n$,
-and $|E|$ being the total number of edges.
+for a certain node $n$ with degree $k_n$, and $|E|$ being the total
+number of edges.
 
-\emph{Clustering} is a concept which determines how to connect a
-node $n$ once a connection with at least one other node $n'$ has
-been established. This procedure determines the intersection set
-of $n'$ with all its neighbours. Then node $n$ is connected to
-all members of the intersection set.
+\emph{Clustering} is a concept which determines how to connect a node
+$n$ once a connection with at least one other node $n'$ has been
+established. This procedure determines the intersection set of $n'$
+with all its neighbours. Node $n$ is then connected to all members of
+the intersection set.
 
 The Barab\'{a}si-Albert model has been used frequently to model real
 networks. A simple adaptation of it increases the clustering whilst
 retaining the power law degree distribution of generated networks.
-
-% FIXME: Check this.
 
 The bipartite nature of real networks can be interpreted as a
 tendency for cliques to form in real networks. \emph{Cliques} are
@@ -809,67 +806,61 @@ First, nodes are added to the network via the preferential attachment
 method. Once attached they are connected to the rest of the
 network via the clustering procedure.
 
-This is implemented as follows:
+\noindent So, in order to a attach a \emph{new node}, $n$,
 
 \begin{enumerate}
-  \item
-    Select a node by generating a random percentage with 2 decimal place
-    precision. The preferences of nodes are stored cumulatively. Therefore, the
-    random number serves as an index with the node as the indexed element, which
-    can be accessed using a binary search.
+  \item We will store nodes in an array alongside their
+    preference. Since the preferences are stored cumulatively, a
+    random number will index a particular node in the array.
+
+  \item Generate a random percentage and find the indexed
+    node\footnote{we used binary search in Visigoth, but any search
+      algorithm will do}.
 
     \begin{algorithmic}
-      \FOR{$l=1 \to |N| - 1$}
-        \STATE{$l \gets 2 \cdot l$}
-        \STATE{$i \gets 0$}
-        \WHILE{$l \ge 0$}
-          \STATE $l \gets \frac{l}{2}$
-          \IF{$l+i \le N$}
-            \STATE pref $\gets$ real in  $[0, 100]$
-            \IF{Comulative preference of $l$ $\leq$ pref}
-              \STATE $i \gets i+l$
-            \ENDIF
-          \ENDIF
-        \ENDWHILE
-      \ENDFOR
-      \RETURN Nodes[i]
+      \STATE $r \gets$ random percentage
+      \STATE $m \gets$ node indexed by $r$
     \end{algorithmic}
 
-  \item
-    Attach the node to the indexed element.
-
-   \item
-    Use the clustering procedure to determine other edges.
+  \item Attach the new node to the indexed node.
 
     \begin{algorithmic}
-      \REQUIRE New Node $n_i$
-      \REQUIRE Neighbour array with all nodes neighbouring $n_i$
-      \REQUIRE Edge count with amount of edges to be added
-      \REQUIRE Used nodes array
-      \STATE length = neighbours.size
+      \STATE connect $n$ to $m$
+    \end{algorithmic}
 
-      \WHILE{There are edges to add $\land$ neighbour array is not empty}
-        \STATE rand $\gets$ random integer $\bmod$ length
-        \STATE Node $n_r \gets$ neighbour[rand]
-        \IF{Edge creation between $n_i$ and $n_r$ was successful}
-          \STATE edge count = edge count - 1
-        \STATE add $n_r$ to used nodes array
-          \STATE neighbour array $\gets$ intersection(neighbour array, neighbours($n_r$))
-        \ELSE
-          \STATE remove neighbours[rand]
+   \item Use the clustering procedure to determine other edges.
+
+    \begin{algorithmic}
+      \REQUIRE Edge count with amount of edges to be added, $e$.
+
+      \STATE $ns \gets$ neighbours($n$)
+
+      \WHILE{$e > 0$}
+        \IF{$ns$ is empty}
+          \STATE \emph{break}
         \ENDIF
-        \STATE length $\gets$ neighbours.size()
+
+        \STATE $r$ $\gets$ random integer $\bmod$ size($ns$)
+        \STATE node $n_r \gets ns[rand]$
+        \IF{$n$ not connected to $n_r$}
+          \STATE connect $n$ to $n_r$
+          \STATE $e \gets e - 1$
+          \STATE $ns \gets$  intersection($ns$, neighbours($n_r$))
+        \ELSE
+          \STATE remove $ns[$rand$]$
+        \ENDIF
       \ENDWHILE
     \end{algorithmic}
-
-   \item If more edges are to be added, repeat the procedure.
 \end{enumerate}
+
+To generate a complete network of $N$ nodes, one need simply repeat
+the above procedure $N$ times.
 
 
 \subsection{Real small world networks}
 Finally, as Visigoth is supposed to help in analysing Small World
-Networks, it can also fetch real world data from the `live' social
-networks \Twitter and identi.ca.
+Networks, it can also fetch real world data from the ``live'' social
+networks \Twitter and \texttt{identi.ca}.
 
 
 
@@ -997,9 +988,9 @@ Recall from ``The maths":
 
 \[ C_\mathrm{avg} =
    \frac{1}{\mathrm{|N|}}\sum_{i=1}^{\mathrm{|N|}} C_i
-\],
+\]
 
-where \(N\) is the total number of nodes in the graph.
+\noindent where \(N\) is the total number of nodes in the graph.
 
 This calculation is implemented as follows:
 
