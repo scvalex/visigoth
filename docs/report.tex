@@ -669,14 +669,6 @@ The model is implemented as follows:
   \end{algorithmic}
 \end{enumerate}
 
-% FIXME: Can we say 'distance' instead of path length? Do you only need the
-%        shortest path lengths or do you mean ALL paths?
-%        Just saying 'path length' is ambiguous.
-
-The average path length of Barab\'{a}si-Albert networks is comparable to the
-average path length of Erd\H{o}s-R\'{e}nyi networks of equal size and average
-degree.
-
 The \emph{clustering coefficient} of Barab\'{a}si-Albert networks is greater
 than the clustering coefficient of Erd\H{o}s-R\'{e}nyi networks of equal size
 and average degree \cite{oconn11}, but relatively low compared to real networks.
@@ -1173,7 +1165,8 @@ platforms are a few defines to deal with the misplaced \OpenGL headers
 on OSX and few conditionals in the project description to handle the
 library finding on Windows.
 
-%% FIXME: add screenshots
+For screenshots of Visigoth running on all three major platforms, see
+Appendix \ref{screenshots}.
 
 \subsubsection{Rapid prototyping}
 
@@ -1744,6 +1737,8 @@ fashion.
 In retrospect, it would have been useful to setup a linting tool as a
 pre-commit hook such that badly formatted code would not be committed.
 
+
+
 \section{Validation}
 \label{validation}
 %% The client is a happy puppy
@@ -1838,21 +1833,21 @@ As a testament to the development practices described in Section
 master.
 
 \subsection{In hindsight}
-We started automated testing too late in the development cycle, and to
+We started automated testing too late in the development cycle and to
 date, too little of the code is being exercised by the tests. Had we
 started earlier, we would have detected certain errors much more
 quickly and we would have greater confidence in the correctness of the
 codebase.
 
+
+
 \section{Looking back}
 %% This section corresponds to 'Conclusions' in part D of the requirements
-
-\subsection{Main Achievements}
 
 \subsection{Challenges}
 Visigoth covers a broad range of software engineering tasks, each with
 a different level of technical skill requirement. For instance, the
-kinds of problems we encountered are:
+kind of problems we encountered are:
 \begin{itemize}
 \item developing graph renderers (\buzz{C}/\OpenGL and
   \buzz{C}/\Cairo);
@@ -1864,31 +1859,34 @@ kinds of problems we encountered are:
   \buzz{REST}/\GitHub).
 \end{itemize}
 
-Hence, each member of the team was constantly being challenged
-individually. We would also organise short technical talks to
+Hence, each member of the team was constantly challenged
+individually. We also organised short technical talks to
 introduce concepts that may be unfamiliar to some and which they may
-find useful; we have done such talks on \Git and branching hygiene and
-\buzz{C++} and \Qt.
+find useful; we have done such talks on \Git and branching hygiene
+as well as \buzz{C++} and \Qt.
 
-\subsection{Planning (or lack of thereof)}
 
-As a team, we were fairly \buzz{Agile} in developing Visigoth, but
+\subsection{Planning (or lack thereof)}
+
+As a team we were fairly \buzz{Agile} in developing Visigoth, but
 this came with a price: towards the end, we were beginning to feel the
 effects of lack of planning. In particular, we had to rewrite some
 components one too many times. If we had to do Visigoth over, we would
 spend more time initially on planning.
 
+
 \subsection{Other issues}
 
 Visigoth exhibits very few issues other than those related to software
-development. Since it is build wholly on open-source libraries, there
+development. Since it is built wholly on open-source libraries, there
 are no restrictions to releasing and redistributing the source
 code\footnote{but since the code is under the \buzz{GPL-3} license,
   it cannot be included in commercial products by third parties
   without our approval} and since it is designed to run on end-user
 machines, there are no environmental issues to consider.
 
-\subsection{Future Plans}
+
+\subsection{Future plans}
 
 We plan to add a game as the next feature to Visigoth. This will be based on the
 original ``Two-Person zero-sum game'' but played in a Small World Network
@@ -1907,60 +1905,88 @@ We also have plans to include a way for the user to script Visigoth, providing
 his own graph generation algorithms through \buzz{QtScript}, a scripting
 language based on \buzz{ECMAScript} which is available in the \Qt platform.
 
+
 \subsection{Conclusion}
 
-Our team has thoroughly enjoyed the process the lead the creation of
+Our team has thoroughly enjoyed the process that led to the creation of
 Visigoth. We managed to get the first results very quickly and then added
 features and refined the product in the successive months. As of today, we are
-very proud on the result and we plan to release it to the wider public in the
+very proud of the result and we plan to release it to the wider public in the
 near future.
 
 While we could have improved in some areas, the development of Visigoth has been
 very successful in what matters more: constantly delivering, on time, the
-features requested by the client; while maintaining a clean and maintainable
-code base. We went further than that, and proposed features of our own which
+features requested by the client while maintaining a clean and maintainable
+code base. We went even further than that and proposed features of our own which
 were all implemented. For this reason we are satisfied not only with the end
-result, but also with how smooth the developing process was, and we think our
-client is as well.
+result, but also with how smooth the development process was, and we think our
+client is satisfied as well.
+
+
 
 \appendix
 
+
+
 \section{Screenshots}
+\label{screenshots}
 
 \begin{center}
-  \includegraphics[width=1\textwidth]{screenshot-linux.png}
+  \includegraphics[width=0.9\textwidth]{screenshot-linux.png}
   Visigoth on Linux, 3D mode
+  \bigskip
 
-  \includegraphics[width=1\textwidth]{screenshot-mac.png}
+  \includegraphics[width=0.9\textwidth]{screenshot-mac.png}
   Visigoth on Mac OS X, showing the ``Edge color'' dialog
+  \bigskip
 
-  \includegraphics[width=1\textwidth]{screenshot-win.png}
+  \includegraphics[width=0.9\textwidth]{screenshot-win.png}
   Visigoth on Windows
 \end{center}
 
+
+
 \section{Sample graphs}
 
-Sample results of the 5 graph models employed by Visigoth, plus the Twitter
-graph:
+Sample results of the 5 graph models employed by Visigoth, plus the
+\Twitter graph:
 
 \begin{center}
-  \includegraphics[width=0.5\textwidth]{barabasi.png}\\
-  Barab\'{a}si-Albert
+  \noindent\begin{minipage}{.45\textwidth}
+    \centering
+    \includegraphics[width=5cm]{barabasi.png}
+    \captionof{figure}{Barab\'{a}si-Albert}
+  \end{minipage}
+  \begin{minipage}{.45\textwidth}
+    \centering
+    \includegraphics[width=5cm]{bipartite.png}
+    \captionof{figure}{Bipartite}
+  \end{minipage}
+  \medskip
 
-  \includegraphics[width=0.5\textwidth]{bipartite.png}\\
-  Bipartite
+  \noindent\begin{minipage}{.45\textwidth}
+    \centering
+    \includegraphics[width=5cm]{erdos.png}
+    \captionof{figure}{Erd\H{o}s-R\'{e}nyi}
+  \end{minipage}
+  \begin{minipage}{.45\textwidth}
+    \centering
+    \includegraphics[width=5cm]{preferential.png}
+    \captionof{figure}{Preferential attachment with clustering}
+  \end{minipage}
+  \medskip
 
-  \includegraphics[width=0.5\textwidth]{erdos.png}\\
-  Erd\H{o}s-R\'{e}nyi
+  \noindent\begin{minipage}{.45\textwidth}
+    \centering
+    \includegraphics[width=5cm]{watts.png}
+    \captionof{figure}{Watts-Strogatz}
+  \end{minipage}
+  \begin{minipage}{.45\textwidth}
+    \centering
+    \includegraphics[width=5cm]{twitter.png}
+    \captionof{figure}{\Twitter}
+  \end{minipage}
 
-  \includegraphics[width=0.5\textwidth]{preferential.png}\\
-  Preferential attachment
-
-  \includegraphics[width=0.5\textwidth]{watts.png}\\
-  Watts-Strogatz
-
-  \includegraphics[width=0.5\textwidth]{twitter.png}\\
-  Twitter
 \end{center}
 
 \addcontentsline{toc}{section}{References}
