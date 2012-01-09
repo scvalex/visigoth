@@ -75,13 +75,16 @@
 % --- Pretty much the usual beamer theme.
 \usepackage{beamerthemeshadow}
 
+\newcommand{\ExtraText}{}
 % --- A title slide for every new section.
 \AtBeginSection{
   \frame{
+    \begin{center}\begin{tiny}\ExtraText\end{tiny}\end{center}
     \begin{block}{}
       \begin{Large}\color{highlight}\centerline{\insertsection}\end{Large}
     \end{block}
   }
+  \renewcommand{\ExtraText}{}
 }
 
 % --- Remove the navigation bar from the bottom right.
@@ -95,9 +98,23 @@
 
 \begin{document}
 
-\title{Visigoth.}
+\frame{
+
+\begin{center}
+  \includegraphics[width=1.4cm]{v.png}
+\end{center}
+
+\vspace{0.6cm}
+\begin{center}
+  \begin{tiny}(We have 75 slides. Make yourselves comfortable.)\end{tiny}
+\end{center}
+
+}
+
+\title{Visigoth}
 \author{}
-\date{10 January 2012}
+\date{January 2012\\
+  \tiny where's the snow?}
 
 \frame{\titlepage}
 % \frame{\frametitle{Outline}\tableofcontents}
@@ -107,69 +124,73 @@
 
 \section{Introduction}
 
-\subsection{Motivation}
-\frame{\frametitle{Motivation}
-There is a whole class of barely explored graphs!
-\pause
-
-\vspace{0.5cm}
-\emph{Example:} Graphs in social networks:
-\pause
+\subsection{Say what?}
+\frame{\frametitle{Say what?}
 
 \begin{itemize}
-  \item Facebook
-  \item Twitter
-  \item identi.ca
-\end{itemize}
-}
+  \item This is Visigoth.
+  \pause
 
-% FIXME: Not entirely happy with the slide split here.
-%        Maybe we can write some more or put the points together?
+  \item It's a desktop application (not a webapp? boo!).
+  \pause
+
+  \item It's a graph visualiser.
+  \pause
+
+  \item But not just any old graph\dots
+\end{itemize}
+
+}
 
 \subsection{Small World Networks}
 \frame{\frametitle{Small World Networks}
+
 \begin{block}{Small World Networks}
-  \emph{SWNs} are graphs that look like a natural web of friendships.
+  \emph{SWNs} are graphs that look like natural webs of friendships.
 \end{block}
+\pause
+
+\vspace{1cm}
+
+Look ``natural''. \pause
+They're everywhere. \pause
+Google+. \pause
+Web pages. \pause
+Academic citations. \pause
+Spam detection. \pause
+Spam generation.
+
 }
 
-\subsection{Why SWNs?}
-\frame{\frametitle{Why SWNs?}
-SWNs are interesting because they show how people interact.
+\subsection{Visigoth again}
+\frame{\frametitle{Visigoth again}
 
-So let's have a look at them!
-}
+\begin{itemize}
+  \item Visigoth is a SWN generator and visualizer.
+  \pause
 
-\subsection{Visigoth}
-\frame{\frametitle{Visigoth}
-Visigoth can generate or retrieve SWN graphs.
+  \item Widest selection of generation algos: 5!
+  \pause
 
-\vspace{0.5cm}
-The user can analyse them both visually as well as statistically.
+  \item Scrapes real networks off of Twitter.
+  \pause
 
-% FIXME: Screenshot here
-\vspace{0.8cm}
-(screenshot here)
+  \item \begin{Huge}\textbf{3D}\end{Huge}
+\end{itemize}
 
-\vspace{0.8cm}
-Really, this is the cutting edge in SWN science!
 }
 
 
-
-
+\renewcommand{\ExtraText}{Brace yourselves! Here come the\dots}
 \section{Maths}
 
 % What is a graph
 % Random graph vs. graphs closer to SWNs
 % Three properties of SWNs
 
+\subsection{Small World Networks}
 
-
-
-\subsection{SWN generation}
-
-\frame{\frametitle{Generating SWNs, first attempt}
+\frame{\frametitle{Keeping it real}
 Let's grow a population. They will make friends with each other.\\
 \pause
 \hspace{0.5cm} $\to$ annoying (crying babies!)\\
@@ -181,7 +202,7 @@ Let's grow a population. They will make friends with each other.\\
 So what can we do?
 }
 
-\frame{\frametitle{Generating SWNs}
+\frame{\frametitle{Generating Small World Networks}
 Okay, let's generate SWNs mathematically then.
 
 That should be a lot more convenient!
@@ -190,54 +211,199 @@ That should be a lot more convenient!
 \vspace{0.5cm}
 Nowadays, we generate networks of \emph{thousands} of nodes within seconds.
 
+\pause
 \hspace{0.5cm} $\to$ 10,000 nodes within 3 sec
+
+\pause
+\vspace{0.5 cm}
+A \emph{network} is, in the mathematical sense, \pause a \emph{graph} which
+consists of a set N of nodes and a set E of edges.
+
+}
+
+\frame{\frametitle{Small World Effect as a concept}
+\emph{Six degrees of separation} 
+\hspace{0.5cm} $\to$ the distance between any two individuals is on average $6$.
+
+\begin{figure}[ht!]
+  \centering
+  \includegraphics[height=50mm,width=50mm]{sixdegrees.png}
+  \caption{Social Network in Real Life}
+\end{figure}
+
+}
+
+\frame{\frametitle{Small World Effect as a concept}
+Frigyes Karinthy first introduced this idea in his 1929 short story \emph{Chains}.
+
+\vspace{0.5cm}
+\pause
+Later on the small world experiment, performed in the 1960s by Stanley Milgram
+and other researchers, formalised the aforementioned concept.
+
+\vspace{0.5cm}
+\pause
+Results in a \emph{small world effect} 
+\pause
+\hspace{0.5cm} $\to$ the \emph{average distance} linking two nodes of the same
+network can be orders of magnitude \emph{smaller than} the \emph{number of nodes} the 
+network actually has.
 }
 
 
-\subsection{Algorithms}
+\frame{\frametitle{Small World Network Characteristics}
 
-\frame{\frametitle{Algorithms}
-We can generate graphs using several algorithms:
+Mathematically speaking, a small world network has the following properties:
 
-\vspace{0.5cm}
 \begin{itemize}
-  \item Erd\H{o}s-R\'{e}nyi
-  \item Watts-Strogatz
-  \item Barabasi-Albert
-  \item Bipartite Model
-  \item Preferential Attachment
+\pause
+\item Low average path length.
+\pause
+\item High clustering coefficient.
+\pause
+\item Scale-free degree distribution.
 \end{itemize}
 
-\vspace{0.5cm}
-... or just hack Facebook and get a huge social graph for free!
 }
 
 
-\subsection{Erd\H{o}s-R\'{e}nyi}
+\subsection{Generation Algorithm}
 
 \frame{\frametitle{Erd\H{o}s-R\'{e}nyi}
-% FIXME: Text and screenshot here
-(text and screenshot here)
+
+\begin{columns}
+
+\begin{column}[T]{5cm}
+
+\includegraphics[height=30mm,width=30mm]{erdos.png}
+
+\end{column}
+
+\begin{column}[T]{5cm}
+
+\begin{itemize}
+  \item It the beginning there was Erd\H{o}s \dots and R\'{e}nyi
+  \pause
+  \item Random Graph
+  \pause
+  \item However \dots
+  \pause
+  \item No SWN properties
+
+\end{itemize}
+\end{column}
+\end{columns} 
+
+
 }
 
 
-\subsection{Bipartite}
+\frame{\frametitle{Watts-Strogatz}
+
+\begin{columns}
+
+\begin{column}[T]{5cm}
+
+\includegraphics[height=30mm,width=30mm]{watts.png}
+
+\end{column}
+
+\begin{column}[T]{5cm}
+\begin{itemize}
+  \item Then in 1998 finally \dots Watts-Strogatz 
+  \pause
+  \item Random graph
+  \pause
+  \item This time with SWN properties included! \dots
+  \item Short average path and high clustering
+ 
+\end{itemize}
+\end{column}
+\end{columns}
+}
 
 
-\subsection{Watts-Strogatz}
+\frame{\frametitle{Barabasi-Albert}
+
+\begin{columns}
+\begin{column}[T]{5cm}
+
+\includegraphics[height=30mm,width=30mm]{barabasi.png}
+
+\end{column}
+
+\begin{column}[T]{5cm}
+\begin{itemize}
+  \item It gets better!
+  \pause
+  \item The random graph is no more
+  \pause
+  \item Same amount of SWN properties included! \dots
+  \item Scale free exponent and short average path
+ 
+\end{itemize}
+\end{column}
+\end{columns}
+
+}
+
+\frame{\frametitle{Preferential attachment with clustering}
+
+\begin{columns}
+
+\begin{column}[T]{5cm}
+
+\includegraphics[height=30mm,width=30mm]{preferential.png}
+
+\subsection{Qt}
 
 
-\subsection{Barabasi-Albert}
+\end{column}
+\begin{column}[T]{5cm}
 
 
-\subsection{Preferential attachment with clustering}
+\begin{itemize}
+  \item The future is here! Thanks to Imperial College
+  \pause
+  \item Similar to Barabasi-Albert but with clustering!
+  \pause
+  \item All SWN properties
+ 
+\end{itemize}
+
+\end{column}
+\end{columns}
+
+}
+
+\frame{\frametitle{Bipartite}
+
+\begin{columns}
+
+\begin{column}[T]{5cm}
+
+\includegraphics[height=30mm,width=30mm]{bipartite.png}
+
+\end{column}
+\begin{column}[T]{5cm}
+
+\begin{itemize}
+  \item The future is here! (again) Thanks to Imperial College
+  \pause
+  \item Completely different generation method.
+  \pause
+  \item All SWN properties
+ 
+\end{itemize}
+
+\end{column}
+\end{columns}
 
 
+}
 
 
 \section{Engineering}
-
-\subsection{Qt}
 
 
 \subsection{C++}
@@ -264,6 +430,7 @@ We can generate graphs using several algorithms:
   \frametitle{Force-directed algorithms}
 
   For Visigoth, we use an optimized ``force directed'' algorithm.
+
 
   \pause
 
