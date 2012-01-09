@@ -603,75 +603,107 @@ and average degree \cite{oconn11}, but relatively low compared to real networks.
   \caption{A sample bipartite graph}
 \end{figure}
 
-A bipartite graph is a graph which consists of two node sets. Each node
-is only allowed to be connected to nodes in a set other than its own.
+A bipartite graph is a graph in which nodes can be divided into two
+node sets such that each node is only connected to nodes in the set
+other than its own.
 
-This model is able to generate realistic networks with
-\emph{low average path length}, \emph{high clustering coefficient} and
-\emph{power law distribution}. The properties of the generated networks
-depend on the distribution of edges in the bipartite graph.
+This model is able to generate realistic networks with \emph{low
+  average path length}, \emph{high clustering coefficient} and
+\emph{power law distribution}. The properties of the generated
+networks depend solely on the distribution of edges in the bipartite
+graph.
 
-The algorithm constructs a network in three simple steps:
-
+\noindent The algorithm constructs a network in three steps:
 \begin{enumerate}
-  \item Generate a bipartite graph with two node sets e.g. set U and set V.
-  \item Connect all nodes in U that are connected to the same node in V.
-  \item Remove the nodes from set V from the graph.
+  \item generate a bipartite graph with two node sets, set $U$ and set
+    $V$,
+  \item connect all nodes in $U$ that are connected to the same node
+    in $V$, and
+  \item remove the nodes of set $V$ from the graph.
 \end{enumerate}
 
-In pseudocode, this looks as follows:
-
+\noindent In pseudocode, this looks as follows:
 \begin{enumerate}
-  \item Generate two node arrays $U$ and $V$, with respective
-        sizes $|U|$ and $|V|$:
+  \item Generate two node sets $U$ and $V$, with respective sizes
+    $|U|$ and $|V|$:
 
     \begin{algorithmic}
       \REQUIRE $|U| > 0$
       \REQUIRE $|V| > 0$
 
       \FOR{$i=0 \to |U|$}
-        \STATE $i \gets i + 1$
-        \STATE $U$[i] $\gets$ new node
+        \STATE add new node to $U$
       \ENDFOR
 
       \FOR{$i=0 \to |V|$}
-        \STATE $i \gets i + 1$
-        \STATE $V$[i] $\gets$ new node
+        \STATE add new node to $V$
       \ENDFOR
     \end{algorithmic}
 
-  \item For each member of $V$, obtain it's degree distribution
-        and add as many nodes from $U$ as the degree permits.
+  \item For each member of $V$, calculate its scale-free degree
+    distribution (see Section \ref{sec:scale-free}), and connect it to as
+    many random nodes in $U$.
 
-  \item Connect any members of $U$ which are disjoint to the network.
+    \begin{algorithmic}
+      \FORALL{node $v \in V$}
+        \STATE $P_v \gets$ scale free distribution of $v$
+        \FOR{$i=0 \to P_v$}
+          \STATE $u \gets $ random node in $U$
+          \STATE connect $u$ to $v$
+        \ENDFOR
+      \ENDFOR
+    \end{algorithmic}
 
-  \item Generate a set (e.g. $S$), which holds all members of
-        $U$ which are connected to the same member in $V$:
+  \item Connect any members of $U$ which are disjoint to the network
+    to a random member of $V$.
+
+    \begin{algorithmic}
+      \STATE $v \gets$ random node in $V$
+      \FORALL{node $u \in U$}
+        \IF{$u$ not connected to any $v \in V$}
+          \STATE connect $u$ to $v$
+        \ENDIF
+      \ENDFOR
+    \end{algorithmic}
+
+  \item Generate sets $S_v$, which hold the edges that connect nodes
+    in $U$ to the same member $v \in V$:
 
   \begin{algorithmic}
-    \FORALL{edges $e_i$}
-      \IF{$e_i$ connects $U$ and $V$}
-        \STATE Add $e_i$ to set $S$
-      \ENDIF
-    \ENDFOR
-  \end{algorithmic}
-
-  \item For all members in set $S$, connect nodes which share
-        a common $V$ member.
-
-  \begin{algorithmic}
-    \REQUIRE Non empty edge set $S$
-    \FORALL{edges $e_i$ in $S$}
-      \FORALL{edges $e_j$ in $S$}
-        \IF{$e_i$ and $e_j$ share the same node in $U$}
-          \STATE Create new edge
+    \FORALL{node $v \in V$}
+      \FORALL{node $u \in U$}
+        \IF{$u$ is connected to $v$ by $e$}
+          \STATE add $e$ to $S_v$
         \ENDIF
       \ENDFOR
     \ENDFOR
   \end{algorithmic}
 
-  \item Remove all edges and nodes which are associated with
-        a member of $V$.
+  \item For all edges in sets $S_v$, connect each pair of nodes in
+    $U$.
+
+  \begin{algorithmic}
+    \FORALL{node $v \in V$}
+      \FORALL{edge $e_1 \in S_v$}
+        \FORALL{edge $e_2 \in S_v$}
+          \STATE connect nodes of $e_1$, $e_2$ not in $V$
+        \ENDFOR
+      \ENDFOR
+    \ENDFOR
+  \end{algorithmic}
+
+  \item Remove all nodes in $V$ and all connecting edges to them.
+
+    \begin{algorithmic}
+      \FORALL{node $v \in V$}
+        \FORALL{node $u \in U$}
+          \IF{$u$ connected to $v$}
+            \STATE disconnect $u$ from $v$
+          \ENDIF
+        \ENDFOR
+        \STATE remove $v$ from $V$
+      \ENDFOR
+    \end{algorithmic}
 
 \end{enumerate}
 
@@ -809,7 +841,7 @@ The first step in this algorithm is to calculate the sum of the
 distances from every node to every node:
 
 \begin{algorithmic}
-  \FORALL{Nodes n}
+  \FORALL{nodes $n$}
     \STATE cumulativeLength $\gets$ lengthSum(n,visited,distance)
     \STATE \dots
   \ENDFOR
@@ -831,7 +863,7 @@ Then it returns the sum of all distances:
   \WHILE{Queue is not empty}
     \STATE parent $\gets$ queue.dequeue()
     \STATE edges $\gets$ parent.edges()
-    \FORALL{e in edges}
+    \FORALL{edge $e$}
     \STATE Node n $\gets$ e.getDifferentFromParent()
       \IF{!visited.contain(n)}
         \STATE visited.insert(n)
@@ -889,7 +921,7 @@ If the degree of the node is greater than 1 we return the calculation.
 \]
 
 \begin{algorithmic}
-  \FORALL {Nodes n}
+  \FORALL {node $n$}
     \STATE clusterCumulative = clusterCumulative + clusteringCoeff(n)
   \ENDFOR
   \RETURN $\frac{clusterCumulative}{|N|}$
@@ -926,7 +958,7 @@ calculate the straight line gradient of the captured points.
   \REQUIRE A vector to hold objects of type point
   \REQUIRE A counter c
   \STATE $c = 0$
-  \FORALL {Point p in Plot}
+  \FORALL {point $p \in$ Plot}
     \IF { $c = 0$ }
       \STATE yPrev $\gets$ p.Y
       \STATE deltaX $\gets$ p.X
