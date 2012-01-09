@@ -59,6 +59,15 @@
 %\setcounter{secnumdepth}{3}
 %\setcounter{tocdepth}{3}
 
+%% Drawing trees and other stuff
+\usepackage{tikz}
+\usetikzlibrary{trees,arrows}
+\usepackage{amssymb}
+
+\let\tikzsquare\square
+\renewcommand{\square}{\ensuremath\tikzsquare}
+
+\input{colors.tex}
 
 % ----- BEAMER SPECIFIC -----
 
@@ -155,12 +164,9 @@ Really, this is the cutting edge in SWN science!
 % Random graph vs. graphs closer to SWNs
 % Three properties of SWNs
 
+\subsection{Small World Networks}
 
-
-
-\subsection{SWN generation}
-
-\frame{\frametitle{Generating SWNs, first attempt}
+\frame{\frametitle{Keeping it real}
 Let's grow a population. They will make friends with each other.\\
 \pause
 \hspace{0.5cm} $\to$ annoying (crying babies!)\\
@@ -172,7 +178,7 @@ Let's grow a population. They will make friends with each other.\\
 So what can we do?
 }
 
-\frame{\frametitle{Generating SWNs}
+\frame{\frametitle{Generating Small World Networks}
 Okay, let's generate SWNs mathematically then.
 
 That should be a lot more convenient!
@@ -181,50 +187,58 @@ That should be a lot more convenient!
 \vspace{0.5cm}
 Nowadays, we generate networks of \emph{thousands} of nodes within seconds.
 
+\pause
 \hspace{0.5cm} $\to$ 10,000 nodes within 3 sec
+
+\pause
+\vspace{0.5 cm}
+A \emph{network} is, in the mathematical sense, \pause a \emph{graph} which
+consists of a set N of nodes and a set E of edges.
+
 }
 
+\frame{\frametitle{Small World Effect as a concept}
+\emph{Six degrees of separation} 
+\hspace{0.5cm} $\to$ the distance between any two individuals is on average $6$.
 
-\subsection{Algorithms}
+\begin{figure}[ht!]
+  \centering
+  \includegraphics[height=50mm,width=50mm]{sixdegrees.png}
+  \caption{Social Network in Real Life}
+\end{figure}
 
-\frame{\frametitle{Algorithms}
-We can generate graphs using several algorithms:
+}
+
+\frame{\frametitle{Small World Effect as a concept}
+Frigyes Karinthy first introduced this idea in his 1929 short story \emph{Chains}.
 
 \vspace{0.5cm}
+\pause
+Later on the small world experiment, performed in the 1960s by Stanley Milgram
+and other researchers, formalised the aforementioned concept.
+
+\vspace{0.5cm}
+\pause
+Results in a \emph{small world effect} 
+\pause
+\hspace{0.5cm} $\to$ the \emph{average distance} linking two nodes of the same
+network can be orders of magnitude \emph{smaller than} the \emph{number of nodes} the 
+network actually has.
+}
+
+\frame{\frametitle{Small World Network Characteristics}
+
+Mathematically speaking, a small world network has the following properties:
+
 \begin{itemize}
-  \item Erd\H{o}s-R\'{e}nyi
-  \item Watts-Strogatz
-  \item Barabasi-Albert
-  \item Bipartite Model
-  \item Preferential Attachment
+\pause
+\item Low average path length.
+\pause
+\item High clustering coefficient.
+\pause
+\item Scale-free degree distribution.
 \end{itemize}
-
-\vspace{0.5cm}
-... or just hack Facebook and get a huge social graph for free!
 }
-
-
-\subsection{Erd\H{o}s-R\'{e}nyi}
-
-\frame{\frametitle{Erd\H{o}s-R\'{e}nyi}
-% FIXME: Text and screenshot here
-(text and screenshot here)
-}
-
-
-\subsection{Bipartite}
-
-
-\subsection{Watts-Strogatz}
-
-
-\subsection{Barabasi-Albert}
-
-
-\subsection{Preferential attachment with clustering}
-
-
-
 
 \section{Engineering}
 
@@ -234,7 +248,111 @@ We can generate graphs using several algorithms:
 \subsection{C++}
 
 
-\subsection{Graph drawing, FADE}
+\subsection{Graph drawing}
+
+\frame{
+  \frametitle{Graph drawing}
+
+  Graph drawing is hard for humans... \pause and harder for computers:
+
+  \begin{itemize}
+    \pause
+    \item Non-formal requirements (human taste)
+    \pause
+    \item Should adapt to a variety of different graphs
+    \pause
+    \item Should be fast
+  \end{itemize}
+}
+
+\frame{
+  \frametitle{Force-directed algorithms}
+
+  For Visigoth, we use an optimized ``force directed'' algorithm.
+
+  \pause
+
+  Each node is a charged particle, and each edge is a rubber band.
+
+  \pause
+
+  We chose this kind of algorithm because:
+
+  \begin{itemize}
+    \item It gives good results for most graphs
+    \pause
+    \item It is easy to implement, few tens of lines of \emph{C++} (\emph{C++}!) in
+      our case
+    \pause
+    \item We can show the stabilization in real time (bling)
+  \end{itemize}
+
+}
+
+\subsection{FADE}
+
+\frame{
+  \frametitle{FADE}
+
+  However, it also is.. \pause slow. Quite slow: $O(n^2)$, where $n$ is the
+  number of nodes.
+
+  \pause
+
+  The solution? FADE, an algorithm that achieves speed through approximation.
+}
+
+\frame{
+  \frametitle{TreeCodes}
+
+  FADE works by storing the nodes of a \emph{TreeCode}, a data structure that
+  stores the nodes recursively subdividing the space:
+
+  \pause
+
+  \begin{columns}
+    \begin{column}{0.5\textwidth}
+      \centering
+      \input{quadtree-graph-pres.tex}
+    \end{column}
+
+    \pause
+
+    \begin{column}{0.5\textwidth}
+      \centering
+      \input{quadtree-tree-pres.tex}
+
+    \end{column}
+  \end{columns}
+}
+
+\frame{
+  \frametitle{FADE}
+  In our case, the \emph{TreeCode} subdivides the space recursively in 8 cubes.
+
+  Once the \emph{TreeCode} is ready, when calculating the repulsion forces for
+  each node:
+
+  \begin{itemize}
+    \pause
+    \item Pick a cube in the \emph{TreeCode}
+    \pause
+    \item If the cube if ``far enough'', it will be treated as a single
+      node, and the repulsion calculated based on how many nodes it contains
+    \pause
+    \item Otherwise, subdivide the cube, and try again with the 8 ``children''
+      cubes.
+  \end{itemize}
+}
+
+\subsection{C++}
+
+\frame{
+  \frametitle{C++}
+
+  \emph{C++}, loved my many and feared by most...
+
+}
 
 
 \subsection{OpenGL}
