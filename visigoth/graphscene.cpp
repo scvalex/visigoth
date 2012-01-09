@@ -8,19 +8,19 @@
 #include "erdosrenyi.h"
 #include "statistics.h"
 #include "barabasialbert.h"
-#include <QColorDialog>
-
+#include "wattsstrogatz.h"
 #ifdef HAS_OAUTH
 #include "twitter.h"
 #endif
 
-GraphScene::GraphScene(QMainWindow *mainWindow) :
+GraphScene::GraphScene(QObject *parent) :
+    QObject(parent),
     algo(0),
     degreeCount(1),
-    myEdgeColor(QColor::fromRgbF(0.0, 0.0, 1.0, 0.5)),
-    myNodeColor(QColor::fromRgbF(0.0, 1.0, 0.3, 0.7)),
+    myBackgroundColour(Qt::black),
     mode3d(false),
-    myBackgroundColor(Qt::black)
+    myEdgeColour(QColor::fromRgbF(0.0, 0.0, 1.0, 0.5)),
+    myNodeColour(QColor::fromRgbF(0.0, 1.0, 0.3, 0.7))
 {
     myAlgorithms["Preferential Attachament"] = PREFERENTIAL_ATTACHAMENT;
     myAlgorithms["Bipartite Model"] = BIPARTITE_MODEL;
@@ -76,6 +76,18 @@ void GraphScene::set3DMode(bool enabled) {
     randomizePlacement();
 }
 
+QColor GraphScene::nodeColour() {
+    return myNodeColour;
+}
+
+QColor GraphScene::edgeColour() {
+    return myEdgeColour;
+}
+
+QColor GraphScene::backgroundColour() {
+    return myBackgroundColour;
+}
+
 bool GraphScene::newEdge(Node *source, Node *dest) {
     Q_ASSERT(source != 0);
     Q_ASSERT(dest != 0);
@@ -83,7 +95,7 @@ bool GraphScene::newEdge(Node *source, Node *dest) {
         return false;
     }
     Edge *edge = new Edge(source, dest);
-    edge->setColour(myEdgeColor);
+    edge->setColour(myEdgeColour);
     if (source->tag() >= hasEdge.size()) {
         hasEdge.resize(source->tag() + 1);
     }
@@ -103,7 +115,7 @@ bool GraphScene::newEdge(Node *source, Node *dest) {
 // used only by the algorithms
 Node* GraphScene::newNode() {
     Node *node = new Node(this);
-    node->setColour(myNodeColor);
+    node->setColour(myNodeColour);
 
     myNodes << node;
 
@@ -173,32 +185,26 @@ void GraphScene::chooseAlgorithm(const QString &name) {
     emit algorithmChanged(algo);
 }
 
-void GraphScene::customizeEdgesColor(QColor newColor, bool isColorChanged) {
-    if (isColorChanged) {
-        myEdgeColor = newColor;
+void GraphScene::customizeEdgesColour(const QColor &newColour) {
+    myEdgeColour = newColour;
 
-        foreach(Edge* edge, myEdges) {
-            if (!edge->isHighlighted)
-                edge->setColour(myEdgeColor);
-        }
+    foreach(Edge* edge, myEdges) {
+        if (!edge->isHighlighted)
+            edge->setColour(myEdgeColour);
     }
 }
 
-void GraphScene::customizeNodesColor(QColor newColor, bool isColorChanged) {
-    if (isColorChanged) {
-        myNodeColor = newColor;
+void GraphScene::customizeNodesColour(const QColor &newColour) {
+    myNodeColour = newColour;
 
-        foreach(Node* node, myNodes) {
-            if(!node->isHighlighted)
-                node->setColour(myNodeColor);
-        }
+    foreach(Node* node, myNodes) {
+        if(!node->isHighlighted)
+            node->setColour(myNodeColour);
     }
 }
 
-void GraphScene::customizeBackgroundColor(QColor newColor, bool isColorChanged) {
-    if (isColorChanged) {
-        myBackgroundColor = newColor;
-    }
+void GraphScene::customizeBackgroundColour(const QColor &newColour) {
+    myBackgroundColour = newColour;
 }
 
 void GraphScene::repopulate() {
@@ -364,12 +370,4 @@ VCubeF GraphScene::graphCube() {
     }
 
     return VCubeF(p1, p2);
-}
-
-QColor& GraphScene::colour() {
-    return myColour;
-}
-
-void GraphScene::setColour(const QColor &c) {
-    myColour = c;
 }

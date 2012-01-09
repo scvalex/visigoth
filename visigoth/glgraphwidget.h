@@ -19,8 +19,7 @@ public:
     virtual ~GLGraphWidget();
 
     void setScene(GraphScene *newScene);
-    void highlightNeighbours();
-    void notHighlightNeighbours();
+    void highlightNeighbours(bool enabled = false);
 
     enum MOUSE_MODES {
         MOUSE_IDLE,
@@ -41,7 +40,6 @@ protected:
 
     void scaleView(qreal scaleFactor);
     void fitToScreen();
-
 
     void wheelEvent(QWheelEvent *event);
     void mouseDoubleClickEvent(QMouseEvent *event);
@@ -67,7 +65,7 @@ private:
     void drawSphere(GLfloat r, int lats, int longs);
     void drawCircle(GLfloat r, int longs);
     void drawNode(Node *node);
-    void rebornGraph();
+    void resetGraphColours();
     void drawGraphGL();
 
     void initGraphProjection();

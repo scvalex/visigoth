@@ -3,11 +3,11 @@
 #include <QPainter>
 
 Edge::Edge(Node *sourceNode, Node *destNode) :
+    dest(destNode),
+    source(sourceNode),
     myColour(QColor::fromRgbF(0.0, 0.0, 1.0, 0.5)),
     isHighlighted(false)
 {
-    dest = destNode;
-    source = sourceNode;
     source->addEdge(this);
     dest->addEdge(this);
 }
@@ -26,6 +26,10 @@ QColor& Edge::colour() {
 
 void Edge::setColour(const QColor &c) {
     myColour = c;
+}
+
+bool Edge::highlighted() const {
+    return isHighlighted;
 }
 
 void Edge::highlight() {

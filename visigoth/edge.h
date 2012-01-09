@@ -18,13 +18,11 @@ public:
     Node* destNode() const;
 
     QColor& colour();
-    QColor myColour;
-    bool isHighlighted;
-
     void setColour(const QColor &c);
+
+    bool highlighted() const;
     void highlight();
     void unHighlight();
-
 
 protected:
     explicit Edge(Node *sourceNode, Node *destNode);
@@ -32,8 +30,8 @@ protected:
 private:
     Node *dest;
     Node *source;
-
-
+    QColor myColour;
+    bool isHighlighted;
 };
 
 #endif // EDGE_H

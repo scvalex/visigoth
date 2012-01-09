@@ -20,7 +20,7 @@ class GraphScene : public QObject
 {
     Q_OBJECT
 public:
-    explicit GraphScene(QMainWindow *mainWindow);
+    explicit GraphScene(QObject *parent = 0);
     ~GraphScene();
 
     QVector<Node*>& nodes();
@@ -52,12 +52,11 @@ public:
 
     Statistics* getStatistics();
 
-    QColor myEdgeColor;
-    QColor myNodeColor;
-
     void set3DMode(bool enabled);
 
-    void setColour(const QColor &b);
+    QColor edgeColour();
+    QColor nodeColour();
+    QColor backgroundColour();
 
 signals:
     void nodeMoved();
@@ -68,9 +67,9 @@ public slots:
     void randomizePlacement();
     void repopulate();
     void chooseAlgorithm(const QString &name);
-    void customizeEdgesColor(QColor newColor, bool isColorChanged);
-    void customizeNodesColor(QColor newColor, bool isColorChanged);
-    void customizeBackgroundColor(QColor newColor, bool isColorChanged);
+    void customizeEdgesColour(const QColor &newColour);
+    void customizeNodesColour(const QColor &newColour);
+    void customizeBackgroundColour(const QColor &newColour);
 
 signals:
     void algorithmChanged(Algorithm *newAlgo);
@@ -97,9 +96,11 @@ private:
     QVector<QList<Node*> > degreeCount;
     QMap<QString, int> myAlgorithms;
 
-    QColor myBackgroundColor;
+    QColor myBackgroundColour;
     bool mode3d;
-    QColor myColour;
+
+    QColor myEdgeColour;
+    QColor myNodeColour;
 };
 
 #endif // GRAPHSCENE_H

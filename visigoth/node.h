@@ -38,17 +38,17 @@ public:
 
     QList<Edge*>& edges();
     QVector<Node*> neighbours() const;
-    QColor myColour;
 
     // QuadTree
     int size() const;
     VPointF center() const;
-    bool isHighlighted;
     const QVector<TreeNode*>& children() const;
     vreal width() const;
 
     QColor& colour();
     void setColour(const QColor &b);
+
+    bool highlighted() const;
     void highlight();
     void unHighlight();
 
@@ -69,8 +69,6 @@ private:
     GraphScene *graph;
     QList<Edge*> edgeList;
 
-
-
     VPointF curPos;
     VPointF newPos;
     bool allowAdvance;
@@ -78,6 +76,9 @@ private:
     // vars for average length
     bool visited;
     int distance;
+
+    QColor myColour;
+    bool isHighlighted;
 
     VPointF calculateNonEdgeForces(TreeNode* treeNode);
 };

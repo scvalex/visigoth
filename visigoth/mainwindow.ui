@@ -23,7 +23,7 @@
      <x>0</x>
      <y>0</y>
      <width>400</width>
-     <height>22</height>
+     <height>21</height>
     </rect>
    </property>
    <widget class="QMenu" name="menu_File">
@@ -47,20 +47,20 @@
     <property name="title">
      <string>View</string>
     </property>
-    <widget class="QMenu" name="menuCustomize_Graph">
+    <widget class="QMenu" name="menuCustomizeGraph">
      <property name="title">
       <string>Customize Graph</string>
      </property>
-     <addaction name="nodeColorAct"/>
-     <addaction name="edgeColorAct"/>
-     <addaction name="backgroundColorAct"/>
+     <addaction name="nodeColourAct"/>
+     <addaction name="edgeColourAct"/>
+     <addaction name="backgroundColourAct"/>
      <addaction name="highlightNeighboursAct"/>
     </widget>
-    <addaction name="menuCustomize_Graph"/>
+    <addaction name="menuCustomizeGraph"/>
    </widget>
    <addaction name="menu_File"/>
-   <addaction name="menuHelp"/>
    <addaction name="menuView"/>
+   <addaction name="menuHelp"/>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
   <widget class="QToolBar" name="quickBar">
@@ -170,19 +170,22 @@
     <string>Manual</string>
    </property>
   </action>
-  <action name="nodeColorAct">
+  <action name="nodeColourAct">
    <property name="text">
-    <string>Node Color</string>
+    <string>Node Colour</string>
    </property>
   </action>
-  <action name="edgeColorAct">
+  <action name="edgeColourAct">
    <property name="text">
-    <string>Edge Color</string>
+    <string>Edge Colour</string>
    </property>
   </action>
-  <action name="backgroundColorAct">
+  <action name="backgroundColourAct">
    <property name="text">
-    <string>Background Color</string>
+    <string>Background Colour</string>
+   </property>
+   <property name="toolTip">
+    <string>Background Colour</string>
    </property>
   </action>
   <action name="highlightNeighboursAct">
@@ -194,6 +197,27 @@
    </property>
    <property name="text">
     <string>Highlight Neighbours</string>
+   </property>
+  </action>
+  <action name="mode3DAct">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>3D Mode</string>
+   </property>
+   <property name="toolTip">
+    <string>Toggle 2D/3D</string>
+   </property>
+  </action>
+  <action name="aboutAct">
+   <property name="text">
+    <string>About</string>
+   </property>
+  </action>
+  <action name="aboutQtAct">
+   <property name="text">
+    <string>About Qt</string>
    </property>
   </action>
  </widget>

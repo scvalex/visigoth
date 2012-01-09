@@ -3,10 +3,10 @@
 
 #include "glgraphwidget.h"
 
+#include <QColor>
 #include <QComboBox>
 #include <QGraphicsView>
 #include <QMainWindow>
-#include <QColorDialog>
 
 class Algorithm;
 class GraphScene;
@@ -29,13 +29,13 @@ public:
 public slots:
     void exportTo();
     void toggleHelp(bool enabled);
-    void customizeColor(QAction* newAction);
+    void customizeColour(QAction *action);
 
 private slots:
     void onAlgorithmChanged(Algorithm *newAlgo);
     void onGenerate();
     void onFocusedNodeChanged(Node *node);
-    void pickColor();
+    bool pickColour(QColor &newColour);
     void showAbout();
     void showAboutQt();
 
@@ -48,9 +48,6 @@ private:
     QWidget *helpWidget;
     QDockWidget *helpDock;
     Node *focusedNode;
-    bool isColorChanged;
-    QColor newColor;
-    QColorDialog colorPicker;
 };
 
 #endif // MAINWINDOW_H

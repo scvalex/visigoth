@@ -29,9 +29,7 @@ MainWindow::MainWindow(QWidget *parent) :
     statsUi(new Ui::Statistics),
     algoCtl(0),
     helpWidget(0),
-    focusedNode(0),
-    newColor(QColor::fromRgbF(0.0, 1.0, 0.3, 0.7)),
-    isColorChanged(false)
+    focusedNode(0)
 {
     qsrand(23);
 
@@ -55,7 +53,7 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->randomizeAct, SIGNAL(triggered()), scene, SLOT(randomizePlacement()));
     connect(ui->generateAct, SIGNAL(triggered()), scene, SLOT(repopulate()));
 
-    connect(ui->menuCustomize_Graph, SIGNAL(triggered(QAction*)), this, SLOT(customizeColor(QAction*)));
+    connect(ui->menuCustomizeGraph, SIGNAL(triggered(QAction*)), this, SLOT(customizeColour(QAction*)));
 
     connect(ui->mode3DAct, SIGNAL(toggled(bool)), view, SLOT(set3DMode(bool)));
     connect(ui->aboutAct, SIGNAL(triggered()), this, SLOT(showAbout()));
@@ -77,37 +75,41 @@ MainWindow::~MainWindow() {
     delete ui;
 }
 
-void MainWindow::pickColor() {
+/* Asks the user for a color.  If the user cancels the action,
+return false and leave NEWCOLOR unchanged.  Otherwise, return
+true and update NEWCOLOUR to match the picked colour. */
+bool MainWindow::pickColour(QColor &newColour) {
     const QColor& initial = QColor::fromRgbF(0.0, 0.0, 1.0, 0.5);
-    const QString& title = "Select Colour";
-    QColor c = colorPicker.getColor(initial,this,title,0);
+    QColorDialog colorPicker;
+    QColor c = colorPicker.getColor(initial, this, "Select Colour", 0);
 
-    if (c.green() == QColor(Qt::black).green() && c.red() == QColor(Qt::black).red() && c.blue() == QColor(Qt::black).blue() && c.alpha() == QColor(Qt::black).alpha()) {
-        isColorChanged = false;
-    } else {
-        isColorChanged = true;
-        newColor = c;
+    if (c.green() == QColor(Qt::black).green() &&
+        c.red() == QColor(Qt::black).red() &&
+        c.blue() == QColor(Qt::black).blue() &&
+        c.alpha() == QColor(Qt::black).alpha())
+    {
+        return false;
     }
+    newColour = c;
+    return true;
 }
 
-void MainWindow::customizeColor(QAction* uiAction) {
-    if (uiAction == ui->edgeColorAct) {
-        pickColor();
-        scene->customizeEdgesColor(newColor,isColorChanged);
-    }
-    else if (uiAction == ui->nodeColorAct) {
-        pickColor();
-        scene->customizeNodesColor(newColor,isColorChanged);
-    }
-    else if (uiAction == ui->backgroundColorAct) {
-        pickColor();
-        scene->customizeBackgroundColor(newColor,isColorChanged);
-    }
-    else if (uiAction == ui->highlightNeighboursAct) {
-        if (ui->highlightNeighboursAct->isChecked())
-            view->highlightNeighbours();
-        else
-            view->notHighlightNeighbours();
+void MainWindow::customizeColour(QAction *action) {
+    QColor colour;
+    if (action == ui->edgeColourAct) {
+        if (pickColour(colour)) {
+            scene->customizeEdgesColour(colour);
+        }
+    } else if (action == ui->nodeColourAct) {
+        if (pickColour(colour)) {
+            scene->customizeNodesColour(colour);
+        }
+    } else if (action == ui->backgroundColourAct) {
+        if (pickColour(colour)) {
+            scene->customizeBackgroundColour(colour);
+        }
+    } else if (action == ui->highlightNeighboursAct) {
+        view->highlightNeighbours(ui->highlightNeighboursAct->isChecked());
     }
 }
 
