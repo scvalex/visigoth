@@ -58,8 +58,6 @@
 %\usepackage{pxfonts}  % \lJoin etc.; TypeSystems
 %\setcounter{secnumdepth}{3}
 %\setcounter{tocdepth}{3}
-\usepackage{lastpage}
-\usepackage{pifont}
 
 %% Drawing trees and other stuff
 \usepackage{tikz}
@@ -70,26 +68,6 @@
 \renewcommand{\square}{\ensuremath\tikzsquare}
 
 \input{colors.tex}
-
-%% Ticks
-\usepackage{pifont}
-\newcommand{\tick}{{\color{darkgreen}\checkmark\ }}
-\newcommand{\cross}{{\color{darkred}\hspace{1pt}\ding{55}\ }}
-
-%% Checklist
-\newcommand{\checklist}[3]{
-  \begin{block}{Checklist}
-    \centering
-    \footnotesize{
-      \ifnum#1=0 \cross \else \tick \fi Low avg. path length
-      \ifnum#2=0 \cross \else \tick \fi High clustering
-      \ifnum#3=0 \cross \else \tick \fi Scale-free degree distribution
-    }
-  \end{block}
-}
-
-\newcommand{\Therefore}{\ensuremath{\Rightarrow} }
-
 
 % ----- BEAMER SPECIFIC -----
 
@@ -130,7 +108,7 @@
 
 \vspace{0.6cm}
 \begin{center}
-  \begin{tiny}(We have \pageref{LastPage} slides. Make yourselves comfortable.)\end{tiny}
+  \begin{tiny}(We have 75 slides. Make yourselves comfortable.)\end{tiny}
 \end{center}
 
 }
@@ -281,7 +259,7 @@ Mathematically speaking, a small world network has the following properties:
 
 \begin{itemize}
 \pause
-\item Low average path length (distance).
+\item Low average path length.
 \pause
 \item High clustering coefficient.
 \pause
@@ -290,102 +268,23 @@ Mathematically speaking, a small world network has the following properties:
 
 }
 
-\frame{\frametitle{SWNs' characteristics insight}
-The \emph{distance} between two nodes in a graph
-represents the minimum number of edges to be traversed in order to get from the
-first node to the second.
-
-\vspace{0.5cm}
-\pause
-\emph{Clustering} is the tendency of real networks to form \emph{cliques}
-(subset of nodes in which all nodes are connected to each other).
-
-\vspace{0.5cm}
-\pause
-\emph{Scale-free} networks have a node degree distribution which follows a
-power-law:
-
-\[ P(k) \sim k^{-\gamma} \hspace{1.2cm} \includegraphics[width=20mm, height=10mm]{angry.png} \]
-}
-
-\frame{\frametitle{More about scale-free networks}
-\vspace{0.1cm}
-Actually, this is not as hard as it seems!
-\hspace{0.3cm} \includegraphics[width=7mm,height=7mm]{happy.png}
-
-\vspace{0.3cm}
-Check this out!
-\vspace{0.1cm}
-\begin{figure}[ht!]
-  \centering
-  \includegraphics[height=40mm,width=60mm]{sfnet.png}
-  \caption{Comparison between random and scale-free networks}
-\end{figure}
-}
-
-\frame{\frametitle{Real World applications of SWNs}
-
-\begin{columns}
-
-\begin{column}[T]{0.3\textwidth}
-
-\begin{figure}[ht!]
-  \includegraphics[width=30mm,height=30mm]{roadmap.png}
-  \caption{London Road Map}
-\end{figure}
-
-\end{column}
-
-\begin{column}[T]{0.3\textwidth}
-
-\begin{figure}[ht!]
- \includegraphics[width=30mm,height=30mm]{neuralnets.png}
-\caption{Neural networks}
-\end{figure}
-
-\end{column}
-
-\begin{column}[T]{0.3\textwidth}
-
-\begin{figure}[ht!]
- \includegraphics[width=30mm,height=30mm]{proteinstruct.png}
-\caption{Protein Structure}
-\end{figure}
-
-\end{column}
-
-\end{columns}
-
-}
-
-\frame{\frametitle{Moving forward...}
-By integrating existing generation algorithms and visualisations into a single,
-easy-to-use interface, the user can make a head start into the large world of
-small world networks.
-
-\pause
-\vspace{0.5cm}
-So...let's check the \emph{algorithms} that help to the born of the small-world
-networks' simulation...
-}
-
 
 \subsection{Generation Algorithm}
 
 \frame{\frametitle{Erd\H{o}s-R\'{e}nyi}
 
-\checklist{0}{0}{0}
-
 \begin{columns}
 
-\begin{column}[T]{.3\textwidth}
+\begin{column}[T]{0.3\textwidth}
+
 \includegraphics[height=30mm,width=30mm]{erdos.png}
+
 \end{column}
 
 \begin{column}[T]{.7\textwidth}
 
 \begin{itemize}
-  \item In the beginning there was Erd\H{o}s \dots and R\'{e}nyi
+  \item It the beginning there was Erd\H{o}s \dots and R\'{e}nyi
   \pause
   \item Random Graph
   \pause
@@ -397,12 +296,11 @@ networks' simulation...
 \end{column}
 \end{columns}
 
+
 }
 
 
 \frame{\frametitle{Watts-Strogatz}
-
-\checklist{1}{1}{0}
 
 \begin{columns}
 
@@ -426,9 +324,8 @@ networks' simulation...
 \end{columns}
 }
 
-\frame{\frametitle{Barabasi-Albert}
 
-\checklist{1}{0}{1}
+\frame{\frametitle{Barabasi-Albert}
 
 \begin{columns}
 \begin{column}[T]{.3\textwidth}
@@ -454,13 +351,14 @@ networks' simulation...
 
 \frame{\frametitle{Preferential attachment with clustering}
 
-\checklist{1}{1}{1}
-
 \begin{columns}
 
 \begin{column}[T]{.3\textwidth}
 
 \includegraphics[height=30mm,width=30mm]{preferential.png}
+
+\subsection{Qt}
+
 
 \end{column}
 \begin{column}[T]{.7\textwidth}
@@ -481,8 +379,6 @@ networks' simulation...
 }
 
 \frame{\frametitle{Bipartite}
-
-\checklist{1}{1}{1}
 
 \begin{columns}
 
@@ -506,53 +402,10 @@ networks' simulation...
 \end{columns}
 }
 
-\renewcommand{\ExtraText}{\includegraphics[width=1cm]{dilbert.png}}
+
+
+
 \section{Engineering}
-
-\subsection{Qt}
-
-\frame{\frametitle{Qt}
-
-The Royal Road to desktop applications:
-\ \includegraphics[width=.4cm]{qt.png}\\
-\pause
-
-Cross-platform. \pause
-Open source. \pause
-Awesome.\\ \pause
-
-You get:
-\begin{itemize}
-  \item widgets \pause
-  \item \texttt{stdlib} replacement \pause
-  \item modern C++ (signals, introspection) \pause
-  \item threading/concurrency \pause
-  \item networking, XML support, OAuth library \pause
-  \item kitchen sink
-\end{itemize}
-
-}
-
-\frame{\frametitle{Visigoth \ding{170} Qt}
-
-That means:
-\begin{itemize}
-  \item widgets \Therefore native look and feel \pause
-  \item \texttt{stdlib} replacement \Therefore Oh, look: a sane
-    \texttt{string} class \pause
-  \item modern C++ (signals, introspection) \Therefore Loose
-    coupling. Better overall design. \pause
-  \item threading/concurrency \Therefore \textsc{speed} \pause
-  \item networking, XML support, OAuth library \Therefore Less
-    hassle. More features. \pause
-\end{itemize}
-\pause
-
-Oh, and it's cross-platform.
-\pause
-Same code: Linux, Windows, OSX.
-
-}
 
 \subsection{Graph drawing}
 
@@ -611,7 +464,7 @@ Same code: Linux, Windows, OSX.
   \frametitle{TreeCodes}
 
   FADE works by storing the nodes of a \emph{TreeCode}, a data structure that
-  stores the nodes while recursively subdividing the space:
+  stores the nodes while recursively subdividing space:
   \pause
 
   \begin{columns}
