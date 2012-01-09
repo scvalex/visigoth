@@ -58,6 +58,8 @@
 %\usepackage{pxfonts}  % \lJoin etc.; TypeSystems
 %\setcounter{secnumdepth}{3}
 %\setcounter{tocdepth}{3}
+\usepackage{lastpage}
+\usepackage{pifont}
 
 %% Drawing trees and other stuff
 \usepackage{tikz}
@@ -85,6 +87,9 @@
     }
   \end{block}
 }
+
+\newcommand{\Therefore}{\ensuremath{\Rightarrow} }
+
 
 % ----- BEAMER SPECIFIC -----
 
@@ -123,7 +128,7 @@
 
 \vspace{0.6cm}
 \begin{center}
-  \begin{tiny}(We have 75 slides. Make yourselves comfortable.)\end{tiny}
+  \begin{tiny}(We have \pageref{LastPage} slides. Make yourselves comfortable.)\end{tiny}
 \end{center}
 
 }
@@ -378,9 +383,6 @@ Mathematically speaking, a small world network has the following properties:
 
 \includegraphics[height=30mm,width=30mm]{preferential.png}
 
-\subsection{Qt}
-
-
 \end{column}
 \begin{column}[T]{.7\textwidth}
 
@@ -423,16 +425,55 @@ Mathematically speaking, a small world network has the following properties:
 
 \end{column}
 \end{columns}
+}
 
+\renewcommand{\ExtraText}{\includegraphics[width=1cm]{dilbert.png}}
+\section{Engineering}
+
+\subsection{Qt}
+
+\frame{\frametitle{Qt}
+
+The Royal Road to desktop applications:
+\ \includegraphics[width=.4cm]{qt.png}\\
+\pause
+
+Cross-platform. \pause
+Open source. \pause
+Awesome.\\ \pause
+
+You get:
+\begin{itemize}
+  \item widgets \pause
+  \item \texttt{stdlib} replacement \pause
+  \item modern C++ (signals, introspection) \pause
+  \item threading/concurrency \pause
+  \item networking, XML support, OAuth library \pause
+  \item kitchen sink
+\end{itemize}
 
 }
 
+\frame{\frametitle{Visigoth \ding{170} Qt}
 
-\section{Engineering}
+That means:
+\begin{itemize}
+  \item widgets \Therefore native look and feel \pause
+  \item \texttt{stdlib} replacement \Therefore Oh, look: a sane
+    \texttt{string} class \pause
+  \item modern C++ (signals, introspection) \Therefore Loose
+    coupling. Better overall design. \pause
+  \item threading/concurrency \Therefore \textsc{speed} \pause
+  \item networking, XML support, OAuth library \Therefore Less
+    hassle. More features. \pause
+\end{itemize}
+\pause
 
+Oh, and it's cross-platform.
+\pause
+Same code: Linux, Windows, OSX.
 
-\subsection{C++}
-
+}
 
 \subsection{Graph drawing}
 
@@ -455,12 +496,9 @@ Mathematically speaking, a small world network has the following properties:
   \frametitle{Force-directed algorithms}
 
   For Visigoth, we use an optimized ``force directed'' algorithm.
-
-
   \pause
 
   Each node is a charged particle, and each edge is a rubber band.
-
   \pause
 
   We chose this kind of algorithm because:
@@ -468,8 +506,8 @@ Mathematically speaking, a small world network has the following properties:
   \begin{itemize}
     \item It gives good results for most graphs
     \pause
-    \item It is easy to implement, few tens of lines of \emph{C++} (\emph{C++}!) in
-      our case
+    \item It is easy to implement, few tens of lines of \emph{C++}
+      (\emph{C++}!) in our case
     \pause
     \item We can show the stabilization in real time (bling)
   \end{itemize}
@@ -483,7 +521,6 @@ Mathematically speaking, a small world network has the following properties:
 
   However, it also is.. \pause slow. Quite slow: $O(n^2)$, where $n$ is the
   number of nodes.
-
   \pause
 
   The solution? FADE, an algorithm that achieves speed through approximation.
@@ -494,7 +531,6 @@ Mathematically speaking, a small world network has the following properties:
 
   FADE works by storing the nodes of a \emph{TreeCode}, a data structure that
   stores the nodes recursively subdividing the space:
-
   \pause
 
   \begin{columns}
@@ -508,7 +544,6 @@ Mathematically speaking, a small world network has the following properties:
     \begin{column}{0.5\textwidth}
       \centering
       \input{quadtree-tree-pres.tex}
-
     \end{column}
   \end{columns}
 }
@@ -538,11 +573,9 @@ Mathematically speaking, a small world network has the following properties:
   \frametitle{C++}
 
   \emph{C++}, the world's friendliest language...
-
   \pause
 
   If you like segfaults.
-
   \pause
 
   And 3-pages long compiler errors.
@@ -591,20 +624,43 @@ Mathematically speaking, a small world network has the following properties:
 
 
 \subsection{OpenGL}
-\frame{\frametitle{OpenGL}
-Visigoth is a lot of fun for mouse addicts as well.
 
-\vspace{0.5cm}
-We can...
+\frame{
+  \frametitle{OpenGL}
 
-\begin{itemize}
+  OpenGL $\to$ super fast graphics with hardware acceleration!
   \pause
-  \item Pan left/right/up/down
+
+  \vspace{0.5cm}
+  We can...
+
+  \begin{itemize}
+    \pause
+    \item Pan left/right/up/down
+    \pause
+    \item Zoom in/out.
+    \pause
+    \item And do it all in 3D - real-time!
+  \end{itemize}
   \pause
-  \item Zoom in/out.
+
+  \vspace{0.5cm}
+  Thanks to the FADE optimisation, it's fast - 1000s of nodes.
+}
+
+\frame{
+  \frametitle{OpenGL selection}
+  Selection made easy...
   \pause
-  \item And do it all in 3D!
-\end{itemize}
+
+  \vspace{0.5cm}
+  It's now the same for 2D and 3D:
+
+  OpenGL ``unprojects'' the mouse click.
+  \pause
+
+  \vspace{0.5cm}
+  Selection triggers node stats recalculation, colouring...
 }
 
 
