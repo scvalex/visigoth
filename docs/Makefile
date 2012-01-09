@@ -1,5 +1,5 @@
 DOCBASE=report
-PRESENTATION=visigoth-presentation
+PRESENTATION=presentation
 GRAPHICS=$(wildcard *.tex)
 LATEX?=pdflatex
 
