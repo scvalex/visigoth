@@ -100,11 +100,6 @@
 
 \begin{document}
 
-\title{Visigoth}
-\author{}
-\date{January 2012\\
-  \tiny where's the snow?}
-
 \frame{
 
 \begin{center}
@@ -117,6 +112,11 @@
 \end{center}
 
 }
+
+\title{Visigoth}
+\author{}
+\date{January 2012\\
+  \tiny where's the snow?}
 
 \frame{\titlepage}
 % \frame{\frametitle{Outline}\tableofcontents}
@@ -186,53 +186,53 @@ Spam generation.
 \renewcommand{\ExtraText}{Brace yourselves! Here come the\dots}
 \section{Maths}
 
-% What is a graph
-% Random graph vs. graphs closer to SWNs
-% Three properties of SWNs
-
 \subsection{Small World Networks}
 
-\frame{\frametitle{Keeping it real}
-Let's grow a population. They will make friends with each other.\\
-\pause
-\hspace{0.5cm} $\to$ annoying (crying babies!)\\
-\hspace{0.5cm} $\to$ expensive (feeding them!)\\
-\hspace{0.5cm} $\to$ maybe a little too slow...
-\pause
+\frame{
+  \frametitle{Keeping it real}
 
-\vspace{0.5cm}
-So what can we do?
+  Let's grow a population. They will make friends with each other.\\
+  \pause
+
+  \hspace{0.5cm} $\to$ annoying \emph{(crying babies!)}\\
+  \hspace{0.5cm} $\to$ expensive \emph{(feeding them!)}\\
+  \hspace{0.5cm} $\to$ maybe a little too slow...
+  \pause
+
+  \vspace{0.5cm}
+  So what can we do?
 }
 
-\frame{\frametitle{Generating Small World Networks}
-Okay, let's generate SWNs mathematically then.
+\frame{
+  \frametitle{Generating Small World Networks}
 
-That should be a lot more convenient!
-\pause
+  Okay, let's generate SWNs mathematically then.
 
-\vspace{0.5cm}
-Nowadays, we generate networks of \emph{thousands} of nodes within seconds.
+  That should be a lot more convenient!
+  \pause
 
-\pause
-\hspace{0.5cm} $\to$ 10,000 nodes within 3 sec
+  \vspace{0.5cm}
+  Nowadays, we generate networks of \emph{thousands} of nodes within seconds.
+  \pause
 
-\pause
-\vspace{0.5 cm}
-A \emph{network} is, in the mathematical sense, \pause a \emph{graph} which
-consists of a set N of nodes and a set E of edges.
+  \hspace{0.5cm} $\to$ 10,000 nodes within 3 sec
+  \pause
 
+  \vspace{0.5 cm}
+  Mathematically, a \emph{network} is a \emph{graph}.
 }
 
-\frame{\frametitle{Small World Effect as a concept}
-\emph{Six degrees of separation}
-\hspace{0.5cm} $\to$ the distance between any two individuals is on average $6$.
+\frame{
+  \frametitle{Small World Effect as a concept}
 
-\begin{figure}[ht!]
-  \centering
-  \includegraphics[height=50mm,width=50mm]{sixdegrees.png}
-  \caption{Social Network in Real Life}
-\end{figure}
+  \emph{Six degrees of separation}
+  \hspace{0.5cm} $\to$ the distance between any two individuals is on average $6$.
 
+  \begin{figure}[ht!]
+    \centering
+    \includegraphics[height=50mm,width=50mm]{sixdegrees.png}
+    \caption{Social Network in Real Life}
+  \end{figure}
 }
 
 \frame{\frametitle{Small World Effect as a concept}
@@ -493,7 +493,7 @@ Mathematically speaking, a small world network has the following properties:
     \pause
     \item Pick a cube in the \emph{TreeCode}
     \pause
-    \item If the cube if ``far enough'', it will be treated as a single
+    \item If the cube is ``far enough'', it will be treated as a single
       node, and the repulsion calculated based on how many nodes it contains
     \pause
     \item Otherwise, subdivide the cube, and try again with the 8 ``children''
