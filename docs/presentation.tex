@@ -59,6 +59,15 @@
 %\setcounter{secnumdepth}{3}
 %\setcounter{tocdepth}{3}
 
+%% Drawing trees and other stuff
+\usepackage{tikz}
+\usetikzlibrary{trees,arrows}
+\usepackage{amssymb}
+
+\let\tikzsquare\square
+\renewcommand{\square}{\ensuremath\tikzsquare}
+
+\input{colors.tex}
 
 % ----- BEAMER SPECIFIC -----
 
@@ -66,13 +75,16 @@
 % --- Pretty much the usual beamer theme.
 \usepackage{beamerthemeshadow}
 
+\newcommand{\ExtraText}{}
 % --- A title slide for every new section.
 \AtBeginSection{
   \frame{
+    \begin{center}\begin{tiny}\ExtraText\end{tiny}\end{center}
     \begin{block}{}
       \begin{Large}\color{highlight}\centerline{\insertsection}\end{Large}
     \end{block}
   }
+  \renewcommand{\ExtraText}{}
 }
 
 % --- Remove the navigation bar from the bottom right.
@@ -86,9 +98,23 @@
 
 \begin{document}
 
-\title{Visigoth.}
+\frame{
+
+\begin{center}
+  \includegraphics[width=1.4cm]{v.png}
+\end{center}
+
+\vspace{0.6cm}
+\begin{center}
+  \begin{tiny}(We have 75 slides. Make yourselves comfortable.)\end{tiny}
+\end{center}
+
+}
+
+\title{Visigoth}
 \author{}
-\date{10 January 2012}
+\date{January 2012\\
+  \tiny where's the snow?}
 
 \frame{\titlepage}
 % \frame{\frametitle{Outline}\tableofcontents}
@@ -98,69 +124,73 @@
 
 \section{Introduction}
 
-\subsection{Motivation}
-\frame{\frametitle{Motivation}
-There is a whole class of barely explored graphs!
-\pause
-
-\vspace{0.5cm}
-\emph{Example:} Graphs in social networks:
-\pause
+\subsection{Say what?}
+\frame{\frametitle{Say what?}
 
 \begin{itemize}
-  \item Facebook
-  \item Twitter
-  \item identi.ca
-\end{itemize}
-}
+  \item This is Visigoth.
+  \pause
 
-% FIXME: Not entirely happy with the slide split here.
-%        Maybe we can write some more or put the points together?
+  \item It's a desktop application (not a webapp? boo!).
+  \pause
+
+  \item It's a graph visualiser.
+  \pause
+
+  \item But not just any old graph\dots
+\end{itemize}
+
+}
 
 \subsection{Small World Networks}
 \frame{\frametitle{Small World Networks}
+
 \begin{block}{Small World Networks}
-  \emph{SWNs} are graphs that look like a natural web of friendships.
+  \emph{SWNs} are graphs that look like natural webs of friendships.
 \end{block}
+\pause
+
+\vspace{1cm}
+
+Look ``natural''. \pause
+They're everywhere. \pause
+Google+. \pause
+Web pages. \pause
+Academic citations. \pause
+Spam detection. \pause
+Spam generation.
+
 }
 
-\subsection{Why SWNs?}
-\frame{\frametitle{Why SWNs?}
-SWNs are interesting because they show how people interact.
+\subsection{Visigoth again}
+\frame{\frametitle{Visigoth again}
 
-So let's have a look at them!
-}
+\begin{itemize}
+  \item Visigoth is a SWN generator and visualizer.
+  \pause
 
-\subsection{Visigoth}
-\frame{\frametitle{Visigoth}
-Visigoth can generate or retrieve SWN graphs.
+  \item Widest selection of generation algos: 5!
+  \pause
 
-\vspace{0.5cm}
-The user can analyse them both visually as well as statistically.
+  \item Scrapes real networks off of Twitter.
+  \pause
 
-% FIXME: Screenshot here
-\vspace{0.8cm}
-(screenshot here)
+  \item \begin{Huge}\textbf{3D}\end{Huge}
+\end{itemize}
 
-\vspace{0.8cm}
-Really, this is the cutting edge in SWN science!
 }
 
 
-
-
+\renewcommand{\ExtraText}{Brace yourselves! Here come the\dots}
 \section{Maths}
 
 % What is a graph
 % Random graph vs. graphs closer to SWNs
 % Three properties of SWNs
 
+\subsection{Small World Networks}
 
-
-
-\subsection{SWN generation}
-
-\frame{\frametitle{Generating SWNs, first attempt}
+\frame{\frametitle{Keeping it real}
 Let's grow a population. They will make friends with each other.\\
 \pause
 \hspace{0.5cm} $\to$ annoying (crying babies!)\\
@@ -172,7 +202,7 @@ Let's grow a population. They will make friends with each other.\\
 So what can we do?
 }
 
-\frame{\frametitle{Generating SWNs}
+\frame{\frametitle{Generating Small World Networks}
 Okay, let's generate SWNs mathematically then.
 
 That should be a lot more convenient!
@@ -181,28 +211,46 @@ That should be a lot more convenient!
 \vspace{0.5cm}
 Nowadays, we generate networks of \emph{thousands} of nodes within seconds.
 
+\pause
 \hspace{0.5cm} $\to$ 10,000 nodes within 3 sec
+
+\pause
+\vspace{0.5 cm}
+A \emph{network} is, in the mathematical sense, \pause a \emph{graph} which
+consists of a set N of nodes and a set E of edges.
+
 }
 
+\frame{\frametitle{Small World Effect as a concept}
+\emph{Six degrees of separation} 
+\hspace{0.5cm} $\to$ the distance between any two individuals is on average $6$.
 
-\subsection{Algorithms}
+\begin{figure}[ht!]
+  \centering
+  \includegraphics[height=50mm,width=50mm]{sixdegrees.png}
+  \caption{Social Network in Real Life}
+\end{figure}
 
-\frame{\frametitle{Algorithms}
-We can generate graphs using several algorithms:
-
-\vspace{0.5cm}
-\begin{itemize}
-  \item Erd\H{o}s-R\'{e}nyi
-  \item Watts-Strogatz
-  \item Barabasi-Albert
-  \item Bipartite Model
-  \item Preferential Attachment
-\end{itemize}
-
-\vspace{0.5cm}
-... or just hack Facebook and get a huge social graph for free!
 }
 
+\frame{\frametitle{Small World Effect as a concept}
+Frigyes Karinthy first introduced this idea in his 1929 short story \emph{Chains}.
+
+\vspace{0.5cm}
+\pause
+Later on the small world experiment, performed in the 1960s by Stanley Milgram
+and other researchers, formalised the aforementioned concept.
+
+\vspace{0.5cm}
+\pause
+Results in a \emph{small world effect} 
+\pause
+\hspace{0.5cm} $\to$ the \emph{average distance} linking two nodes of the same
+network can be orders of magnitude \emph{smaller than} the \emph{number of nodes} the 
+network actually has.
+}
+
+<<<<<<< HEAD
 \subsection{Generation Algorithm}
 
 \frame{\frametitle{Erd\H{o}s-R\'{e}nyi}
@@ -281,9 +329,25 @@ We can generate graphs using several algorithms:
 \end{column}
 \end{columns}
 
+=======
+\frame{\frametitle{Small World Network Characteristics}
+
+Mathematically speaking, a small world network has the following properties:
+
+\begin{itemize}
+\pause
+\item Low average path length.
+\pause
+\item High clustering coefficient.
+\pause
+\item Scale-free degree distribution.
+\end{itemize}
+>>>>>>> 1c36ee0cf43ccca277225f6c169e54790b669580
 }
 
+\section{Engineering}
 
+<<<<<<< HEAD
 \frame{\frametitle{Preferential attachment with clustering}
 
 \begin{columns}
@@ -291,10 +355,14 @@ We can generate graphs using several algorithms:
 \begin{column}[T]{5cm}
 
 \includegraphics[height=30mm,width=30mm]{preferential.png}
+=======
+\subsection{Qt}
+>>>>>>> 1c36ee0cf43ccca277225f6c169e54790b669580
 
 \end{column}
 \begin{column}[T]{5cm}
 
+<<<<<<< HEAD
 \begin{itemize}
   \item The future is here! Thanks to Imperial College
   \pause
@@ -308,9 +376,13 @@ We can generate graphs using several algorithms:
 \end{columns}
 
 }
+=======
+\subsection{C++}
+>>>>>>> 1c36ee0cf43ccca277225f6c169e54790b669580
 
 \frame{\frametitle{Bipartite}
 
+<<<<<<< HEAD
 \begin{columns}
 
 \begin{column}[T]{5cm}
@@ -334,16 +406,113 @@ We can generate graphs using several algorithms:
 
 
 }
+=======
+\subsection{Graph drawing}
 
-\section{Engineering}
+\frame{
+  \frametitle{Graph drawing}
 
-\subsection{Qt}
+  Graph drawing is hard for humans... \pause and harder for computers:
 
+  \begin{itemize}
+    \pause
+    \item Non-formal requirements (human taste)
+    \pause
+    \item Should adapt to a variety of different graphs
+    \pause
+    \item Should be fast
+  \end{itemize}
+}
+
+\frame{
+  \frametitle{Force-directed algorithms}
+
+  For Visigoth, we use an optimized ``force directed'' algorithm.
+>>>>>>> 1c36ee0cf43ccca277225f6c169e54790b669580
+
+  \pause
+
+  Each node is a charged particle, and each edge is a rubber band.
+
+  \pause
+
+  We chose this kind of algorithm because:
+
+  \begin{itemize}
+    \item It gives good results for most graphs
+    \pause
+    \item It is easy to implement, few tens of lines of \emph{C++} (\emph{C++}!) in
+      our case
+    \pause
+    \item We can show the stabilization in real time (bling)
+  \end{itemize}
+
+}
+
+\subsection{FADE}
+
+\frame{
+  \frametitle{FADE}
+
+  However, it also is.. \pause slow. Quite slow: $O(n^2)$, where $n$ is the
+  number of nodes.
+
+  \pause
+
+  The solution? FADE, an algorithm that achieves speed through approximation.
+}
+
+\frame{
+  \frametitle{TreeCodes}
+
+  FADE works by storing the nodes of a \emph{TreeCode}, a data structure that
+  stores the nodes recursively subdividing the space:
+
+  \pause
+
+  \begin{columns}
+    \begin{column}{0.5\textwidth}
+      \centering
+      \input{quadtree-graph-pres.tex}
+    \end{column}
+
+    \pause
+
+    \begin{column}{0.5\textwidth}
+      \centering
+      \input{quadtree-tree-pres.tex}
+
+    \end{column}
+  \end{columns}
+}
+
+\frame{
+  \frametitle{FADE}
+  In our case, the \emph{TreeCode} subdivides the space recursively in 8 cubes.
+
+  Once the \emph{TreeCode} is ready, when calculating the repulsion forces for
+  each node:
+
+  \begin{itemize}
+    \pause
+    \item Pick a cube in the \emph{TreeCode}
+    \pause
+    \item If the cube if ``far enough'', it will be treated as a single
+      node, and the repulsion calculated based on how many nodes it contains
+    \pause
+    \item Otherwise, subdivide the cube, and try again with the 8 ``children''
+      cubes.
+  \end{itemize}
+}
 
 \subsection{C++}
 
+\frame{
+  \frametitle{C++}
 
-\subsection{Graph drawing, FADE}
+  \emph{C++}, loved my many and feared by most...
+
+}
 
 
 \subsection{OpenGL}
