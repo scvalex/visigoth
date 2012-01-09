@@ -189,8 +189,7 @@ void GraphScene::customizeEdgesColour(const QColor &newColour) {
     myEdgeColour = newColour;
 
     foreach(Edge* edge, myEdges) {
-        if (!edge->isHighlighted)
-            edge->setColour(myEdgeColour);
+        edge->setColour(myEdgeColour);
     }
 }
 
@@ -198,8 +197,7 @@ void GraphScene::customizeNodesColour(const QColor &newColour) {
     myNodeColour = newColour;
 
     foreach(Node* node, myNodes) {
-        if(!node->isHighlighted)
-            node->setColour(myNodeColour);
+        node->setColour(myNodeColour);
     }
 }
 
