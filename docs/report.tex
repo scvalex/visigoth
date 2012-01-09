@@ -492,8 +492,6 @@ The algorithm operates in two steps:
         to prevent infinite looping:
 
 % FIXME: Is this really correct? Looks to me like edges may be lost
-         as they are always removed, but not always reconnected.
-         Marc, please check.
 
   \begin{algorithmic}
     \REQUIRE $0 \leq \beta \leq 1$
@@ -825,9 +823,15 @@ generated networks in real time. The statistics which are calculated are:
 
 
 \subsection{Average degree}
-\[ \frac{2\sum_{i=1}^{\mathrm{|E|}} e_i}
-        {\sum_{j=1}^{\mathrm{|N|}} n_j}
-\]
+
+As explained before, in ``The maths" sections, to calculate the
+average degree all degrees are summed and divided by the total number
+of nodes in the network:
+
+\begin{equation}
+\ d_{avg} =\frac{\sum_{i=1}^gd(n_i)}{g}
+\end{equation}
+where \(g\) is the total number of nodes in the network.
 
 Implementation is trivial.
 
@@ -837,8 +841,12 @@ Implementation is trivial.
         {\sum nodes^2 - \sum nodes}
 \]
 
-The first step in this algorithm is to calculate the sum of the
-distances from every node to every node:
+The algorithm is implemented as follows:
+
+\begin{enumerate}
+
+\item Calculate the sum of the distances from every node to every 
+node:
 
 \begin{algorithmic}
   \FORALL{nodes $n$}
@@ -846,14 +854,17 @@ distances from every node to every node:
     \STATE \dots
   \ENDFOR
 \end{algorithmic}
-Then divide the calculation by $|N| \cdot (|N| - 1)$
+
+\item Divide the calculation by $|N| \cdot (|N| - 1)$:
+
 \begin{algorithmic}
   \RETURN $\frac{\mathrm{cumulativeLength}}{|N| \cdot (|N| - 1)}$
 \end{algorithmic}
 
 Here \code{lengthSum} is a subprocedure which traverses the network in a
 breadth-first manner and calculates the distance to each node.
-Then it returns the sum of all distances:
+
+\item Return the sum of all distances:
 
 \begin{algorithmic}
   \REQUIRE Starting node parent
@@ -877,18 +888,19 @@ Then it returns the sum of all distances:
   \RETURN retLength
 \end{algorithmic}
 
+\end{enumerate}
 
 \subsection{Clustering coefficient}
-As described in section \label{sec:clusteringcoefficient}, the
+As described in ``The maths" section \label{sec:clusteringcoefficient}, the
 clustering coefficient $C_i$ is defined as
 \[ C_i = \frac{2 \cdot |E_i|}{k_i \cdot (k_i-1)} \]
 
-where $k_i$ is the number of neighbours of node $n_i$ and $|E_i|$ is
-the number of edges between the neighbours of node $n_i$.
+where $k_i$ is the number of neighbours of node $n_i$, $|E_i|$ is the number of edges between the neighbours of node $n_i$.
 
-The first step is to calculate the intersection of the neighbours
-of the node we want to calculate the statistic for and the
-neighbours of that node's neighbours:
+\begin{enumerate}
+\item Calculate the intersection of the neighbours of the node:
+
+We want to calculate the statistics for the node and it's neighbours:
 
 \begin{algorithmic}
   \REQUIRE A node $n$
@@ -903,7 +915,7 @@ neighbours of that node's neighbours:
   \ENDWHILE
 \end{algorithmic}
 
-If the degree of the node is greater than 1 we return the calculation.
+\item If the degree of the node is greater than 1 we return the calculation:
 
 \begin{algorithmic}
   \REQUIRE k = n.degree
@@ -914,11 +926,19 @@ If the degree of the node is greater than 1 we return the calculation.
   \ENDIF
 \end{algorithmic}
 
+\end{enumerate}
 
 \subsection{Clustering average}
+
+Recall from ``The maths":
+
 \[ C_\mathrm{avg} =
    \frac{1}{\mathrm{|N|}}\sum_{i=1}^{\mathrm{|N|}} C_i
-\]
+\],
+
+where \(N\) is the total number of nodes in the graph.
+
+This calculation is implemented as follows:
 
 \begin{algorithmic}
   \FORALL {node $n$}
@@ -933,9 +953,10 @@ Before being able to calculate any gradient Visigoth has to probe the network
 and determine the degree distribution. Since we are dealing with exponential
 growth the algorithm takes the natural logarithm of both the degree and its
 frequency in the network, allowing for the gradient to be calculated as a
-straight line.
-
+straight line:
 \[ f(x) = ax^k \equiv ln(f(x)) = kln(a) + kln(x) \equiv y = mx + b \]
+
+The implementation we approached is:
 
 \begin{algorithmic}
   \REQUIRE maxDegree which holds the maximum degree of the network
@@ -983,10 +1004,10 @@ gradient is sloped downwards.
 %        screenshots, move nodes, fly in 3D, the kitchen sink.
 
 \subsection{Graph display}
-Visigoth is able to draw graphs in both 2D and 3D, showing the graph either
-in a planar display or in ``space' and thus allowing the user to ``fly' through
-it. Notably, the user can switch between the two modes at any time while
-preserving the graph.
+Visigoth is able to draw graphs in both 2D and 3D, showing the graph
+either in a planar display or in ``space'' and thus allowing the user
+to ``fly'' through it. Notably, the user can switch between the two
+modes at any time while preserving the graph.
 
 \subsection{Graph Generation}
 Visigoth uses the 5 algorithms described in section \ref{sec:algos} to generate
