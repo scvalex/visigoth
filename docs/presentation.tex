@@ -58,6 +58,8 @@
 %\usepackage{pxfonts}  % \lJoin etc.; TypeSystems
 %\setcounter{secnumdepth}{3}
 %\setcounter{tocdepth}{3}
+\usepackage{lastpage}
+\usepackage{pifont}
 
 %% Drawing trees and other stuff
 \usepackage{tikz}
@@ -68,6 +70,8 @@
 \renewcommand{\square}{\ensuremath\tikzsquare}
 
 \input{colors.tex}
+
+\newcommand{\Therefore}{\ensuremath{\Rightarrow} }
 
 % ----- BEAMER SPECIFIC -----
 
@@ -106,7 +110,7 @@
 
 \vspace{0.6cm}
 \begin{center}
-  \begin{tiny}(We have 75 slides. Make yourselves comfortable.)\end{tiny}
+  \begin{tiny}(We have \pageref{LastPage} slides. Make yourselves comfortable.)\end{tiny}
 \end{center}
 
 }
@@ -431,10 +435,6 @@ networks' simulation...
 \begin{column}[T]{.3\textwidth}
 
 \includegraphics[height=30mm,width=30mm]{preferential.png}
->>>>>>> origin/master
-
-\subsection{Qt}
-
 
 \end{column}
 \begin{column}[T]{.7\textwidth}
@@ -476,15 +476,55 @@ networks' simulation...
 
 \end{column}
 \end{columns}
+}
 
+\renewcommand{\ExtraText}{\includegraphics[width=1cm]{dilbert.png}}
+\section{Engineering}
+
+\subsection{Qt}
+
+\frame{\frametitle{Qt}
+
+The Royal Road to desktop applications:
+\ \includegraphics[width=.4cm]{qt.png}\\
+\pause
+
+Cross-platform. \pause
+Open source. \pause
+Awesome.\\ \pause
+
+You get:
+\begin{itemize}
+  \item widgets \pause
+  \item \texttt{stdlib} replacement \pause
+  \item modern C++ (signals, introspection) \pause
+  \item threading/concurrency \pause
+  \item networking, XML support, OAuth library \pause
+  \item kitchen sink
+\end{itemize}
 
 }
 
-\section{Engineering}
+\frame{\frametitle{Visigoth \ding{170} Qt}
 
+That means:
+\begin{itemize}
+  \item widgets \Therefore native look and feel \pause
+  \item \texttt{stdlib} replacement \Therefore Oh, look: a sane
+    \texttt{string} class \pause
+  \item modern C++ (signals, introspection) \Therefore Loose
+    coupling. Better overall design. \pause
+  \item threading/concurrency \Therefore \textsc{speed} \pause
+  \item networking, XML support, OAuth library \Therefore Less
+    hassle. More features. \pause
+\end{itemize}
+\pause
 
-\subsection{C++}
+Oh, and it's cross-platform.
+\pause
+Same code: Linux, Windows, OSX.
 
+}
 
 \subsection{Graph drawing}
 
@@ -507,12 +547,9 @@ networks' simulation...
   \frametitle{Force-directed algorithms}
 
   For Visigoth, we use an optimized ``force directed'' algorithm.
-
-
   \pause
 
   Each node is a charged particle, and each edge is a rubber band.
-
   \pause
 
   We chose this kind of algorithm because:
@@ -520,8 +557,8 @@ networks' simulation...
   \begin{itemize}
     \item It gives good results for most graphs
     \pause
-    \item It is easy to implement, few tens of lines of \emph{C++} (\emph{C++}!) in
-      our case
+    \item It is easy to implement, few tens of lines of \emph{C++}
+      (\emph{C++}!) in our case
     \pause
     \item We can show the stabilization in real time (bling)
   \end{itemize}
@@ -535,7 +572,6 @@ networks' simulation...
 
   However, it also is.. \pause slow. Quite slow: $O(n^2)$, where $n$ is the
   number of nodes.
-
   \pause
 
   The solution? FADE, an algorithm that achieves speed through approximation.
@@ -546,7 +582,6 @@ networks' simulation...
 
   FADE works by storing the nodes of a \emph{TreeCode}, a data structure that
   stores the nodes recursively subdividing the space:
-
   \pause
 
   \begin{columns}
@@ -560,7 +595,6 @@ networks' simulation...
     \begin{column}{0.5\textwidth}
       \centering
       \input{quadtree-tree-pres.tex}
-
     \end{column}
   \end{columns}
 }
@@ -590,11 +624,9 @@ networks' simulation...
   \frametitle{C++}
 
   \emph{C++}, the world's friendliest language...
-
   \pause
 
   If you like segfaults.
-
   \pause
 
   And 3-pages long compiler errors.
@@ -644,39 +676,42 @@ networks' simulation...
 
 \subsection{OpenGL}
 
-\frame{\frametitle{OpenGL}
-OpenGL $\to$ super fast graphics!
-\pause
+\frame{
+  \frametitle{OpenGL}
 
-\vspace{0.5cm}
-We can...
+  OpenGL $\to$ super fast graphics with hardware acceleration!
+  \pause
 
-\begin{itemize}
-  \pause
-  \item Pan left/right/up/down
-  \pause
-  \item Zoom in/out.
-  \pause
-  \item And do it all in 3D - real-time!
-\end{itemize}
-\pause
+  \vspace{0.5cm}
+  We can...
 
-\vspace{0.5cm}
-Thanks to the FADE optimisation, it's fast - 1000s of nodes.
+  \begin{itemize}
+    \pause
+    \item Pan left/right/up/down
+    \pause
+    \item Zoom in/out.
+    \pause
+    \item And do it all in 3D - real-time!
+  \end{itemize}
+  \pause
+
+  \vspace{0.5cm}
+  Thanks to the FADE optimisation, it's fast - 1000s of nodes.
 }
 
-\frame{\frametitle{OpenGL selection}
-Selection made easy...
-\pause
+\frame{
+  \frametitle{OpenGL selection}
+  Selection made easy...
+  \pause
 
-\vspace{0.5cm}
-It's now the same for 2D and 3D:
+  \vspace{0.5cm}
+  It's now the same for 2D and 3D:
 
-OpenGL ``unprojects'' the mouse click.
-\pause
+  OpenGL ``unprojects'' the mouse click.
+  \pause
 
-\vspace{0.5cm}
-Selection triggers node stats recalculation, colouring...
+  \vspace{0.5cm}
+  Selection triggers node stats recalculation, colouring...
 }
 
 
