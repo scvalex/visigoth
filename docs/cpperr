@@ -1,0 +1,12 @@
+readply.cpp:109: conversion from '_List_iterator<list<basic_string<c
+har,string_char_traits<char>,__default_alloc_template<true,0> >,allo
+cator<basic_string<char,string_char_traits<char>,__default_alloc_tem
+plate<true,0> > > >,const list<basic_string<char,string_char_traits<
+char>,__default_alloc_template<true,0> >,allocator<basic_string<char
+,string_char_traits<char>,__default_alloc_template<true,0> > > > &,c
+onst list<basic_string<char,string_char_traits<char>,__default_alloc
+_template<true,0> >,allocator<basic_string<char,string_char_traits<c
+har>,__default_alloc_template<true,0> > > > *>' to non-scalar type '
+list<basic_string<char,string_char_traits<char>,__default_alloc_temp
+late<true,0> >,allocator<basic_string<char,string_char_traits<char>,
+__default_alloc_template<true,0> > > >' requested

@@ -12,7 +12,7 @@
 
 % --- Listing inclusion.
 % \usepackage{dsfont}
-% \usepackage{listings}
+\usepackage{listings}
 % \lstset{numbers=left, numberstyle=\tiny, numbersep=5pt}
 % \lstset{language=C}
 
@@ -75,13 +75,16 @@
 % --- Pretty much the usual beamer theme.
 \usepackage{beamerthemeshadow}
 
+\newcommand{\ExtraText}{}
 % --- A title slide for every new section.
 \AtBeginSection{
   \frame{
+    \begin{center}\begin{tiny}\ExtraText\end{tiny}\end{center}
     \begin{block}{}
       \begin{Large}\color{highlight}\centerline{\insertsection}\end{Large}
     \end{block}
   }
+  \renewcommand{\ExtraText}{}
 }
 
 % --- Remove the navigation bar from the bottom right.
@@ -95,9 +98,23 @@
 
 \begin{document}
 
-\title{Visigoth.}
+\frame{
+
+\begin{center}
+  \includegraphics[width=1.4cm]{v.png}
+\end{center}
+
+\vspace{0.6cm}
+\begin{center}
+  \begin{tiny}(We have 75 slides. Make yourselves comfortable.)\end{tiny}
+\end{center}
+
+}
+
+\title{Visigoth}
 \author{}
-\date{10 January 2012}
+\date{January 2012\\
+  \tiny where's the snow?}
 
 \frame{\titlepage}
 % \frame{\frametitle{Outline}\tableofcontents}
@@ -107,57 +124,64 @@
 
 \section{Introduction}
 
-\subsection{Motivation}
-\frame{\frametitle{Motivation}
-There is a whole class of barely explored graphs!
-\pause
-
-\vspace{0.5cm}
-\emph{Example:} Graphs in social networks:
-\pause
+\subsection{Say what?}
+\frame{\frametitle{Say what?}
 
 \begin{itemize}
-  \item Facebook
-  \item Twitter
-  \item identi.ca
-\end{itemize}
-}
+  \item This is Visigoth.
+  \pause
 
-% FIXME: Not entirely happy with the slide split here.
-%        Maybe we can write some more or put the points together?
+  \item It's a desktop application (not a webapp? boo!).
+  \pause
+
+  \item It's a graph visualiser.
+  \pause
+
+  \item But not just any old graph\dots
+\end{itemize}
+
+}
 
 \subsection{Small World Networks}
 \frame{\frametitle{Small World Networks}
+
 \begin{block}{Small World Networks}
-  \emph{SWNs} are graphs that look like a natural web of friendships.
+  \emph{SWNs} are graphs that look like natural webs of friendships.
 \end{block}
+\pause
+
+\vspace{1cm}
+
+Look ``natural''. \pause
+They're everywhere. \pause
+Google+. \pause
+Web pages. \pause
+Academic citations. \pause
+Spam detection. \pause
+Spam generation.
+
 }
 
-\subsection{Why SWNs?}
-\frame{\frametitle{Why SWNs?}
-SWNs are interesting because they show how people interact.
+\subsection{Visigoth again}
+\frame{\frametitle{Visigoth again}
 
-So let's have a look at them!
-}
+\begin{itemize}
+  \item Visigoth is a SWN generator and visualizer.
+  \pause
 
-\subsection{Visigoth}
-\frame{\frametitle{Visigoth}
-Visigoth can generate or retrieve SWN graphs.
+  \item Widest selection of generation algos: 5!
+  \pause
 
-\vspace{0.5cm}
-The user can analyse them both visually as well as statistically.
+  \item Scrapes real networks off of Twitter.
+  \pause
 
-% FIXME: Screenshot here
-\vspace{0.8cm}
-(screenshot here)
+  \item \begin{Huge}\textbf{3D}\end{Huge}
+\end{itemize}
 
-\vspace{0.8cm}
-Really, this is the cutting edge in SWN science!
 }
 
 
-
-
+\renewcommand{\ExtraText}{Brace yourselves! Here come the\dots}
 \section{Maths}
 
 % What is a graph
@@ -198,7 +222,7 @@ consists of a set N of nodes and a set E of edges.
 }
 
 \frame{\frametitle{Small World Effect as a concept}
-\emph{Six degrees of separation} 
+\emph{Six degrees of separation}
 \hspace{0.5cm} $\to$ the distance between any two individuals is on average $6$.
 
 \begin{figure}[ht!]
@@ -219,12 +243,13 @@ and other researchers, formalised the aforementioned concept.
 
 \vspace{0.5cm}
 \pause
-Results in a \emph{small world effect} 
+Results in a \emph{small world effect}
 \pause
 \hspace{0.5cm} $\to$ the \emph{average distance} linking two nodes of the same
-network can be orders of magnitude \emph{smaller than} the \emph{number of nodes} the 
+network can be orders of magnitude \emph{smaller than} the \emph{number of nodes} the
 network actually has.
 }
+
 
 \frame{\frametitle{Small World Network Characteristics}
 
@@ -238,6 +263,7 @@ Mathematically speaking, a small world network has the following properties:
 \pause
 \item Scale-free degree distribution.
 \end{itemize}
+
 }
 
 \frame{\frametitle{SWNs' characteristics insight}
@@ -256,7 +282,6 @@ first node to the second.
 power-law:
 
 \[ P(k) \sim k^{-\gamma} \hspace{1.2cm} \includegraphics[width=20mm, height=10mm]{angry.png} \] 
-%add the angry face somewhere after the formula here..
 }
 
 \frame{\frametitle{More about scale-free networks}
@@ -321,11 +346,141 @@ networks' simulation...
 }
 
 
+\subsection{Generation Algorithm}
+
+\frame{\frametitle{Erd\H{o}s-R\'{e}nyi}
+
+\begin{columns}
+
+\begin{column}[T]{.3\textwidth}
+\includegraphics[height=30mm,width=30mm]{erdos.png}
+\end{column}
+
+\begin{column}[T]{.7\textwidth}
+
+\begin{itemize}
+  \item It the beginning there was Erd\H{o}s \dots and R\'{e}nyi
+  \pause
+  \item Random Graph
+  \pause
+  \item However \dots
+  \pause
+  \item No SWN properties
+
+\end{itemize}
+\end{column}
+\end{columns}
 
 
-\section{Engineering}
+}
+
+
+\frame{\frametitle{Watts-Strogatz}
+
+\begin{columns}
+
+\begin{column}[T]{.3\textwidth}
+
+\includegraphics[height=30mm,width=30mm]{watts.png}
+
+\end{column}
+
+\begin{column}[T]{.7\textwidth}
+\begin{itemize}
+  \item Then in 1998 finally \dots Watts-Strogatz
+  \pause
+  \item Random graph
+  \pause
+  \item This time with SWN properties included! \dots
+  \item Short average path and high clustering
+
+\end{itemize}
+\end{column}
+\end{columns}
+}
+
+
+\frame{\frametitle{Barabasi-Albert}
+
+\begin{columns}
+\begin{column}[T]{.3\textwidth}
+
+\includegraphics[height=30mm,width=30mm]{barabasi.png}
+
+\end{column}
+
+\begin{column}[T]{.7\textwidth}
+\begin{itemize}
+  \item It gets better!
+  \pause
+  \item The random graph is no more
+  \pause
+  \item Same amount of SWN properties included! \dots
+  \item Scale free exponent and short average path
+
+\end{itemize}
+\end{column}
+\end{columns}
+
+}
+
+\frame{\frametitle{Preferential attachment with clustering}
+
+\begin{columns}
+
+\begin{column}[T]{.3\textwidth}
+
+\includegraphics[height=30mm,width=30mm]{preferential.png}
+>>>>>>> origin/master
 
 \subsection{Qt}
+
+
+\end{column}
+\begin{column}[T]{.7\textwidth}
+
+
+\begin{itemize}
+  \item The future is here! Thanks to Imperial College
+  \pause
+  \item Similar to Barabasi-Albert but with clustering!
+  \pause
+  \item All SWN properties
+
+\end{itemize}
+
+\end{column}
+\end{columns}
+
+}
+
+\frame{\frametitle{Bipartite}
+
+\begin{columns}
+
+\begin{column}[T]{.3\textwidth}
+
+\includegraphics[height=30mm,width=30mm]{bipartite.png}
+
+\end{column}
+\begin{column}[T]{.7\textwidth}
+
+\begin{itemize}
+  \item The future is here! (again) Thanks to Imperial College
+  \pause
+  \item Completely different generation method.
+  \pause
+  \item All SWN properties
+
+\end{itemize}
+
+\end{column}
+\end{columns}
+
+
+}
+
+\section{Engineering}
 
 
 \subsection{C++}
@@ -352,6 +507,7 @@ networks' simulation...
   \frametitle{Force-directed algorithms}
 
   For Visigoth, we use an optimized ``force directed'' algorithm.
+
 
   \pause
 
@@ -433,14 +589,64 @@ networks' simulation...
 \frame{
   \frametitle{C++}
 
-  \emph{C++}, loved my many and feared by most...
+  \emph{C++}, the world's friendliest language...
 
+  \pause
+
+  If you like segfaults.
+
+  \pause
+
+  And 3-pages long compiler errors.
+}
+
+\frame{
+  \frametitle{C++}
+
+  We chose \emph{C++} because of \emph{Qt}, but some team members were scared.
+
+  However, it does have its advantages, and it served us well:
+
+  \begin{itemize}
+    \pause
+    \item Tools: Mainly \emph{Qt} and \emph{OpenGL}
+    \pause
+    \item Performance: ours is a CPU bound application, and with \emph{C++} we
+      can squeeze our machines more, especially with manual memory management.
+    \pause
+    \item Abstraction: while \emph{C} and \emph{C++} are both fast and popular,
+      doing O-O in \emph{C} is \textbf{not} nice (take a look at
+      GObject\footnote{\url{http://developer.gnome.org/gobject/}} for details).
+  \end{itemize}
+}
+
+\frame{
+  \frametitle{C++, the dark side}
+
+  But...
+
+  \begin{itemize}
+    \pause
+    \item Unmanaged memory is not nice, most of the times. Memory leaks are not
+      nice. Segfaults are not nice.
+    \pause
+    \item The language is a mess. Too much stuff in too little space: templates,
+      overloading, friends\dots\\
+      \pause
+      {\tiny \lstinputlisting{cpperr}}
+  \end{itemize}
+  \pause
+  In any case, we are happy with our choice, and we don't care what
+  the haters say.
 }
 
 
+
 \subsection{OpenGL}
+
 \frame{\frametitle{OpenGL}
-Visigoth is a lot of fun for mouse addicts as well.
+OpenGL $\to$ super fast graphics!
+\pause
 
 \vspace{0.5cm}
 We can...
@@ -451,8 +657,26 @@ We can...
   \pause
   \item Zoom in/out.
   \pause
-  \item And do it all in 3D!
+  \item And do it all in 3D - real-time!
 \end{itemize}
+\pause
+
+\vspace{0.5cm}
+Thanks to the FADE optimisation, it's fast - 1000s of nodes.
+}
+
+\frame{\frametitle{OpenGL selection}
+Selection made easy...
+\pause
+
+\vspace{0.5cm}
+It's now the same for 2D and 3D:
+
+OpenGL ``unprojects'' the mouse click.
+\pause
+
+\vspace{0.5cm}
+Selection triggers node stats recalculation, colouring...
 }
 
 
