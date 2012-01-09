@@ -43,7 +43,23 @@
     <addaction name="aboutAct"/>
     <addaction name="aboutQtAct"/>
    </widget>
+   <widget class="QMenu" name="menuView">
+    <property name="title">
+     <string>View</string>
+    </property>
+    <widget class="QMenu" name="menuCustomizeGraph">
+     <property name="title">
+      <string>Customize Graph</string>
+     </property>
+     <addaction name="nodeColourAct"/>
+     <addaction name="edgeColourAct"/>
+     <addaction name="backgroundColourAct"/>
+     <addaction name="highlightNeighboursAct"/>
+    </widget>
+    <addaction name="menuCustomizeGraph"/>
+   </widget>
    <addaction name="menu_File"/>
+   <addaction name="menuView"/>
    <addaction name="menuHelp"/>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
@@ -154,15 +170,44 @@
     <string>Manual</string>
    </property>
   </action>
+  <action name="nodeColourAct">
+   <property name="text">
+    <string>Node Colour</string>
+   </property>
+  </action>
+  <action name="edgeColourAct">
+   <property name="text">
+    <string>Edge Colour</string>
+   </property>
+  </action>
+  <action name="backgroundColourAct">
+   <property name="text">
+    <string>Background Colour</string>
+   </property>
+   <property name="toolTip">
+    <string>Background Colour</string>
+   </property>
+  </action>
+  <action name="highlightNeighboursAct">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="checked">
+    <bool>false</bool>
+   </property>
+   <property name="text">
+    <string>Highlight Neighbours</string>
+   </property>
+  </action>
   <action name="mode3DAct">
    <property name="checkable">
     <bool>true</bool>
    </property>
    <property name="text">
-    <string>3D View</string>
+    <string>3D Mode</string>
    </property>
    <property name="toolTip">
-    <string>Unleash the 3D</string>
+    <string>Toggle 2D/3D</string>
    </property>
   </action>
   <action name="aboutAct">
