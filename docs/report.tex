@@ -1752,7 +1752,7 @@ for the development of Visigoth) and \emph{the users} (i.e. the people
 who would end up using Visigoth).
 
 We held meetings with \emph{the client} near the end of each iteration
-in order to report on our progress and get feedback on new
+in order to report on our progress and to get feedback on new
 developments. These meetings would consist of a short demo of newly
 added features, a short ``impromptu'' usability test and a discussion
 on what new features should be the focus of the following iteration.
@@ -1764,6 +1764,7 @@ e.g. button placements. Most of the our client's wishes referred to
 extensions to the functionality of our product, such as a 3D rendering
 mode and the online network generation algorithms.
 
+
 \subsection{User validation}
 Near the end of each iteration we asked classmates and friends to try
 out accomplishing certain tasks in Visigoth while we watched. At the
@@ -1772,6 +1773,7 @@ end, we would ask what felt awkward or wrong.
 The lasting impression was that they were happy with the software, but
 watching them struggle with certain aspects led to improvements in
 usability.
+
 
 \subsection{Functionality tests}
 \label{tests}
@@ -1815,12 +1817,13 @@ take away were twofold:
     described above.
 \end{itemize}
 
+
 \subsection{Continuous Integration}
 Having the tests and not running them would be a pointless exercise,
 so we use a \buzz{Jenkins
 CI}\footnote{\href{http://jenkins-ci.org/}{jenkins-ci.org}} server. It
 is set up to track the master branch. On receiving a change
-notification from the central repository, it proceeds to do a fresh
+notification from the central repository it proceeds to do a fresh
 build of the project, runs the tests and generates the coverage
 statistics. It also keeps track of previous builds and aggregates
 information about the overall health of the project.  The server is
@@ -1829,8 +1832,9 @@ what the current status of the project is. It is also set up to notify
 team members, via the project mailing-list, when problems occur.
 
 As a testament to the development practices described in Section
-\ref{practices}, after $220$ builds, we have never had a failure on
+\ref{practices}, after $220$ builds we have never had a failure on
 master.
+
 
 \subsection{In hindsight}
 We started automated testing too late in the development cycle and to
