@@ -58,6 +58,8 @@
 %\usepackage{pxfonts}  % \lJoin etc.; TypeSystems
 %\setcounter{secnumdepth}{3}
 %\setcounter{tocdepth}{3}
+\usepackage{lastpage}
+\usepackage{pifont}
 
 %% Drawing trees and other stuff
 \usepackage{tikz}
@@ -68,6 +70,8 @@
 \renewcommand{\square}{\ensuremath\tikzsquare}
 
 \input{colors.tex}
+
+\newcommand{\Therefore}{\ensuremath{\Rightarrow} }
 
 % ----- BEAMER SPECIFIC -----
 
@@ -106,7 +110,7 @@
 
 \vspace{0.6cm}
 \begin{center}
-  \begin{tiny}(We have 75 slides. Make yourselves comfortable.)\end{tiny}
+  \begin{tiny}(We have \pageref{LastPage} slides. Make yourselves comfortable.)\end{tiny}
 \end{center}
 
 }
@@ -264,10 +268,53 @@ Mathematically speaking, a small world network has the following properties:
 \end{itemize}
 }
 
+\renewcommand{\ExtraText}{\includegraphics[width=1cm]{dilbert.png}}
 \section{Engineering}
 
 \subsection{Qt}
 
+\frame{\frametitle{Qt}
+
+The Royal Road to desktop applications:
+\ \includegraphics[width=.4cm]{qt.png}\\
+\pause
+
+Cross-platform. \pause
+Open source. \pause
+Awesome.\\ \pause
+
+You get:
+\begin{itemize}
+  \item widgets \pause
+  \item \texttt{stdlib} replacement \pause
+  \item modern C++ (signals, introspection) \pause
+  \item threading/concurrency \pause
+  \item networking, XML support, OAuth library \pause
+  \item kitchen sink
+\end{itemize}
+
+}
+
+\frame{\frametitle{Visigoth \ding{170} Qt}
+
+That means:
+\begin{itemize}
+  \item widgets \Therefore native look and feel \pause
+  \item \texttt{stdlib} replacement \Therefore Oh, look: a sane
+    \texttt{string} class \pause
+  \item modern C++ (signals, introspection) \Therefore Loose
+    coupling. Better overall design. \pause
+  \item threading/concurrency \Therefore \textsc{speed} \pause
+  \item networking, XML support, OAuth library \Therefore Less
+    hassle. More features. \pause
+\end{itemize}
+\pause
+
+Oh, and it's cross-platform.
+\pause
+Same code: Linux, Windows, OSX.
+
+}
 
 \subsection{C++}
 
