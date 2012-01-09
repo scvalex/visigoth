@@ -1066,6 +1066,7 @@ gradient is sloped downwards.
 \section{Visigoth technologies}
 
 \subsection{\Qt}
+\label{sec:qt}
 
 The UI toolkit, standard library replacement, and application
 framework Visigoth uses is \Qt\footnote{\myhref{qt.nokia.com}}.
@@ -1875,9 +1876,37 @@ machines, there are no environmental issues to consider.
 \subsection{Future Plans}
 
 We plan to add a game as the next feature to Visigoth. This will be based on the
-original ``Two-Person zero-sum game" but played in a Small World
-Network environment (currently this game has been implemented in
-industry on a general lattice environment).
+original ``Two-Person zero-sum game'' but played in a Small World Network
+environment (currently this game has been implemented in industry on a general
+lattice environment).
+
+As mentioned in various places in the report, there is also room for performance
+improvement. The top priority would be to set up a framework based on \Qt
+concurrent libraries to execute computing-intensive tasks on separate worker
+threads (as mentioned in section \ref{sec:qt}), so the graph rendering would be
+always smooth while generating the graph, calculating statistics, etc. We did
+not implement this yet because we are conscious of the fragility of concurrent
+systems based on shared memory, and we want to plan this change carefully.
+
+We also have plans to include a way for the user to script Visigoth, providing
+his own graph generation algorithms through \buzz{QtScript}, a scripting
+language based on \buzz{ECMAScript} which is available in the \Qt platform.
+
+\subsection{Conclusion}
+
+Our team has thoroughly enjoyed the process the lead the creation of
+Visigoth. We managed to get the first results very quickly and then added
+features and refined the product in the successive months. As of today, we are
+very proud on the result and we plan to release it to the wider public in the
+near future.
+
+While we could have improved in some areas, the development of Visigoth has been
+very successful in what matters more: constantly delivering, on time, the
+features requested by the client; while maintaining a clean and maintainable
+code base. We went further than that, and proposed features of our own which
+were all implemented. For this reason we are satisfied not only with the end
+result, but also with how smooth the developing process was, and we think our
+client is as well.
 
 \appendix
 
