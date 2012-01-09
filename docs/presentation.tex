@@ -69,6 +69,23 @@
 
 \input{colors.tex}
 
+%% Ticks
+\usepackage{pifont}
+\newcommand{\tick}{{\color{darkgreen}\checkmark\ }}
+\newcommand{\cross}{{\color{darkred}\hspace{1pt}\ding{55}\ }}
+
+%% Checklist
+\newcommand{\checklist}[3]{
+  \begin{block}{Checklist}
+    \centering
+    \footnotesize{
+      \ifnum#1=0 \cross \else \tick \fi Low avg. path length
+      \ifnum#2=0 \cross \else \tick \fi High clustering
+      \ifnum#3=0 \cross \else \tick \fi Scale-free degree distribution
+    }
+  \end{block}
+}
+
 % ----- BEAMER SPECIFIC -----
 
 
@@ -271,6 +288,8 @@ Mathematically speaking, a small world network has the following properties:
 
 \frame{\frametitle{Erd\H{o}s-R\'{e}nyi}
 
+\checklist{0}{0}{0}
+
 \begin{columns}
 
 \begin{column}[T]{0.3\textwidth}
@@ -282,7 +301,7 @@ Mathematically speaking, a small world network has the following properties:
 \begin{column}[T]{.7\textwidth}
 
 \begin{itemize}
-  \item It the beginning there was Erd\H{o}s \dots and R\'{e}nyi
+  \item In the beginning there was Erd\H{o}s \dots and R\'{e}nyi
   \pause
   \item Random Graph
   \pause
@@ -294,11 +313,12 @@ Mathematically speaking, a small world network has the following properties:
 \end{column}
 \end{columns}
 
-
 }
 
 
 \frame{\frametitle{Watts-Strogatz}
+
+\checklist{1}{1}{0}
 
 \begin{columns}
 
@@ -322,8 +342,9 @@ Mathematically speaking, a small world network has the following properties:
 \end{columns}
 }
 
-
 \frame{\frametitle{Barabasi-Albert}
+
+\checklist{1}{0}{1}
 
 \begin{columns}
 \begin{column}[T]{.3\textwidth}
@@ -348,6 +369,8 @@ Mathematically speaking, a small world network has the following properties:
 }
 
 \frame{\frametitle{Preferential attachment with clustering}
+
+\checklist{1}{1}{1}
 
 \begin{columns}
 
@@ -377,6 +400,8 @@ Mathematically speaking, a small world network has the following properties:
 }
 
 \frame{\frametitle{Bipartite}
+
+\checklist{1}{1}{1}
 
 \begin{columns}
 
