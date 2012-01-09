@@ -66,13 +66,16 @@
 % --- Pretty much the usual beamer theme.
 \usepackage{beamerthemeshadow}
 
+\newcommand{\ExtraText}{}
 % --- A title slide for every new section.
 \AtBeginSection{
   \frame{
+    \begin{center}\begin{tiny}\ExtraText\end{tiny}\end{center}
     \begin{block}{}
       \begin{Large}\color{highlight}\centerline{\insertsection}\end{Large}
     \end{block}
   }
+  \renewcommand{\ExtraText}{}
 }
 
 % --- Remove the navigation bar from the bottom right.
@@ -86,9 +89,10 @@
 
 \begin{document}
 
-\title{Visigoth.}
+\title{Visigoth}
 \author{}
-\date{10 January 2012}
+\date{January 2012\\
+  \tiny where's the snow?}
 
 \frame{\titlepage}
 % \frame{\frametitle{Outline}\tableofcontents}
@@ -98,57 +102,64 @@
 
 \section{Introduction}
 
-\subsection{Motivation}
-\frame{\frametitle{Motivation}
-There is a whole class of barely explored graphs!
-\pause
-
-\vspace{0.5cm}
-\emph{Example:} Graphs in social networks:
-\pause
+\subsection{Say what?}
+\frame{\frametitle{Say what?}
 
 \begin{itemize}
-  \item Facebook
-  \item Twitter
-  \item identi.ca
-\end{itemize}
-}
+  \item This is Visigoth.
+  \pause
 
-% FIXME: Not entirely happy with the slide split here.
-%        Maybe we can write some more or put the points together?
+  \item It's a desktop application (not a webapp? boo!).
+  \pause
+
+  \item It's a graph visualiser.
+  \pause
+
+  \item But not just any old graph\dots
+\end{itemize}
+
+}
 
 \subsection{Small World Networks}
 \frame{\frametitle{Small World Networks}
+
 \begin{block}{Small World Networks}
-  \emph{SWNs} are graphs that look like a natural web of friendships.
+  \emph{SWNs} are graphs that look like natural webs of friendships.
 \end{block}
+\pause
+
+\vspace{1cm}
+
+Look ``natural''. \pause
+They're everywhere. \pause
+Google+. \pause
+Web pages. \pause
+Academic citations. \pause
+Spam detection. \pause
+Spam generation.
+
 }
 
-\subsection{Why SWNs?}
-\frame{\frametitle{Why SWNs?}
-SWNs are interesting because they show how people interact.
+\subsection{Visigoth again}
+\frame{\frametitle{Visigoth again}
 
-So let's have a look at them!
-}
+\begin{itemize}
+  \item Visigoth is a SWN generator and visualizer.
+  \pause
 
-\subsection{Visigoth}
-\frame{\frametitle{Visigoth}
-Visigoth can generate or retrieve SWN graphs.
+  \item Widest selection of generation algos: 5!
+  \pause
 
-\vspace{0.5cm}
-The user can analyse them both visually as well as statistically.
+  \item Scrapes real networks off of Twitter.
+  \pause
 
-% FIXME: Screenshot here
-\vspace{0.8cm}
-(screenshot here)
+  \item \begin{Huge}\textbf{3D}\end{Huge}
+\end{itemize}
 
-\vspace{0.8cm}
-Really, this is the cutting edge in SWN science!
 }
 
 
-
-
+\renewcommand{\ExtraText}{Brace yourselves! Here come the\dots}
 \section{Maths}
 
 % What is a graph
