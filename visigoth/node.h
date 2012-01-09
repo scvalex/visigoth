@@ -48,6 +48,9 @@ public:
     QColor& colour();
     void setColour(const QColor &b);
 
+    bool highlighted() const;
+    void setHighlight(bool enabled);
+
     static void reset();
 
 signals:
@@ -65,8 +68,6 @@ private:
     GraphScene *graph;
     QList<Edge*> edgeList;
 
-    QColor myColour;
-
     VPointF curPos;
     VPointF newPos;
     bool allowAdvance;
@@ -74,6 +75,9 @@ private:
     // vars for average length
     bool visited;
     int distance;
+
+    QColor myColour;
+    bool isHighlighted;
 
     VPointF calculateNonEdgeForces(TreeNode* treeNode);
 };

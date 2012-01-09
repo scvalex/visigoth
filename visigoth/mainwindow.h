@@ -3,6 +3,7 @@
 
 #include "glgraphwidget.h"
 
+#include <QColor>
 #include <QComboBox>
 #include <QGraphicsView>
 #include <QMainWindow>
@@ -28,11 +29,13 @@ public:
 public slots:
     void exportTo();
     void toggleHelp(bool enabled);
+    void customizeColour(QAction *action);
 
 private slots:
     void onAlgorithmChanged(Algorithm *newAlgo);
     void onGenerate();
     void onFocusedNodeChanged(Node *node);
+    bool pickColour(QColor &newColour);
     void showAbout();
     void showAboutQt();
 
