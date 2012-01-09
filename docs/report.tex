@@ -912,7 +912,7 @@ straight line.
   \REQUIRE maxDegree which holds the maximum degree of the network
   \REQUIRE A vector to hold objects of type point
   \FOR { $i = 0 \to maxDegree$}
-    \STATE ++i
+    \STATE i = i + 1
     \STATE count $\gets$ graph.nodesWithDegree(i)
     \STATE y = $\frac{count}{|N|}$
     \IF { $y \ne 0$}
@@ -1159,7 +1159,7 @@ space. In this case we check the position the mouse pointer is at and
 find the object selected by the user. This is fundamental in allowing
 us to move nodes around and selecting them for statistical analysis.
 
-\subsection{C++}
+\subsection{\buzz{C++}}
 
 Visigoth, ignoring the \buzz{XML} files describing the interface, is
 entirely written in \buzz{C++}. Initially, while being conscious of
@@ -1452,8 +1452,8 @@ Spring model algorithms are nice for two reasons:
   algorithms are by far the more adaptive.
 
 \item Ease of implementation: Our simple implementation of the
-  algorithm take a little less then 50 lines of C++ code, and works
-  well up to medium-sized graphs.
+  algorithm take a little less then 50 lines of \buzz{C++} code, and
+  works well up to medium-sized graphs.
 
 \item Real time drawing: force based algorithms can be used to show in
   real time the untangling of the graph, which is usually an
@@ -1601,13 +1601,13 @@ current 3D Renderer.
   \begin{tabular}{c|l}
     Component         & SLOC \\
     \hline
-    GUI               & $180$ C++, 1037 XML\\
-    3D Renderer       & $452$ C++, 82 C\\
-    \code{GraphScene} & $686$ C++\\
-    Algorithms        & $1220$ C++\\
-    Testing           & $238$ C++ \\
+    GUI               & $180$ \buzz{C++}, 1037 \buzz{XML}\\
+    3D Renderer       & $452$ \buzz{C++}, 82 \buzz{C}\\
+    \code{GraphScene} & $686$ \buzz{C++}\\
+    Algorithms        & $1220$ \buzz{C++}\\
+    Testing           & $238$ \buzz{C++} \\
     \hline
-    Total             & $3061$ C++, $1037$ XML, $82$ C
+    Total             & $3061$ \buzz{C++}, $1037$ \buzz{XML}, $82$ \buzz{C}
   \end{tabular}
   \caption{Lines of code in each component}
   \label{fig:sloc}
