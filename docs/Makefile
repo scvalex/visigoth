@@ -33,14 +33,15 @@ $(PRESENTATION).pdf: $(PRESENTATION).tex $(GRAPHICS)
 
 .PHONY: pdfclean
 pdfclean:
-	rm -f $(DOCBASE).ps
-	rm -f $(DOCBASE).dvi
-	rm -f $(DOCBASE).aux
-	rm -f $(DOCBASE).out
-	rm -f $(DOCBASE).toc
-	rm -f $(DOCBASE).nav
-	rm -f $(DOCBASE).snm
-	rm -f $(DOCBASE).log
+	$(foreach f,$(DOCBASE) $(PRESENTATION),\
+	rm -f $(f).ps &&\
+	rm -f $(f).dvi &&\
+	rm -f $(f).aux &&\
+	rm -f $(f).out &&\
+	rm -f $(f).toc &&\
+	rm -f $(f).nav &&\
+	rm -f $(f).snm &&\
+	rm -f $(f).log)
 	rm -f texput.log
 	rm -f *~
 
