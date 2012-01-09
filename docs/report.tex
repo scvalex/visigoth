@@ -64,6 +64,11 @@
 \newcommand{\Twitter}{\href{http://twitter.com}{Twitter} }
 \newcommand{\GitHub}{\href{https://github.com}{GitHub} }
 
+%% Clubs and widows. Avoid them like the plague.
+\clubpenalty = 10000
+\widowpenalty = 10000
+\displaywidowpenalty = 10000
+
 %% %%%%%%%%%%%%%%%%%%%% END COMMANDS %%%%%%%%%%%%%%%%%%%%
 
 %% %%%%%%%%%%%%%%%%%%%% BEGIN COLORS %%%%%%%%%%%%%%%%%%%%
@@ -151,7 +156,11 @@ algorithm. Additionally, Visigoth can connect to social networking platforms
 such as \Twitter to fetch and display real-world networks.
 \end{abstract}
 
+
+
 \tableofcontents
+
+
 
 \section{Introduction}
 %% This section corresponds to A in the requirements.
@@ -168,7 +177,7 @@ large underlying data sets within the last decade.  \cite{oconn11}
 
 The structural properties of real networks have been studied extensively over
 the years, mainly focusing their common characteristic properties.  These
-networks share low average path lengths, high clustering coefficients and
+networks share low average distances, high clustering coefficients and
 scale-free degree distribution.
 
 In order to easen further analysis of real networks, the aim is to simulate them
@@ -205,21 +214,27 @@ networks, the development of vaccination strategies
 for disease control and a broad range of other practical
 uses. \cite{complexNets}
 
+
 \subsection{The maths}
 
 %% FIXME: Give formal mathematical definitions for qualities.
 
 \subsubsection{Networks}
 
-A \emph{network} is a graph, which in turn is an ordered pair $G(N,E)$
-comprising of a set of \emph{nodes} $N$ and a set of \emph{edges}, $E$.  An
-\emph{edge} is a 2-element subset of $N$ representing a \emph{connection}
-between a pair of \emph{nodes}.
+A \emph{network} is, in the mathematical sense, a graph. This
+graph in turn consists of a set $N$ of \emph{nodes} and a set
+$E$ of \emph{edges}. An edge is a connection between two nodes
+and can be mathematically represented as a pair thereof.
 
-The \emph{degree} $K_i$ of a node $i$ is the number of nodes that it is
-connected to. The average degree $k$ of a network is $k =\frac{2 \cdot m}{|N|}$
-where $m$ is the number of edges in the network and $|N|$ is the total
-number of nodes.
+
+\subsubsection{Degree of a node}
+
+The \emph{degree} $k_i$ of a node $n_i$ is the number of nodes that it is
+connected to. The average degree $K_{avg}$ of a network is
+\[ K_{avg} =\frac{2 \cdot |E|}{|N|} \]
+where $|E|$ is the number of edges in the network and $|N|$ is the total
+number of nodes. The factor of $2$ takes into account that every edge is
+connected to two nodes.
 
 \subsubsection{The small world effect}
 
@@ -228,131 +243,135 @@ acquaintances between all human beings on Earth were to be recorded
 in a graph, everyone would be at most approximately six hops (from
 acquaintance to acquaintance) away from any other person on Earth.
 
-A group of people can be represented by a \emph{social network}, a graph
-in which individuals are the nodes and an edge betwen them represents
-an acquaintance.
-
 In such a graph, a sequence of edges from one individual to another is
-called a path, and the length of the shortest possible path is of
-special interest as it tends to be surprisingly low in natural networks.
+called a \emph{path}, and the length of the \emph{shortest} possible path
+(also called the \emph{distance}) is of special interest as it tends to
+be surprisingly low in natural networks, even if they consist of as many
+as billions of nodes - such as the human population.
 
 Frigyes Karinthy first introduced the idea of ``six degrees of separation''
 in his 1929 short story ``Chains''.
 
-The small world experiment, performed in the 1960s by Stanley Milgram
-and other researchers,
-formalised the aforementioned concept. In this experiment, letters were
-sent to randomly selected individuals, asking them to forward the letter to a
-randomly selected recipient. In case the destination should be unknown to them
-they were asked to send the letter to a friend or
+Later on the small world experiment, performed in the 1960s by
+Stanley Milgram and other researchers, formalised the
+aforementioned concept. In this experiment letters were
+sent to random individuals, asking them to forward the letter to a
+random recipient. In case the destination was unknown to them
+they were instructed to send the letter to a friend or
 relative who was more likely to know the recipient.
 The conclusion Milgram drew from his experiment was that the
-\emph{shortest path length} between individuals is on average $6$.
+distance between any two individuals is on average $6$.
 
-This result lead to the more genereal idea of a ``small-world effect" which
-denotes the fact that the average distance linking two nodes belonging to the
-same network can be orders of magnitude smaller than the number of nodes making
-up the network. \cite{complexAdapt}
+This result led to the more genereal idea of a ``small world effect'' which
+describes the idea that the average distance linking two nodes belonging to
+the same network can be orders of magnitude smaller than the number of nodes
+the network actually consists of. \cite{complexAdapt}
 
 The characteristic properties of a small world network are:
 
 \begin{itemize}
-\item Low average path length.
-\item High clustering coefficient.
-\item Scale-free degree distribution.
+  \item Low average distance.
+  \item High clustering coefficient.
+  \item Scale-free degree distribution.
 \end{itemize}
 
-These characteristics shall be analysed in more detail in the following subsections.
+These characteristics shall be explained in more detail in the following subsections.
 
-\subsubsection{Path Length}
+\subsubsection{Distance}
 
-The path length between two nodes in a graph indicates how many nodes
-have to be visited in order to go from the first node to the second.
+As mentioned before, the \emph{distance} between two nodes in a graph
+is the minimum number of edges to be traversed in order to get from
+the first node to the second.
 
-Both Dijkstra's algorithm and A* can be used to find the shortest path length
-$d(v_i, v_j)$ between to vertices $v_i$ and $v_j$ in a network. The average
-path length $L_G$ is the average of the shortest path length over all pairs of
-vertices:
+Both Dijkstra's algorithm and A* can be used to find the distance
+$d(n_i, n_j)$ between two nodes $n_i$ and $n_j$ in a network. The
+average distance $d_{avg}$ in a network of $|N|$ nodes is the average
+of the distance over all pairs of nodes:
 
-\[ L_G = \frac{1}{N(N-1)} \sum_{i, j} d(v_i, v_j) \]
+\[ d_{avg} = \frac{1}{|N| \cdot (|N| - 1)} \sum_{i, j} d(n_i, n_j) \]
 
-where $d(v_i, v_j) = 0$ when there is no path between vertices $v_i$ and $v_j$.
+where $d(n_i, n_j) = 0$ when there is no path from $n_i$ to $n_j$.
 
 \subsubsection{Clustering coefficient}
 
 \emph{Clustering} is the tendency of real networks to form
-\emph{cliques}. In a graph, a clique is a subset of vertices in which all
-vertices are connected to each other. For example, in social networks
-cliques represent circles of friends or acquaintances in which every
-member knows every other member.
+\emph{cliques}. In a graph, a clique is defined to be a subset of
+nodes in which all nodes are connected to each other.
+In real life, cliques represent circles of friends
+or acquaintances in which every member knows every other member.
 
-The clustering coefficient proposed by Watts and Strogatz is calculated for each
-vertex $i$.
+The clustering coefficient $C_i$ of a node $n_i$ as proposed by
+Watts and Strogatz is defined as
 
-\[ C_i = \frac{2E_i}{k_i(k_i-1)} \]
+\[ C_i = \frac{2 \cdot |E_i|}{k_i(k_i-1)} \]
 
-where $k_i$ is the number of neighbours of vertex $i$ and $E_i$ is the number
-of edges between the neighbours of vertex $i$. Thus, the average clustering
-coefficient over the network is:
+where $k_i$ is the number of neighbours of node $n_i$ and $|E_i|$ is
+the number of edges between the neighbours of node $n_i$. Thus, the
+average clustering coefficient $C_{avg}$ over a network of $|N|$
+nodes is:
 
-\[ \ C_{avg} = \frac{1}{N}\sum_{i=0}^{N} C_i \]
+\[ C_{avg} = \frac{1}{N}\sum_{i=0}^{N} C_i \]
 
 \subsubsection{Scale-free distribution}
 \label{sec:scale-free}
 
-Barabasi and Albert showed that real networks such as the World Wide Web are
-scale-free. The \emph{degree distribution} of scale-free networks follows a
-power law:
+Barabasi and Albert showed that real networks such as the World Wide Web
+are \emph{scale-free}. In these networks, the \emph{degree distribution}
+follows the power law
 
 \[ P(k) \sim k^{-\gamma} \]
 
-where $P(k)$ is the probability that a node in the network will be of degree $k$.
+where $P(k)$ is the probability that a node will be of degree $k$.
 
-\subsection{Small World Networks}
+
+\subsection{Small world networks}
 
 Small-world networks tend to contain \emph{cliques} and
 \emph{near-cliques}, meaning sub-networks which have connections
-between almost any two nodes within them. This follows from the
-defining property of a high clustering coefficient.
+between almost any two nodes within them. This stems directly from
+the defining property of having a high clustering coefficient.
 
 Secondly, most pairs of nodes will be connected by at least one
-short path. This follows from the defining property that the
-mean-shortest path length has to be small.
+\emph{short path}, i.e. a path that is shorter than the
+\emph{average distance}.
+This follows from the property that the average distance $d_{avg}$
+is small even when the total number $|N|$ of nodes is large.
 
-Several other properties are often associated with small-world
+Several other properties are often associated with small world
 networks. Typically there is an over-abundance of hubs - nodes
 in the network with a high number of connections (called a high
 degree of the respective node). These hubs serve as the common
-connections mediating the short path lengths between other
-edges. By analogy, the small-world network of airline flights
-has a small mean-path length (i.e. between any two cities you
-are likely to have to take three or fewer flights) because many
+connections mediating the short distances between other
+nodes. By analogy, the small-world network of airline flights
+has a small average distance, i.e. between any two cities one
+is likely to have to take three or fewer flights because many
 flights are routed through hub cities. \cite{smnet}
 
-Small-world properties are found in \emph{many} real-world
-phenomena, including road maps, food chains, electric power
-grids, metabolite processing networks, networks of brain
+Small world properties are found in \emph{many} real-world
+phenomena including road maps, food chains, electric power
+grids, metabolic processing networks, networks of brain
 neurons, voter networks, telephone call graphs, and social
 influence networks.
 
 Networks of \emph{connected proteins} have small world properties
-such as power-law obeying degree distributions. Similarly
-\emph{transcriptional networks}, in which the nodes are genes,
-and they are linked if one gene has an up or down-regulatory
-genetic influence on the other, have small world network properties.
+such as power law obeying degree distributions. Similarly,
+\emph{transcriptional networks} with genes as the nodes,
+linked if one gene has an up- or down-regulatory genetic
+influence on the other, have small world network properties.
 
 %% FIXME: Explain how SWNs exhibit *all* the properties we're
 %% interested in.  Include some math.
+
 
 \subsection{Introducing Visigoth}
 
 Visigoth makes peeking into the current state-of-the-art of artificial Small
 World Networks simple and fun. By integrating existing generation algorithms and
 visualisations into a single, easy-to-use interface, the user can make a head
-start into the small world of Small World Networks and:
+start into the large world of small world networks and
 
 \begin{itemize}
-  \item see how these algorithms have improved on each other over time
+  \item see how these algorithms have improved on each other over time,
     generating increasingly better networks,
   \item see the effects of changing algorithm parameters on the
     resulting networks, and
@@ -396,12 +415,12 @@ On request of our customer we have implemented several generation
 algorithms for Small World Networks which have been developed over
 the course of the last decade.
 
+
 \subsection{Erd\H{o}s-R\'{e}nyi}
-% FIXME
 The Erd\H{o}s-R\'{e}nyi model, named after Paul Erd\"{o}s and
 Alfr\'{e}d R\'{e}nyi, is an algorithm to generate random networks.
 This is the simplest of the graph generation algorithms in Visigoth's
-repertoire. The simplicity of this algorithm is attractive, however
+repertoire, but while this makes it quite attractive,
 the random networks produced by this model do not exhibit all of
 the characteristics of real networks since clustering is low and
 the node degree distribution is binomial (and thus not scale-free).
@@ -431,7 +450,7 @@ in the graph, and $P$ is the probability cutoff value:
 % FIXME
 The Watts-Strogatz model is a graph generation algorithm which
 generates random graphs with the small-world properties of
-\emph{short average path length} and \emph{high clustering}.
+\emph{low average distance} and \emph{high clustering}.
 It was introduced by Duncan J. Watts and Steven Strogatz in 1998.
 
 This model is based on stochastically `rewiring' the edges of a
@@ -501,7 +520,7 @@ As explained in section \ref{sec:scale-free}, a network is deemed scale-free if
 its degree distribution follows a power law. In context, this means that the
 frequency of attachment to a node varies as a power of its degree. Such networks
 are also \emph{scale invariant} meaning that their size has no effect on their
-attributes (i.e. degree distribution).
+degree distribution.
 
 This is achieved using preferential attachment, meaning that nodes are added to
 the graph one by one and nodes will be selected to be linked to other nodes with
@@ -657,7 +676,7 @@ This procedure is implemented as follows:
 
 \end{enumerate}
 
-\subsection{Preferential Attachment with Clustering}
+\subsection{Preferential attachment with clustering}
 
 % FIXME
 Preferential attachment and clustering are two distinct concepts used
@@ -757,7 +776,7 @@ This is implemented as follows:
 \end{enumerate}
 
 
-\subsection{Real Small World Networks}
+\subsection{Real small world networks}
 Finally, as Visigoth is supposed to help in analysing Small World
 Networks, it can also fetch real world data from the `live' social
 networks \Twitter and identi.ca.
@@ -776,14 +795,14 @@ generated networks in real time. The statistics which are calculated are:
   \item Clustering Coefficient
 \end{itemize}
 
-\subsection{Average Degree}
+\subsection{Average degree}
 \[
   \frac{2\sum_{i=1}^{\mathrm{max\ edges}} edges_i}
        {\sum_{j=1}^{\mathrm{max\ vertices}} vertices_j}
 \]
 Implementation is trivial.
 
-\subsection{Average Path Length}
+\subsection{Average path length}
 \[
 \frac{\sum_{i,j}distance_\mathrm{shortest}(vertice_i,vertice_j)}{\sum
 vertices^2 - \sum vertices}
@@ -832,7 +851,7 @@ It then returns the sum of all distances:
 \end{algorithmic}
 
 
-\subsection{Clustering Coefficient}
+\subsection{Clustering coefficient}
 The clustering coefficient is defined as:
 \[
   C_i = \frac{2|\{e_j,_k\}|}{k_i(k_i-1)}
@@ -870,7 +889,7 @@ If the degree of the node is greater than 1 we return the calculation.
 \end{algorithmic}
 
 
-\subsection{Clustering Average}
+\subsection{Clustering average}
 \[
   C_\mathrm{avg} =
   \frac{1}{\mathrm{\sum nodes}}\sum_{i=1}^{\mathrm{max\ nodes}} C_i
@@ -884,7 +903,7 @@ If the degree of the node is greater than 1 we return the calculation.
 \end{algorithmic}
 
 
-\subsection{Scale Free Exponent}
+\subsection{Scale free exponent}
 Before being able to calculate any gradient Visigoth has to probe the network
 and determine the degree distribution. Since we are dealing with exponential
 growth the algorithm takes the natural logarithm of both the degree and its
@@ -940,13 +959,13 @@ gradient is sloped downwards.
 % FIXME: Describe what we can do. Generate, set properties, save
 %        screenshots, move nodes, fly in 3D, the kitchen sink.
 
-\subsection{Graph Display}
+\subsection{Graph display}
 Visigoth is able to draw graphs in both 2D and 3D, showing the graph either
  in a planar display or in ``space" and thus allowing the user to ``fly" through it.
 Notably, the user can switch between the two modes at any time while preserving
 the graph.
 
-\subsection{Graph Generation}
+\subsection{Graph generation}
 Visigoth implements five distinct graph generating algorithms for the user to interact with:
 \begin{enumerate}
 \item \emph{Preferential Attachment with Clustering}
@@ -954,7 +973,7 @@ Visigoth implements five distinct graph generating algorithms for the user to in
 Selects a node for attachment depending on the number of edges they hold
 compared with the whole system. Creates links to nodes neighbouring that node.
 
-\item \emph{Bipartite Generation}
+\item \emph{Bipartite generation}
 
 Creates a bipartite graph and for all nodes, links all nodes of set A connected to
 the same node in set B. Finally, removes all nodes form set B.
@@ -980,7 +999,7 @@ starting from themselves.
 The algorithms may be configured by a variety of parameters exposed to users
 via inputs. Most algorithms may also be later expanded by adding nodes.
 
-\subsection{Graph Interaction}
+\subsection{Graph interaction}
 There are several ways to interact with the graph: by \emph{dragging} it using the mouse,
  the graph is moved on the screen. In 3D mode, it can also be rotated and moved
 back and forth.
