@@ -12,7 +12,7 @@
 
 % --- Listing inclusion.
 % \usepackage{dsfont}
-% \usepackage{listings}
+\usepackage{listings}
 % \lstset{numbers=left, numberstyle=\tiny, numbersep=5pt}
 % \lstset{language=C}
 
@@ -250,6 +250,7 @@ network can be orders of magnitude \emph{smaller than} the \emph{number of nodes
 network actually has.
 }
 
+
 \frame{\frametitle{Small World Network Characteristics}
 
 Mathematically speaking, a small world network has the following properties:
@@ -262,11 +263,147 @@ Mathematically speaking, a small world network has the following properties:
 \pause
 \item Scale-free degree distribution.
 \end{itemize}
+
 }
 
-\section{Engineering}
+
+\subsection{Generation Algorithm}
+
+\frame{\frametitle{Erd\H{o}s-R\'{e}nyi}
+
+\begin{columns}
+
+\begin{column}[T]{5cm}
+
+\includegraphics[height=30mm,width=30mm]{erdos.png}
+
+\end{column}
+
+\begin{column}[T]{5cm}
+
+\begin{itemize}
+  \item It the beginning there was Erd\H{o}s \dots and R\'{e}nyi
+  \pause
+  \item Random Graph
+  \pause
+  \item However \dots
+  \pause
+  \item No SWN properties
+
+\end{itemize}
+\end{column}
+\end{columns} 
+
+
+}
+
+
+\frame{\frametitle{Watts-Strogatz}
+
+\begin{columns}
+
+\begin{column}[T]{5cm}
+
+\includegraphics[height=30mm,width=30mm]{watts.png}
+
+\end{column}
+
+\begin{column}[T]{5cm}
+\begin{itemize}
+  \item Then in 1998 finally \dots Watts-Strogatz 
+  \pause
+  \item Random graph
+  \pause
+  \item This time with SWN properties included! \dots
+  \item Short average path and high clustering
+ 
+\end{itemize}
+\end{column}
+\end{columns}
+}
+
+
+\frame{\frametitle{Barabasi-Albert}
+
+\begin{columns}
+\begin{column}[T]{5cm}
+
+\includegraphics[height=30mm,width=30mm]{barabasi.png}
+
+\end{column}
+
+\begin{column}[T]{5cm}
+\begin{itemize}
+  \item It gets better!
+  \pause
+  \item The random graph is no more
+  \pause
+  \item Same amount of SWN properties included! \dots
+  \item Scale free exponent and short average path
+ 
+\end{itemize}
+\end{column}
+\end{columns}
+
+}
+
+\frame{\frametitle{Preferential attachment with clustering}
+
+\begin{columns}
+
+\begin{column}[T]{5cm}
+
+\includegraphics[height=30mm,width=30mm]{preferential.png}
 
 \subsection{Qt}
+
+
+\end{column}
+\begin{column}[T]{5cm}
+
+
+\begin{itemize}
+  \item The future is here! Thanks to Imperial College
+  \pause
+  \item Similar to Barabasi-Albert but with clustering!
+  \pause
+  \item All SWN properties
+ 
+\end{itemize}
+
+\end{column}
+\end{columns}
+
+}
+
+\frame{\frametitle{Bipartite}
+
+\begin{columns}
+
+\begin{column}[T]{5cm}
+
+\includegraphics[height=30mm,width=30mm]{bipartite.png}
+
+\end{column}
+\begin{column}[T]{5cm}
+
+\begin{itemize}
+  \item The future is here! (again) Thanks to Imperial College
+  \pause
+  \item Completely different generation method.
+  \pause
+  \item All SWN properties
+ 
+\end{itemize}
+
+\end{column}
+\end{columns}
+
+
+}
+
+
+\section{Engineering}
 
 
 \subsection{C++}
@@ -293,6 +430,7 @@ Mathematically speaking, a small world network has the following properties:
   \frametitle{Force-directed algorithms}
 
   For Visigoth, we use an optimized ``force directed'' algorithm.
+
 
   \pause
 
@@ -374,9 +512,60 @@ Mathematically speaking, a small world network has the following properties:
 \frame{
   \frametitle{C++}
 
-  \emph{C++}, loved my many and feared by most...
+  \emph{C++}, the world's friendliest language...
 
+  \pause
+
+  If you like segfaults.
+
+  \pause
+
+  And 3-pages long compiler errors.
 }
+
+\frame{
+  \frametitle{C++}
+
+  We chose \emph{C++} because of \emph{Qt}, but some team members were scared.
+
+  However, it does have its advantages, and it served us well:
+
+  \begin{itemize}
+    \pause
+    \item Tools: Mainly \emph{Qt} and \emph{OpenGL}
+    \pause
+    \item Performance: ours is a CPU bound application, and with \emph{C++} we
+      can squeeze our machines more, especially with manual memory management.
+    \pause
+    \item Abstraction: while \emph{C} and \emph{C++} are both fast and popular,
+      doing O-O in \emph{C} is \textbf{not} nice (take a look at
+      GObject\footnote{\url{http://developer.gnome.org/gobject/}} for details).
+  \end{itemize}
+}
+
+\frame{
+  \frametitle{C++, the dark side}
+
+  But...
+
+  \begin{itemize}
+    \pause
+    \item Unmanaged memory is not nice, most of the times. Memory leaks are not
+      nice. Segfaults are not nice.
+    \pause
+    \item The language is a mess. Too much stuff in too little space: templates,
+      overloading, friends\ldots
+  \end{itemize}
+
+  \pause
+
+  In any case, we are happy with our choice.
+
+  \pause
+
+  \tiny{\lstinputlisting{cpperr}}
+}
+
 
 
 \subsection{OpenGL}
