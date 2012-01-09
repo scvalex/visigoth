@@ -32,10 +32,6 @@ bool Edge::highlighted() const {
     return isHighlighted;
 }
 
-void Edge::highlight() {
-    isHighlighted = true;
-}
-
-void Edge::unHighlight() {
-    isHighlighted = false;
+void Edge::setHighlight(bool enabled) {
+    isHighlighted = enabled;
 }

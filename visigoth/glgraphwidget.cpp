@@ -114,38 +114,24 @@ void GLGraphWidget::resetGraphColours() {
 void GLGraphWidget::mouseDoubleClickEvent(QMouseEvent *event) {
     if (event->button() == Qt::LeftButton) {
         Node *hitNode = selectGL(event->x(), event->y());
-        if (!hitNode) {
+        if (!hitNode || hitNode->highlighted() != isHighlighted) {
             return;
         }
 
-        if (!isHighlighted) {
-            hitNode->unHighlight();
-            foreach (Node* node, hitNode->neighbours()) {
-                foreach (Edge* edge, hitNode->edges()) {
-                    if ((edge->sourceNode() == hitNode && edge->destNode() == node) ||
-                        (edge->sourceNode() == node && edge->destNode() == hitNode))
-                    {
-                        edge->unHighlight();
-                    }
+        isHighlighted = !isHighlighted;
+        hitNode->setHighlight(isHighlighted);
+        foreach (Node* node, hitNode->neighbours()) {
+            foreach (Edge* edge, hitNode->edges()) {
+                if ((edge->sourceNode() == hitNode && edge->destNode() == node) ||
+                    (edge->sourceNode() == node && edge->destNode() == hitNode))
+                {
+                    edge->setHighlight(isHighlighted);
                 }
             }
-            isHighlighted = true;
-        } else if (isHighlighted) {
-            hitNode->highlight();
-            foreach (Node* node, hitNode->neighbours()) {
-                foreach (Edge* edge, hitNode->edges()) {
-                    if ((edge->sourceNode() == hitNode && edge->destNode() == node) ||
-                        (edge->sourceNode() == node && edge->destNode() == hitNode))
-                    {
-                        edge->highlight();
-                    }
-                }
-            }
-            isHighlighted = false;
         }
-    }
 
-    this->repaint();
+        this->repaint();
+    }
 }
 
 void GLGraphWidget::mousePressEvent(QMouseEvent *event) {

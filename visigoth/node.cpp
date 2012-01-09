@@ -128,12 +128,8 @@ bool Node::highlighted() const {
     return isHighlighted;
 }
 
-void Node::highlight() {
-    isHighlighted =  true;
-}
-
-void Node::unHighlight() {
-    isHighlighted = false;
+void Node::setHighlight(bool enabled) {
+    isHighlighted =  enabled;
 }
 
 void Node::reset() {

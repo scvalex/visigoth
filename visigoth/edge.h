@@ -21,8 +21,7 @@ public:
     void setColour(const QColor &c);
 
     bool highlighted() const;
-    void highlight();
-    void unHighlight();
+    void setHighlight(bool enabled);
 
 protected:
     explicit Edge(Node *sourceNode, Node *destNode);

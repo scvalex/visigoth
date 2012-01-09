@@ -49,8 +49,7 @@ public:
     void setColour(const QColor &b);
 
     bool highlighted() const;
-    void highlight();
-    void unHighlight();
+    void setHighlight(bool enabled);
 
     static void reset();
 
