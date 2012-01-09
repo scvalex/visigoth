@@ -1149,7 +1149,8 @@ platforms are a few defines to deal with the misplaced \OpenGL headers
 on OSX and few conditionals in the project description to handle the
 library finding on Windows.
 
-%% FIXME: add screenshots
+For screenshots of Visigoth running on all three major platforms, see
+Appendix \ref{screenshots}.
 
 \subsubsection{Rapid prototyping}
 
@@ -1901,42 +1902,65 @@ client is as well.
 
 \appendix
 
+\addcontentsline{toc}{section}{Screenshots}
 \section{Screenshots}
+\label{screenshots}
 
 \begin{center}
-  \includegraphics[width=1\textwidth]{screenshot-linux.png}
+  \includegraphics[width=0.9\textwidth]{screenshot-linux.png}
   Visigoth on Linux, 3D mode
+  \bigskip
 
-  \includegraphics[width=1\textwidth]{screenshot-mac.png}
+  \includegraphics[width=0.9\textwidth]{screenshot-mac.png}
   Visigoth on Mac OS X, showing the ``Edge color'' dialog
+  \bigskip
 
-  \includegraphics[width=1\textwidth]{screenshot-win.png}
+  \includegraphics[width=0.9\textwidth]{screenshot-win.png}
   Visigoth on Windows
 \end{center}
 
+\addcontentsline{toc}{section}{Sample graphs}
 \section{Sample graphs}
 
-Sample results of the 5 graph models employed by Visigoth, plus the Twitter
-graph:
+Sample results of the 5 graph models employed by Visigoth, plus the
+\Twitter graph:
 
 \begin{center}
-  \includegraphics[width=0.5\textwidth]{barabasi.png}\\
-  Barab\'{a}si-Albert
+  \noindent\begin{minipage}{.45\textwidth}
+    \centering
+    \includegraphics[width=5cm]{barabasi.png}
+    \captionof{figure}{Barab\'{a}si-Albert}
+  \end{minipage}
+  \begin{minipage}{.45\textwidth}
+    \centering
+    \includegraphics[width=5cm]{bipartite.png}
+    \captionof{figure}{Bipartite}
+  \end{minipage}
+  \medskip
 
-  \includegraphics[width=0.5\textwidth]{bipartite.png}\\
-  Bipartite
+  \noindent\begin{minipage}{.45\textwidth}
+    \centering
+    \includegraphics[width=5cm]{erdos.png}
+    \captionof{figure}{Erd\H{o}s-R\'{e}nyi}
+  \end{minipage}
+  \begin{minipage}{.45\textwidth}
+    \centering
+    \includegraphics[width=5cm]{preferential.png}
+    \captionof{figure}{Preferential attachment}
+  \end{minipage}
+  \medskip
 
-  \includegraphics[width=0.5\textwidth]{erdos.png}\\
-  Erd\H{o}s-R\'{e}nyi
+  \noindent\begin{minipage}{.45\textwidth}
+    \centering
+    \includegraphics[width=5cm]{watts.png}
+    \captionof{figure}{Watts-Strogatz}
+  \end{minipage}
+  \begin{minipage}{.45\textwidth}
+    \centering
+    \includegraphics[width=5cm]{twitter.png}
+    \captionof{figure}{\Twitter}
+  \end{minipage}
 
-  \includegraphics[width=0.5\textwidth]{preferential.png}\\
-  Preferential attachment
-
-  \includegraphics[width=0.5\textwidth]{watts.png}\\
-  Watts-Strogatz
-
-  \includegraphics[width=0.5\textwidth]{twitter.png}\\
-  Twitter
 \end{center}
 
 \addcontentsline{toc}{section}{References}
