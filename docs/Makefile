@@ -1,6 +1,6 @@
 DOCBASE=report
 PRESENTATION=presentation
-GRAPHICS=$(wildcard *.tex)
+GRAPHICS=
 LATEX?=pdflatex
 
 all: $(GRAPHICS) $(DOCBASE).pdf $(PRESENTATION).pdf pdfclean
