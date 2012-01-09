@@ -130,7 +130,9 @@
 
 \vspace{0.6cm}
 \begin{center}
-  \begin{tiny}(We have \pageref{LastPage} slides. Make yourselves comfortable.)\end{tiny}
+  \begin{tiny}
+    (We have \pageref{LastPage} slides. Make yourselves comfortable.)
+  \end{tiny}
 \end{center}
 
 }
@@ -245,67 +247,78 @@ Spam generation.
 }
 
 \frame{
-  \frametitle{Small World Effect as a concept}
+  \frametitle{Six degrees of separation}
 
-  \emph{Six degrees of separation}
-  \hspace{0.5cm} $\to$ the distance between any two individuals is on average $6$.
+  \begin{columns}
+    \begin{column}[T]{.6\textwidth}
+      Idea:
+      The distance between any two individuals on Earth is on average $6$.
 
-  \begin{figure}[ht!]
-    \centering
-    \includegraphics[height=50mm,width=50mm]{sixdegrees.png}
-    \caption{Social Network in Real Life}
-  \end{figure}
+      \vspace{0.5cm}
+      But how? We are \emph{billions} of humans.
+    \end{column}
+
+    \begin{column}[T]{.4\textwidth}
+      \includegraphics[width=.99\textwidth]{sixdegrees.png}
+    \end{column}
+  \end{columns}
 }
 
-\frame{\frametitle{Small World Effect as a concept}
-Frigyes Karinthy first introduced this idea in his 1929 short story \emph{Chains}.
+\frame{
+  \frametitle{The idea of the Small World Effect}
 
-\vspace{0.5cm}
-\pause
-Later on the small world experiment, performed in the 1960s by Stanley Milgram
-and other researchers, formalised the aforementioned concept.
+  Frigyes Karinthy first introduced this idea in his 1929 short story
+  \emph{Chains}.
+  \pause
 
-\vspace{0.5cm}
-\pause
-Results in a \emph{small world effect}
-\pause
-\hspace{0.5cm} $\to$ the \emph{average distance} linking two nodes of the same
-network can be orders of magnitude \emph{smaller than} the \emph{number of nodes} the
-network actually has.
+  \vspace{0.5cm}
+  In the 1960s the small world experiment (Stanley Milgram et al.) formalised
+  the aforementioned concept.
+  \pause
+
+  \vspace{0.5cm}
+  It confirmed the average distance of $6$ and resulted in
+  general awareness of the \emph{small world effect}.
+  \pause
+
+  \hspace{0.5cm} $\to$ the \emph{average distance} linking two nodes of the same
+  network can be \emph{orders of magnitude} smaller than the number of nodes the
+  network actually has.
 }
 
 
-\frame{\frametitle{Small World Network Characteristics}
+\frame{
+  \frametitle{Small World Network Characteristics}
 
-Mathematically speaking, a small world network has the following properties:
+  Mathematically speaking, a small world network has the following properties:
+  \pause
 
-\begin{itemize}
-\pause
-\item Low average path length (distance).
-\pause
-\item High clustering coefficient.
-\pause
-\item Scale-free degree distribution.
-\end{itemize}
-
+  \begin{itemize}
+    \item Low average path length (distance).
+    \pause
+    \item High clustering coefficient.
+    \pause
+    \item Scale-free degree distribution.
+  \end{itemize}
 }
 
-\frame{\frametitle{SWNs' characteristics insight}
-The \emph{distance} between two nodes in a graph
-represents the minimum number of edges to be traversed in order to get from the
-first node to the second.
+\frame{
+  \frametitle{SWNs' characteristics insight}
 
-\vspace{0.5cm}
-\pause
-\emph{Clustering} is the tendency of real networks to form \emph{cliques}
-(subset of nodes in which all nodes are connected to each other).
+  The \emph{distance} between two nodes in a graph is the minimum number of
+  edges to be traversed in order to get from the first node to the second.
+  \pause
 
-\vspace{0.5cm}
-\pause
-\emph{Scale-free} networks have a node degree distribution which follows a
-power-law:
+  \vspace{0.5cm}
+  \emph{Clustering} is the tendency of real networks to form \emph{cliques}
+  (i.e. subsets of nodes in which all nodes are connected to each other).
+  \pause
 
-\[ P(k) \sim k^{-\gamma} \hspace{1.2cm} \includegraphics[width=20mm, height=10mm]{angry.png} \]
+  \vspace{0.5cm}
+  \emph{Scale-free} networks have a node degree distribution which follows a
+  power law:
+
+  \[ P(k) \sim k^{-\gamma} \hspace{1.2cm} \includegraphics[width=20mm, height=10mm]{angry.png} \]
 }
 
 \frame{\frametitle{More about scale-free networks}
