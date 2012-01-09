@@ -401,10 +401,67 @@ positive reaction to our suggestions we then added them to our
 product, creating a comprehensive base for analysing graphs that
 may be re-used for other mathematical projects in the future.
 
+\section{Visigoth functionality}
 
+% FIXME: Describe what we can do. Generate, set properties, save
+%        screenshots, move nodes, fly in 3D, the kitchen sink.
 
-%\section{In detail}
-%% This section corresponds to B in the requirements
+\subsection{Graph display}
+Visigoth is able to draw graphs in both 2D and 3D, showing the graph
+either in a planar display or in ``space'' and thus allowing the user
+to ``fly'' through it. Notably, the user can switch between the two
+modes at any time while preserving the graph.
+
+\subsection{Graph Generation}
+Visigoth uses the 5 algorithms described in section \ref{sec:algos} to generate
+graphs for the user to interact with:
+
+\begin{description}
+\item [Preferential Attachment with Clustering] Selects a node for attachment
+  depending on the number of edges they hold compared with the whole
+  system. Creates links to nodes neighbouring that node.
+
+\item [Bipartite Generation] Creates a bipartite graph and for all nodes, links
+  all nodes of set A connected to the same node in set B. Finally, removes all
+  nodes form set B.
+
+\item [Erd\H{o}s-R\'{e}nyi] Generates a random graph.
+
+\item [Watts-Strogatz] Creates a ring of connected nodes and re-links some nodes
+  randomly within that ring.
+
+\item [Barab\'{a}si-Albert] Nodes added to by preferential attachment, with no
+  clustering.
+\end{description}
+
+In addition to these algorithms, we also implement a \Twitter data-mining
+option, which lets users use their \Twitter account to graph the relations
+between followers starting from themselves.
+
+The algorithms may be configured by a variety of parameters exposed to users
+via inputs. Most algorithms may also be later expanded by adding nodes.
+
+\subsection{Graph Interaction}
+There are several ways to interact with the graph: by \emph{dragging} it using
+the mouse, the graph is moved on the screen. In 3D mode, it can also be rotated
+and moved back and forth.
+
+Similarly, nodes can be dragged using the mouse, resulting in a reordering of
+the graph according to the built-in spring force model. \emph{Clicking} a node
+calculates node specific statistics, such as the clustering coefficient.
+
+A \emph{toolbar} gives easy access to common actions such as graph regeneration
+and node reshuffling.
+
+A simple \emph{menu} option allows users to customize the appearance of the
+generated graph, such as: change edges and nodes colour, choose a different
+background, highlight cliques or highlight selected node and connections with
+it's direct neighbours.
+
+\subsection{Export to PNG, JPEG files}
+Finally, Visigoth allows taking snapshots of the graphs and exporting them to
+image files. The supported formats include PNG and JPEG, which are the image
+formats supported by most computers.
 
 \section{Generating Small World Networks}
 \label{sec:algos}
@@ -945,67 +1002,6 @@ gradient is sloped downwards.
 
 
 
-\section{Visigoth functionality}
-
-% FIXME: Describe what we can do. Generate, set properties, save
-%        screenshots, move nodes, fly in 3D, the kitchen sink.
-
-\subsection{Graph display}
-Visigoth is able to draw graphs in both 2D and 3D, showing the graph
-either in a planar display or in ``space'' and thus allowing the user
-to ``fly'' through it. Notably, the user can switch between the two
-modes at any time while preserving the graph.
-
-\subsection{Graph Generation}
-Visigoth uses the 5 algorithms described in section \ref{sec:algos} to generate
-graphs for the user to interact with:
-
-\begin{description}
-\item [Preferential Attachment with Clustering] Selects a node for attachment
-  depending on the number of edges they hold compared with the whole
-  system. Creates links to nodes neighbouring that node.
-
-\item [Bipartite Generation] Creates a bipartite graph and for all nodes, links
-  all nodes of set A connected to the same node in set B. Finally, removes all
-  nodes form set B.
-
-\item [Erd\H{o}s-R\'{e}nyi] Generates a random graph.
-
-\item [Watts-Strogatz] Creates a ring of connected nodes and re-links some nodes
-  randomly within that ring.
-
-\item [Barab\'{a}si-Albert] Nodes added to by preferential attachment, with no
-  clustering.
-\end{description}
-
-In addition to these algorithms, we also implement a \Twitter data-mining
-option, which lets users use their \Twitter account to graph the relations
-between followers starting from themselves.
-
-The algorithms may be configured by a variety of parameters exposed to users
-via inputs. Most algorithms may also be later expanded by adding nodes.
-
-\subsection{Graph Interaction}
-There are several ways to interact with the graph: by \emph{dragging} it using
-the mouse, the graph is moved on the screen. In 3D mode, it can also be rotated
-and moved back and forth.
-
-Similarly, nodes can be dragged using the mouse, resulting in a reordering of
-the graph according to the built-in spring force model. \emph{Clicking} a node
-calculates node specific statistics, such as the clustering coefficient.
-
-A \emph{toolbar} gives easy access to common actions such as graph regeneration
-and node reshuffling.
-
-A simple \emph{menu} option allows users to customize the appearance of the
-generated graph, such as: change edges and nodes colour, choose a different
-background, highlight cliques or highlight selected node and connections with
-it's direct neighbours.
-
-\subsection{Export to PNG, JPEG files}
-Finally, Visigoth allows taking snapshots of the graphs and exporting them to
-image files. The supported formats include PNG and JPEG, which are the image
-formats supported by most computers.
 
 \section{Visigoth technologies}
 
@@ -1813,6 +1809,46 @@ code\footnote{but since the code is under the \buzz{GPL-3} license,
   it cannot be included in commercial products by third parties
   without our approval} and since it is designed to run on end-user
 machines, there are no environmental issues to consider.
+
+\appendix
+
+\section{Screenshots}
+
+\begin{center}
+  \includegraphics[width=1\textwidth]{screenshot-linux.png}
+  Visigoth on Linux, 3D mode
+
+  \includegraphics[width=1\textwidth]{screenshot-mac.png}
+  Visigoth on Mac OS X, showing the ``Edge color'' dialog
+
+  \includegraphics[width=1\textwidth]{screenshot-win.png}
+  Visigoth on Windows
+\end{center}
+
+\section{Sample graphs}
+
+Sample results of the 5 graph models employed by Visigoth, plus the Twitter
+graph:
+
+\begin{center}
+  \includegraphics[width=0.5\textwidth]{barabasi.png}\\
+  Barab\'{a}si-Albert
+
+  \includegraphics[width=0.5\textwidth]{bipartite.png}\\
+  Bipartite
+
+  \includegraphics[width=0.5\textwidth]{erdos.png}\\
+  Erd\H{o}s-R\'{e}nyi
+
+  \includegraphics[width=0.5\textwidth]{preferential.png}\\
+  Preferential attachment
+
+  \includegraphics[width=0.5\textwidth]{watts.png}\\
+  Watts-Strogatz
+
+  \includegraphics[width=0.5\textwidth]{twitter.png}\\
+  Twitter
+\end{center}
 
 \addcontentsline{toc}{section}{References}
 \begin{thebibliography}{9}
