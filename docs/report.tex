@@ -597,12 +597,11 @@ and average degree \cite{oconn11}, but relatively low compared to real networks.
 
 \subsection{Bipartite model}
 
-\begin{wrapfigure}{R}{0.4\textwidth}
-  \begin{center}
-    \input{bipartite-graph.tex}
-  \end{center}
+\begin{figure}[ht!]
+  \centering
+  \input{bipartite-graph.tex}
   \caption{A sample bipartite graph}
-\end{wrapfigure}
+\end{figure}
 
 A bipartite graph is a graph which consists of two node sets. Each node
 is only allowed to be connected to nodes in a set other than its own.
@@ -611,8 +610,6 @@ This model is able to generate realistic networks with
 \emph{low average path length}, \emph{high clustering coefficient} and
 \emph{power law distribution}. The properties of the generated networks
 depend on the distribution of edges in the bipartite graph.
-
-%FIXME: please fix the doc layout
 
 The algorithm constructs a network in three simple steps:
 
