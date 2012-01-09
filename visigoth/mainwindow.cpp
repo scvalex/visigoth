@@ -80,16 +80,11 @@ return false and leave NEWCOLOR unchanged.  Otherwise, return
 true and update NEWCOLOUR to match the picked colour. */
 bool MainWindow::pickColour(QColor &newColour) {
     const QColor& initial = QColor::fromRgbF(0.0, 0.0, 1.0, 0.5);
-    QColorDialog colorPicker;
-    QColor c = colorPicker.getColor(initial, this, "Select Colour", 0);
-
-    if (c.green() == QColor(Qt::black).green() &&
-        c.red() == QColor(Qt::black).red() &&
-        c.blue() == QColor(Qt::black).blue() &&
-        c.alpha() == QColor(Qt::black).alpha())
-    {
+    QColor c = QColorDialog::getColor(initial, this, "Select Colour", 0);
+    if (!c.isValid()) {
         return false;
     }
+
     newColour = c;
     return true;
 }
