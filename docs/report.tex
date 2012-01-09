@@ -293,6 +293,7 @@ of the distance over all pairs of nodes:
 where $d(n_i, n_j) = 0$ when there is no path from $n_i$ to $n_j$.
 
 \subsubsection{Clustering coefficient}
+\label{sec:clusteringcoefficient}
 
 \emph{Clustering} is the tendency of real networks to form
 \emph{cliques}. In a graph, a clique is defined to be a subset of
@@ -303,7 +304,7 @@ or acquaintances in which every member knows every other member.
 The clustering coefficient $C_i$ of a node $n_i$ as proposed by
 Watts and Strogatz is defined as
 
-\[ C_i = \frac{2 \cdot |E_i|}{k_i(k_i-1)} \]
+\[ C_i = \frac{2 \cdot |E_i|}{k_i \cdot (k_i-1)} \]
 
 where $k_i$ is the number of neighbours of node $n_i$ and $|E_i|$ is
 the number of edges between the neighbours of node $n_i$. Thus, the
@@ -430,15 +431,16 @@ value which can be set by the user. For every pair of nodes in the
 network, a new random number is generated and the nodes are linked
 by an edge if the random number is below the cutoff value.
 
-This is implemented in the following way, where $N$ is the number of vertices
-in the graph, and $P$ is the probability cutoff value:
+In the following pseudocode for this algorithm, $N$ is the number
+of nodes in the graph, while $P$ is the probability cutoff value:
+
 \begin{algorithmic}
   \REQUIRE $0 \leq P \leq 1$
   \FOR{$i = 0 \to N - 1$}
     \FOR{$j = i + 1 \to N - 1$}
       \STATE $k \gets $ random real in $[0, 1]$
       \IF{$k < P$}
-        \STATE Add a new edge between $i$ and $j$.
+        \STATE Add edge between $i$ and $j$.
       \ELSE
         \STATE \textbf{continue}
       \ENDIF
@@ -446,41 +448,41 @@ in the graph, and $P$ is the probability cutoff value:
   \ENDFOR
 \end{algorithmic}
 
+
 \subsection{Watts-Strogatz}
-% FIXME
 The Watts-Strogatz model is a graph generation algorithm which
-generates random graphs with the small-world properties of
+generates random graphs with the small world properties of
 \emph{low average distance} and \emph{high clustering}.
-It was introduced by Duncan J. Watts and Steven Strogatz in 1998.
+It was invented by Duncan J. Watts and Steven Strogatz in 1998.
 
 This model is based on stochastically `rewiring' the edges of a
-regular ring lattice. The resulting network is an interpolation
+regular ring lattice. The resulting network is a trade-off
 between a regular ring lattice and a random Erd\H{o}s-R\'{e}nyi
-network. Therefore there is a great variation of possible output
-networks depending on the probabilities for both the connection
-of nodes and the rewiring of edges.
+network, therefore giving a great variation of possible output
+networks depending on the probabilities for both the initial
+connection of nodes as well as the rewiring of edges.
 
 The algorithm operates in two steps:
 
 \begin{itemize}
-  \item First, generate a regular ring lattice with $N$ nodes,
-        each with $K$ neighbours, half of which on each side.
+  \item First, generate a regular ring lattice with $|N|$ nodes,
+        each with $k_{avg}$ neighbours, half of which on each side.
 
   \begin{algorithmic}
-    \REQUIRE{$N \gg K \gg \ln{N} \gg 1$}
-    \FOR{$i = 0 \to N - 1$}
-      \STATE Create node $i$.
+    \REQUIRE{$|N| \gg k_{avg} \gg \ln{|N|} \gg 1$}
+    \FOR{$i = 0 \to |N| - 1$}
+      \STATE Create node $n_i$.
     \ENDFOR
 
-    \FOR{$i = 0 \to N - 1$}
-      \FOR{$j = 1 \to \frac{K}{2}$}
-        \STATE $k \gets (i + j) \bmod{N}$
-        \STATE Add edge between $i$ and $k$.
+    \FOR{$i = 0 \to |N| - 1$}
+      \FOR{$j = 1 \to \frac{k_{avg}}{2}$}
+        \STATE $m \gets (i + j) \bmod{|N|}$
+        \STATE Add edge between $i$ and $m$.
       \ENDFOR
 
-      \FOR{$j = 1 \to \frac{K}{2}$}
-        \STATE $k \gets (N + i - j) \bmod{N}$
-        \STATE Add edge between $i$ and $k$.
+      \FOR{$j = 1 \to \frac{|K|}{2}$}
+        \STATE $m \gets (|N| + i - j) \bmod{|N|}$
+        \STATE Add edge between $i$ and $m$.
       \ENDFOR
     \ENDFOR
   \end{algorithmic}
@@ -489,20 +491,24 @@ The algorithm operates in two steps:
         probability $\beta$, where $\gamma$ is a high number
         to prevent infinite looping:
 
+% FIXME: Is this really correct? Looks to me like edges may be lost
+         as they are always removed, but not always reconnected.
+         Marc, please check.
+
   \begin{algorithmic}
     \REQUIRE $0 \leq \beta \leq 1$
-    \FOR{$i = 0 \to N - 1$}
-      \FOR{$r = 1 \to \frac{K}{2}$}
-        \STATE $j \gets (n + r) \bmod{N}$
+    \FOR{$i = 0 \to |N| - 1$}
+      \FOR{$r = 1 \to \frac{k_{avg}}{2}$}
+        \STATE $j \gets (n + r) \bmod{|N|}$
         \STATE $r \gets$ random real in $[0, 1]$
         \IF{$r < \beta$}
           \STATE Remove edge between $i$ and $j$.
           \FOR{$cut = 1 \to \gamma$}
-            \STATE $k \gets$ random integer in $[0, N)$
-            \IF{edge between $i$ and $k$ exists}
+            \STATE $m \gets$ random integer in $[0, |N|)$
+            \IF{edge between $i$ and $m$ exists}
               \STATE \textbf{break}
             \ELSE
-              \STATE Add edge between $i$ and $k$.
+              \STATE Add edge between $i$ and $m$.
             \ENDIF
           \ENDFOR
         \ENDIF
@@ -514,25 +520,22 @@ The algorithm operates in two steps:
 \subsection{Barab\'{a}si-Albert}
 
 The Barab\'{a}si-Albert model is an algorithm for generating \emph{scale-free}
-networks, as described in section \ref{sec:scale-free}.
-
-As explained in section \ref{sec:scale-free}, a network is deemed scale-free if
-its degree distribution follows a power law. In context, this means that the
-frequency of attachment to a node varies as a power of its degree. Such networks
-are also \emph{scale invariant} meaning that their size has no effect on their
+networks as described in section \ref{sec:scale-free}, meaning that
+their degree distribution follows a power law. Such networks are also
+\emph{scale invariant} meaning that their size has no effect on their
 degree distribution.
 
-This is achieved using preferential attachment, meaning that nodes are added to
+This is achieved using \emph{preferential attachment}: Nodes are added to
 the graph one by one and nodes will be selected to be linked to other nodes with
 a probability proportional to their degree in the network. This model
-demonstrates that a power-law degree distribution can arise following growth and
-the preferential attachment and that the combination of these two elements may
-be an important factor in the formation of real networks \cite{oconn11}.
+demonstrates that a power law degree distribution can arise following growth
+with preferential attachment and that the combination of these two elements
+may be an important factor in the formation of real networks \cite{oconn11}.
 
 The model is implemented as follows:
 
-%% I'm really not sure how this works. Please Marc step in and make this
-%% understandable by a reader with no previous knowledge.
+%% FIXME: I'm really not sure how this works. Please Marc step in and make this
+%%        understandable by a reader with no previous knowledge.
 
 \begin{enumerate}
 \item
@@ -541,11 +544,11 @@ The model is implemented as follows:
   node as the indexed element, which can be accessed using a binary search.
   \begin{algorithmic}
     \REQUIRE A real random number $pref$ in $[0,100]$.
-    \FOR{$l=1 \to N-1$}
+    \FOR{$l=1 \to |N| - 1$}
       \STATE{$l \gets 2l$}
       \FOR {$i=0 \to l \ge 0$}
         \STATE $l \gets \frac{l}{2}$
-	\IF{$l+i \le N$}
+	\IF{$l+i \le |N|$}
           \IF{cumulative preference[l+i] $\leq$ genPreference}
             \STATE $i = i+l$
           \ENDIF
@@ -559,38 +562,38 @@ The model is implemented as follows:
 
   \item If more edges are to be added, repeat the procedure.
   \begin{algorithmic}
-    \REQUIRE  new Node $N_i$
+    \REQUIRE new Node $n_i$
     \REQUIRE Edge count with amount of edges to be added
-    \REQUIRE A vector of used nodes
-    \REQUIRE A vector of all nodes exluding $N_i$ called Nodes
+    \REQUIRE An array of used nodes
+    \REQUIRE An array of all nodes exluding $n_i$ called Nodes
     \WHILE{Edge count $>$ 0}
       \STATE r $\gets$ random real in $[0, 1]$
       \STATE Node vPref $\gets$ getPreference(Nodes,r)
-      \WHILE{Adding edges between $N_i$ and vPref failed}
+      \WHILE{Adding edges between $n_i$ and vPref failed}
         \STATE r $\gets$ random real in $[0, 1]$
         \STATE Node vPref $\gets$ getPreference(Nodes,r)
       \ENDWHILE
-      \STATE -- edge count
+      \STATE edge count = edge count - 1
       \STATE usedNodes.add(vPref)
       \IF{All nodes are used}
         \STATE break
       \ENDIF
     \ENDWHILE
   \end{algorithmic}
-
-  \item Recompute the preferences.
-  \begin{algorithmic}
-    \STATE updatePreferences(Nodes, 2Edges)
-  \end{algorithmic}
 \end{enumerate}
+
+% FIXME: Can we say 'distance' instead of path length? Do you only need the
+%        shortest path lengths or do you mean ALL paths?
+%        Just saying 'path length' is ambiguous.
 
 The average path length of Barab\'{a}si-Albert networks is comparable to the
 average path length of Erd\H{o}s-R\'{e}nyi networks of equal size and average
 degree.
 
-The clustering coefficient of Barab\'{a}si-Albert networks is greater than the
-clustering coefficient of Erd\H{o}s-R\'{e}nyi networks of equal size and average
-degree \cite{oconn11}, but relatively low compared to real networks.
+The \emph{clustering coefficient} of Barab\'{a}si-Albert networks is greater
+than the clustering coefficient of Erd\H{o}s-R\'{e}nyi networks of equal size
+and average degree \cite{oconn11}, but relatively low compared to real networks.
+
 
 \subsection{Bipartite model}
 
@@ -601,16 +604,16 @@ degree \cite{oconn11}, but relatively low compared to real networks.
   \caption{A sample bipartite graph}
 \end{wrapfigure}
 
-A bipartite graph is a graph which consists of two node sets. The nodes from
-each set are only allowed to connect to nodes which are not a member of their
-own set.
+A bipartite graph is a graph which consists of two node sets. Each node
+is only allowed to be connected to nodes in a set other than its own.
 
-This model is able to generate realistic networks with low average path length,
-high clustering coefficient and power-law distribution. The properties of the
-network generated dependend on the distribution of edges in the bipartite
-graph.
+This model is able to generate realistic networks with
+\emph{low average path length}, \emph{high clustering coefficient} and
+\emph{power law distribution}. The properties of the generated networks
+depend on the distribution of edges in the bipartite graph.
 
 %FIXME: please fix the doc layout
+
 The algorithm constructs a network in three simple steps:
 
 \begin{enumerate}
@@ -619,39 +622,39 @@ The algorithm constructs a network in three simple steps:
   \item Remove the nodes from set V from the graph.
 \end{enumerate}
 
-This procedure is implemented as follows:
+In pseudocode, this looks as follows:
 
 \begin{enumerate}
-  \item Generate two node vectors, $U$ and $V$, with respective
-        sizes $N_U$ and $N_V$:
+  \item Generate two node arrays $U$ and $V$, with respective
+        sizes $|U|$ and $|V|$:
 
     \begin{algorithmic}
-      \REQUIRE $N_U > 0$
-      \REQUIRE $N_V > 0$
+      \REQUIRE $|U| > 0$
+      \REQUIRE $|V| > 0$
 
-      \FOR{$i=0 \to N_U$}
+      \FOR{$i=0 \to |U|$}
         \STATE $i \gets i + 1$
-        \STATE $U$[i] $\gets$ New node
+        \STATE $U$[i] $\gets$ new node
       \ENDFOR
 
-      \FOR{$i=0 \to N_V$}
+      \FOR{$i=0 \to |V|$}
         \STATE $i \gets i + 1$
-        \STATE $V$[i] $\gets$ New node
+        \STATE $V$[i] $\gets$ new node
       \ENDFOR
     \end{algorithmic}
 
-  \item For each member of $V$, obtain it's degree distribution,
+  \item For each member of $V$, obtain it's degree distribution
         and add as many nodes from $U$ as the degree permits.
 
-  \item Connect any members of $U$, which are disjoint, to the network.
+  \item Connect any members of $U$ which are disjoint to the network.
 
   \item Generate a set (e.g. $S$), which holds all members of
         $U$ which are connected to the same member in $V$:
 
   \begin{algorithmic}
-    \FORALL{edges $E_i$}
-      \IF{$E_i$ connects $U$ and $V$}
-        \STATE Add $E_i$ to set $S$
+    \FORALL{edges $e_i$}
+      \IF{$e_i$ connects $U$ and $V$}
+        \STATE Add $e_i$ to set $S$
       \ENDIF
     \ENDFOR
   \end{algorithmic}
@@ -661,9 +664,9 @@ This procedure is implemented as follows:
 
   \begin{algorithmic}
     \REQUIRE Non empty edge set $S$
-    \FORALL{edges $E_i$ in $S$}
-      \FORALL{edges $E_j$ in $S$}
-        \IF{$E_i$ and $E_j$ share the same node in $U$}
+    \FORALL{edges $e_i$ in $S$}
+      \FORALL{edges $e_j$ in $S$}
+        \IF{$e_i$ and $e_j$ share the same node in $U$}
           \STATE Create new edge
         \ENDIF
       \ENDFOR
@@ -684,23 +687,23 @@ in graph generation.
 When using \emph{preferential attachment} we assign nodes a preference
 depending on their degree. Nodes with more edges will have a higher
 preference than nodes with fewer edges. The preference lies within the
-range $[0,1]$ and, assuming that no disjoint nodes exist,
-is
-\[ \frac{K_N}{Edges} \]
-for a certain node $N$ with degree $N_K$,
-and $Edges$ being the total number of edges.
+range $[0,1]$ and, assuming that no disjoint nodes exist, is
+\[ \frac{k_n}{|E|} \]
+for a certain node $n$ with degree $k_n$,
+and $|E|$ being the total number of edges.
 
 \emph{Clustering} is a concept which determines how to connect a
-node $N$ once a connection with at least one other node $N'$ has
+node $n$ once a connection with at least one other node $n'$ has
 been established. This procedure determines the intersection set
-of $N'$ with all its neighbours. Then node $N$ is connected to
+of $n'$ with all its neighbours. Then node $n$ is connected to
 all members of the intersection set.
 
 The Barab\'{a}si-Albert model has been used frequently to model real
 networks. A simple adaptation of it increases the clustering whilst
-retaining the power-law degree distribution of generated networks.
+retaining the power law degree distribution of generated networks.
 
 % FIXME: Check this.
+
 The bipartite nature of real networks can be interpreted as a
 tendency for cliques to form in real networks. \emph{Cliques} are
 fully connected subsets of vertices of a graph. Their presence
@@ -712,7 +715,7 @@ vertices, whereas the algorithm described in \cite{oconn11} combines
 both concepts to generate networks with scale-free characteristics.
 
 First, nodes are added to the network via the preferential attachment
-method. Then, once attached they are connected to the rest of the
+method. Once attached they are connected to the rest of the
 network via the clustering procedure.
 
 This is implemented as follows:
@@ -725,13 +728,13 @@ This is implemented as follows:
     can be accessed using a binary search.
 
     \begin{algorithmic}
-      \FOR{$l=1 \to N-1$}
-        \STATE{$l \gets 2l$}
+      \FOR{$l=1 \to |N| - 1$}
+        \STATE{$l \gets 2 \cdot l$}
         \STATE{$i \gets 0$}
         \WHILE{$l \ge 0$}
           \STATE $l \gets \frac{l}{2}$
           \IF{$l+i \le N$}
-            \STATE pref $\gets$ real in  $[0,100]$
+            \STATE pref $\gets$ real in  $[0, 100]$
             \IF{Comulative preference of $l$ $\leq$ pref}
               \STATE $i \gets i+l$
             \ENDIF
@@ -748,19 +751,19 @@ This is implemented as follows:
     Use the clustering procedure to determine other edges.
 
     \begin{algorithmic}
-      \REQUIRE New Node $N_i$
-      \REQUIRE Neighbour array with all nodes neighbouring $N_i$
+      \REQUIRE New Node $n_i$
+      \REQUIRE Neighbour array with all nodes neighbouring $n_i$
       \REQUIRE Edge count with amount of edges to be added
       \REQUIRE Used nodes array
       \STATE length = neighbours.size
 
       \WHILE{There are edges to add $\land$ neighbour array is not empty}
         \STATE rand $\gets$ random integer $\bmod$ length
-        \STATE Node $R_i \gets$ neighbour[rand]
-        \IF{Edge creation between $N_i$ and $R_i$ was successful}
-          \STATE --edge count
-        \STATE add $R_i$ to used nodes array
-          \STATE neighbour array $\gets$ intersection(neighbour array,neighbours($R_i$))
+        \STATE Node $n_r \gets$ neighbour[rand]
+        \IF{Edge creation between $n_i$ and $n_r$ was successful}
+          \STATE edge count = edge count - 1
+        \STATE add $n_r$ to used nodes array
+          \STATE neighbour array $\gets$ intersection(neighbour array, neighbours($n_r$))
         \ELSE
           \STATE remove neighbours[rand]
         \ENDIF
@@ -768,10 +771,7 @@ This is implemented as follows:
       \ENDWHILE
     \end{algorithmic}
 
-   \item
-    If more edges are to be added, repeat the procedure.
-  \item
-    Recompute the preferences.
+   \item If more edges are to be added, repeat the procedure.
 \end{enumerate}
 
 
@@ -794,38 +794,37 @@ generated networks in real time. The statistics which are calculated are:
   \item Clustering Coefficient
 \end{itemize}
 
+
 \subsection{Average degree}
-\[
-  \frac{2\sum_{i=1}^{\mathrm{max\ edges}} edges_i}
-       {\sum_{j=1}^{\mathrm{max\ vertices}} vertices_j}
+\[ \frac{2\sum_{i=1}^{\mathrm{|E|}} e_i}
+        {\sum_{j=1}^{\mathrm{|N|}} n_j}
 \]
+
 Implementation is trivial.
 
-\subsection{Average path length}
-\[
-\frac{\sum_{i,j}distance_\mathrm{shortest}(vertice_i,vertice_j)}{\sum
-vertices^2 - \sum vertices}
+
+\subsection{Average distance}
+\[ \frac{\sum_{i,j}distance(n_i,n_j)}
+        {\sum nodes^2 - \sum nodes}
 \]
 
-The first step in this algorithm is to calculate the path
-length from every node to every node:
+The first step in this algorithm is to calculate the sum of the
+distances from every node to every node:
 
 \begin{algorithmic}
-  \FORALL{Nodes N}
-    \STATE cumulativeLength $\gets$ lengthSum(N,visited,distance)
+  \FORALL{Nodes n}
+    \STATE cumulativeLength $\gets$ lengthSum(n,visited,distance)
     \STATE \dots
   \ENDFOR
 \end{algorithmic}
-
-Then divide the calculation by $N_i(N_i-1)$
-
+Then divide the calculation by $|N| \cdot (|N| - 1)$
 \begin{algorithmic}
-  \RETURN $\frac{\mathrm{cummulativeLength}}{N(N-1)}$
+  \RETURN $\frac{\mathrm{cumulativeLength}}{|N| \cdot (|N| - 1)}$
 \end{algorithmic}
 
 Here \code{lengthSum} is a subprocedure which traverses the network in a
-breadth-first manner and calculates the minimum distance to each node.
-It then returns the sum of all distances:
+breadth-first manner and calculates the distance to each node.
+Then it returns the sum of all distances:
 
 \begin{algorithmic}
   \REQUIRE Starting node parent
@@ -835,15 +834,15 @@ It then returns the sum of all distances:
   \WHILE{Queue is not empty}
     \STATE parent $\gets$ queue.dequeue()
     \STATE edges $\gets$ parent.edges()
-    \FORALL{E in edges}
-    \STATE Node n $\gets$ E.getDifferentFromParent()
+    \FORALL{e in edges}
+    \STATE Node n $\gets$ e.getDifferentFromParent()
       \IF{!visited.contain(n)}
         \STATE visited.insert(n)
         \STATE distance[n] $\gets$ distance.value(parent, 0) + 1
         \STATE queue.enqueue(n)
       \ENDIF
     \ENDFOR
-    \STATE retLength += distance[parent]
+    \STATE retLength = retLength distance[parent]
   \ENDWHILE
 
   \RETURN retLength
@@ -851,54 +850,52 @@ It then returns the sum of all distances:
 
 
 \subsection{Clustering coefficient}
-The clustering coefficient is defined as:
-\[
-  C_i = \frac{2|\{e_j,_k\}|}{k_i(k_i-1)}
-\]
-where $k_i$ is the number of vertices immediately connected to $node_i$.
+As described in section \label{sec:clusteringcoefficient}, the
+clustering coefficient $C_i$ is defined as
+\[ C_i = \frac{2 \cdot |E_i|}{k_i \cdot (k_i-1)} \]
 
-The set ${e_j,_k}$ is set of all edges common to the neighbours of $vertex_i$.
+where $k_i$ is the number of neighbours of node $n_i$ and $|E_i|$ is
+the number of edges between the neighbours of node $n_i$.
 
 The first step is to calculate the intersection of the neighbours
 of the node we want to calculate the statistic for and the
 neighbours of that node's neighbours:
 
 \begin{algorithmic}
-  \REQUIRE A node N
-  \REQUIRE An edge array with edges connected to N
+  \REQUIRE A node $n$
+  \REQUIRE An edge array with edges connected to $n$
   \REQUIRE A counter called intersection
-  \WHILE {!edges.empty()}
-    \STATE Edge e $\gets$ edges.takeFirst()
-    \STATE Vector nNeighbours = N.neighbours()
-    \STATE Node $N_i \gets$ e.differentFrom(N)
-    \STATE Vector otherNeighbours $\gets$  $N_i$.neighbours()
-    \STATE  intersection += intersectionCount(nNeighbours, otherNeighbours);
+  \WHILE {!edges.empty}
+    \STATE Edge $e$ $\gets$ edges.takeFirst
+    \STATE Vector nNeighbours = $n$.neighbours
+    \STATE Node $n_i \gets$ $e$.differentFrom($n_i$)
+    \STATE Vector otherNeighbours $\gets$ $n_i$.neighbours
+    \STATE intersection = intersection + intersectionCount(nNeighbours, otherNeighbours);
   \ENDWHILE
 \end{algorithmic}
 
 If the degree of the node is greater than 1 we return the calculation.
 
 \begin{algorithmic}
-  \REQUIRE k = N.degree()
-  \IF{k $>$ 1}
-    \RETURN $\frac{2intersection}{k*(k-1)}$
+  \REQUIRE k = n.degree
+  \IF{$k > 1$}
+    \RETURN $\frac{2 \cdot intersection}{k \cdot (k-1)}$
   \ELSE
-    \RETURN 0
+    \RETURN $0$
   \ENDIF
 \end{algorithmic}
 
 
 \subsection{Clustering average}
-\[
-  C_\mathrm{avg} =
-  \frac{1}{\mathrm{\sum nodes}}\sum_{i=1}^{\mathrm{max\ nodes}} C_i
+\[ C_\mathrm{avg} =
+   \frac{1}{\mathrm{|N|}}\sum_{i=1}^{\mathrm{|N|}} C_i
 \]
 
 \begin{algorithmic}
-  \FORALL {Nodes N}
-    \STATE clusterCumulative = clusterCumulative + clusteringCoeff(N)
+  \FORALL {Nodes n}
+    \STATE clusterCumulative = clusterCumulative + clusteringCoeff(n)
   \ENDFOR
-  \RETURN $\frac{clusterCumulative}{Node Cont}$
+  \RETURN $\frac{clusterCumulative}{|N|}$
 \end{algorithmic}
 
 
@@ -909,9 +906,7 @@ growth the algorithm takes the natural logarithm of both the degree and its
 frequency in the network, allowing for the gradient to be calculated as a
 straight line.
 
-\[
-  f(x) = ax^k \equiv ln(f(x)) = kln(a) + kln(x) \equiv y = mx + b
-\]
+\[ f(x) = ax^k \equiv ln(f(x)) = kln(a) + kln(x) \equiv y = mx + b \]
 
 \begin{algorithmic}
   \REQUIRE maxDegree which holds the maximum degree of the network
@@ -919,7 +914,7 @@ straight line.
   \FOR { $i = 0 \to maxDegree$}
     \STATE ++i
     \STATE count $\gets$ graph.nodesWithDegree(i)
-    \STATE y = $\frac{count}{Total Nodes}$
+    \STATE y = $\frac{count}{|N|}$
     \IF { $y \ne 0$}
       \STATE  point p($ln(i+1)$,$ln(y)$)
       \STATE plot.add(p)
@@ -927,7 +922,7 @@ straight line.
   \ENDFOR
 \end{algorithmic}
 
-After recording the degree distribution, the algorithm proceeds to
+After recording the degree distribution the algorithm proceeds to
 calculate the straight line gradient of the captured points.
 
 \begin{algorithmic}
@@ -960,9 +955,9 @@ gradient is sloped downwards.
 
 \subsection{Graph display}
 Visigoth is able to draw graphs in both 2D and 3D, showing the graph either
- in a planar display or in ``space" and thus allowing the user to ``fly" through it.
-Notably, the user can switch between the two modes at any time while preserving
-the graph.
+in a planar display or in ``space' and thus allowing the user to ``fly' through
+it. Notably, the user can switch between the two modes at any time while
+preserving the graph.
 
 \subsection{Graph Generation}
 Visigoth uses the 5 algorithms described in section \ref{sec:algos} to generate
