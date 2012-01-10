@@ -1,9 +1,10 @@
 DOCBASE=report
 PRESENTATION=presentation
+EXECSUMMARY=execsummary
 GRAPHICS=
 LATEX?=pdflatex
 
-all: $(GRAPHICS) $(DOCBASE).pdf $(PRESENTATION).pdf pdfclean
+all: $(GRAPHICS) $(DOCBASE).pdf $(PRESENTATION).pdf $(EXECSUMMARY).pdf pdfclean
 
 %-crop.pdf: %.pdf
 	pdfcrop $<
@@ -31,9 +32,13 @@ $(PRESENTATION).pdf: $(PRESENTATION).tex $(GRAPHICS)
 	$(LATEX) $(PRESENTATION).tex
 	$(LATEX) $(PRESENTATION).tex
 
+$(EXECSUMMARY).pdf: $(EXECSUMMARY).tex $(GRAPHICS)
+	$(LATEX) $(EXECSUMMARY).tex
+	$(LATEX) $(EXECSUMMARY).tex
+
 .PHONY: pdfclean
 pdfclean:
-	$(foreach f,$(DOCBASE) $(PRESENTATION),\
+	$(foreach f,$(DOCBASE) $(PRESENTATION) $(EXECSUMMARY),\
 	rm -f $(f).ps &&\
 	rm -f $(f).dvi &&\
 	rm -f $(f).aux &&\
