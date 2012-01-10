@@ -52,10 +52,10 @@
 
 \newcommand{\myhref}[1]{\href{http://#1}{#1}}
 
-\newcommand{\Qt}{\buzz{Qt}}
-\newcommand{\Cpp}{\buzz{C++}}
-\newcommand{\OpenGL}{\buzz{OpenGL}}
-\newcommand{\FADE}{\buzz{FADE}}
+\newcommand{\Qt}{\buzz{Qt} }
+\newcommand{\Cpp}{\buzz{C++} }
+\newcommand{\OpenGL}{\buzz{OpenGL} }
+\newcommand{\FADE}{\buzz{FADE} }
 
 %% Clubs and widows. Avoid them like the plague.
 \clubpenalty = 10000
@@ -162,8 +162,9 @@
       band. In this way, nodes tend to repel each other while edges keep
       clusters together. Our implementation worked great but was too slow for
       large graph. For this reason, we sped it up implementing a 3D version of
-      the FADE algorithm, which works by approximation by subdividing the space
-      and then treat in sub-spaces as nodes, instead of analysing each node.
+      the \FADE algorithm, which works by approximation by subdividing the space
+      and then sometimes treating in sub-spaces as nodes, instead of always
+      analysing each node.
 
     \item[\Cpp] \Cpp, while being a very complex and fairly low level language,
       has served us well. This is mainly due to the excellent availability of
