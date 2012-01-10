@@ -16,14 +16,14 @@ amazing, incredible
 [make them understand that we have several algos, we are FAST, we are multiplatform]
 
 
-Maths (sum 2:00 min, Ingrid)
+Maths (Ingrid)
 =====
 
 What is a graph? (0:30 min)
 
-Random graph vs. graphs closer to SWNs (0:30 min)
+Small world effect: history (1:30 min)
 
-Comparisons (1:30 min):
+Comparisons (2:00 min):
 ------------
 1. Low avg path length
 2. high clustering coefficient [cliques, maybe compare to social life?]
@@ -32,7 +32,7 @@ Comparisons (1:30 min):
 GRAPHICAL EXAMPLES? - picture of the internet / proteins (0:30 min)
 
 
-Algorithms (3:00 min, Marc):
+Algorithms (2:30 min, Marc):
 ==========
 Checklist showing which properties the algo fulfils
 
@@ -48,21 +48,22 @@ PAwC		y	y	y	FINALLY!
 [skip statistics, show them in demo]
 
 
-Engineering (sum 5:30 min)
+Engineering
 ===========
 [Qt, C++, OpenGL, Spring Model Algos]
 
 joke about c++, qt
 
-Qt (2:00 min, Alex)
+Qt (2:30 min, Alex)
  -> may not be as hyped as node.js but after 15 years of dev it seems to work. Well, that's what they say.
 
-C++ : ugly but utilitarianist (Francesco, 1:00 min)
+Graph drawing, FADE (Francesco, 2:30 min)
+
+C++ (Francesco, 1:30 min)
+ugly but utilitarianist
 [compare to GLib...]
 
-Graph drawing, FADE (Francesco, 1:30 min)
-
-OpenGL (Max, 1:00 min)
+OpenGL (Max, 1:30 min)
 
 
 DEMO (5:00 min, Max)
@@ -70,6 +71,6 @@ DEMO (5:00 min, Max)
 UI options, Qt, OpenGL
 
 
-Conclusion (1:00 min, Francesco)
+Conclusion (2:00 min, Francesco)
 ==========
 Stress the delivering focus attitude of our team and its fulfilment
