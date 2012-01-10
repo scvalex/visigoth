@@ -96,7 +96,7 @@
   Marc-David Haubenstock\\\mailto{mh808@doc.ic.ac.uk}\and
   Maximilian Staudt\\\mailto{ms9109@doc.ic.ac.uk}
 }
-\date{}
+\date{Abbas Edalat (\emph{supervisor})\\\mailto{ae@doc.ic.ac.uk}}
 \maketitle
 
 \begin{description}
@@ -130,10 +130,9 @@
   clustering. Additionally, Visigoth can connect to social networking
   platforms such as Twitter to fetch and display real-world networks.
 
-  Users can regenerate graphs, add nodes, tweak node layouts, move
-  nodes and reshuffle nodes as well as highlight nodes and their
-  edges. They can also zoom in/out and pan graphs, and in 3D mode
-  they can ``fly'' through the graph and rotate it.
+  Users can regenerate graphs and add, move, reshuffle, as well as
+  highlight nodes and their edges. They can zoom and pan graphs, and,
+  in 3D mode, they can rotate and ``fly'' through the graph.
 
   Users may also customize the appearance of the generated graph by
   changing the colour of the edges, the nodes and the background.
@@ -186,52 +185,38 @@
   % components, or any other comparable measure of the effort
   % required; Summary of each team member's contributions
 
-  We encountered a number of difficulties while building Visigoth
-  which we overcame by dividing the application into mostly
-  independent components. The following sections provide overviews
-  and short descriptions for each component.
+  Building Visigoth, we overcame a number of difficulties by splitting
+  it into several independent components:
 
   \begin{description}
-  \item[Tests] The test system is heavily oriented towards
-    functionality testing, checking that user actions cause the
+  \item[Tests] The functional tests check that user actions cause the
     expected behaviour.
 
-  \item[GUI] The GUI is the only user-visible component. It was relies
-    heavily on \Qt's widget library and \OpenGL.
+  \item[GUI] The user-visible component relies heavily on \Qt's widget
+    library and \OpenGL.
 
-  \item[GraphScene] We took a Model-View-Controller approach in
-    Visigoth's design. While the GUI system is the view the
-    GraphScene is the model and encapsulates the controller.
+  \item[GraphScene] The graph layout component is the \emph{model} and
+    \emph{controller} in Visigoth's overall Model-View-Controller
+    design, supplemented by the \textbf{GUI} as the \emph{View}.
 
-  \item[Algorithms] The last component of Visigoth are the graph
-    generation algorithms. All algorithms implement the
-    \code{Algorithm} interface which allows them to be plugged into
-    the GraphScene with ease.
+  \item[Algorithms] The last component are the graph generation
+    algorithms. By implementing the \code{Algorithm} interface, they
+    are easily plugged into the \code{GraphScene}.
   \end{description}
 
   Work was divided within the team such that each member would focus
   on developing a particular component and reviewing another. We chose
   an iterative development model where each iteration consisted of
-  adding a small number of features to the existing product.
+  adding a small number of features to the existing
+  product. Furthermore, our practice of peer-review ensured that the
+  whole team stayed up to date about the state of the project, exposed
+  unnoticed bugs and maintained an always-releasable codebase.
 
-  We had to ensure that no bugs crept into the master branch. In order
-  to achieve this goal, no changes were allowed to be merged into
-  master until at least one other member of the team reviewed them.
-  By means of our consistent practice of peer review the whole team
-  stayed informed about the current state of the project in addition
-  to exposing and fixing bugs missed by the original code author.
-
-  To further promote group awareness of the complete state of the
-  project we held frequent short meetings true to the idea of
-  \emph{scrum}. These were whole-group meetings held once every few
-  days in which team members shared comments on the features they
-  were working on at the time and the future outlook of the project.
-
-  While our development methodology was not test-driven or focused on
-  usability, we continuously tested the software on volunteers and
-  towards the end of each iteration we held meetings with our client.
-  These tests and meetings uncovered a few problems which eventually
-  led to small redesigns.
+  Further promoting group awareness of the project's state, we held
+  frequent short meetings true to the idea of \emph{scrum}. In these
+  whole-group meetings, held once every few days, team members shared
+  comments on the features they were working on at the time and the
+  future outlook of the project.
 
 \item[Validation]
   % D. Validation and Conclusions How did you validate your product?
@@ -250,7 +235,7 @@
   positive. As the interface always met our client's demands, only
   small changes were necessary from iteration to iteration.
 
-  Furthermore, we asked friends (``users'') to try accomplishing
+  Furthermore, we asked volunteers (``users'') to try accomplishing
   certain tasks in Visigoth while we watched. At the end, we would ask
   what felt awkward or wrong. The lasting impression was that they
   were happy with the software, but watching them struggle with
