@@ -652,11 +652,7 @@ The model is implemented as follows:
     \REQUIRE new Node $n_i$
     \REQUIRE Edge count with amount of edges to be added
     \REQUIRE An array of used nodes
-<<<<<<< HEAD
-    \REQUIRE An array of all nodes exluding $N_i$ called Nodes
-=======
     \REQUIRE An array of all nodes exluding $n_i$ called Nodes
->>>>>>> c8d564b195e2168f038e05ada3edb29a43ab5025
     \WHILE{Edge count $>$ 0}
       \STATE r $\gets$ random real in $[0, 1]$
       \STATE Node vPref $\gets$ getPreference(Nodes,r)
@@ -705,64 +701,10 @@ graph.
   \item remove the nodes of set $V$ from the graph.
 \end{enumerate}
 
-<<<<<<< HEAD
-This procedure is implemented as follows:
-
-
-\begin{algorithmic}
-\REQUIRE An array of nodes of set U called uVector
-\REQUIRE An array of nodes of set V called vVector
-\REQUIRE A degree distribution for all nodes
-
-\STATE Populate uVector and vVector
-\FORALL{Elements of uVector}
-  \STATE Connect to random members of vVector. The degrees of the connections are governed
-              by the degree distribution.
-\ENDFOR
-\STATE Connect all disconnected members of uVector to a random member in vVector
-\FORALL{Elements of vVector $V_i$}
-  \STATE Connect all members of uVector connected to $V_i$
-\ENDFOR
-\STATE Remove all edges associated with vVector.
-\STATE Remove all vVector members.
-\end{algorithmic}
-
-\subsection{Preferential Attachment with Clustering}
-
-% FIXME
-Preferential attachment and clustering are two distinct concepts used
-in graph generation.
-
-When using \emph{preferential attachment} we assign nodes a preference
-depending on their degree. Nodes with more edges will have a higher
-preference than nodes with fewer edges. The preference lies within the
-range $[0,1]$ and, assuming that no disjoint nodes exist,
-is
-\[ \frac{K_N}{Edges} \]
-for a certain node $N$ with degree $N_K$,
-and $Edges$ being the total number of edges.
-
-\emph{Clustering} is a concept which determines how to connect a
-node $N$ once a connection with at least one other node $N'$ has
-been established. This procedure determines the intersection set
-of $N'$ with all its neighbours. Then node $N$ is connected to
-all members of the intersection set.
-
-The Barabasi-Albert model has been used frequently to model real
-networks. A simple adaptation of it increases the clustering whilst
-retaining the power-law degree distribution of generated networks.
-
-% FIXME: Check this.
-The bipartite nature of real networks can be interpreted as a
-tendency for cliques to form in real networks. \emph{Cliques} are
-fully connected subsets of vertices of a graph. Their presence
-greatly increases the clustering coefficient of a network.
-=======
 \noindent In pseudocode, this looks as follows:
 \begin{enumerate}
   \item Generate two node sets $U$ and $V$, with respective sizes
     $|U|$ and $|V|$:
->>>>>>> c8d564b195e2168f038e05ada3edb29a43ab5025
 
     \begin{algorithmic}
       \REQUIRE $|U| > 0$
