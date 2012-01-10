@@ -118,7 +118,7 @@
   properties: low average path length, high clustering, and scale-free
   degree distribution.
 
-  Visigoth generates networks with several algorithms, which present a
+  Visigoth generates networks with several algorithms which present a
   smooth progression in the number of desired properties their output
   exhibits. The algorithms are: Erd\H{o}s-R\'{e}nyi, Watts-Strogatz,
   Barabasi-Albert, Bipartite, and Preferential attachment with
@@ -126,14 +126,14 @@
   platforms such as Twitter to fetch and display real-world networks.
 
   Users can regenerate graphs, add nodes, tweak node layouts, move
-  nodes, reshuffle nodes, highlight nodes and cliques. They can also
-  zoom in/out, pan, rotate graphs. In 3D mode, they can ``fly''
-  through the graph.
+  nodes and reshuffle nodes as well as highlight nodes and their
+  edges. They can also zoom in/out and pan graphs, and in 3D mode
+  they can ``fly'' through the graph and rotate it.
 
   Users may also customize the appearance of the generated graph by
-  changing the colour of edges and nodes, choosing a different
-  background. Finally, Visigoth supports taking snapshots of graphs
-  and exporting them to PNG or JPEG files.
+  changing the colour of the edges, the nodes and the background.
+  Finally, Visigoth supports taking snapshots of graphs and exporting
+  them to PNG or JPEG files.
 
 \item[Technical Description]
   % B. Short Technical Description; Short introduction into
@@ -151,52 +151,52 @@
   % components, or any other comparable measure of the effort
   % required; Summary of each team member's contributions
 
-  We encountered a number of difficulties whilst building Visigoth,
-  which we over- came by dividing the application into
-  mostly-independent components.  The following sections provide
-  overviews and short descriptions for each component.
+  We encountered a number of difficulties while building Visigoth
+  which we overcame by dividing the application into mostly
+  independent components. The following sections provide overviews
+  and short descriptions for each component.
 
   \begin{description}
   \item[Tests] The test system is heavily oriented towards
     functionality testing, checking that user actions cause the
     expected behaviour.
 
-  \item[GUI] The GUI is the only user-visible component. It was relies
-    heavily on Qt's widget library and OpenGL.
+  \item[GUI] The GUI is the only component directly visible to the
+    user. It relies heavily on Qt's widget library and OpenGL.
 
-  \item[GraphScene] We took an Model-View-Controller approach in
-    Visigoth's design. Whist the GUI system is the view, the
-    GraphScene is the model and encap- sulates the controller.
+  \item[GraphScene] We took a Model-View-Controller approach in
+    Visigoth's design. While the GUI system is the view the
+    GraphScene is the model and encapsulates the controller.
 
-  \item[Algorithms] The last component of Visigoth are the
-    algorithms. All the individual algorithms implement the Algorithm
-    interface, which allows them to be easily plugged into the
-    GraphScene.
+  \item[Algorithms] The last component of Visigoth are the graph
+    generation algorithms. All algorithms implement the
+    \code{Algorithm} interface which allows them to be plugged into
+    the GraphScene with ease.
   \end{description}
 
-  Work was divided between team members such that each would focus on
-  developing a particular component and reviewing another. We chose an
-  iterative development model, where each iteration consisted of
+  Work was divided within the team such that each member would focus
+  on developing a particular component and reviewing another. We chose
+  an iterative development model where each iteration consisted of
   adding a small number of features to the existing product.
 
-  We have had to ensure that no bugs crept into the master
-  branch. Towards this goal, no changes are merged into master until
-  at least another member of the team reviews them. Through this
-  practice of peer review the whole team has stayed informed on the
-  current state of the project in addition to exposing and fixing bugs
-  missed by the original code author.
+  We had to ensure that no bugs crept into the master branch. In order
+  to achieve this goal, no changes were allowed to be merged into
+  master until at least one other member of the team reviewed them.
+  By means of our consistent practice of peer review the whole team
+  stayed informed about the current state of the project in addition
+  to exposing and fixing bugs missed by the original code author.
 
   To further promote group awareness of the complete state of the
   project we held frequent short meetings true to the idea of
-  \emph{scrum}. These were whole-group meetings held every few days,
-  in which team members shared comments on what features they were
-  working on at the time and the future outlook of the project.
+  \emph{scrum}. These were whole-group meetings held once every few
+  days in which team members shared comments on the features they
+  were working on at the time and the future outlook of the project.
 
   While our development methodology was not test-driven or focused on
   usability, we continuously tested the software on volunteers and
-  towards the end of each iteration, we held meetings with our
-  client. These tests and meetings uncovered a few problems, which
-  eventually lead to small redesigns.
+  towards the end of each iteration we held meetings with our client.
+  These tests and meetings uncovered a few problems which eventually
+  led to small redesigns.
 
 \item[Validation]
   % D. Validation and Conclusions How did you validate your product?
