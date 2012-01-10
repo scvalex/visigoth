@@ -52,6 +52,11 @@
 
 \newcommand{\myhref}[1]{\href{http://#1}{#1}}
 
+\newcommand{\Qt}{\buzz{Qt}}
+\newcommand{\Cpp}{\buzz{C++}}
+\newcommand{\OpenGL}{\buzz{OpenGL}}
+\newcommand{\FADE}{\buzz{FADE}}
+
 %% Clubs and widows. Avoid them like the plague.
 \clubpenalty = 10000
 \widowpenalty = 10000
@@ -144,11 +149,12 @@
   the best of our machines:
 
   \begin{description}
-    \item[Qt] To model the UI, we use Nokia's brilliant framework. Qt ships with
-      a permissive license, has excellent cross-platform supports, and comes
-      with a comprehensive library along with a meta-object system on top of C++
-      objects. These features considerably ease the pain of C++ development, and
-      development time would have definitely been longer without Qt.
+    \item[\Qt] To model the UI, we use Nokia's brilliant framework. \Qt
+      ships with a permissive license, has excellent cross-platform supports,
+      and comes with a comprehensive library along with a meta-object system on
+      top of \Cpp objects. These features considerably ease the pain of \Cpp
+      development, and development time would have definitely been longer
+      without \Qt.
 
     \item[Force-directed algorithm] To draw our graphs, we use an optimised,
       state of the art force-directed algorithm. This class of algorithms works
@@ -159,18 +165,18 @@
       the FADE algorithm, which works by approximation by subdividing the space
       and then treat in sub-spaces as nodes, instead of analysing each node.
 
-    \item[C++] C++, while being a very complex and fairly low level language,
+    \item[\Cpp] \Cpp, while being a very complex and fairly low level language,
       has served us well. This is mainly due to the excellent availability of
       tools, the fine-grained control resulting in better performance, and the
       its abstraction capabilities. However, we often fought against its
       complexity and unmanaged nature.
 
-    \item[OpenGL] Finally, our graph rendered is implemented in straight OpenGL,
-      for performance reason. After trying other backends (Cairo, Qt), and
-      realising that we would not be able to render more than a few nodes with
-      them, we went the hardware accelerated way with OpenGL. This way, we are
-      able of drawing 10s of thousands of nodes while being able to pan, zoom,
-      and select our graph both in 3D and 2D.
+    \item[\OpenGL] Finally, our graph rendered is implemented in straight
+      \OpenGL, for performance reason. After trying other backends
+      (\buzz{Cairo}, \Qt), and realising that we would not be able to render
+      more than a few nodes with them, we went the hardware accelerated way with
+      \OpenGL. This way, we are able of drawing 10s of thousands of nodes while
+      being able to pan, zoom, and select our graph both in 3D and 2D.
   \end{description}
 
 \item[Software Engineering Issues]
@@ -195,7 +201,7 @@
     expected behaviour.
 
   \item[GUI] The GUI is the only user-visible component. It was relies
-    heavily on Qt's widget library and OpenGL.
+    heavily on \Qt's widget library and \OpenGL.
 
   \item[GraphScene] We took an Model-View-Controller approach in
     Visigoth's design. Whist the GUI system is the view, the
