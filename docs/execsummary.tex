@@ -145,40 +145,34 @@
   % technologies used Design of your software, possibly including a
   % diagram of the major components of the project; Main achievements
 
-  While building Visigoth, we employed a variety of tools and techniques to make
-  the best of our machines:
+  Building Visigoth, we employed a variety of tools:
 
   \begin{description}
-    \item[\Qt] To model the UI, we use Nokia's brilliant framework. \Qt
-      ships with a permissive license, has excellent cross-platform supports,
-      and comes with a comprehensive library along with a meta-object system on
-      top of \Cpp objects. These features considerably ease the pain of \Cpp
-      development, and development time would have definitely been longer
-      without \Qt.
+    \item[\Qt] The UI is built using Nokia's desktop application
+      framework. \Qt is open-source, cross-platform, comes with a
+      comprehensive library, and extensions to \Cpp objects. Together,
+      these features considerably simplified \Cpp development, and
+      shortened development time.
 
-    \item[Force-directed algorithm] To draw our graphs, we use an optimised,
-      state of the art force-directed algorithm. This class of algorithms works
-      by treating each nodes as a charged particle and each edge as a rubber
-      band. In this way, nodes tend to repel each other while edges keep
-      clusters together. Our implementation worked great but was too slow for
-      large graph. For this reason, we sped it up implementing a 3D version of
-      the \FADE algorithm, which works by approximation by subdividing the space
-      and then sometimes treating in sub-spaces as nodes, instead of always
-      analysing each node.
+    \item[Force-directed algorithm] To draw our graphs, we use an
+      optimised, state of the art force-directed
+      algorithm\footnote{each node is treated as a charged particle
+        and each edge as a rubber band so that nodes repel each other
+        while edges keep clusters together}. We sped up our na\"ive
+      code by implementing a 3D version of the \FADE approximation
+      algorithm, which treats distant node clusters as single
+      entities.
 
-    \item[\Cpp] \Cpp, while being a very complex and fairly low level language,
-      has served us well. This is mainly due to the excellent availability of
-      tools, the fine-grained control resulting in better performance, and the
-      its abstraction capabilities. However, we often fought against its
-      complexity and unmanaged nature.
+    \item[\Cpp] Despite its complexity and low-level nature, \Cpp has
+      served us well. Because of the large availability of libraries,
+      high performance and abstraction capabilities, it enabled us to
+      develop a better product.
 
-    \item[\OpenGL] Finally, our graph rendered is implemented in straight
-      \OpenGL, for performance reasons. After trying other backends
-      (\buzz{Cairo}, \Qt), and realising that we would not be able to render
-      more than a few hundreds nodes with them, we went the hardware accelerated
-      way with \OpenGL. This way, we are able of drawing 10s of thousands of
-      nodes while being able to pan, zoom, and select our graph both in 3D and
-      2D.
+    \item[\OpenGL] Our graph is rendered using \OpenGL for performance
+      reasons. We found that using other backends (\buzz{Cairo}, \Qt),
+      we would not be able to render more than a few hundred
+      nodes. Using \OpenGL, we can draw thousands of nodes while
+      animating the graph in real-time, both in 2D and 3D.
   \end{description}
 
 \item[Software Engineering Issues]
