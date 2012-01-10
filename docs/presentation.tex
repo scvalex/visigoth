@@ -668,39 +668,7 @@ Same code: Linux, Windows, OSX.
 \frame{
   \frametitle{C++}
 
-  \emph{C++}, the world's friendliest language...
-  \pause
-
-  If you like segfaults.
-  \pause
-
-  And 3-pages long compiler errors.
-}
-
-\frame{
-  \frametitle{C++}
-
-  We chose \emph{C++} because of \emph{Qt}, but some team members were scared.
-
-  However, it does have its advantages, and it served us well:
-
-  \begin{itemize}
-    \pause
-    \item Tools: Mainly \emph{Qt} and \emph{OpenGL}
-    \pause
-    \item Performance: ours is a CPU bound application, and with \emph{C++} we
-      can squeeze our machines more, especially with manual memory management.
-    \pause
-    \item Abstraction: while \emph{C} and \emph{C++} are both fast and popular,
-      doing O-O in \emph{C} is \textbf{not} nice (take a look at
-      GObject\footnote{\url{http://developer.gnome.org/gobject/}} for details).
-  \end{itemize}
-}
-
-\frame{
-  \frametitle{C++, the dark side}
-
-  But...
+  We chose \emph{C++} because of \emph{Qt}, but some team members were scared:
 
   \begin{itemize}
     \pause
@@ -709,15 +677,21 @@ Same code: Linux, Windows, OSX.
     \pause
     \item The language is a mess. Too much stuff in too little space: templates,
       overloading, friends\dots\\
-      \pause
-      {\tiny \lstinputlisting{cpperr}}
   \end{itemize}
-  \pause
-  In any case, we are happy with our choice, and we don't care what
-  the haters say.
+
+  However, it does have its advantages, and it served us well:
+
+  \begin{itemize}
+    \pause
+    \item \textbf{Tools}: \emph{Qt}, \emph{OpenGL}, etc.
+    \pause
+    \item \textbf{Performance}: ours is a CPU bound application, and
+      with \emph{C++} we can squeeze our machines more.
+    \pause
+    \item \textbf{Abstraction}: while \emph{C} and \emph{C++} are both
+      fast and popular, having O-O abstractions help a lot.
+  \end{itemize}
 }
-
-
 
 \subsection{OpenGL}
 
