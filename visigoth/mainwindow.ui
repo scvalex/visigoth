@@ -54,7 +54,7 @@
      <addaction name="nodeColourAct"/>
      <addaction name="edgeColourAct"/>
      <addaction name="backgroundColourAct"/>
-     <addaction name="highlightNeighboursAct"/>
+     <addaction name="resetHighlightingAct"/>
     </widget>
     <addaction name="menuCustomizeGraph"/>
    </widget>
@@ -188,15 +188,15 @@
     <string>Background Colour</string>
    </property>
   </action>
-  <action name="highlightNeighboursAct">
-   <property name="checkable">
-    <bool>true</bool>
-   </property>
+  <action name="resetHighlightingAct">
    <property name="checked">
     <bool>false</bool>
    </property>
    <property name="text">
-    <string>Highlight Neighbours</string>
+    <string>Reset Highlighting</string>
+   </property>
+   <property name="toolTip">
+    <string>Reset Highlighting</string>
    </property>
   </action>
   <action name="mode3DAct">

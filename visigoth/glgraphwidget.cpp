@@ -24,7 +24,6 @@ GLGraphWidget::GLGraphWidget(QWidget *parent) :
     QGLWidget(parent),
     myScene(0),
     mouseMode(MOUSE_IDLE),
-    isHighlighted(false),
     animTimerId(0)
 {
     setFocusPolicy(Qt::StrongFocus);
@@ -91,40 +90,29 @@ void GLGraphWidget::wheelEvent(QWheelEvent *event) {
     this->repaint();
 }
 
-void GLGraphWidget::highlightNeighbours(bool enabled) {
-    isHighlighted = enabled;
-    if (!enabled) {
-        resetGraphColours();
+void GLGraphWidget::resetHighlighting() {
+    foreach (Node *node, myScene->nodes()) {
+        node->setHighlight(false);
     }
-}
-
-void GLGraphWidget::resetGraphColours() {
-    foreach(Edge* edge, myScene->edges()) {
-        if (edge->colour() != myScene->edgeColour())
-            edge->setColour(myScene->edgeColour());
+    foreach (Edge *edge, myScene->edges()) {
+        edge->setHighlight(false);
     }
-    foreach(Node* node, myScene->nodes()) {
-        if (node->colour() != myScene->nodeColour())
-            node->setColour(myScene->nodeColour());
-        }
     repaint();
 }
 
 void GLGraphWidget::mouseDoubleClickEvent(QMouseEvent *event) {
     if (event->button() == Qt::LeftButton) {
         Node *hitNode = selectGL(event->x(), event->y());
-        if (!hitNode || hitNode->highlighted() != isHighlighted) {
+        if (!hitNode)
             return;
-        }
 
-        isHighlighted = !isHighlighted;
-        hitNode->setHighlight(isHighlighted);
+        hitNode->setHighlight(!hitNode->highlighted());
         foreach (Node* node, hitNode->neighbours()) {
             foreach (Edge* edge, hitNode->edges()) {
                 if ((edge->sourceNode() == hitNode && edge->destNode() == node) ||
                     (edge->sourceNode() == node && edge->destNode() == hitNode))
                 {
-                    edge->setHighlight(isHighlighted);
+                    edge->setHighlight(hitNode->highlighted());
                 }
             }
         }

@@ -58,9 +58,6 @@ public:
     QColor nodeColour();
     QColor backgroundColour();
 
-signals:
-    void nodeMoved();
-
 public slots:
     void onNodeMoved();
     void addVertex();
@@ -72,6 +69,7 @@ public slots:
     void customizeBackgroundColour(const QColor &newColour);
 
 signals:
+    void nodeMoved();
     void algorithmChanged(Algorithm *newAlgo);
     void repopulated();
 

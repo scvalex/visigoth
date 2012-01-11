@@ -106,8 +106,8 @@ void MainWindow::customizeColour(QAction *action) {
         if (pickColour(colour)) {
             scene->customizeBackgroundColour(colour);
         }
-    } else if (action == ui->highlightNeighboursAct) {
-        view->highlightNeighbours(ui->highlightNeighboursAct->isChecked());
+    } else if (action == ui->resetHighlightingAct) {
+        view->resetHighlighting();
     }
 }
 
