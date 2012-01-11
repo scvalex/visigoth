@@ -19,7 +19,7 @@ public:
     virtual ~GLGraphWidget();
 
     void setScene(GraphScene *newScene);
-    void highlightNeighbours(bool enabled = false);
+    void resetHighlighting();
 
     enum MOUSE_MODES {
         MOUSE_IDLE,
@@ -65,7 +65,6 @@ private:
     void drawSphere(GLfloat r, int lats, int longs);
     void drawCircle(GLfloat r, int longs);
     void drawNode(Node *node);
-    void resetGraphColours();
     void drawGraphGL();
 
     void initGraphProjection();
@@ -86,7 +85,6 @@ private:
 
     bool mode3d;
     bool running;
-    bool isHighlighted;
     int animTimerId;
 };
 

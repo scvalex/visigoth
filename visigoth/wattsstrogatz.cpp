@@ -1,4 +1,5 @@
 #include "graphscene.h"
+#include "notify.h"
 #include "wattsstrogatz.h"
 #include "ui_wattscontrol.h"
 
@@ -40,7 +41,7 @@ bool WattsStrogatz::canAddVertex() {
 }
 
 void WattsStrogatz::addVertex() {
-    qDebug("Watts Strogatz does not support adding new vertices");
+    Notify::normal("Watts Strogatz does not support adding new vertices");
 }
 
 QWidget* WattsStrogatz::controlWidget(QWidget *parent) {

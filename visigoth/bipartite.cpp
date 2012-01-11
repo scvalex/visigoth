@@ -1,10 +1,10 @@
 #include "graphscene.h"
 #include "bipartite.h"
+#include "mainwindow.h"
+#include "notify.h"
 #include "ui_bipartitecontrol.h"
 #include "ui_mainwindow.h"
-#include "mainwindow.h"
 
-#include <QDebug>
 #include <QSet>
 #include <QWidget>
 
@@ -126,7 +126,7 @@ bool Bipartite::canAddVertex() {
 }
 
 void Bipartite::addVertex() {
-    qDebug("Bipartite does not support adding new vertices");
+    Notify::important("Bipartite does not support adding new vertices");
 }
 
 QWidget* Bipartite::controlWidget(QWidget *parent) {
