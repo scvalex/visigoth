@@ -131,6 +131,10 @@ void GLGraphWidget::mousePressEvent(QMouseEvent *event) {
             {
                 Node *hitNode = selectGL(event->x(), event->y());
                 if (hitNode) {
+                    // Calculate stats
+                    emit selectNode(hitNode);
+
+                    // Set up dragging
                     draggedNode = hitNode;
                     draggedNode->setAllowAdvance(false);
                     mouseMode = MOUSE_DRAGGING;
@@ -170,10 +174,6 @@ void GLGraphWidget::mouseMoveEvent(QMouseEvent *event) {
     int dx, dy;
 
     if (mouseMode == MOUSE_IDLE) {
-        Node *node = selectGL(event->x(), event->y());
-        if (node != 0) {
-            emit hoveringOnNode(node);
-        }
         return;
     }
 
