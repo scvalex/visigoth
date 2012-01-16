@@ -32,7 +32,7 @@ public:
 
 signals:
     void algorithmChanged(Algorithm *newAlgo);
-    void selectNode(Node *node);
+    void onSelectNode(Node *node);
 
 protected:
     bool animationRunning();

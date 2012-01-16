@@ -61,7 +61,7 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->aboutQtAct, SIGNAL(triggered()), this, SLOT(showAboutQt()));
     connect(scene, SIGNAL(repopulated()), this, SLOT(onGenerate()));
     connect(view, SIGNAL(algorithmChanged(Algorithm*)), this, SLOT(onAlgorithmChanged(Algorithm*)));
-    connect(view, SIGNAL(selectNode(Node*)), this, SLOT(onFocusedNodeChanged(Node*)));
+    connect(view, SIGNAL(onSelectNode(Node*)), this, SLOT(onFocusedNodeChanged(Node*)));
 
     ui->chooserCombo->addItems(scene->algorithms());
     connect(ui->chooserCombo, SIGNAL(currentIndexChanged(const QString &)), scene, SLOT(chooseAlgorithm(const QString &)));

@@ -2,12 +2,12 @@ QT += core gui opengl xml network
 
 RESOURCES = resources.qrc \
 
-#CONFIG += oauth
-#oauth {
-#    CONFIG += link_pkgconfig
-#    PKGCONFIG += qoauth
-#    DEFINES += HAS_OAUTH
-#}
+CONFIG += oauth
+oauth {
+    CONFIG += link_pkgconfig
+    PKGCONFIG += qoauth
+    DEFINES += HAS_OAUTH
+}
 
 TARGET = visigoth
 TEMPLATE = app

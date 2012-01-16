@@ -132,7 +132,7 @@ void GLGraphWidget::mousePressEvent(QMouseEvent *event) {
                 Node *hitNode = selectGL(event->x(), event->y());
                 if (hitNode) {
                     // Calculate stats
-                    emit selectNode(hitNode);
+                    emit onSelectNode(hitNode);
 
                     // Set up dragging
                     draggedNode = hitNode;
